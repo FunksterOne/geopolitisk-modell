@@ -445,6 +445,13 @@ input[type=range]::-webkit-slider-thumb {
 .divider { height: 1px; background: var(--border); margin: 22px 0; }
 
 /* ── FOOTNOTE ───────────────────────────────── */
+.truth-card { transition: box-shadow .15s, border-color .15s; }
+.truth-card:hover { box-shadow: var(--shadow-md); border-color: rgba(31,56,100,.3) !important; }
+.truth-card.truth-relevant:hover { border-color: var(--red) !important; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .3; }
+}
 .footnote { font-size: 11px; color: var(--faint); font-style: italic; line-height: 1.6; margin-top: 20px; }
 
 /* ── MACRO DATA ─────────────────────────────── */
@@ -737,6 +744,20 @@ input[type=range]::-webkit-slider-thumb {
   <!-- INNLEDNING -->
   <div style="font-size:13.5px;line-height:1.82;color:var(--text);font-weight:300;margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--navy);border-radius:0 var(--radius) var(--radius) 0;padding:14px 18px;box-shadow:var(--shadow)">
     Dette er en analytisk modell basert på en syntese av seks sentrale verk som til sammen beskriver den geopolitiske og makroøkonomiske virkeligheten per 31. mars 2026. Modellen integrerer makroøkonomisk resesjonsteori (Goodspeed), kartlegging av det amerikanske sanksjonsapparatet (Fishman), handelspolitisk arkitektur (Miran), offisielle amerikanske forsvars- og sikkerhetsstrategier, og erkjennelsesteori for investorer under dyp usikkerhet (Taleb). Modellen inkluderer også en dedikert analyse av Kinas posisjon i globale verdikjeder — herunder landets nær-monopol på prosessering av sjeldne jordarter og kritiske metaller, og bruken av eksportkontroller som strategisk virkemiddel. Situasjonen er kritisk: Hormuz-stredet har vært stengt i 31 dager, Brent-råolje handler nær rekordnivåer, og alle tre av Goodspeeds klassiske resesjonstriggers er aktive simultant. Bruk navigasjonen til venstre for å gå i dybden på hvert analytisk rammeverk, kjøre Hormuz-kalkulatoren, sammenligne scenarier eller lese det fullstendige analysedokumentet.
+  </div>
+
+  <!-- TRUMP TRUTH SOCIAL — KOMPAKT LIVE FEED -->
+  <div style="margin-bottom:20px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <div style="width:7px;height:7px;border-radius:50%;background:#C53030;animation:pulse 2s infinite;flex-shrink:0"></div>
+      <span style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#C53030">Live</span>
+      <span style="font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy)">Trump &middot; Truth Social</span>
+      <div style="flex:1;height:1px;background:var(--border)"></div>
+      <span style="font-size:9px;color:var(--faint)" id="truth-updated">Henter...</span>
+    </div>
+    <div id="truth-feed" style="display:flex;flex-direction:row;gap:8px;flex-wrap:nowrap;width:100%">
+      <div style="font-size:11px;color:var(--faint);padding:8px">Laster...</div>
+    </div>
   </div>
 
   <!-- NØKKELTALL -->
@@ -3893,28 +3914,92 @@ function initAnalyseProgress() {
 // window._brentLive brukes fortsatt av Hormuz-kalkulatoren hvis satt av build.py
 
 document.addEventListener('DOMContentLoaded', initAnalyseProgress);
+document.addEventListener('DOMContentLoaded', initTruthFeed);
+
+// ── TRUMP TRUTH SOCIAL LIVE FEED ────────────────────────────────────────────
+// Kilde: CNN Truth Archive — oppdateres hvert 5. minutt, CORS-åpent
+function initTruthFeed() {
+  fetchTruth();
+  setInterval(fetchTruth, 5 * 60 * 1000); // poll hvert 5. minutt
+}
+
+function fetchTruth() {
+  fetch('https://ix.cnn.io/data/truth-social/truth_archive.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) { renderTruth(data.slice(0, 5)); })
+    .catch(function(e) {
+      var feed = document.getElementById('truth-feed');
+      if (feed) feed.innerHTML = '<div style="font-size:11px;color:var(--muted);padding:8px">Kunne ikke hente Truth Social-feed.</div>';
+    });
+}
+
+function renderTruth(posts) {
+  var feed = document.getElementById('truth-feed');
+  var upd  = document.getElementById('truth-updated');
+  if (!feed) return;
+
+  var now = new Date();
+  if (upd) upd.textContent = 'Oppdatert ' + now.toLocaleTimeString('no-NO', {hour:'2-digit',minute:'2-digit'});
+
+  var keywords = ['tariff','sanction','iran','hormuz','oil','china','nato','trade','deal','nuclear','military','war','economy','fed','dollar'];
+  var n = posts.length || 1;
+  // Bredde = 100% delt på antall poster, min 160px, max 22%
+  var w = 'calc((100% - ' + (n-1)*8 + 'px) / ' + n + ')';
+
+  feed.innerHTML = posts.map(function(p) {
+    var div = document.createElement('div');
+    div.innerHTML = p.content;
+    var text = (div.textContent || div.innerText || '').trim();
+    if (!text) return '';
+
+    var d = new Date(p.created_at);
+    var dato = d.toLocaleDateString('no-NO', {day:'numeric',month:'short'}) +
+               ' ' + d.toLocaleTimeString('no-NO', {hour:'2-digit',minute:'2-digit'});
+    var kort = text.length > 140 ? text.substring(0, 140) + '…' : text;
+    var relevant = keywords.some(function(k) { return text.toLowerCase().indexOf(k) !== -1; });
+
+    return '<a href="' + p.url + '" target="_blank" rel="noopener" class="truth-card' + (relevant ? ' truth-relevant' : '') + '" style="' +
+      'flex:1 1 ' + w + ';min-width:0;' +
+      'background:var(--surface);' +
+      'border:1px solid ' + (relevant ? 'rgba(197,48,48,.35)' : 'var(--border)') + ';' +
+      'border-top:2px solid ' + (relevant ? 'var(--red)' : 'var(--border)') + ';' +
+      'border-radius:var(--radius);' +
+      'padding:8px 10px;' +
+      'display:flex;flex-direction:column;gap:4px;' +
+      'text-decoration:none;cursor:pointer">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center">' +
+        (relevant
+          ? '<span style="font-size:7px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--red-lt);color:var(--red);padding:1px 5px;border-radius:3px">Markedsrelevant</span>'
+          : '<span style="font-size:7px;color:var(--faint)">Truth Social</span>') +
+        '<span style="font-size:8px;color:var(--faint);flex-shrink:0">' + dato + ' &#x2197;</span>' +
+      '</div>' +
+      '<div style="font-size:11px;line-height:1.55;color:var(--text);font-weight:300;flex:1;overflow:hidden">' + kort + '</div>' +
+      '<div style="font-size:8px;color:var(--faint)">' +
+        (p.reblogs_count ? '&#x21BA; ' + p.reblogs_count.toLocaleString() + ' ' : '') +
+        (p.favourites_count ? '&#x2665; ' + p.favourites_count.toLocaleString() : '') +
+      '</div>' +
+    '</a>';
+  }).filter(Boolean).join('');
+}
 
 
-</script>
-
-<script>
 </script>
 
 <script>
 // PRICES_INJECTED_START
-// build.py 2026-04-01 kl. 01.04.2026 19:06 · 10 ferske · 0 fra cache
+// build.py 2026-04-01 kl. 01.04.2026 21:30 · 10 ferske · 0 fra cache
 document.addEventListener("DOMContentLoaded", function() {
-  var e=document.getElementById('kap-brent-val');var s=document.getElementById('kap-brent-sub');if(e)e.textContent='$101.11';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-2.40%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-wti-val');var s=document.getElementById('kap-wti-sub');if(e)e.textContent='$99.82';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-2.09%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-gas-val');var s=document.getElementById('kap-gas-sub');if(e)e.textContent='$2.811';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-2.36%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-copper-val');var s=document.getElementById('kap-copper-sub');if(e)e.textContent='$5.613';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-0.71%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-gold-val');var s=document.getElementById('kap-gold-sub');if(e)e.textContent='$4788';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+1.82%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-silver-val');var s=document.getElementById('kap-silver-sub');if(e)e.textContent='$75.47';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-0.08%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-us10y-val');var s=document.getElementById('kap-us10y-sub');if(e)e.textContent='4.322%';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.63%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-eurusd-val');var s=document.getElementById('kap-eurusd-sub');if(e)e.textContent='1.1582';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.21%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-usdnok-val');var s=document.getElementById('kap-usdnok-sub');if(e)e.textContent='9.7245';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.36%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-eurnok-val');var s=document.getElementById('kap-eurnok-sub');if(e)e.textContent='11.2625';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.57%</span> &middot; Stooq 2026-04-01';
-  window._brentLive=101.11;
+  var e=document.getElementById('kap-brent-val');var s=document.getElementById('kap-brent-sub');if(e)e.textContent='$101.01';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-2.50%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-wti-val');var s=document.getElementById('kap-wti-sub');if(e)e.textContent='$99.65';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-2.26%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-gas-val');var s=document.getElementById('kap-gas-sub');if(e)e.textContent='$2.819';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-2.08%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-copper-val');var s=document.getElementById('kap-copper-sub');if(e)e.textContent='$5.620';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-0.58%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-gold-val');var s=document.getElementById('kap-gold-sub');if(e)e.textContent='$4794';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+1.94%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-silver-val');var s=document.getElementById('kap-silver-sub');if(e)e.textContent='$75.56';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.05%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-us10y-val');var s=document.getElementById('kap-us10y-sub');if(e)e.textContent='4.332%';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.86%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-eurusd-val');var s=document.getElementById('kap-eurusd-sub');if(e)e.textContent='1.1583';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.23%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-usdnok-val');var s=document.getElementById('kap-usdnok-sub');if(e)e.textContent='9.7255';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.37%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-eurnok-val');var s=document.getElementById('kap-eurnok-sub');if(e)e.textContent='11.2651';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.60%</span> &middot; Stooq 2026-04-01';
+  window._brentLive=101.01;
 });
 // PRICES_INJECTED_END
 </script>
