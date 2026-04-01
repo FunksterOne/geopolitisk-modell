@@ -59,39 +59,43 @@ CARD_MAP = {
     'eurnok':    'kap-eurnok',
 }
 
-# ── RSS-kilder ─────────────────────────────────────────────────────────────────
+# ── RSS-kilder — aapne feeds ───────────────────────────────────────────────────
 RSS_SOURCES = [
-    {'name': 'Reuters World',    'url': 'https://feeds.reuters.com/reuters/worldNews',    'label': 'Reuters'},
-    {'name': 'Reuters Business', 'url': 'https://feeds.reuters.com/reuters/businessNews', 'label': 'Reuters'},
-    {'name': 'Al Jazeera',       'url': 'https://www.aljazeera.com/xml/rss/all.xml',      'label': 'Al Jazeera'},
-    {'name': 'EIA',              'url': 'https://www.eia.gov/rss/news.xml',               'label': 'EIA'},
-    {'name': 'BBC World',        'url': 'https://feeds.bbci.co.uk/news/world/rss.xml',    'label': 'BBC'},
+    {'name': 'Al Jazeera',      'url': 'https://www.aljazeera.com/xml/rss/all.xml',         'label': 'Al Jazeera'},
+    {'name': 'France 24',       'url': 'https://www.france24.com/en/rss',                   'label': 'France 24'},
+    {'name': 'NPR World',       'url': 'https://feeds.npr.org/1004/rss.xml',                'label': 'NPR'},
+    {'name': 'EIA News',        'url': 'https://www.eia.gov/rss/news.xml',                  'label': 'EIA'},
+    {'name': 'ABC Australia',   'url': 'https://www.abc.net.au/news/feed/51120/rss.xml',    'label': 'ABC'},
+    {'name': 'Arab News',       'url': 'https://www.arabnews.com/rss.xml',                  'label': 'Arab News'},
+    {'name': 'OilPrice',        'url': 'https://oilprice.com/rss/main',                     'label': 'OilPrice'},
 ]
 
 KEYWORDS = [
     'hormuz','iran','strait','oil','crude','brent','wti','opec','energy',
     'china','taiwan','rare earth','lithium','semiconductor','sanction',
-    'nato','russia','ukraine','middle east','gulf','saudi',
+    'nato','russia','ukraine','middle east','gulf','saudi','israel',
     'fed','federal reserve','ecb','interest rate','inflation','recession',
     'trump','tariff','trade','dollar','yuan',
-    'war','military','attack','strike','conflict','ceasefire',
+    'war','military','attack','strike','conflict','ceasefire','nuclear',
     'norway','norges bank','equinor','lng','gas',
-    'market','stock','bond','yield',
+    'market','stock','bond','yield','economy',
 ]
 
 CATEGORIES = {
     'Hormuz og energi':  ['hormuz','strait','crude','brent','wti','opec','lng','gas','energy','oil'],
-    'Iran og Midtosten': ['iran','middle east','gulf','saudi','israel','irak','iraq'],
+    'Iran og Midtosten': ['iran','middle east','gulf','saudi','israel','irak','iraq','nuclear'],
     'Kina og ravarer':   ['china','taiwan','rare earth','lithium','semiconductor','yuan','beijing'],
     'NATO og allianser': ['nato','russia','ukraine','military','attack','strike','war','conflict'],
-    'Markeder og makro': ['fed','federal reserve','ecb','inflation','recession','rate','yield','market','dollar','tariff','trade'],
-    'Norge og Norden':   ['norway','norges bank','equinor','nordic','krone','nok'],
+    'Markeder og makro': ['fed','ecb','inflation','recession','rate','yield','market','dollar','tariff','trade','economy'],
+    'Norge og Norden':   ['norway','norges bank','equinor','nordic','krone','nok','norwegian'],
 }
 
 
-def fetch_rss(url, timeout=8):
+def fetch_rss(url, timeout=10):
     try:
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        req = urllib.request.Request(url, headers={
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36'
+        })
         with urllib.request.urlopen(req, timeout=timeout) as r:
             data = r.read()
         root = ET.fromstring(data)
@@ -134,11 +138,11 @@ def generate_brief(prices):
         items = fetch_rss(src['url'])
         relevant = [(t, l, d, src['label']) for t, l, d in items if is_relevant(t, d)]
         all_articles.extend(relevant[:5])
-        print(f"    {src['label']:<15} {len(relevant)}/{len(items)} relevante")
-        time.sleep(0.3)
+        print(f"    {src['label']:<16} {len(relevant)}/{len(items)} relevante")
+        time.sleep(0.5)
 
     if not all_articles:
-        print(f"  Ingen relevante artikler -- ingen brief generert")
+        print(f"  Ingen relevante artikler funnet -- ingen brief generert")
         return False
 
     seen = set()
@@ -182,7 +186,8 @@ def generate_brief(prices):
     )
 
     brief_file.write_text('\n'.join(lines), encoding='utf-8')
-    print(f"  Brief-utkast generert: {brief_file.name} ({sum(len(a) for a in cleaned.values())} artikler)")
+    total = sum(len(a) for a in cleaned.values())
+    print(f"  Brief-utkast generert: {brief_file.name} ({total} artikler, {len(cleaned)} kategorier)")
     return True
 
 
