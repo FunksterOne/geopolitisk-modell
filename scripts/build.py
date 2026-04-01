@@ -2,11 +2,11 @@
 build.py — Geopolitisk Systemanalyse Investor 2026
 Henter priser fra Stooq.com og daglig brief, injiserer i index.html.
 
-Kjøres av Cowork kl. 06:05 hver morgen:
+Kjøres av GitHub Actions kl. 04:05 UTC (06:05 norsk tid) og av Cowork lokalt.
     python scripts/build.py
 """
 
-import csv, io, json, re, urllib.request
+import csv, io, re, urllib.request
 from datetime import date, datetime
 from pathlib import Path
 
@@ -28,18 +28,34 @@ for en, no in MONTHS_NO.items():
 
 # ── Stooq-tickere ─────────────────────────────────────────────────────────────
 # (symbol, navn, enhet, desimaler, divisor)
-# divisor=100: COMEX kobber/sølv er i cent -> del på 100 for $/lb og $/oz
+# divisor=100: COMEX kobber/sølv leveres i cent -> del på 100
 STOOQ_TICKERS = [
-    ('cb.f',     'Brent',          '$',  2, 1),
-    ('cl.f',     'WTI',            '$',  2, 1),
-    ('ng.f',     'Naturgass',      '$',  3, 1),
-    ('hg.f',     'Kobber',         '$',  3, 100),
-    ('gc.f',     'Gull',           '$',  0, 1),
-    ('si.f',     'Sølv',           '$',  2, 100),
-    ('eurusd',   'EUR/USD',        '',   4, 1),
-    ('usdnok',   'USD/NOK',        '',   4, 1),
-    ('10yusy.b', 'US 10Y',         '%',  3, 1),
+    ('cb.f',      'Brent',      '$',  2, 1),
+    ('cl.f',      'WTI',        '$',  2, 1),
+    ('ng.f',      'Naturgass',  '$',  3, 1),
+    ('hg.f',      'Kobber',     '$',  3, 100),
+    ('gc.f',      'Gull',       '$',  0, 1),
+    ('si.f',      'Sølv',       '$',  2, 100),
+    ('lad.f',     'Aluminium',  '$',  0, 1),
+    ('eurusd',    'EUR/USD',    '',   4, 1),
+    ('usdnok',    'USD/NOK',    '',   4, 1),
+    ('eurnok',    'EUR/NOK',    '',   4, 1),
+    ('10yusy.b',  'US 10Y',     '%',  3, 1),
+    ('10ydeuy.b', 'Tysk 10Y',   '%',  3, 1),
 ]
+
+# ── HTML-element-IDer i Kapitalimplikasjoner ──────────────────────────────────
+CARD_MAP = {
+    'cb.f':      'kap-brent',
+    'gc.f':      'kap-gold',
+    'hg.f':      'kap-copper',
+    'lad.f':     'kap-alum',
+    '10yusy.b':  'kap-us10y',
+    '10ydeuy.b': 'kap-de10y',
+    'eurusd':    'kap-eurusd',
+    'usdnok':    'kap-usdnok',
+    'eurnok':    'kap-eurnok',
+}
 
 def fetch_stooq(sym):
     url = f'https://stooq.com/q/l/?s={sym}&f=sd2t2ohlcv&h&e=csv'
@@ -52,9 +68,8 @@ def fetch_stooq(sym):
     row   = rows[1]
     close = row[6]
     dato  = row[1]
-    if close in ('', 'N/A', 'n/a', '-'):
+    if close in ('', 'N/A', 'n/a', '-', 'N/D'):
         return None, None, dato
-    # Beregn dagsendring i prosent fra Open (index 3) til Close (index 6)
     try:
         open_p  = float(row[3])
         close_p = float(close)
@@ -70,73 +85,53 @@ print(f"  build.py — {datetime.now().strftime('%d.%m.%Y %H:%M:%S')}")
 print(f"{'─'*55}")
 print("  Henter priser fra Stooq.com...")
 
-prices = {}
+prices  = {}
 ts_dato = None
 
 for sym, navn, unit, dec, div in STOOQ_TICKERS:
     try:
         raw, chg, dato = fetch_stooq(sym)
         if raw is None:
-            print(f"  {sym:<12} N/A")
+            print(f"  {sym:<14} N/A")
             continue
         val = raw / div
-        prices[sym] = {'val': val, 'chg': chg, 'unit': unit, 'dec': dec, 'navn': navn}
+        prices[sym] = {'val': val, 'chg': chg, 'unit': unit, 'dec': dec}
         if dato and not ts_dato:
             ts_dato = dato
         ps = f"{unit}{val:.{dec}f}" if unit == '$' else f"{val:.{dec}f}{unit}"
-        print(f"  {sym:<12} {ps:>10}  ({chg:+.2f}%)")
+        print(f"  {sym:<14} {ps:>10}  ({chg:+.2f}%)")
     except Exception as e:
-        print(f"  {sym:<12} FEIL: {e}")
+        print(f"  {sym:<14} FEIL: {e}")
 
-print(f"  {len(prices)}/{len(STOOQ_TICKERS)} priser hentet · dato: {ts_dato}")
+ok = len(prices)
+print(f"  {ok}/{len(STOOQ_TICKERS)} priser hentet · dato: {ts_dato}")
 
 # ── Les HTML ──────────────────────────────────────────────────────────────────
 html = TEMPLATE.read_text(encoding='utf-8')
 
-# ── Injiser priser i Kapitalimplikasjoner-kortene ─────────────────────────────
+# ── Injiser priser ────────────────────────────────────────────────────────────
 if prices:
-    # Bygg JS-blokk som oppdaterer de fem nøkkeltallskortene
-    now_str = datetime.now().strftime('%d.%m.%Y %H:%M')
-
-    # Hjelpefunksjon: formater pris
-    def fmt(sym):
-        if sym not in prices:
-            return None, None
-        p = prices[sym]
-        v, c, u, d = p['val'], p['chg'], p['unit'], p['dec']
-        if u == '$':
-            ps = f'${v:.{d}f}'
-        elif u == '%':
-            ps = f'{v:.{d}f}%'
-        else:
-            ps = f'{v:.{d}f}'
-        cs = f'{c:+.2f}%' if c is not None else ''
-        return ps, cs
-
-    # Mapper symbol -> HTML-element-ID i Kapitalimplikasjoner
-    CARD_MAP = {
-        'cb.f':     ('kap-brent',  'Brent råolje'),
-        'cl.f':     ('kap-wti',    'WTI råolje'),
-        'gc.f':     ('kap-gold',   'Gull spot'),
-        'hg.f':     ('kap-copper', 'LME Kobber'),
-        '10yusy.b': ('kap-us10y',  'US 10Y Treasury'),
-    }
-
+    now_str  = datetime.now().strftime('%d.%m.%Y %H:%M')
     js_lines = [f'// Priser injisert av build.py {iso_date} kl. {now_str}']
-    for sym, (el_id, label) in CARD_MAP.items():
-        ps, cs = fmt(sym)
-        if ps:
-            chg_color = '#14532D' if prices[sym]['chg'] >= 0 else '#C53030'
-            js_lines.append(
-                f'(function(){{'
-                f'var v=document.getElementById("{el_id}-val");'
-                f'var s=document.getElementById("{el_id}-sub");'
-                f'if(v){{v.textContent="{ps}";v.title="Stooq {ts_dato}";}} '
-                f'if(s){{s.innerHTML=\'<span style="color:{chg_color};font-weight:600">{cs}</span> · Stooq {ts_dato}\';}} '
-                f'}})()'
-            )
 
-    # Brent til Hormuz-kalkulator
+    for sym, el_id in CARD_MAP.items():
+        if sym not in prices:
+            continue
+        p   = prices[sym]
+        v, c, u, d = p['val'], p['chg'], p['unit'], p['dec']
+        if u == '$':   ps = f'${v:.{d}f}'
+        elif u == '%': ps = f'{v:.{d}f}%'
+        else:          ps = f'{v:.{d}f}'
+        col = '#14532D' if c >= 0 else '#C53030'
+        js_lines.append(
+            f'(function(){{'
+            f'var v=document.getElementById("{el_id}-val");'
+            f'var s=document.getElementById("{el_id}-sub");'
+            f'if(v)v.textContent="{ps}";'
+            f'if(s)s.innerHTML=\'<span style="color:{col};font-weight:600">{c:+.2f}%</span> &middot; Stooq {ts_dato}\';'
+            f'}})()'
+        )
+
     if 'cb.f' in prices:
         js_lines.append(f'window._brentLive = {prices["cb.f"]["val"]:.2f};')
 
@@ -153,12 +148,14 @@ if prices:
         print(f"  Priser injisert (oppdaterte eksisterende blokk)")
     else:
         html = html.replace(
-            'document.addEventListener(\'DOMContentLoaded\', initAnalyseProgress);',
-            f'{marker_s}\n{inject_js}\n{marker_e}\n\n'
-            'document.addEventListener(\'DOMContentLoaded\', initAnalyseProgress);',
+            "document.addEventListener('DOMContentLoaded', initAnalyseProgress);",
+            f"{marker_s}\n{inject_js}\n{marker_e}\n\n"
+            "document.addEventListener('DOMContentLoaded', initAnalyseProgress);",
             1
         )
         print(f"  Priser injisert (ny blokk)")
+else:
+    print("  Ingen priser — beholder fallback-verdier")
 
 # ── Les og injiser brief ──────────────────────────────────────────────────────
 brief_file = BRIEFS / f"Geopolitisk oppdatering {iso_date}.md"
