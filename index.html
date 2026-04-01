@@ -972,7 +972,7 @@ input[type=range]::-webkit-slider-thumb {
         </div>
         <div class="slider-group" style="margin-bottom:0">
           <div class="slider-meta">
-            <span class="slider-label">Oljeprissjokk (utover dagens ~113 $)</span>
+            <span class="slider-label">Oljeprissjokk (utover dagens <span id="hz-base-price">~101 $</span>)</span>
             <span class="slider-val" id="out-oil" style="font-size:15px">+13 $/fat</span>
           </div>
           <input type="range" min="0" max="115" value="13" step="1" id="sl-oil" oninput="updateSliderLabel(this); debouncedCalc()">
@@ -1675,8 +1675,31 @@ input[type=range]::-webkit-slider-thumb {
       <div class="stat-sub" id="kap-alum-sub">Stooq lad.f</div>
     </div>
   </div>
-  <!-- Rad 2: Renter og valuta -->
-  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px">
+  <!-- Rad 2b: Energi og valuta -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px">
+    <div class="stat-card" style="border-left:3px solid var(--amber)">
+      <div class="stat-label">WTI råolje</div>
+      <div class="stat-value" style="font-size:18px;color:var(--amber)" id="kap-wti-val">-</div>
+      <div class="stat-sub" id="kap-wti-sub">Stooq cl.f</div>
+    </div>
+    <div class="stat-card" style="border-left:3px solid var(--amber)">
+      <div class="stat-label">Naturgass (Henry Hub)</div>
+      <div class="stat-value" style="font-size:18px;color:var(--amber)" id="kap-gas-val">-</div>
+      <div class="stat-sub" id="kap-gas-sub">Stooq ng.f · $/MMBtu</div>
+    </div>
+    <div class="stat-card" style="border-left:3px solid var(--faint)">
+      <div class="stat-label">EUR/USD</div>
+      <div class="stat-value" style="font-size:18px" id="kap-eurusd-val">-</div>
+      <div class="stat-sub" id="kap-eurusd-sub">Stooq eurusd</div>
+    </div>
+    <div class="stat-card" style="border-left:3px solid var(--faint)">
+      <div class="stat-label">Sølv ($/oz)</div>
+      <div class="stat-value" style="font-size:18px" id="kap-silver-val">-</div>
+      <div class="stat-sub" id="kap-silver-sub">Stooq si.f</div>
+    </div>
+  </div>
+  <!-- Rad 3: Renter og valuta -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
     <div class="stat-card" style="border-left:3px solid var(--navy)">
       <div class="stat-label">US 10Y Treasury</div>
       <div class="stat-value" style="font-size:18px;color:var(--navy)" id="kap-us10y-val">-</div>
@@ -1686,11 +1709,6 @@ input[type=range]::-webkit-slider-thumb {
       <div class="stat-label">Tysk 10Y Bund</div>
       <div class="stat-value" style="font-size:18px;color:var(--navy)" id="kap-de10y-val">-</div>
       <div class="stat-sub" id="kap-de10y-sub">Stooq 10ydeuy.b</div>
-    </div>
-    <div class="stat-card" style="border-left:3px solid var(--faint)">
-      <div class="stat-label">EUR/USD</div>
-      <div class="stat-value" style="font-size:18px" id="kap-eurusd-val">-</div>
-      <div class="stat-sub" id="kap-eurusd-sub">Stooq eurusd</div>
     </div>
     <div class="stat-card" style="border-left:3px solid var(--faint)">
       <div class="stat-label">USD/NOK</div>
@@ -3131,14 +3149,46 @@ input[type=range]::-webkit-slider-thumb {
       <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
       <div><div class="imp-title">Innhold utenfor panel-div (denne loggen)</div><div class="imp-desc">Tekniske detaljer og Iterative forbedringer flot utenfor panel-logg-diven. Rotaarsak: ubalanserte div-tags. Panelet rekonstruert.</div></div>
     </div>
-    <div class="imp-row" style="border-bottom:none">
+    <div class="imp-row">
       <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
       <div><div class="imp-title">Tidshorisont 5-15 aar til 5-10 aar</div><div class="imp-desc">Alle forekomster av fem til femten aar og 5-15 aar oppdatert til 5-10 aar.</div></div>
     </div>
+    <div class="imp-row">
+      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
+      <div><div class="imp-title">1. april 2026 — Live markedspriser via Stooq.com</div><div class="imp-desc">9 Stooq-tickere testet og bekreftet (9/9 OK). build.py henter priser og injiserer i index.html via DOMContentLoaded. Kobber og sølv korrigert for COMEX cent-format (divisor 100). Yahoo Finance og TradingView widgets avvist etter grundig testing.</div></div>
+    </div>
+    <div class="imp-row">
+      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
+      <div><div class="imp-title">1. april 2026 — GitHub pipeline satt opp</div><div class="imp-desc">Git installert (v2.53.0 via winget). Repo pushet til github.com/FunksterOne/geopolitisk-modell. GitHub Pages aktivert. GitHub Actions workflow (daglig.yml) kjoerer build.py kl. 04:05 UTC. Task Scheduler kjoerer sync_brief.py kl. 06:02. Modell live paa funksterone.github.io/geopolitisk-modell.</div></div>
+    </div>
+    <div class="imp-row">
+      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
+      <div><div class="imp-title">1. april 2026 — Scenarioanalyse rebuilt med Perera-kausalitet</div><div class="imp-desc">Tre scenarier (A/B/C) fullstendig erstattet med Perera (2026) som empirisk fundament. 44 datapunkter. Sektorvis tidsakse over 36 maaneder. Kaskademodell med P1/S2/T3. Ikke-reversible skader dokumentert.</div></div>
+    </div>
+    <div class="imp-row">
+      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
+      <div><div class="imp-title">1. april 2026 — Kapitalimplikasjoner utvidet til 12 prisinstrumenter</div><div class="imp-desc">To-lags struktur: overordnet strategi + spesifikke implikasjoner. Fordelingsmatrise per scenario A/B/C. Vektet anbefaling (27 % energi, 21 % forsvar, 16 % gull osv.). WTI, naturgass, EUR/USD og sølv lagt til.</div></div>
+    </div>
+    <div class="imp-row">
+      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
+      <div><div class="imp-title">1. april 2026 — build.py forbedret med retry-logikk og fallback-cache</div><div class="imp-desc">Retry 3 ganger med 2 sekunders forsinkelse. Fallback til .price_cache.json ved N/A eller nettverksfeil. Hormuz-kalkulator kobler dynamisk til _brentLive. Sliderens basiprisetikett oppdateres automatisk. GitHub Actions oppgradert til FORCE_JAVASCRIPT_ACTIONS_TO_NODE24.</div></div>
+    </div>
+    <div class="imp-row" style="border-bottom:none">
+      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
+      <div><div class="imp-title">1. april 2026 — Teknisk dokumentasjon</div><div class="imp-desc">Word-dokument (Geopolitisk_Pipeline_Dokumentasjon.docx) generert med full beskrivelse av daglig pipeline, Stooq-tickere, GitHub Actions, Task Scheduler, repo-struktur og konflikthaandtering.</div></div>
+    </div>
+  </div>
+
+  <div class="section-label">Tekniske detaljer — oppdatert 1. april 2026</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
+    <div class="stat-card"><div class="stat-label">Filstørrelse</div><div class="stat-value" style="font-size:20px">~275 KB</div><div class="stat-sub">Selvforsynt HTML · ingen rammeverk</div></div>
+    <div class="stat-card"><div class="stat-label">Menyvalg</div><div class="stat-value" style="font-size:20px">11</div><div class="stat-sub">Inkl. denne loggen</div></div>
+    <div class="stat-card"><div class="stat-label">Prisinstrumenter</div><div class="stat-value" style="font-size:20px">12</div><div class="stat-sub">Stooq.com · daglig oppdatering</div></div>
+    <div class="stat-card"><div class="stat-label">Live URL</div><div class="stat-value" style="font-size:14px;margin-top:4px">GitHub Pages</div><div class="stat-sub">funksterone.github.io/geopolitisk-modell</div></div>
   </div>
 
   <div class="footnote" style="margin-top:16px">
-    Modell bygget av Claude (Anthropic Sonnet 4.6) &middot; Analytisk grunnlag og faglige beslutninger: Halvard Nordang, Affectum AS &middot; 31. mars 2026
+    Modell bygget av Claude (Anthropic Sonnet 4.6) &middot; Analytisk grunnlag og faglige beslutninger: Halvard Nordang, Affectum AS &middot; 31. mars–1. april 2026
   </div>
 
 </div>
@@ -3506,7 +3556,10 @@ function calcHormuz() {
   // (slider label set by updateSliderLabel)
 
   const cm = conflictMult[conflict];
-  const baseOil = window._brentLive || 94; // EIA Brent spot 9. mars 2026
+  const baseOil = window._brentLive || 101; // Stooq cb.f — oppdateres av build.py
+  // Oppdater etikett i slider dynamisk
+  const bpEl = document.getElementById('hz-base-price');
+  if (bpEl) bpEl.textContent = '~' + Math.round(baseOil) + ' $';
   const peakOil = Math.round(baseOil + oilShock * cm);
   const normalOil = Math.round(72 + oilShock * cm * 0.12); // decay toward pre-conflict ~72 $
 
@@ -3839,27 +3892,26 @@ function initAnalyseProgress() {
 // Brent-pris vises via TradingView live widget (se Oversikt-panelet)
 // window._brentLive brukes fortsatt av Hormuz-kalkulatoren hvis satt av build.py
 
-
 document.addEventListener('DOMContentLoaded', initAnalyseProgress);
 
 
 </script>
 
 <script>
-</script>
-
-<script>
 // PRICES_INJECTED_START
-// build.py 2026-04-01 kl. 01.04.2026 15:25
+// build.py 2026-04-01 kl. 01.04.2026 21:03 · 10 ferske · 0 fra cache
 document.addEventListener("DOMContentLoaded", function() {
-  var e=document.getElementById('kap-brent-val');var s=document.getElementById('kap-brent-sub');if(e)e.textContent='$101.95';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-1.59%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-gold-val');var s=document.getElementById('kap-gold-sub');if(e)e.textContent='$4796';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+1.98%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-copper-val');var s=document.getElementById('kap-copper-sub');if(e)e.textContent='$5.631';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-0.39%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-us10y-val');var s=document.getElementById('kap-us10y-sub');if(e)e.textContent='4.298%';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.07%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-eurusd-val');var s=document.getElementById('kap-eurusd-sub');if(e)e.textContent='1.1613';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.48%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-usdnok-val');var s=document.getElementById('kap-usdnok-sub');if(e)e.textContent='9.6945';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.05%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-eurnok-val');var s=document.getElementById('kap-eurnok-sub');if(e)e.textContent='11.2579';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.53%</span> &middot; Stooq 2026-04-01';
-  window._brentLive=101.95;
+  var e=document.getElementById('kap-brent-val');var s=document.getElementById('kap-brent-sub');if(e)e.textContent='$101.15';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-2.36%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-wti-val');var s=document.getElementById('kap-wti-sub');if(e)e.textContent='$99.79';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-2.12%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-gas-val');var s=document.getElementById('kap-gas-sub');if(e)e.textContent='$2.811';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-2.36%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-copper-val');var s=document.getElementById('kap-copper-sub');if(e)e.textContent='$5.609';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-0.78%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-gold-val');var s=document.getElementById('kap-gold-sub');if(e)e.textContent='$4779';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+1.63%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-silver-val');var s=document.getElementById('kap-silver-sub');if(e)e.textContent='$75.28';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-0.33%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-us10y-val');var s=document.getElementById('kap-us10y-sub');if(e)e.textContent='4.323%';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.65%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-eurusd-val');var s=document.getElementById('kap-eurusd-sub');if(e)e.textContent='1.1579';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.19%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-usdnok-val');var s=document.getElementById('kap-usdnok-sub');if(e)e.textContent='9.7298';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.41%</span> &middot; Stooq 2026-04-01';
+  var e=document.getElementById('kap-eurnok-val');var s=document.getElementById('kap-eurnok-sub');if(e)e.textContent='11.2658';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.60%</span> &middot; Stooq 2026-04-01';
+  window._brentLive=101.15;
 });
 // PRICES_INJECTED_END
 </script>
