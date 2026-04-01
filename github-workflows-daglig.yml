@@ -1,0 +1,45 @@
+name: Daglig oppdatering av geopolitisk modell
+
+on:
+  schedule:
+    # Kl. 06:05 Oslo-tid (UTC+2 sommer = 04:05 UTC)
+    - cron: '5 4 * * *'
+  workflow_dispatch:
+    # Tillater manuell kjøring fra GitHub-grensesnittet
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Sjekk ut repository
+        uses: actions/checkout@v4
+
+      - name: Sett opp Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Kopier dagens brief fra secrets (eller briefs-mappe)
+        run: |
+          echo "Leter etter brief for $(date +%Y-%m-%d)..."
+          ls briefs/ || echo "Ingen briefs ennå"
+
+      - name: Kjør byggeskript
+        run: python scripts/build.py
+
+      - name: Sjekk om index.html ble endret
+        id: check_changes
+        run: |
+          git diff --quiet index.html && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit og push oppdatert modell
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Daglig brief $(date +%Y-%m-%d)"
+          git push
