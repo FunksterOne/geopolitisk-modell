@@ -5,7 +5,6 @@ on:
     # Kl. 06:05 Oslo-tid (UTC+2 sommer = 04:05 UTC)
     - cron: '5 4 * * *'
   workflow_dispatch:
-    # Tillater manuell kjøring fra GitHub-grensesnittet
 
 jobs:
   build:
@@ -25,21 +24,14 @@ jobs:
       - name: Vis briefs-mappe
         run: |
           echo "Leter etter brief for $(date +%Y-%m-%d)..."
-          ls briefs/ || echo "Ingen briefs ennå"
+          ls briefs/ 2>/dev/null || echo "Ingen briefs ennå"
 
       - name: Kjør byggeskript
         run: python scripts/build.py
 
-      - name: Sjekk om index.html ble endret
-        id: check_changes
-        run: |
-          git diff --quiet index.html && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
-
       - name: Commit og push oppdatert modell
-        if: steps.check_changes.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "Daglig oppdatering $(date +%Y-%m-%d)"
-          git push
+          git diff --staged --quiet || git commit -m "Daglig oppdatering $(date +%Y-%m-%d)" && git push
