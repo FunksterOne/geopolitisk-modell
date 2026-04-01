@@ -27,8 +27,6 @@ for en, no in MONTHS_NO.items():
     no_date = no_date.replace(en, no)
 
 # ── Stooq-tickere ─────────────────────────────────────────────────────────────
-# (symbol, navn, enhet, desimaler, divisor)
-# divisor=100: COMEX kobber/sølv leveres i cent -> del på 100
 STOOQ_TICKERS = [
     ('cb.f',      'Brent',      '$',  2, 1),
     ('cl.f',      'WTI',        '$',  2, 1),
@@ -44,7 +42,6 @@ STOOQ_TICKERS = [
     ('10ydeuy.b', 'Tysk 10Y',   '%',  3, 1),
 ]
 
-# ── HTML-element-IDer i Kapitalimplikasjoner ──────────────────────────────────
 CARD_MAP = {
     'cb.f':      'kap-brent',
     'gc.f':      'kap-gold',
@@ -65,9 +62,7 @@ def fetch_stooq(sym):
     rows = list(csv.reader(io.StringIO(text.strip())))
     if len(rows) < 2:
         return None, None, None
-    row   = rows[1]
-    close = row[6]
-    dato  = row[1]
+    row, close, dato = rows[1], rows[1][6], rows[1][1]
     if close in ('', 'N/A', 'n/a', '-', 'N/D'):
         return None, None, dato
     try:
@@ -75,18 +70,16 @@ def fetch_stooq(sym):
         close_p = float(close)
         chg_pct = ((close_p - open_p) / open_p) * 100 if open_p else 0
     except:
-        close_p = float(close)
-        chg_pct = 0
+        close_p, chg_pct = float(close), 0
     return close_p, chg_pct, dato
 
-# ── Hent alle priser ──────────────────────────────────────────────────────────
+# ── Hent priser ───────────────────────────────────────────────────────────────
 print(f"\n{'─'*55}")
 print(f"  build.py — {datetime.now().strftime('%d.%m.%Y %H:%M:%S')}")
 print(f"{'─'*55}")
 print("  Henter priser fra Stooq.com...")
 
-prices  = {}
-ts_dato = None
+prices, ts_dato = {}, None
 
 for sym, navn, unit, dec, div in STOOQ_TICKERS:
     try:
@@ -103,61 +96,59 @@ for sym, navn, unit, dec, div in STOOQ_TICKERS:
     except Exception as e:
         print(f"  {sym:<14} FEIL: {e}")
 
-ok = len(prices)
-print(f"  {ok}/{len(STOOQ_TICKERS)} priser hentet · dato: {ts_dato}")
+print(f"  {len(prices)}/{len(STOOQ_TICKERS)} priser hentet · dato: {ts_dato}")
 
 # ── Les HTML ──────────────────────────────────────────────────────────────────
 html = TEMPLATE.read_text(encoding='utf-8')
 
-# ── Injiser priser ────────────────────────────────────────────────────────────
+# ── Fjern gammel injeksjonsblokk uansett format ───────────────────────────────
+html = re.sub(
+    r'// PRICES_INJECTED_START[\s\S]*?// PRICES_INJECTED_END\n?',
+    '', html
+)
+
+# ── Bygg ny injeksjonsblokk pakket i DOMContentLoaded ────────────────────────
 if prices:
     now_str  = datetime.now().strftime('%d.%m.%Y %H:%M')
-    js_lines = [f'// Priser injisert av build.py {iso_date} kl. {now_str}']
+    fn_lines = []
 
     for sym, el_id in CARD_MAP.items():
         if sym not in prices:
             continue
-        p   = prices[sym]
+        p = prices[sym]
         v, c, u, d = p['val'], p['chg'], p['unit'], p['dec']
         if u == '$':   ps = f'${v:.{d}f}'
         elif u == '%': ps = f'{v:.{d}f}%'
         else:          ps = f'{v:.{d}f}'
         col = '#14532D' if c >= 0 else '#C53030'
-        js_lines.append(
-            f'(function(){{'
-            f'var v=document.getElementById("{el_id}-val");'
-            f'var s=document.getElementById("{el_id}-sub");'
-            f'if(v)v.textContent="{ps}";'
-            f'if(s)s.innerHTML=\'<span style="color:{col};font-weight:600">{c:+.2f}%</span> &middot; Stooq {ts_dato}\';'
-            f'}})()'
+        fn_lines.append(
+            f"  var e=document.getElementById('{el_id}-val');"
+            f"var s=document.getElementById('{el_id}-sub');"
+            f"if(e)e.textContent='{ps}';"
+            f"if(s)s.innerHTML='<span style=\"color:{col};font-weight:600\">{c:+.2f}%</span> &middot; Stooq {ts_dato}';"
         )
 
     if 'cb.f' in prices:
-        js_lines.append(f'window._brentLive = {prices["cb.f"]["val"]:.2f};')
+        fn_lines.append(f"  window._brentLive={prices['cb.f']['val']:.2f};")
 
-    inject_js = '\n'.join(js_lines)
-    marker_s  = '// PRICES_INJECTED_START'
-    marker_e  = '// PRICES_INJECTED_END'
+    inject = (
+        f'\n<script>\n'
+        f'// PRICES_INJECTED_START\n'
+        f'// build.py {iso_date} kl. {now_str}\n'
+        f'document.addEventListener("DOMContentLoaded", function() {{\n'
+        + '\n'.join(fn_lines) + '\n'
+        f'}});\n'
+        f'// PRICES_INJECTED_END\n'
+        f'</script>\n'
+    )
 
-    if marker_s in html:
-        html = re.sub(
-            rf'{re.escape(marker_s)}.*?{re.escape(marker_e)}',
-            f'{marker_s}\n{inject_js}\n{marker_e}',
-            html, flags=re.DOTALL
-        )
-        print(f"  Priser injisert (oppdaterte eksisterende blokk)")
-    else:
-        html = html.replace(
-            "document.addEventListener('DOMContentLoaded', initAnalyseProgress);",
-            f"{marker_s}\n{inject_js}\n{marker_e}\n\n"
-            "document.addEventListener('DOMContentLoaded', initAnalyseProgress);",
-            1
-        )
-        print(f"  Priser injisert (ny blokk)")
+    # Injiser rett før </body>
+    html = html.replace('</body>', inject + '</body>')
+    print(f"  Priser injisert rett før </body>")
 else:
     print("  Ingen priser — beholder fallback-verdier")
 
-# ── Les og injiser brief ──────────────────────────────────────────────────────
+# ── Brief ─────────────────────────────────────────────────────────────────────
 brief_file = BRIEFS / f"Geopolitisk oppdatering {iso_date}.md"
 if brief_file.exists():
     md = brief_file.read_text(encoding='utf-8')
