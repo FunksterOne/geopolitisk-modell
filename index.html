@@ -1652,31 +1652,55 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 
   <!-- Markedsstatus per 1. april -->
-  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px">
+  <!-- Rad 1: Energi og metaller -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px">
     <div class="stat-card" style="border-left:3px solid var(--amber)">
-      <div class="stat-label">Brent spot</div>
-      <div class="stat-value" style="font-size:18px;color:var(--amber)" id="kap-brent-val">~101.81 $</div>
-      <div class="stat-sub" id="kap-brent-sub">Stooq cb.f · 1. apr. 2026</div>
+      <div class="stat-label">Brent råolje</div>
+      <div class="stat-value" style="font-size:18px;color:var(--amber)" id="kap-brent-val">—</div>
+      <div class="stat-sub" id="kap-brent-sub">Stooq cb.f</div>
     </div>
     <div class="stat-card" style="border-left:3px solid var(--amber)">
       <div class="stat-label">Gull spot</div>
-      <div class="stat-value" style="font-size:18px;color:var(--amber)" id="kap-gold-val">$4765</div>
-      <div class="stat-sub" id="kap-gold-sub">Stooq gc.f · 1. apr. 2026</div>
+      <div class="stat-value" style="font-size:18px;color:var(--amber)" id="kap-gold-val">—</div>
+      <div class="stat-sub" id="kap-gold-sub">Stooq gc.f</div>
     </div>
     <div class="stat-card" style="border-left:3px solid var(--navy)">
       <div class="stat-label">Kobber COMEX</div>
-      <div class="stat-value" style="font-size:18px;color:var(--navy)" id="kap-copper-val">$5.609/lb</div>
-      <div class="stat-sub" id="kap-copper-sub">Stooq hg.f · 1. apr. 2026</div>
-    </div>
-    <div class="stat-card" style="border-left:3px solid var(--navy)">
-      <div class="stat-label">US 10Y Treasury</div>
-      <div class="stat-value" style="font-size:18px;color:var(--navy)" id="kap-us10y-val">4.325%</div>
-      <div class="stat-sub" id="kap-us10y-sub">Stooq 10yusy.b · 1. apr. 2026</div>
+      <div class="stat-value" style="font-size:18px;color:var(--navy)" id="kap-copper-val">—</div>
+      <div class="stat-sub" id="kap-copper-sub">Stooq hg.f</div>
     </div>
     <div class="stat-card" style="border-left:3px solid var(--red)">
       <div class="stat-label">LME Aluminium</div>
-      <div class="stat-value" style="font-size:18px;color:var(--red)">~3 500 $/t</div>
-      <div class="stat-sub">+52 % siden Hormuz · LME</div>
+      <div class="stat-value" style="font-size:18px;color:var(--red)" id="kap-alum-val">—</div>
+      <div class="stat-sub" id="kap-alum-sub">Stooq lad.f</div>
+    </div>
+  </div>
+  <!-- Rad 2: Renter og valuta -->
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px">
+    <div class="stat-card" style="border-left:3px solid var(--navy)">
+      <div class="stat-label">US 10Y Treasury</div>
+      <div class="stat-value" style="font-size:18px;color:var(--navy)" id="kap-us10y-val">—</div>
+      <div class="stat-sub" id="kap-us10y-sub">Stooq 10yusy.b</div>
+    </div>
+    <div class="stat-card" style="border-left:3px solid var(--navy)">
+      <div class="stat-label">Tysk 10Y Bund</div>
+      <div class="stat-value" style="font-size:18px;color:var(--navy)" id="kap-de10y-val">—</div>
+      <div class="stat-sub" id="kap-de10y-sub">Stooq 10ydeuy.b</div>
+    </div>
+    <div class="stat-card" style="border-left:3px solid var(--faint)">
+      <div class="stat-label">EUR/USD</div>
+      <div class="stat-value" style="font-size:18px" id="kap-eurusd-val">—</div>
+      <div class="stat-sub" id="kap-eurusd-sub">Stooq eurusd</div>
+    </div>
+    <div class="stat-card" style="border-left:3px solid var(--faint)">
+      <div class="stat-label">USD/NOK</div>
+      <div class="stat-value" style="font-size:18px" id="kap-usdnok-val">—</div>
+      <div class="stat-sub" id="kap-usdnok-sub">Stooq usdnok</div>
+    </div>
+    <div class="stat-card" style="border-left:3px solid var(--faint)">
+      <div class="stat-label">EUR/NOK</div>
+      <div class="stat-value" style="font-size:18px" id="kap-eurnok-val">—</div>
+      <div class="stat-sub" id="kap-eurnok-sub">Stooq eurnok</div>
     </div>
   </div>
 
@@ -3816,13 +3840,13 @@ function initAnalyseProgress() {
 // window._brentLive brukes fortsatt av Hormuz-kalkulatoren hvis satt av build.py
 
 // PRICES_INJECTED_START
-// Priser injisert av build.py 2026-04-01 kl. 01.04.2026 16:46
-(function(){var v=document.getElementById("kap-brent-val");var s=document.getElementById("kap-brent-sub");if(v){v.textContent="$101.36";v.title="Stooq 2026-04-01";} if(s){s.innerHTML='<span style="color:#C53030;font-weight:600">-2.16%</span> · Stooq 2026-04-01';} })()
-(function(){var v=document.getElementById("kap-wti-val");var s=document.getElementById("kap-wti-sub");if(v){v.textContent="$99.07";v.title="Stooq 2026-04-01";} if(s){s.innerHTML='<span style="color:#C53030;font-weight:600">-2.82%</span> · Stooq 2026-04-01';} })()
-(function(){var v=document.getElementById("kap-gold-val");var s=document.getElementById("kap-gold-sub");if(v){v.textContent="$4782";v.title="Stooq 2026-04-01";} if(s){s.innerHTML='<span style="color:#14532D;font-weight:600">+1.69%</span> · Stooq 2026-04-01';} })()
-(function(){var v=document.getElementById("kap-copper-val");var s=document.getElementById("kap-copper-sub");if(v){v.textContent="$5.607";v.title="Stooq 2026-04-01";} if(s){s.innerHTML='<span style="color:#C53030;font-weight:600">-0.80%</span> · Stooq 2026-04-01';} })()
-(function(){var v=document.getElementById("kap-us10y-val");var s=document.getElementById("kap-us10y-sub");if(v){v.textContent="4.313%";v.title="Stooq 2026-04-01";} if(s){s.innerHTML='<span style="color:#14532D;font-weight:600">+0.42%</span> · Stooq 2026-04-01';} })()
-window._brentLive = 101.36;
+// Priser injisert av build.py 2026-04-01 kl. 01.04.2026 16:51
+(function(){var v=document.getElementById("kap-brent-val");var s=document.getElementById("kap-brent-sub");if(v){v.textContent="$101.26";v.title="Stooq 2026-04-01";} if(s){s.innerHTML='<span style="color:#C53030;font-weight:600">-2.26%</span> · Stooq 2026-04-01';} })()
+(function(){var v=document.getElementById("kap-wti-val");var s=document.getElementById("kap-wti-sub");if(v){v.textContent="$98.97";v.title="Stooq 2026-04-01";} if(s){s.innerHTML='<span style="color:#C53030;font-weight:600">-2.92%</span> · Stooq 2026-04-01';} })()
+(function(){var v=document.getElementById("kap-gold-val");var s=document.getElementById("kap-gold-sub");if(v){v.textContent="$4786";v.title="Stooq 2026-04-01";} if(s){s.innerHTML='<span style="color:#14532D;font-weight:600">+1.77%</span> · Stooq 2026-04-01';} })()
+(function(){var v=document.getElementById("kap-copper-val");var s=document.getElementById("kap-copper-sub");if(v){v.textContent="$5.614";v.title="Stooq 2026-04-01";} if(s){s.innerHTML='<span style="color:#C53030;font-weight:600">-0.70%</span> · Stooq 2026-04-01';} })()
+(function(){var v=document.getElementById("kap-us10y-val");var s=document.getElementById("kap-us10y-sub");if(v){v.textContent="4.307%";v.title="Stooq 2026-04-01";} if(s){s.innerHTML='<span style="color:#14532D;font-weight:600">+0.28%</span> · Stooq 2026-04-01';} })()
+window._brentLive = 101.26;
 // PRICES_INJECTED_END
 
 document.addEventListener('DOMContentLoaded', initAnalyseProgress);
