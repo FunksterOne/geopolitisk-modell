@@ -685,6 +685,12 @@ input[type=range]::-webkit-slider-thumb {
 <header class="topbar">
   <div class="topbar-brand">Geopolitisk Systemanalyse 2026</div>
   <div class="topbar-meta"><span id="dyn-topbar-date"></span> &nbsp;·&nbsp; Halvard Nordang — Affectum AS</div>
+  <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
+    <input type="text" id="search-input" placeholder="Søk i modellen..." oninput="runSearch(this.value)"
+      style="font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text);width:180px;outline:none">
+    <div id="search-count" style="font-size:10px;color:var(--faint);white-space:nowrap"></div>
+    <button onclick="clearSearch()" style="font-size:10px;color:var(--faint);background:none;border:none;cursor:pointer;padding:0 4px">✕</button>
+  </div>
   <div class="topbar-badge">KONFIDENSIELT</div>
 </header>
 
@@ -722,6 +728,9 @@ input[type=range]::-webkit-slider-thumb {
 
   <div class="nav-item" data-panel="nyheter" onclick="nav(this)">
     <span class="nav-dot" style="background:#0E7490;box-shadow:0 0 0 2px rgba(14,116,144,.3)"></span>Nyheter
+  </div>
+  <div class="nav-item" data-panel="status" onclick="nav(this)">
+    <div class="nav-dot" style="background:#0F6E56"></div>Modellstatus
   </div>
   <div class="nav-item" data-panel="logg" onclick="nav(this)">
     <span class="nav-dot" style="background:#B8B7B0"></span>Modellens tilblivelse
@@ -2022,6 +2031,7 @@ input[type=range]::-webkit-slider-thumb {
     <div class="mtab" data-macro="europa" onclick="setMacro('europa',this)">Europa</div>
     <div class="mtab" data-macro="kina" onclick="setMacro('kina',this)">Kina</div>
     <div class="mtab" data-macro="energi" onclick="setMacro('energi',this)">Energi & markeder</div>
+    <div class="mtab" data-macro="norge" onclick="setMacro('norge',this)" style="border-left:2px solid var(--navy)">🇳🇴 Norge</div>
   </div>
 
   <!-- ── SAMMENLIGNING ── -->
@@ -2394,6 +2404,91 @@ input[type=range]::-webkit-slider-thumb {
       <div class="relevance-label">Analytisk nøkkelpunkt — Goodspeed · Taleb · kapitalimplikasjoner</div>
       Goodspeed dokumenterer at energisjokk er involvert i 10 av 12 resesjoner i USA siden 1945. Hormuz-stengningen er nøyaktig den typen brå og diskontinuerlig energisjokk han beskriver — ikke en gradvis prisstigning, men en strukturell forstyrrelse av forsyningskjeden. Dallas Feds estimat på −2,9 prosentpoeng annualisert BNP-effekt ved ett kvartal stengning er en Goodspeed-type-1-hendelse. Talebs poeng: ingen av de eksisterende modellene er kalibrert for dette. March 2026 CPI-dataene (2,4 %) reflekterer ennå ikke Hormuz-effekten — det vil komme i april og mai-rapportene.
     </div>
+  </div>
+
+  <!-- ── NORGE ── -->
+  <div class="macro-panel" id="macro-norge">
+    <div class="section-label" style="margin-top:0">Norges økonomi · SSB tabell 12880 · Oppdatert 17. mars 2026</div>
+
+    <!-- Nøkkeltall 2025/2026 -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+      <div class="stat-card" style="border-left:3px solid var(--navy)">
+        <div class="stat-label">BNP Fastlands-Norge</div>
+        <div class="stat-value" style="font-size:18px">1,8 %</div>
+        <div class="stat-sub">2025 · prognose 2,0 % (2026)</div>
+      </div>
+      <div class="stat-card" style="border-left:3px solid var(--red)">
+        <div class="stat-label">KPI-vekst</div>
+        <div class="stat-value" style="font-size:18px;color:var(--red)">3,0 %</div>
+        <div class="stat-sub">2025 · KPI-JAE 3,1 % · prognose 3,2 % (2026)</div>
+      </div>
+      <div class="stat-card" style="border-left:3px solid var(--navy)">
+        <div class="stat-label">Arbeidsledighet (AKU)</div>
+        <div class="stat-value" style="font-size:18px">4,5 %</div>
+        <div class="stat-sub">2025 (nivå) · prognose 4,4 % (2026)</div>
+      </div>
+      <div class="stat-card" style="border-left:3px solid var(--navy)">
+        <div class="stat-label">Pengemarkedsrente</div>
+        <div class="stat-value" style="font-size:18px">4,4 %</div>
+        <div class="stat-sub">2025 (nivå) · prognose 4,2 % (2026)</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px">
+      <div class="stat-card" style="border-left:3px solid var(--green)">
+        <div class="stat-label">Driftsbalanse</div>
+        <div class="stat-value" style="font-size:18px;color:var(--green)">776 mrd kr</div>
+        <div class="stat-sub">2025 · prognose 946 mrd kr (2026)</div>
+      </div>
+      <div class="stat-card" style="border-left:3px solid var(--amber)">
+        <div class="stat-label">Råoljepris SSB-prognose</div>
+        <div class="stat-value" style="font-size:18px;color:var(--amber)">68 $/fat</div>
+        <div class="stat-sub">2025 · prognose 78 $/fat (2026) — før Hormuz</div>
+      </div>
+      <div class="stat-card" style="border-left:3px solid var(--faint)">
+        <div class="stat-label">NOK per euro</div>
+        <div class="stat-value" style="font-size:18px">11,72</div>
+        <div class="stat-sub">2025 (nivå) · prognose 11,20 (2026)</div>
+      </div>
+      <div class="stat-card" style="border-left:3px solid var(--green)">
+        <div class="stat-label">BNP Total</div>
+        <div class="stat-value" style="font-size:18px">1,4 %</div>
+        <div class="stat-sub">2025 · inkl. petroleum</div>
+      </div>
+    </div>
+
+    <!-- Historisk tabell -->
+    <div class="section-label">Historisk utvikling — SSB tabell 12880</div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Indikator</th>
+          <th>2022</th>
+          <th>2023</th>
+          <th>2024</th>
+          <th>2025</th>
+          <th>2026P</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>BNP Fastlands-Norge (% vekst)</td><td class="num">5,2</td><td class="num">0,9</td><td class="num">0,6</td><td class="num">1,8</td><td class="num" style="color:var(--navy);font-weight:600">2,0</td></tr>
+        <tr><td>KPI (% vekst)</td><td class="num">5,8</td><td class="num">5,5</td><td class="num">3,2</td><td class="num">3,0</td><td class="num" style="color:var(--red)">3,2</td></tr>
+        <tr><td>KPI-JAE (% vekst)</td><td class="num">3,9</td><td class="num">6,2</td><td class="num">3,6</td><td class="num">3,1</td><td class="num" style="color:var(--red)">3,1</td></tr>
+        <tr><td>Arbeidsledighet % (nivå)</td><td class="num">3,2</td><td class="num">3,6</td><td class="num">4,0</td><td class="num">4,5</td><td class="num">4,4</td></tr>
+        <tr><td>Driftsbalanse (mrd kr)</td><td class="num">1 652</td><td class="num">908</td><td class="num">807</td><td class="num">776</td><td class="num" style="color:var(--green);font-weight:600">946</td></tr>
+        <tr><td>Råoljepris (USD/fat)</td><td class="num">99</td><td class="num">82</td><td class="num">80</td><td class="num">68</td><td class="num" style="color:var(--amber)">78</td></tr>
+        <tr><td>Pengemarkedsrente % (nivå)</td><td class="num">2,1</td><td class="num">4,2</td><td class="num">4,7</td><td class="num">4,4</td><td class="num">4,2</td></tr>
+        <tr><td>NOK per euro (nivå)</td><td class="num">10,10</td><td class="num">11,42</td><td class="num">11,63</td><td class="num">11,72</td><td class="num">11,20</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Analytisk kobling -->
+    <div class="section-label">Analytisk kobling til modellen</div>
+    <div class="diag-box">
+      <div class="diag-label">Norge i Hormuz-konteksten</div>
+      SSB-prognosen for råoljepris i 2026 er 78 $/fat — utarbeidet i mars 2026 og reflekterer ikke Hormuz-stengningen. Gjeldende Brent ~101 $/fat er 30 % over SSBs prognose. Driftsbalansen på 946 mrd kr (prognose) er en undervurdering: høyere oljepris øker norske eksportinntekter direkte. <strong>Norge er en strukturell vinner i Scenario B og C</strong> — energieksportør med sunn statsbalanse, lav gjeldsgrad og stor petroleumsfond-buffer. Motvekt: kronestyrkelse (NOK/EUR 11,20 prognose) komprimerer eksportkonkurranseevne for fastlandsøkonomien. KPI 3,2 % (2026P) gir Norges Bank begrenset rom for rentekutt — renten holdes høy lengre enn andre sentralbanker.
+    </div>
+    <div class="footnote">Kilde: SSB tabell 12880 — Makroøkonomiske hovedstørrelser. Regnskap og prognoser 1991–2029 · Oppdatert 17. mars 2026</div>
   </div>
 
 </div>
@@ -3054,6 +3149,68 @@ input[type=range]::-webkit-slider-thumb {
 
 
 <!-- MODELLENS TILBLIVELSE -->
+<!-- ─── MODELLSTATUS ─── -->
+<div class="panel" id="panel-status">
+  <div class="panel-header">
+    <div class="panel-title">Modellstatus</div>
+    <div class="panel-sub">Sjekkliste: holder de analytiske forutsetningene fortsatt? · Oppdateres manuelt i daglig brief</div>
+  </div>
+
+  <div class="section-label" style="margin-top:0">Goodspeeds tre resesjonstriggers</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px">
+    <div class="stat-card" style="border-left:3px solid var(--red)">
+      <div class="stat-label">Trigger 1 — Energisjokk</div>
+      <div class="stat-value" style="color:var(--red);font-size:16px">● Aktiv</div>
+      <div class="stat-sub">Brent ~101 $ · +55 % i mars · Hormuz dag 31</div>
+    </div>
+    <div class="stat-card" style="border-left:3px solid var(--red)">
+      <div class="stat-label">Trigger 2 — Krig</div>
+      <div class="stat-value" style="color:var(--red);font-size:16px">● Aktiv</div>
+      <div class="stat-sub">USA/Iran-konflikt pågår · Hegseth exit-signal</div>
+    </div>
+    <div class="stat-card" style="border-left:3px solid var(--red)">
+      <div class="stat-label">Trigger 3 — Kredittkontraksjon</div>
+      <div class="stat-value" style="color:var(--red);font-size:16px">● Aktiv</div>
+      <div class="stat-sub">Fed handlingslam · PCE 2,7 % hindrer kutt</div>
+    </div>
+  </div>
+
+  <div class="section-label">Hormuz-status</div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px">
+    <div class="stat-card" style="border-left:3px solid var(--red)">
+      <div class="stat-label">Hormuz-stredet</div>
+      <div class="stat-value" style="color:var(--red);font-size:16px">● Stengt</div>
+      <div class="stat-sub">Dag 31 per 1. april 2026 · Iran erklærte 4. mars</div>
+    </div>
+    <div class="stat-card" style="border-left:3px solid var(--amber)">
+      <div class="stat-label">USA exit-signal</div>
+      <div class="stat-value" style="color:var(--amber);font-size:16px">● Nytt</div>
+      <div class="stat-sub">31. mars · Hegseth + Trump signaliserer 6–8 uker</div>
+    </div>
+  </div>
+
+  <div class="section-label">Mirans forutsetninger</div>
+  <div style="display:grid;grid-template-columns:repeat(1,1fr);gap:4px;margin-bottom:20px">
+    <div class="card" style="padding:10px 14px">
+      <div style="display:grid;grid-template-columns:1fr auto;gap:4px 20px">
+        <span style="font-size:11.5px;color:var(--muted)">Valutakurskompensasjon demper inflasjon</span><span style="font-size:11px;font-weight:700;color:var(--red)">Brutt</span>
+        <span style="font-size:11.5px;color:var(--muted)">Billig energi som prisdempende faktor</span><span style="font-size:11px;font-weight:700;color:var(--red)">Brutt</span>
+        <span style="font-size:11.5px;color:var(--muted)">Gradvis implementering minimerer volatilitet</span><span style="font-size:11px;font-weight:700;color:var(--red)">Brutt</span>
+        <span style="font-size:11.5px;color:var(--muted)">Federal Reserve-koordinering er mulig</span><span style="font-size:11px;font-weight:700;color:var(--red)">Brutt</span>
+        <span style="font-size:11.5px;color:var(--muted)">Stabile makrobetingelser for trinnvis gjennomføring</span><span style="font-size:11px;font-weight:700;color:var(--red)">Brutt</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Fishmans asymmetri-status</div>
+  <div class="diag-box">
+    <div class="diag-label">Strukturell skade — irreversibel uavhengig av krigsutgang</div>
+    Yuan-toll-regime ved Hormuz er etablert. De-dollarisering akselererer. Perera Train 4 og 6 fysisk ødelagt. Bangladesh-avling 2026 tapt. 200 ISO-heliumcontainere fordampet. Fishmans kjernepåstand: skaden er strukturell uavhengig av når krigen slutter. <strong>Status: bekreftet aktiv per 1. april 2026.</strong>
+  </div>
+
+  <div class="footnote" style="margin-top:16px">Modellstatus oppdateres manuelt i daglig brief · Nøkkelord: HORMUZ_STATUS, GOODSPEED_TRIGGER, MIRAN_STATUS</div>
+</div>
+
 <div class="panel" id="panel-logg">
   <div class="panel-header">
     <div class="panel-title">Modellens tilblivelse</div>
@@ -3488,33 +3645,6 @@ input[type=range]::-webkit-slider-thumb {
     </div>
   </div>
 
-  <!-- BRIEF -- 1. april 2026 -->
-  <div style="margin-bottom:20px">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#0E7490">1. april 2026</div>
-      <div style="flex:1;height:1px;background:var(--border)"></div>
-      <div style="font-size:10px;color:var(--faint)">Automatisk utkast</div>
-    </div>
-    <div class="card"><div style="font-size:10px;background:#FEF08A;color:#713F12;padding:4px 10px;border-radius:3px;margin-bottom:8px;font-weight:600">Automatisk utkast</div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px">Geopolitisk nyhetsoppdatering -- 1. april 2026</div><div style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px"><div style="border-left:3px solid #C53030;padding-left:12px"><div style="font-size:11px;font-weight:700;color:#C53030;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Hormuz og energi</div><div style="font-size:12px;line-height:1.7;color:var(--text)">- <a href="https://news.google.com/rss/articles/CBMijgFBVV95cUxNU2pIMnB2VDJ0NGRYRTNiTElCUVJtc0JLaG1Pa0dGdTZCdjhxejBVRE5WR3VoV0k5aVBMcFRwQnNrMHZmZHVvaC1ZcjRBMjh6bFozdE5kUDhlSlBNa2p3X2YwRjdFdmo1WWJhTkhWV2hRQk03RUhjbGVuTUVsZnhVQ1hsZEJ0dFJiWVlYeWdB?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">Why Reopening the Strait of Hormuz Matters for the U.S. Economy - The New York Times</a> (The New York Times)
-- <a href="https://news.google.com/rss/articles/CBMikAFBVV95cUxPR2JBUlo0a28zTFF1cE9tWERGU19Nc3FXQTJjbEU0YlY1d2o5ZDJWdGhHVThCVnNKeUswTWs5Q1hfdFB5c0hzSGxSSWtZc0doRm5ETkdCTGEwU0VGT1pDMlpKcWgtZEt0NWNRZE5wbDB3Snk2U0liSVM5NlNLTTRnczl0V0x3SlZ5UmRVZ3dOcWLSAZYBQVVfeXFMTTlZc2Z3UW9YcmZ2NTNia2RlcF9xMXo1anFpMHN6YmRtX2pwZmZHZFpmdDZwQm50NW5zQXRvSGg5bEVUdG9jQThzMG83Z2hHQV8zcmlTdVJJbUxCLWpRRnZZS05RYzhfSzFraDNiZHZ1MEIxMTdOTjRrSnRySEtOQ0UwRG96dWhpdWFlSW5tV2pFcGJzM2ZR?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">After Trump's claim of a "present," data show most ships getting through Strait of Hormuz are linked to Iran - CBS News</a> (CBS News)
-- <a href="https://news.google.com/rss/articles/CBMiigNBVV95cUxPZjctSVEyb0Rsd09ubDNjVkI0c0JBWkQ2ZDBITU03bHd5RHRaSjBfODFsZTN0Um5VaXRfcWFaekkwZkRJd2NNRE9EY3lpbGRVdTcwYmZhWmM5S0dlNXB6RklSVU9lZFpaTk9jU0d6M2ZfcEdPam5DRHZyYkI1V0d0SlUtMHV3N2FtRm5YcHpYYnZ2dk56ZEg4RkRVMmxyUXBaS0dXcldVNklVUFRGNTVUQ210MnQ4WmwtMFZTOXA5azNockcwUXMtNlA4RlY4Skh2Z20xV2N2M3J0TEpTWkJLaFpGbjdvdTVLQWkwSTlqc0FZUGc4Z3JXUzR6UW5YbkhnbTRoSEtWaFlPV1BwWS0xN1FnNFF1TURzdHExUGNtUHE5b3JkLVo1Z09YMThwRDhEQUxmTm1oZDFBbVI5cUhtVTNnRkUwMFk1Q0JfUGg1WGhhWmdSWmJrOHlkSlA1cXp4MGpHUzFHRk9QamlIWGZuWXQtdmh2WndxT2h3X3ZLR2dQNEMtamJhenN3?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">Exclusive | Trump Tells Aides He’s Willing to End War Without Reopening Hormuz - wsj.com</a> (wsj.com)
-- <a href="https://news.google.com/rss/articles/CBMi8AFBVV95cUxNUk1ZQWF6THpFTzlsWFhFcHYtYjRWN1VBVlNDQWVrSnJfYjZwVUFNdjdhMEh1Y2otZGRuZjlEZlZWcDFmYUZLbWFHNEh2ZTBITURyMjlIdnU4VS1aRHpHSHAwOFB0LUdpblVXeFh6b0puQWhpNnhiWTJiWDVKYUsxSllXTUcwMEdFclNZZlkzMjNJemtGcmRpZGs3aTg5dDF3MzZsNTk3dXhvS0Zyc2g4WV9NekhnSEUtYkQxN2pfSm5vSnUtYnRPaWE2c3lLRm1EVENYVlAyVjl4MnBDU2s0aTkyank4RnhYbkpSQkNhNm0?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">Trump tells Post war against Iran won’t last ‘much longer’ —Strait of Hormuz will reopen ‘automatically’ after US exit - New York Post</a> (New York Post)</div></div><div style="border-left:3px solid #C53030;padding-left:12px"><div style="font-size:11px;font-weight:700;color:#C53030;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Iran og Midtosten</div><div style="font-size:12px;line-height:1.7;color:var(--text)">- <a href="https://news.google.com/rss/articles/CBMiuwFBVV95cUxOQkNNSHlXV2dyc2dEWng3bm84T3dGdEhpdTVqNFFoQXNydDhsUzdYRkVYT1FmNUsxQlhWR1p1bHFRendVVGFrb0RJdVB2Zjhydno2MHFId05HYmtKb1Vfei1Ha0dLYW0wWU8xSlRIRHU3dWRQSXN2OVFNT0VFTlIyaHEwYlUyR1BFWFV1VXp2bGlLcE9NZGJXbExUbzE2eHVldVFGWWVSSl9vX0NneURyeFp0WjFER0VzOFZ3?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">US to leave Iran 'pretty quickly' and return if needed, Trump tells Reuters - Reuters</a> (Reuters)
-- <a href="https://news.google.com/rss/articles/CBMicEFVX3lxTFB6aU13TFZ2ZmJzaGtYSWNCRS1EbUZqeW5aUW16ME5SaEFIVS1MLTBEZUJ0eVkxMUVld1BTbEV0TE5GYldESUNrQVJqS05jUnpiU2hqOVhUWDg1eGhmOVZ4Q04xTzdIQ25kR2FIWkF1bTY?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">The Iran War may dull Dubai’s glittering image - Northeastern Global News</a> (Northeastern Global News)
-- <a href="https://news.google.com/rss/articles/CBMilAFBVV95cUxNWG1BNXpZRnIwZ3NvQVEtZXRSdThRa3o1bHlObmNIR0tyajVmemgyWlQ4UG1uMklDZmxzZzRGNW9YTUJHdURiZ0NYbmpZU1RUYU5mYTVEUGtFSUdBNUY0ZzFOTHh5c1BrTDFSdmUta0FYTk41bWEya2V6V2RvaHl5WGt6bjYxY2JaY0V5WjZqcHZEYm9J?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">Trump's Iran threats alarm war crimes experts - NBC News</a> (NBC News)
-- <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE5XY3c4aE5zNTBVWlJ0V0VCTjdneGlad3Zscjh1emhpSTgyV1dKdzZ2N3pmTG9vclp6dW5OR3N0V0VvMVRNQl9xcVl1Y0VNeTY3bG5zTThla3Radw?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">Israel's perpetual war with Iran may be hard to win with military might alone - BBC</a> (BBC)</div></div><div style="border-left:3px solid #C63D2F;padding-left:12px"><div style="font-size:11px;font-weight:700;color:#C63D2F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Kina og ravarer</div><div style="font-size:12px;line-height:1.7;color:var(--text)">- <a href="https://news.google.com/rss/articles/CBMitwFBVV95cUxQY2lrZFlmSWlQbVdWUXhTZEMtTllZUV9TUkd4S0w2LWNtVkZlLTZjQmlPQ1pSakdDaHdlZlVWcDN0RjBkb1JLQndERE4tdkZDS09QMUNiTW4xWkR2YjJ5ci1BcTFvWElHRklSaktxdUMyMGtWdzk0QzJiUVRRbjJmS0s0elh0amliTTFoaE1seGlaNkl4dm5lb3djR2FLWjZUdWN0VC1YWlJ1YkcwbFdzX1FybmJsN3M?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">China's rare earth exports rise, shipments to US fall - Reuters</a> (Reuters)
-- <a href="https://news.google.com/rss/articles/CBMiuwFBVV95cUxPZFZLaU5JRWo5Vk02SWRENy1zaFMtUTk1dmpta09ZX0hBMm9BUXJJMUJvRlItcGdValhSazR0T2UtLWtIVHVGT1oyVDd3UGtVLXZhRkMycDFUdU94ME9YZlplQ1pONTZwYklLSXJtX3hTUUVQNHdwQS1uTE9PTmRGWEZ5Ni1zM1d6V1lPNU1GRVBJdE4xa284LUZwN3RQa3o4aWxJbDNxVHlsTC1nTFRpUjhPVDlmV3NoOEI4?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">The 6,000-Meter Mirage: Is Japan Extracting Rare Earths or Political Capital? - chinausfocus.com</a> (chinausfocus.com)
-- <a href="https://news.google.com/rss/articles/CBMiqwFBVV95cUxONlZBZ1R2ZjR5NE1wZV95cEhUdFd4XzZFMWFPSGRqWGhqODduZzFEY0JER20xNjRLRlVWeDJqUWZERnNuV1l5WmxpOHBMSzNWV2d3cXI1UVc1WVNHMXdmSFFQS0ZhaUJURlV4YUNwdTU4bTBZbFZUYzUtSlRibDdqMVNhNEJ6MWpGQUx6TWkzQWU2RXhJSzRhVEdmVEUzcTJNSzN3QlRfendzTUk?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">Beijing hold’em: European cards against Chinese coercion - pubaffairsbruxelles.eu</a> (pubaffairsbruxelles.eu)
-- <a href="https://news.google.com/rss/articles/CBMipwFBVV95cUxQd0g5Y25JX2lMSjNvd052bnNCajdLYnJmOHdCLTN6ODhERklrOWdTWUZaSTJXYXJ3TWJyWEJlYUlLS0dPTjNaOVBXc0RsOGFtNkp1QnEtSGlxempHLW90UU5lMzVESnBVMENfRjlyLVpQTWg3a2ZUbGRMSEI1a2lJMC12dG9pcHMwS0FnYVRKaThMbUZuRnR5Y1RQQ1JyODh3TUsxandhWQ?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">Japan and France Forge Rare Earth Partnership to Counter China’s Supply Dominance - thedeepdive.ca</a> (thedeepdive.ca)</div></div><div style="border-left:3px solid #1F3864;padding-left:12px"><div style="font-size:11px;font-weight:700;color:#1F3864;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">NATO og allianser</div><div style="font-size:12px;line-height:1.7;color:var(--text)">- <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxQcU1tTG1DbUt5cjNwWG53dFVwVFR3UEhxeWIwU3ZrUFJnY3FEMGl4Y05jeHI3QWRWUkQzN0w5ZmlVSGl6bjRhN2hzek5BeUhUakVkLWc0SjVObV9mX3BNcEhpbF9NRUx0WFdpS0UtTWpNdkxMUHliZkxXQzBXV194X0htd05xdTdJT3l0d1VZbzRhVFhNNUY1clBQSVlDLTdJRXNz0gGoAUFVX3lxTFBhSFJlUndsdHFpTU9nUFlEakxyc3hQMFpQbW5lc04tUjFVcHh0MXFUM0E4WjF0TjlBd2xENzAwd2IzaTdxekgtR3ZFSDBfblBYenRYbWtJRkRuYmJ6bXdQa01WN1gyenMtRUk0eFB4alN5Z29seHlIazNpcm5BWmlKQjJ3RXhRTXd4OG00ZW51ZGpya0J0R1AxdVhKWWY5YjNVdU5HbUtseg?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">Russia claims to take full control of Ukraine’s Luhansk region - Al Jazeera</a> (Al Jazeera)
-- <a href="https://news.google.com/rss/articles/CBMiqAFBVV95cUxQWjQ4TWxhVG5RZXFlUG4tc1hfc1BKOGEteGpHWG50b0VYRUlUUVZWcDRzbWJjY0d6eDVDdWxKUnFtZC00YXlnazBZQjJWdlp3TnFrcHF4MFY1V3dzZW1JWmx6ZHZwRHc1ZHZGSE5ZclRKVUlCRnZnT3RuS1BWMWVzYmhQMWp3Y2ZsZ2x3aGtjalFQSmxfMHlzY28zQ1ZKNXZ0eGMxYW12Zm4?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">Russian Offensive Campaign Assessment, March 31, 2026 - Institute for the Study of War</a> (Institute for the Study of War)
-- <a href="https://news.google.com/rss/articles/CBMiywFBVV95cUxQSU0wSVdlRHIxZDNuVjZ2V1dQaTdFQTdHV040R294cklxWGZyUDkxYTZoczNqaWtWRWJCczlZbGlaMkFwMGRZemFPc21URTFQRDllMnN3OFltMlRPUG5mODBoUXB3MlNMTEtIMnJVNk43ci1PUTd0c3VPNl9Ebko4YXI4N2xWNDBFUlYxUDN6aW9MSDJVeDhXVkxXVzVzSHJuMk8wc2hPR3llR3dUcUthRHgxaTFDNmZ3ZUVndldpZDlDNi0wbXNybU9STdIB0AFBVV95cUxOazVMb0VkX3VKUjVXYjBzazdfdG8wa3NrcWl4U2s2clo0VWdBdHNrQjlOaHVMTDhVdHZlUzhqLWEtR25SdFo2WWMzZzQ0cnF1YXdfTi1ZcDQ3UUx0WldqMjk5Z2ZXMFQzNHU3ci0wdk9YR3RXdjhFVWkxcjZ5eEljRWlhWURzWlNQRU5LSHBQd2M3TnI4czVYN3VxOWtmSGkxS3ZxMEtaWHBoa3VKeTAtSUNELU0xTDhyTGJkRUdUd3Z3NnM1akxKWkt5VjNjOS1Y?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">Kyiv denies Russian claims of full control over Ukraine's Luhansk region ahead of U.S. envoy talks - pbs.org</a> (pbs.org)
-- <a href="https://news.google.com/rss/articles/CBMijgFBVV95cUxQOXNOWGVDZm9BZ0FCaXhTYnd0VzNWejlOdExlZUEyRVozdndGUnZXTjUwZS1WMHVxUWRKbU50NU1DWUxMVTlrY0E5YVgteEVRVDdaa21Ebll4NHU1bHlDcnczWmtQZTJ6YXhrdHNCSkFkT3BhMElfVndXR3d5VTh3RDJoQU1HR3lzR2l0VDF3?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">The Iran Conflict Is Becoming a Russia-Ukraine Proxy War - cfr.org</a> (cfr.org)</div></div><div style="border-left:3px solid #0E7490;padding-left:12px"><div style="font-size:11px;font-weight:700;color:#0E7490;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Markeder og makro</div><div style="font-size:12px;line-height:1.7;color:var(--text)">- <a href="https://news.google.com/rss/articles/CBMivwFBVV95cUxOVGdLbTAzRjdrQ0lHT256dDg1eF9ydkF6RURjUzdqdDdrVjJ5MXlRWW4xdjQyb1RqQmcya3VfLUctTnNfSW83RWY2MVFFNE1hZlBVV3QxdHNGeTNnVllQeUhyV3l1bjcwenVqb3k2SDFhQy1kZ0JCMDN6c21sX0hGZHRHdUZ5YnJWQ1V3bnFpYUFreTBsN3FjYWxoeTBOeUx3NWtJeVF1U1M4YlJJM0c4UGNTQU90THIyWDBkSjVjb9IBxAFBVV95cUxOWVp6WDNrSWNwVk1Ya3RSQTJhV0l2dzY3c2JPc3Nhbnk1ZEVGNkVScWxNQTJUNEpram9CekZ4MW05OExmUUlaWnBucG1xTnVkaU1GN1hIVm84RlVWZ1k1bXlFSDljdzhqUUNQZzUxUDk0UERhTk83NjJMMHdicTRBaTBxdk5VejlYS1ZRZzAtbWVYcE44UkJYcU1iT2dSbHB1eTdFeWJmdURCcU1hcFFVa2dWMEJxWlpPTHVkS0FPRHdodllH?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">Markets now see the Fed's next move as a potential rate hike as inflation fears mount - CNBC</a> (CNBC)
-- <a href="https://news.google.com/rss/articles/CBMingFBVV95cUxOTkVoejNsRFVxdDNOaTlnNm41eTB2MXIyT2JBaDRiR25QNzNVVkhXcVRzcnNoSHJLbXZRR3hhWWV6cnFJb2xyeHA0N2JsNmtGLW9Rb2hublBtR2F6X3NNZWFJV3d6WDc0MzhOemdJS2RTanhmN1hfelliUFZfMXhYOU41c2VXejA4NGhDZWNBMXlrcjg2TGxESkh0aVo2QdIBowFBVV95cUxNdy15aVZGQm40bTQ1OXVQck55N19MUW93Wjg0R1cwQ0d2dms1bUgycmR6WHNwOHBGLVRZWUZYNExZNVlGQnotNmtsYUJRaFRFZldnRndFeFlkbFg0NG1PUUp2QnZrVzhzSkxrMXk5cDU3Z3BXSEN6aDZWMXB4QV9nUTFka1FRckE4NXFPQkhjLWxGMVFhbXRJN0VxUFRCR1NNVk5n?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">'Gut punch': Why Wall Street is raising recession odds amid the Iran war - abcnews.com</a> (abcnews.com)
-- <a href="https://news.google.com/rss/articles/CBMiuAFBVV95cUxPeURKcTdEWkJNcmRTbWtjZ2FieTZYVEg1UGVNWUlHV2JLOWtaMFBJQ2MteEItQXV3NDVyeEtubXVuRFZoZUVrV21URno5di1lTHU0ZWlTZ2pnNm1YYXdYd1JrV0w1LW8yNWRyMUF5STZwS2hVWGVHLWl1MnRCQmdRRjdyRXNmTEZ5QTBENTFlNWxCWDhHZVBOX1V2MmoxTEVzVGsxVS1kdG5tTVh6U2N0aDNDTnU3SFFQ?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">Federal Reserve Cuts Rates to Boost Jobs and Prevent Recession - gonzaga.edu</a> (gonzaga.edu)
-- <a href="https://news.google.com/rss/articles/CBMikwFBVV95cUxNX19PbmJFZkdSZjhBdkRic2lLWG94QVNRS2hUaW0yMG5mTGdvQkkyR2tzT3VvRVdMU1hvdUNONVc5ZV85aGJTYlJONFVBN0pLb2J5SEVSajZpMjBtNzYyWjh3Um1mR2wtejNBQW45NFAyZ3lEaDBwMVJacjcwaC1vendpclBMaWtjZGxMMGpCTW9oVmc?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">In This Crisis, the Best Investors Can Expect From the Fed Is Nothing - The New York Times</a> (The New York Times)</div></div><div style="border-left:3px solid #888780;padding-left:12px"><div style="font-size:11px;font-weight:700;color:#888780;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Norge og Norden</div><div style="font-size:12px;line-height:1.7;color:var(--text)">- <a href="https://news.google.com/rss/articles/CBMitAFBVV95cUxORDQ1NUwzRmVNdHVTVzdicDUtVVlueUdEQ2VWSWtjejZkYy1VZWhRdkVfY1EzNkZCcTJ3YUNpVmRqR2w3V2VpLWZWa2RfTGpBWUw4ZDBQenhpRnJFc1FjNXdNWDFWcWxQVTlxMEJ0LV9ZdUhGckcxVEhySldzREg5RWRfdHV2T2pjdFQybnpMMDhrbGl6YVhrUC1jMUtpUEhHM2FlUEhHenl4QU1Hbi1CekFEaks?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">Will Norges Bank Raise Interest Rates Amid the Iran War? - Morningstar Canada</a> (Morningstar Canada)
-- <a href="https://news.google.com/rss/articles/CBMivwFBVV95cUxPeDZabTU1ZDcwYnp2T2lmNm9xcURJaXdLU2xfVW5RLXF2dWpWTzVlZk9hTjhsd2NIclFVcXpMcEtDenFsdlgwYVZHUWZnc09lNFQ0RGNQblB0S3ZuWFE3N09fMW9JeFAwdU9uZlRvc1UtR1NQekZxQ18zbGtndDJmMEh3aU9YUktkaDFaaTdFVXUyUWltYjRrbDFxLVdMNGxTejNXalZOdVpyRjY1aHktU1Z2ZERDYk5JNmFHTld3SQ?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">Norway wealth fund moves towards some AI-driven decisions but with humans in control - Reuters</a> (Reuters)
-- <a href="https://news.google.com/rss/articles/CBMidEFVX3lxTE1VVUFnTmJtUXhEeTVEX1RmaDdQTllXNTRFQTVpUVlkWTRGbV9MaWRKcEdjV0tiNWNqLXQyaWY4X3V4OUN1aUwyUmhsOXljaEdyLU02LXVBbVV0c1hmTHBMNjJqeEdJWlJqVzNFWnNhR0NVYkJV?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">Norges Bank is ready to hike rates - ING THINK economic and financial analysis | ING THINK</a> (ING THINK economic and financial analysis | ING THINK)
-- <a href="https://news.google.com/rss/articles/CBMijgNBVV95cUxNalRhMEJIUGREekNFRWZUTXpza3hWcUl6djZsZEZ5UllwTzNIOWVUYThjWXVYMzl4d3FjNk5RSGphUDNCc2l6ZTM1RkVIQ2RwS2NNREk3XzZjOWpfQVo2TV80dXlRRXVBXzJqQ3U2RHRIZXVvRFNqbWJXdzVzSmVtQ3V1QjJVdGZXOXNleHBnbTN3MTR5LXhaQXFGOE9tVzFFYTF5czZYUlFzMEx4VF91eDV1WlRTR25oeEFQa2dxOE1WZ0YwMHBBMWVSZnd4UnZBd01ZMzZGY0NaWk5BSWJpR0RwNlQyS3FDcm8ybkVBWExqNFlIdzR3VDd2RU5DMk1lY29idkM0RzNoQ2NibUg5MzZybkJJVUNXTHdUS0wzUDdXcE9mY0ZVMDB1ejNBQThVT0VhWW9ubDExd0UtNElRbXA1RW9Ca0ZFeXhjSGIzeHpXUUIwdDNJSWREZkZHOUdYMFJFUnRQcWJ4ZUxMVnBtWkg3VVpzTVdVYnQ2VFNMRzV0VXVaQU1GQXJoYmM0UQ?oc=5" target="_blank" rel="noopener" style="color:var(--navy);text-decoration:underline">Norges Bank expects to lift borrowing costs this year as energy prices stoke inflation - MSN</a> (MSN)</div></div></div><div style="font-size:11.5px;line-height:1.65;background:var(--navy-lt);border-radius:var(--radius);padding:10px 12px"><strong style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid);display:block;margin-bottom:4px">Vurdering</strong>Brent handler i dag pa ~100 $/fat (-3.2%). Hormuz og Goodspeed-triggerne er aktive. *Automatisk utkast -- rediger og suppler.*</div></div>
-  </div>
   <!-- INJECT_POINT -->
 
   <!-- ══════════════════════════════════════════════════
@@ -3941,6 +4071,51 @@ function initAnalyseProgress() {
 // window._brentLive brukes fortsatt av Hormuz-kalkulatoren hvis satt av build.py
 
 document.addEventListener('DOMContentLoaded', initAnalyseProgress);
+
+// ── SØKEFUNKSJON ─────────────────────────────────────────────────────────────
+var _searchMarks = [];
+function runSearch(q) {
+  // Fjern gamle markeringer
+  _searchMarks.forEach(function(el) {
+    var p = el.parentNode;
+    if (p) p.replaceChild(document.createTextNode(el.textContent), el);
+  });
+  _searchMarks = [];
+  var cnt = document.getElementById('search-count');
+  if (!q || q.length < 2) { if (cnt) cnt.textContent = ''; return; }
+
+  var walker = document.createTreeWalker(
+    document.getElementById('content') || document.body,
+    NodeFilter.SHOW_TEXT, null, false
+  );
+  var nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+
+  var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+  var hits = 0;
+  nodes.forEach(function(node) {
+    if (!node.nodeValue.match(re)) return;
+    var frag = document.createDocumentFragment();
+    node.nodeValue.split(re).forEach(function(part, i) {
+      if (i % 2 === 1) {
+        var mark = document.createElement('mark');
+        mark.style.cssText = 'background:#FEF08A;color:#000;border-radius:2px;padding:0 1px';
+        mark.textContent = part;
+        frag.appendChild(mark);
+        _searchMarks.push(mark);
+        hits++;
+      } else {
+        frag.appendChild(document.createTextNode(part));
+      }
+    });
+    node.parentNode.replaceChild(frag, node);
+  });
+  if (cnt) cnt.textContent = hits ? hits + ' treff' : 'Ingen treff';
+}
+function clearSearch() {
+  var inp = document.getElementById('search-input');
+  if (inp) { inp.value = ''; runSearch(''); }
+}
 document.addEventListener('DOMContentLoaded', function() {
   // Sett dynamisk dato overalt
   var MONTHS = ['januar','februar','mars','april','mai','juni','juli','august','september','oktober','november','desember'];
@@ -4024,34 +4199,6 @@ function renderTruth(posts) {
 }
 
 
-</script>
-
-<script>
-</script>
-
-<script>
-</script>
-
-<script>
-</script>
-
-<script>
-// PRICES_INJECTED_START
-// build.py 2026-04-01 kl. 01.04.2026 20:46
-document.addEventListener("DOMContentLoaded", function() {
-  var e=document.getElementById('kap-brent-val');var s=document.getElementById('kap-brent-sub');if(e)e.textContent='$100.32';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-3.17%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-wti-val');var s=document.getElementById('kap-wti-sub');if(e)e.textContent='$98.87';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-3.02%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-gas-val');var s=document.getElementById('kap-gas-sub');if(e)e.textContent='$2.811';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-2.36%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-copper-val');var s=document.getElementById('kap-copper-sub');if(e)e.textContent='$5.622';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-0.55%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-gold-val');var s=document.getElementById('kap-gold-sub');if(e)e.textContent='$4786';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+1.78%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-silver-val');var s=document.getElementById('kap-silver-sub');if(e)e.textContent='$75.25';if(s)s.innerHTML='<span style="color:#C53030;font-weight:600">-0.37%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-us10y-val');var s=document.getElementById('kap-us10y-sub');if(e)e.textContent='4.322%';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.63%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-eurusd-val');var s=document.getElementById('kap-eurusd-sub');if(e)e.textContent='1.1592';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.30%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-usdnok-val');var s=document.getElementById('kap-usdnok-sub');if(e)e.textContent='9.7170';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.28%</span> &middot; Stooq 2026-04-01';
-  var e=document.getElementById('kap-eurnok-val');var s=document.getElementById('kap-eurnok-sub');if(e)e.textContent='11.2637';if(s)s.innerHTML='<span style="color:#14532D;font-weight:600">+0.58%</span> &middot; Stooq 2026-04-01';
-  window._brentLive=100.32;
-}});
-// PRICES_INJECTED_END
 </script>
 </body>
 </html>
