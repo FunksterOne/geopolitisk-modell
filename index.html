@@ -764,6 +764,40 @@ input[type=range]::-webkit-slider-thumb {
     <div class="panel-sub">Makroøkonomi, kapital og strategi — per <span id="dyn-oversikt-date"></span></div>
   </div>
 
+  <!-- LIVE MARKEDSSTATUS -->
+  <div id="market-strip" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:20px">
+    <div class="mkt-box" data-sym="BZ=F"    data-label="Brent" data-unit="$" data-dec="2"></div>
+    <div class="mkt-box" data-sym="CL=F"    data-label="WTI" data-unit="$" data-dec="2"></div>
+    <div class="mkt-box" data-sym="NG=F"    data-label="Naturgass" data-unit="$" data-dec="3"></div>
+    <div class="mkt-box" data-sym="GC=F"    data-label="Gull" data-unit="$" data-dec="0"></div>
+    <div class="mkt-box" data-sym="SI=F"    data-label="Sølv" data-unit="$" data-dec="2"></div>
+    <div class="mkt-box" data-sym="HG=F"    data-label="Kobber" data-unit="$/lb" data-dec="3"></div>
+    <div class="mkt-box" data-sym="^GSPC"   data-label="S&amp;P 500" data-unit="" data-dec="0"></div>
+    <div class="mkt-box" data-sym="^VIX"    data-label="VIX" data-unit="" data-dec="2"></div>
+    <div class="mkt-box" data-sym="DX-Y.NYB" data-label="DXY" data-unit="" data-dec="2"></div>
+    <div class="mkt-box" data-sym="EURUSD=X" data-label="EUR/USD" data-unit="" data-dec="4"></div>
+    <div class="mkt-box" data-sym="USDNOK=X" data-label="USD/NOK" data-unit="" data-dec="4"></div>
+  </div>
+  <style>
+  .mkt-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 10px;
+    box-shadow: var(--shadow);
+    min-width: 0;
+  }
+  .mkt-box .mkt-label { font-size: 9px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--faint); margin-bottom: 3px; }
+  .mkt-box .mkt-val   { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1; white-space: nowrap; }
+  .mkt-box .mkt-unit  { font-size: 9px; color: var(--faint); margin-left: 1px; }
+  .mkt-box .mkt-chg   { font-size: 9px; font-weight: 500; margin-top: 2px; }
+  .mkt-box.up   { border-top: 2px solid #14532D; }
+  .mkt-box.down { border-top: 2px solid #C53030; }
+  @media (max-width: 860px) {
+    #market-strip { grid-template-columns: repeat(4, 1fr); }
+  }
+  </style>
+
   <!-- INNLEDNING -->
   <div style="font-size:13.5px;line-height:1.82;color:var(--text);font-weight:300;margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--navy);border-radius:0 var(--radius) var(--radius) 0;padding:14px 18px;box-shadow:var(--shadow)">
     Dette er en analytisk modell basert på en syntese av seks sentrale verk som til sammen beskriver den geopolitiske og makroøkonomiske virkeligheten per 31. mars 2026. Modellen integrerer makroøkonomisk resesjonsteori (Goodspeed), kartlegging av det amerikanske sanksjonsapparatet (Fishman), handelspolitisk arkitektur (Miran), offisielle amerikanske forsvars- og sikkerhetsstrategier, og erkjennelsesteori for investorer under dyp usikkerhet (Taleb). Modellen inkluderer også en dedikert analyse av Kinas posisjon i globale verdikjeder — herunder landets nær-monopol på prosessering av sjeldne jordarter og kritiske metaller, og bruken av eksportkontroller som strategisk virkemiddel. Situasjonen er kritisk: Hormuz-stredet har vært stengt i 31 dager, Brent-råolje handler nær rekordnivåer, og alle tre av Goodspeeds klassiske resesjonstriggers er aktive simultant. Bruk navigasjonen til venstre for å gå i dybden på hvert analytisk rammeverk, kjøre Hormuz-kalkulatoren, sammenligne scenarier eller lese det fullstendige analysedokumentet.
@@ -4352,6 +4386,71 @@ function renderTruth(posts) {
   }).filter(Boolean).join('');
 }
 
+
+// ── LIVE MARKEDSBOKSER ───────────────────────────────────────────────────────
+var _marketSymbols = [
+  'BZ=F','CL=F','NG=F','GC=F','SI=F','HG=F',
+  '^GSPC','^VIX','DX-Y.NYB','EURUSD=X','USDNOK=X'
+];
+
+function fetchMarkets() {
+  var PROXY = 'https://corsproxy.io/?';
+  var batch = _marketSymbols.join('%2C');
+  var url = PROXY + encodeURIComponent(
+    'https://query1.finance.yahoo.com/v7/finance/quote?symbols=' +
+    _marketSymbols.join(',') +
+    '&fields=regularMarketPrice,regularMarketChange,regularMarketChangePercent'
+  );
+  fetch(url, { cache: 'no-store' })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var results = data.quoteResponse && data.quoteResponse.result;
+      if (!results) return;
+      results.forEach(function(q) {
+        var box = document.querySelector('.mkt-box[data-sym="' + q.symbol + '"]');
+        if (!box) return;
+        var dec  = parseInt(box.dataset.dec || '2');
+        var unit = box.dataset.unit || '';
+        var p    = q.regularMarketPrice;
+        var chg  = q.regularMarketChangePercent;
+        var up   = chg >= 0;
+
+        box.classList.remove('up','down');
+        box.classList.add(up ? 'up' : 'down');
+
+        box.innerHTML =
+          '<div class="mkt-label">' + box.dataset.label + '</div>' +
+          '<div class="mkt-val">' + p.toFixed(dec) +
+            (unit ? '<span class="mkt-unit">' + unit + '</span>' : '') +
+          '</div>' +
+          '<div class="mkt-chg" style="color:' + (up ? '#14532D' : '#C53030') + '">' +
+            (up ? '▲' : '▼') + ' ' + Math.abs(chg).toFixed(2) + '%' +
+          '</div>';
+
+        // Synk Brent med Hormuz-kalkulatoren
+        if (q.symbol === 'BZ=F') {
+          window._brentLive = p;
+          var lbl = document.getElementById('brent-base-lbl');
+          if (lbl) lbl.textContent = '~' + Math.round(p) + ' $';
+          var statEl = document.getElementById('live-brent-stat');
+          if (statEl) statEl.textContent = p.toFixed(2) + ' $/fat';
+          var srcEl = document.getElementById('live-brent-src');
+          if (srcEl) {
+            var ts = new Date().toLocaleTimeString('no-NO', {hour:'2-digit', minute:'2-digit'});
+            srcEl.textContent = 'Live · Yahoo Finance · ' + ts;
+          }
+        }
+      });
+    })
+    .catch(function() {
+      // Stille feil — behold tomme bokser
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  fetchMarkets();
+  setInterval(fetchMarkets, 5 * 60 * 1000);
+});
 
 </script>
 </body>
