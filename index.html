@@ -813,9 +813,12 @@ input[type=range]::-webkit-slider-thumb {
     <!-- ── HORMUZ-KALKULATOR ─────────────────────────────────── -->
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 18px;box-shadow:var(--shadow)">
       <!-- Header -->
-      <div style="margin-bottom:10px">
-        <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:3px">Hormuz-kalkulator</div>
-        <div style="font-size:12px;font-weight:600;color:var(--text)">Juster parametere — live konsekvenser</div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+        <div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:3px">Hormuz-kalkulator</div>
+          <div style="font-size:12px;font-weight:600;color:var(--text)">Juster parametere — live konsekvenser</div>
+        </div>
+        <span class="tt-trigger" data-tt="tt-kalkulator-guide" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:10px;font-weight:700;cursor:help;border:1px solid var(--border-md);flex-shrink:0">?</span>
       </div>
 
       <!-- TSHM-statusboks (skjult inntil synk kjøres) -->
@@ -2722,7 +2725,7 @@ input[type=range]::-webkit-slider-thumb {
 </div>
 
 <script>
-function nav(elOrId) {
+function nav(elOrId, skipHistory) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   // Støtter nav('panel-makro') direkte ID-streng og nav(el-med-data-panel)
   var panelId = (typeof elOrId === 'string')
@@ -2732,7 +2735,31 @@ function nav(elOrId) {
   if (panelEl) panelEl.classList.add('active');
   var main = document.querySelector('.main');
   if (main) main.scrollTop = 0;
+  // Legg til i nettleserhistorikk (unntatt ved popstate-kall)
+  if (!skipHistory) {
+    try {
+      var isDashboard = (panelId === 'panel-oversikt');
+      if (isDashboard) {
+        history.replaceState({ panel: panelId }, '');
+      } else {
+        if (!history.state || history.state.panel !== panelId) {
+          history.pushState({ panel: panelId }, '');
+        }
+      }
+    } catch(e) { /* srcdoc / sandbox — ignoreres */ }
+  }
 }
+
+// Tilbake-knapp sender alltid til dashboard
+window.addEventListener('popstate', function(e) {
+  nav('panel-oversikt', true);
+  try { history.replaceState({ panel: 'panel-oversikt' }, ''); } catch(e) {}
+});
+
+// Sett initial historikkinnslag ved sidelasting
+document.addEventListener('DOMContentLoaded', function() {
+  try { history.replaceState({ panel: 'panel-oversikt' }, ''); } catch(e) {}
+});
 
 let currentAuthor = null;
 function selectAuthor(key, card) {
@@ -4357,6 +4384,21 @@ window.nav = function(el) {
   <span style="color:rgba(255,255,255,.6);font-size:11px">Glideformel:</span> Alle verdier glattes med 70 % ny signal + 30 % forrige kjøring for å dempe enkeltutslag fra én ekstremnyhet.
   <div class="tt-sep"></div>
   <span style="color:rgba(255,255,255,.6);font-size:11px">Begrensning:</span> TSHM er en heuristisk modell — ikke en kausal prediktor. Bruk som utgangspunkt og juster manuelt basert på kontekst Trumpometeret ikke fanger (forhandlingsklima, tredjepartsmekling, markedsposisjonering).
+
+<div class="tt-box" id="tt-kalkulator-guide" style="max-width:320px">
+  <h4>Slik virker kalkulatoren</h4>
+  Tre parametere styrer alle beregninger:
+  <div class="tt-sep"></div>
+  <table>
+    <tr><td style="color:rgba(255,255,255,.5);white-space:nowrap">⏱ Varighet</td><td>Antall uker Hormuz er stengt. Over 13 uker utløser Goodspeeds resesjonstrigger. Over 26 uker: irreversibel Perera-terskel.</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5);white-space:nowrap">📈 Oljeprissjokk</td><td>Ekstra stigning i Brent utover live-pris. +13 $/fat = Dallas Fed base-scenario (mars 2026). Kilian (2008): store sjokk gir overproporsjonal BNP-effekt.</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5);white-space:nowrap">⚔️ Konfliktnivå</td><td>Skalerer alle effekter: Begrenset ×1,0 · Eskalert ×1,5 · Full krig ×2,2</td></tr>
+  </table>
+  <div class="tt-sep"></div>
+  Alle tall oppdateres umiddelbart. Brent-prisen hentes live fra Yahoo Finance og brukes som startpunkt for oljeprisgrafen og BNP-beregningene.
+  <div class="tt-sep"></div>
+  <span style="color:rgba(255,255,255,.55);font-size:11px">Bruk «⟳ Synk fra Trumpometer» for å la nyhetene sette parameterne automatisk.</span>
+</div>
 </div>
 
 <!-- WTI/BRENT SPREAD TOOLTIP -->
