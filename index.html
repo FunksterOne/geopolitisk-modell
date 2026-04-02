@@ -765,7 +765,7 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 
   <!-- LIVE MARKEDSSTATUS -->
-  <div id="market-strip" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:20px">
+  <div id="market-strip" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:20px">
     <div class="mkt-box" data-sym="BZ=F"    data-label="Brent" data-unit="$" data-dec="2"></div>
     <div class="mkt-box" data-sym="CL=F"    data-label="WTI" data-unit="$" data-dec="2"></div>
     <div class="mkt-box" data-sym="NG=F"    data-label="Naturgass" data-unit="$" data-dec="3"></div>
@@ -786,6 +786,7 @@ input[type=range]::-webkit-slider-thumb {
     padding: 5px 8px;
     box-shadow: var(--shadow);
     min-width: 0;
+    white-space: nowrap;
   }
   .mkt-box .mkt-label { font-size: 8px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--faint); margin-bottom: 2px; }
   .mkt-box .mkt-val   { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1; white-space: nowrap; }
@@ -794,7 +795,7 @@ input[type=range]::-webkit-slider-thumb {
   .mkt-box.up   { border-top: 2px solid #14532D; }
   .mkt-box.down { border-top: 2px solid #C53030; }
   @media (max-width: 860px) {
-    #market-strip { grid-template-columns: repeat(4, 1fr); }
+    #market-strip { gap: 4px; }
   }
   </style>
 
