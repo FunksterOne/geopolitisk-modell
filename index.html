@@ -715,6 +715,14 @@ input[type=range]::-webkit-slider-thumb {
 .tt-box td { padding: 3px 6px 3px 0; vertical-align: top; }
 .tt-box td:last-child { color: rgba(255,255,255,.75); }
 .tt-box .tt-sep { border-top: 1px solid rgba(255,255,255,.15); margin: 7px 0; }
+/* ── MARKEDSBOKSER ── */
+.mkt-box { background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px 8px;box-shadow:var(--shadow);min-width:0;white-space:nowrap; }
+.mkt-box .mkt-label { font-size:8px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:2px; }
+.mkt-box .mkt-val   { font-size:12px;font-weight:600;color:var(--text);line-height:1;white-space:nowrap; }
+.mkt-box .mkt-unit  { font-size:8px;color:var(--faint);margin-left:1px; }
+.mkt-box .mkt-chg   { font-size:8px;font-weight:500;margin-top:2px; }
+.mkt-box.up   { border-top:2px solid #14532D; }
+.mkt-box.down { border-top:2px solid #C53030; }
 </style>
 </head>
 <body>
@@ -795,9 +803,24 @@ input[type=range]::-webkit-slider-thumb {
 
 <!-- ─── OVERSIKT ─── -->
 <div class="panel active" id="panel-oversikt">
-  <div class="panel-header">
-    <div class="panel-title">Den nye verdensordenen</div>
-    <div class="panel-sub">Makroøkonomi, kapital og strategi — per <span id="dyn-oversikt-date"></span></div>
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap">
+    <div style="flex-shrink:0">
+      <div class="panel-title" style="margin-bottom:4px">Den nye verdensordenen</div>
+      <div class="panel-sub">Makroøkonomi, kapital og strategi — per <span id="dyn-oversikt-date"></span></div>
+    </div>
+    <div id="market-strip" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;flex:1;max-width:700px">
+      <div class="mkt-box" data-sym="BZ=F"     data-label="Brent"     data-unit="$"    data-dec="2"></div>
+      <div class="mkt-box" data-sym="CL=F"     data-label="WTI"       data-unit="$"    data-dec="2"></div>
+      <div class="mkt-box" data-sym="NG=F"     data-label="Naturgass" data-unit="$"    data-dec="3"></div>
+      <div class="mkt-box" data-sym="GC=F"     data-label="Gull"      data-unit="$"    data-dec="0"></div>
+      <div class="mkt-box" data-sym="SI=F"     data-label="Sølv"      data-unit="$"    data-dec="2"></div>
+      <div class="mkt-box" data-sym="HG=F"     data-label="Kobber"    data-unit="$/lb" data-dec="3"></div>
+      <div class="mkt-box" data-sym="^GSPC"    data-label="S&amp;P 500" data-unit=""  data-dec="0"></div>
+      <div class="mkt-box" data-sym="^VIX"     data-label="VIX"       data-unit=""     data-dec="2"></div>
+      <div class="mkt-box" data-sym="DX-Y.NYB" data-label="DXY"       data-unit=""     data-dec="2"></div>
+      <div class="mkt-box" data-sym="EURUSD=X" data-label="EUR/USD"   data-unit=""     data-dec="4"></div>
+      <div class="mkt-box" data-sym="USDNOK=X" data-label="USD/NOK"   data-unit=""     data-dec="4"></div>
+    </div>
   </div>
 
   <!-- ══ 1. SYSTEMSTATUS-BANNER ══════════════════════════════════════════ -->
@@ -837,29 +860,7 @@ input[type=range]::-webkit-slider-thumb {
     </div>
   </div>
 
-  <!-- ══ 2. LIVE MARKEDSSTATUS ══════════════════════════════════════════ -->
-  <div id="market-strip" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px">
-    <div class="mkt-box" data-sym="BZ=F"     data-label="Brent"     data-unit="$"    data-dec="2"></div>
-    <div class="mkt-box" data-sym="CL=F"     data-label="WTI"       data-unit="$"    data-dec="2"></div>
-    <div class="mkt-box" data-sym="NG=F"     data-label="Naturgass" data-unit="$"    data-dec="3"></div>
-    <div class="mkt-box" data-sym="GC=F"     data-label="Gull"      data-unit="$"    data-dec="0"></div>
-    <div class="mkt-box" data-sym="SI=F"     data-label="Sølv"      data-unit="$"    data-dec="2"></div>
-    <div class="mkt-box" data-sym="HG=F"     data-label="Kobber"    data-unit="$/lb" data-dec="3"></div>
-    <div class="mkt-box" data-sym="^GSPC"    data-label="S&amp;P 500" data-unit=""  data-dec="0"></div>
-    <div class="mkt-box" data-sym="^VIX"     data-label="VIX"       data-unit=""     data-dec="2"></div>
-    <div class="mkt-box" data-sym="DX-Y.NYB" data-label="DXY"       data-unit=""     data-dec="2"></div>
-    <div class="mkt-box" data-sym="EURUSD=X" data-label="EUR/USD"   data-unit=""     data-dec="4"></div>
-    <div class="mkt-box" data-sym="USDNOK=X" data-label="USD/NOK"   data-unit=""     data-dec="4"></div>
-  </div>
-  <style>
-  .mkt-box { background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px 8px;box-shadow:var(--shadow);min-width:0;white-space:nowrap; }
-  .mkt-box .mkt-label { font-size:8px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:2px; }
-  .mkt-box .mkt-val   { font-size:12px;font-weight:600;color:var(--text);line-height:1;white-space:nowrap; }
-  .mkt-box .mkt-unit  { font-size:8px;color:var(--faint);margin-left:1px; }
-  .mkt-box .mkt-chg   { font-size:8px;font-weight:500;margin-top:2px; }
-  .mkt-box.up   { border-top:2px solid #14532D; }
-  .mkt-box.down { border-top:2px solid #C53030; }
-  </style>
+
 
   <!-- ══ 3. TRE KOLONNER: NØKKELTALL | HENDELSER | GOODSPEED+MIRAN ═══════ -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
