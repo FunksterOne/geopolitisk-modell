@@ -987,7 +987,8 @@ input[type=range]::-webkit-slider-thumb {
         </div>
         <div style="flex:1">
           <div style="font-size:38px;font-weight:700;line-height:1;color:var(--navy)" id="dash-trump-score">—</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px;margin-bottom:12px" id="dash-trump-label">Beregner...</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;margin-bottom:4px" id="dash-trump-label">Beregner...</div>
+          <div style="font-size:10px;color:var(--faint);margin-bottom:10px" id="dash-trump-direction">—</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-radius:6px;overflow:hidden;border:1px solid var(--border)">
             <div style="background:var(--surface);padding:7px 10px">
               <div style="font-size:9px;color:var(--faint);margin-bottom:1px">Nyheter 24t</div>
@@ -2317,6 +2318,7 @@ input[type=range]::-webkit-slider-thumb {
       <div style="margin-top:6px">
         <div style="font-size:40px;font-weight:700;line-height:1;color:var(--navy)" id="trump-score-num">—</div>
         <div style="font-size:11px;color:var(--muted);margin-top:3px;height:16px" id="trump-score-label">Beregner...</div>
+        <div style="font-size:10.5px;color:var(--faint);margin-top:6px;line-height:1.4" id="trump-direction">Analyserer retning...</div>
         <div style="font-size:10px;color:var(--faint);margin-top:2px">Trumpometer-score (0–100)</div>
       </div>
     </div>
@@ -3872,17 +3874,18 @@ window.nav = function(el) {
 <!-- TRUMPOMETER TOOLTIP -->
 <div class="tt-box" id="tt-trumpometer">
   <h4>Trumpometer — slik fungerer det</h4>
-  Analyserer automatisk alle Trump-relaterte nyheter fra RSS-feedene og scorer dem 0–100 basert på tre faktorer:
+  Analyserer automatisk alle Trump-relaterte nyheter og scorer dem 0–100 basert på fire faktorer:
   <div class="tt-sep"></div>
   <table>
     <tr><td style="color:rgba(255,255,255,.5)">Ordstyrke</td><td>Militære/geopolitiske ord gir +15 per treff (maks +40). Økonomiord +10. Politikkord +5.</td></tr>
     <tr><td style="color:rgba(255,255,255,.5)">Tema-boost</td><td>Hormuz +25 · Kina +15 · NDS +15 · Goodspeed +12 · Miran +10</td></tr>
     <tr><td style="color:rgba(255,255,255,.5)">Ferskhet</td><td>&lt;3t: +8 · &lt;8t: +4 · &lt;24t: +1</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">De-eskalering</td><td>Fredsord trekker fra: «ceasefire», «truce», «reopened» gir −18. Forhandlingsord (f.eks. «peace talks», «deal signed») gir −10 hvis Iran/Hormuz også nevnes. Maks −50 per nyhet.</td></tr>
   </table>
   <div class="tt-sep"></div>
-  Speedometer-score = gjennomsnitt × 0,7 + gjennomsnitt × volumfaktor × 0,3. Volumfaktoren øker ved mange nyheter.
+  Speedometer-score = gjennomsnitt × 0,7 + gjennomsnitt × volumfaktor × 0,3. Scoren måler <strong style="color:white">geopolitisk relevans</strong>, ikke retning — en fredsavtale kan score like høyt som en eskalering.
   <div class="tt-sep"></div>
-  Klikk «Vis alle Trump-nyheter» for full visning med filtrering på tema og rammeverk.
+  Retningsindikatoren under scoren (↑ Eskalering / ↓ De-eskalering / ↔ Blandet) viser hvilken type nyheter som dominerer siste 24 timer.
 </div>
 
 <!-- TSHM TOOLTIP -->
@@ -4406,6 +4409,9 @@ function syncDashTrump() {
   // Count + topp tema
   var s = function(id,v){ var el=document.getElementById(id); if(el) el.textContent=v; };
   s('dash-trump-count', count);
+  s('dash-trump-score', meterScore);
+  var lblEl = document.getElementById('dash-trump-label');
+  if (lblEl) lblEl.textContent = meterScore>=80?'Kritisk signalnivå':meterScore>=60?'Høy aktivitet':meterScore>=40?'Moderat aktivitet':meterScore>=20?'Lav aktivitet':'Ingen signaler 24t';
   var catCount = {};
   recent.forEach(function(s){ (s.item.cats||[]).forEach(function(c){ catCount[c]=(catCount[c]||0)+1; }); });
   var topCat = Object.keys(catCount).sort(function(a,b){ return catCount[b]-catCount[a]; })[0]||'—';
@@ -4855,10 +4861,27 @@ function scoreTrumpItem(item) {
             'policy','regulation','budget','deficit','debt','spending'];
   var sw = ['tweet','post','said','claim','suggest','consider','may','might',
             'report','source','plan','meeting','talk','call'];
+  // De-eskaleringsbegrep — høy sikkerhet
+  var deesc_high = ['ceasefire','truce','reopened','shipping resumed','de-escalat',
+                    'pullback','oman mediation','peace deal reached','withdrawal complete',
+                    'sanctions lifted','strait open','hormuz open'];
+  // Kontekstsensitive — teller kun hvis Iran/Hormuz også nevnes
+  var deesc_ctx  = ['peace talks','negotiations','diplomatic','agreement reached',
+                    'deal signed','accord','withdrawal','prisoner exchange',
+                    'un resolution','iaea agreement','oil falls','brent drops','market relief'];
+  var hasIranCtx = text.indexOf('iran') !== -1 || text.indexOf('hormuz') !== -1 || text.indexOf('strait') !== -1;
+  var deescPenalty = 0;
+  deesc_high.forEach(function(w) { if (text.indexOf(w) !== -1) deescPenalty += 18; });
+  if (hasIranCtx) {
+    deesc_ctx.forEach(function(w) { if (text.indexOf(w) !== -1) deescPenalty += 10; });
+  }
   score += Math.min(40, s5.filter(function(w){ return text.indexOf(w)!==-1; }).length * 15);
   score += Math.min(25, s4.filter(function(w){ return text.indexOf(w)!==-1; }).length * 10);
   score += Math.min(15, s3.filter(function(w){ return text.indexOf(w)!==-1; }).length * 5);
   score -= Math.min(10, sw.filter(function(w){ return text.indexOf(w)!==-1; }).length * 3);
+  score -= Math.min(50, deescPenalty); // Maks -50 fra de-eskalering
+  // Lagre retning for bruk i UI
+  item._deesc = deescPenalty;
   // Tema-boost
   var cats = item.cats || [];
   var temaBoost = { hormuz:25, kina:15, geopolitikk:12, energi:10, makro:10, kapital:6 };
@@ -4952,6 +4975,13 @@ function updateTrumpometer() {
   var volFactor = count > 0 ? Math.min(1, Math.log(count+1)/Math.log(20)) : 0;
   var meterScore = count > 0 ? Math.min(100, Math.round(avg*0.7 + avg*volFactor*0.3)) : 0;
 
+  // Retningsanalyse — tell eskalerings- vs. de-eskaleringssignaler
+  var escCount  = recent.filter(function(s) { return s.score >= 50 && !(s.item._deesc > 0); }).length;
+  var deescCount = recent.filter(function(s) { return s.item._deesc > 0; }).length;
+  var netDir = escCount - deescCount * 1.5; // De-eskalering vektes litt mer
+  var direction = netDir > 2 ? 'eskalering' : netDir < -1 ? 'deeskalering' : 'blandet';
+  window._trumpDirection = direction;
+
   var s = function(id,v) { var el=document.getElementById(id); if(el) el.textContent=v; };
   s('trump-count', count);
   s('trump-avg',   Math.round(avg));
@@ -4959,6 +4989,32 @@ function updateTrumpometer() {
   s('trump-top-cat', catLabels[topCat]||topCat);
 
   setTrumpNeedle(meterScore);
+
+  // Retningsindikator — dashboard
+  var dashDir = document.getElementById('dash-trump-direction');
+  if (dashDir) {
+    if (direction === 'eskalering') {
+      dashDir.textContent = '↑ Eskalering dominerer';
+      dashDir.style.color = 'var(--red)';
+    } else if (direction === 'deeskalering') {
+      dashDir.textContent = '↓ De-eskalering dominerer';
+      dashDir.style.color = 'var(--green)';
+    } else {
+      dashDir.textContent = '↔ Blandede signaler';
+      dashDir.style.color = 'var(--faint)';
+    }
+  }
+  // Retningsindikator — Trumpometer-panel
+  var panDir = document.getElementById('trump-direction');
+  if (panDir) {
+    if (direction === 'eskalering') {
+      panDir.innerHTML = '<span style="color:var(--red);font-weight:700">↑ Eskalering</span> dominerer nyhetsbildet siste 24t';
+    } else if (direction === 'deeskalering') {
+      panDir.innerHTML = '<span style="color:var(--green);font-weight:700">↓ De-eskalering</span> dominerer nyhetsbildet siste 24t';
+    } else {
+      panDir.innerHTML = '<span style="color:var(--faint);font-weight:700">↔ Blandet</span> — eskalering og de-eskalering i balanse';
+    }
+  }
 
   var ts = new Date().toLocaleTimeString('no-NO',{hour:'2-digit',minute:'2-digit'});
   s('trump-updated', count + ' Trump-nyheter siste 24t · Oppdatert ' + ts);
