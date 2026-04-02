@@ -4193,39 +4193,42 @@ document.addEventListener('DOMContentLoaded', initTruthFeed);
 window._brentLive = null;
 
 function fetchBrent() {
-  // Kildekjede: Yahoo Finance (v7 — mer CORS-tolerant) → Stooq CSV → statisk
+  // Kildekjede: corsproxy.io + Yahoo Finance (BZ=F) -> Stooq JSON via corsproxy
+  var PROXY = 'https://corsproxy.io/?';
+
   var sources = [
     {
       label: 'Yahoo Finance',
-      url: 'https://query1.finance.yahoo.com/v7/finance/quote?symbols=BZ%3DF&fields=regularMarketPrice',
-      parse: function(data) {
-        try {
-          var r = data.quoteResponse && data.quoteResponse.result && data.quoteResponse.result[0];
-          var p = r && parseFloat(r.regularMarketPrice);
-          return (p && p > 40 && p < 500) ? p : null;
-        } catch(e) { return null; }
-      }
-    },
-    {
-      label: 'Yahoo v8',
-      url: 'https://query2.finance.yahoo.com/v8/finance/chart/BZ%3DF?interval=1d&range=1d',
+      url: PROXY + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/BZ=F?interval=1d&range=1d'),
       parse: function(data) {
         try {
           var p = parseFloat(data.chart.result[0].meta.regularMarketPrice);
-          return (p && p > 40 && p < 500) ? p : null;
+          return (p > 40 && p < 500) ? p : null;
         } catch(e) { return null; }
       }
     },
     {
-      label: 'Stooq CSV',
-      url: 'https://stooq.com/q/d/l/?s=cb.f&i=d',
+      label: 'Yahoo v2',
+      url: PROXY + encodeURIComponent('https://query2.finance.yahoo.com/v8/finance/chart/BZ=F?interval=1d&range=1d'),
+      parse: function(data) {
+        try {
+          var p = parseFloat(data.chart.result[0].meta.regularMarketPrice);
+          return (p > 40 && p < 500) ? p : null;
+        } catch(e) { return null; }
+      }
+    },
+    {
+      label: 'Stooq',
+      url: PROXY + encodeURIComponent('https://stooq.com/q/l/?s=cb.f&f=sd2t2ohlcv&h&e=json'),
       rawText: true,
       parse: function(text) {
         try {
-          var lines = text.trim().split('\n');
-          var last = lines[lines.length - 1].split(',');
-          var p = parseFloat(last[4]); // Close price
-          return (p && p > 40 && p < 500) ? p : null;
+          var cleaned = text.replace(/"volume"\s*:\s*}/g, '"volume":0}')
+                            .replace(/"volume"\s*:\s*,/g, '"volume":0,');
+          var data = JSON.parse(cleaned);
+          var s = data && data.symbols && data.symbols[0];
+          var p = s && parseFloat(s.close || s.open);
+          return (p > 40 && p < 500) ? p : null;
         } catch(e) { return null; }
       }
     }
@@ -4234,7 +4237,7 @@ function fetchBrent() {
   var tried = 0;
   function tryNext() {
     if (tried >= sources.length) {
-      setBrent(null);
+      setBrent(null, null);
       return;
     }
     var src = sources[tried++];
@@ -4264,7 +4267,7 @@ function fetchBrent() {
     }
     window._brentLive = price;
     if (lbl)    lbl.textContent  = '~' + Math.round(price) + ' $';
-    if (statEl) statEl.textContent = Math.round(price) + ' $/fat';
+    if (statEl) statEl.textContent = price.toFixed(2) + ' $/fat';
     if (srcEl) {
       var ts = new Date().toLocaleTimeString('no-NO', {hour:'2-digit', minute:'2-digit'});
       srcEl.textContent = 'Live · ' + (label || 'API') + ' · ' + ts;
