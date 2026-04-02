@@ -67,8 +67,9 @@ body {
   z-index: 100;
 }
 .topbar-brand {
-  font-family: 'DM Serif Display', serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 17px;
+  font-weight: 500;
   letter-spacing: 0.01em;
   opacity: 0.95;
 }
@@ -684,8 +685,10 @@ input[type=range]::-webkit-slider-thumb {
 
 <header class="topbar">
   <div class="topbar-brand">Geopolitisk Systemanalyse 2026</div>
-  <div class="topbar-meta"><span id="dyn-topbar-date"></span> &nbsp;·&nbsp; Halvard Nordang — Affectum AS</div>
-  <div class="topbar-badge" style="margin-left:auto">KONFIDENSIELT</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+    <div class="topbar-meta"><span id="dyn-topbar-date"></span> &nbsp;·&nbsp; Halvard Nordang — Affectum AS</div>
+    <div class="topbar-badge">KONFIDENSIELT</div>
+  </div>
 </header>
 
 <!-- ── SØKERAD ── -->
@@ -713,10 +716,10 @@ input[type=range]::-webkit-slider-thumb {
 <aside class="sidebar">
   <div class="nav-section-label">Navigasjon</div>
   <div class="nav-item active" data-panel="oversikt" onclick="nav(this)">
-    <span class="nav-dot" style="background:#7F77DD"></span>Oversikt
+    <span class="nav-dot" style="background:#7F77DD"></span>Dashboard
   </div>
   <div class="nav-item" data-panel="analytikere" onclick="nav(this)">
-    <span class="nav-dot" style="background:#1D9E75"></span>Analytikerne
+    <span class="nav-dot" style="background:#1D9E75"></span>Om modellen
   </div>
   <div class="nav-item" data-panel="hormuz" onclick="nav(this)">
     <span class="nav-dot" style="background:#D85A30"></span>Hormuz-krisen
@@ -799,10 +802,6 @@ input[type=range]::-webkit-slider-thumb {
   }
   </style>
 
-  <!-- INNLEDNING -->
-  <div style="font-size:13.5px;line-height:1.82;color:var(--text);font-weight:300;margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--navy);border-radius:0 var(--radius) var(--radius) 0;padding:14px 18px;box-shadow:var(--shadow)">
-    Dette er en analytisk modell basert på en syntese av seks sentrale verk som til sammen beskriver den geopolitiske og makroøkonomiske virkeligheten per 31. mars 2026. Modellen integrerer makroøkonomisk resesjonsteori (Goodspeed), kartlegging av det amerikanske sanksjonsapparatet (Fishman), handelspolitisk arkitektur (Miran), offisielle amerikanske forsvars- og sikkerhetsstrategier, og erkjennelsesteori for investorer under dyp usikkerhet (Taleb). Modellen inkluderer også en dedikert analyse av Kinas posisjon i globale verdikjeder — herunder landets nær-monopol på prosessering av sjeldne jordarter og kritiske metaller, og bruken av eksportkontroller som strategisk virkemiddel. Situasjonen er kritisk: Hormuz-stredet har vært stengt i 31 dager, Brent-råolje handler nær rekordnivåer, og alle tre av Goodspeeds klassiske resesjonstriggers er aktive simultant. Bruk navigasjonen til venstre for å gå i dybden på hvert analytisk rammeverk, kjøre Hormuz-kalkulatoren, sammenligne scenarier eller lese det fullstendige analysedokumentet.
-  </div>
 
   <!-- TRUMP TRUTH SOCIAL — KOMPAKT LIVE FEED -->
   <div style="margin-bottom:20px">
@@ -930,8 +929,12 @@ input[type=range]::-webkit-slider-thumb {
 <!-- ─── ANALYTIKERNE ─── -->
 <div class="panel" id="panel-analytikere">
   <div class="panel-header">
-    <div class="panel-title">De seks analytiske rammeverk</div>
-    <div class="panel-sub">Klikk på en analytiker for å se kjernebidrag og analytisk begrensning</div>
+    <div class="panel-title">Om modellen</div>
+    <div class="panel-sub">Seks analytiske rammeverk · klikk på en analytiker for å se kjernebidrag og begrensning</div>
+  </div>
+
+  <div style="font-size:13.5px;line-height:1.82;color:var(--text);font-weight:300;margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--navy);border-radius:0 var(--radius) var(--radius) 0;padding:14px 18px;box-shadow:var(--shadow)">
+    Dette er en analytisk modell basert på en syntese av seks sentrale verk som til sammen beskriver den geopolitiske og makroøkonomiske virkeligheten per 31. mars 2026. Modellen integrerer makroøkonomisk resesjonsteori (Goodspeed), kartlegging av det amerikanske sanksjonsapparatet (Fishman), handelspolitisk arkitektur (Miran), offisielle amerikanske forsvars- og sikkerhetsstrategier, og erkjennelsesteori for investorer under dyp usikkerhet (Taleb). Modellen inkluderer også en dedikert analyse av Kinas posisjon i globale verdikjeder — herunder landets nær-monopol på prosessering av sjeldne jordarter og kritiske metaller, og bruken av eksportkontroller som strategisk virkemiddel. Situasjonen er kritisk: Hormuz-stredet har vært stengt i 31 dager, Brent-råolje handler nær rekordnivåer, og alle tre av Goodspeeds klassiske resesjonstriggers er aktive simultant. Bruk navigasjonen til venstre for å gå i dybden på hvert analytisk rammeverk, kjøre Hormuz-kalkulatoren, sammenligne scenarier eller lese det fullstendige analysedokumentet.
   </div>
 
   <div class="author-grid">
@@ -4116,7 +4119,7 @@ function runSearch(q) {
   var results = []; // {panelId, panelTitle, excerpt, markIdx}
 
   var panelNames = {
-    'panel-oversikt':'Oversikt','panel-analytikere':'Analytikerne',
+    'panel-oversikt':'Dashboard','panel-analytikere':'Om modellen',
     'panel-hormuz':'Hormuz-krisen','panel-kina':'Kinas posisjon',
     'panel-scenarier':'Scenarier','panel-taleb':'Taleb-rammeverk',
     'panel-kapital':'Kapitalimplikasjoner','panel-makro':'Makrodata',
