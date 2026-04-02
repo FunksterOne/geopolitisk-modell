@@ -816,6 +816,27 @@ input[type=range]::-webkit-slider-thumb {
     </div>
   </div>
 
+  <!-- ══ 1b. LIVE FRA HORMUZ-KALKULATOREN ══════════════════════════════ -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+    <div style="background:var(--navy-lt);border:1px solid var(--border-md);border-radius:var(--radius);padding:10px 14px;text-align:center">
+      <div style="font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:4px">Brent topp</div>
+      <div style="font-size:20px;font-weight:700;color:var(--red)" id="dash-cr-brent">—</div>
+    </div>
+    <div style="background:var(--navy-lt);border:1px solid var(--border-md);border-radius:var(--radius);padding:10px 14px;text-align:center">
+      <div style="font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:4px">BNP-effekt kumulativ <span class="tt-trigger" data-tt="bnp-tooltip" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:rgba(30,60,120,.2);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:2px;vertical-align:middle">?</span></div>
+      <div style="font-size:20px;font-weight:700;color:var(--red)" id="dash-cr-gdp">—</div>
+    </div>
+    <div style="background:var(--navy-lt);border:1px solid var(--border-md);border-radius:var(--radius);padding:10px 14px;text-align:center">
+      <div style="font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:4px">KPI-effekt <span class="tt-trigger" data-tt="tt-kpi" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:rgba(30,60,120,.2);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:2px;vertical-align:middle">?</span></div>
+      <div style="font-size:20px;font-weight:700;color:var(--amber)" id="dash-cr-cpi">—</div>
+    </div>
+    <div style="background:var(--navy-lt);border:1px solid var(--border-md);border-radius:var(--radius);padding:10px 14px;text-align:center">
+      <div style="font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:4px">Resesjonsrisiko</div>
+      <div style="font-size:20px;font-weight:700" id="dash-cr-risk">—</div>
+      <div style="font-size:8px;color:var(--faint);margin-top:2px"><a href="#" onclick="nav(document.querySelector('[data-panel=hormuz]'));return false" style="color:var(--navy-mid);text-decoration:none">Juster i Hormuz →</a></div>
+    </div>
+  </div>
+
   <!-- ══ 2. LIVE MARKEDSSTATUS ══════════════════════════════════════════ -->
   <div id="market-strip" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px">
     <div class="mkt-box" data-sym="BZ=F"     data-label="Brent"     data-unit="$"    data-dec="2"></div>
@@ -1000,31 +1021,6 @@ input[type=range]::-webkit-slider-thumb {
       </div>
     </div>
 
-    <!-- 4c. BNP-effekt fra Hormuz-kalkulatoren — dynamisk -->
-    <div style="background:var(--navy-lt);border:1px solid var(--border-md);border-radius:var(--radius);padding:12px 16px">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:10px">Live fra Hormuz-kalkulatoren — gjeldende standardparametere</div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
-        <div style="text-align:center">
-          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Brent topp</div>
-          <div style="font-size:16px;font-weight:700;color:var(--red)" id="dash-cr-brent">—</div>
-        </div>
-        <div style="text-align:center">
-          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">BNP-effekt kumulativ <span class="tt-trigger" data-tt="bnp-tooltip" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:rgba(30,60,120,.15);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:2px;vertical-align:middle">?</span></div>
-          <div style="font-size:16px;font-weight:700;color:var(--red)" id="dash-cr-gdp">—</div>
-        </div>
-        <div style="text-align:center">
-          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">KPI-effekt <span class="tt-trigger" data-tt="tt-kpi" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:rgba(30,60,120,.15);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:2px;vertical-align:middle">?</span></div>
-          <div style="font-size:16px;font-weight:700;color:var(--amber)" id="dash-cr-cpi">—</div>
-        </div>
-        <div style="text-align:center">
-          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Resesjonsrisiko</div>
-          <div style="font-size:16px;font-weight:700" id="dash-cr-risk">—</div>
-        </div>
-      </div>
-      <div style="margin-top:8px;font-size:9px;color:var(--faint);text-align:right">
-        Endre parametere i <a href="#" onclick="nav(document.querySelector('[data-panel=hormuz]'));return false" style="color:var(--navy-mid);text-decoration:none;font-weight:600">Hormuz-krisen →</a>
-      </div>
-    </div>
   </div>
 
   <!-- ══ 5. KJERNEDIAGNOSE ══════════════════════════════════════════════ -->
