@@ -7883,22 +7883,51 @@ window.nav = function(el) {
       <div class="popup-head-left">
         <div class="popup-head-title">Scenarioanalyse</div>
         <div class="popup-head-params">
-          <span class="popup-head-param">Varighet: <strong id="scm-dur">—</strong></span>
-          <span style="opacity:.3">·</span>
-          <span class="popup-head-param">Sjokk: <strong id="scm-oil">—</strong></span>
-          <span style="opacity:.3">·</span>
-          <span class="popup-head-param">Konflikt: <strong id="scm-conf">—</strong></span>
-          <span style="opacity:.3">·</span>
+          <div class="popup-head-pill">
+            <div class="popup-head-pill-dot pulse"></div>
+            <span>Brent: <strong id="scm-brent-live">—</strong></span>
+          </div>
+          <div class="popup-head-pill">Varighet: <strong id="scm-dur">—</strong></div>
+          <div class="popup-head-pill">Sjokk: <strong id="scm-oil">—</strong></div>
           <span class="popup-head-param">Brent topp: <strong id="scm-peak" style="color:#FCA5A5">—</strong></span>
         </div>
-        <div class="popup-head-sub">Tre forløp over 36 mnd · Perera (2026) bortfallsdata · dynamisk fra kalkulatoren</div>
+        <div class="popup-head-sub">Tre forløp over 36 mnd · Perera (2026) bortfallsdata · dynamisk fra Hormuz-kalkulatoren</div>
       </div>
       <button id="sc-modal-close" class="popup-close-btn" onclick="closeScenarioModal()">✕</button>
     </div>
 
+    <!-- KPI-strip — speiler Hormuz-modal -->
+    <div id="sc-modal-kpi-strip" class="popup-kpi-strip">
+      <div class="popup-kpi-cell">
+        <div class="popup-kpi-label">Scenario A</div>
+        <div class="popup-kpi-val" style="color:var(--green)" id="scm-strip-pA">—</div>
+        <div class="popup-kpi-sub">Rask oppløsning</div>
+      </div>
+      <div class="popup-kpi-cell">
+        <div class="popup-kpi-label">Scenario B ★</div>
+        <div class="popup-kpi-val" style="color:var(--amber)" id="scm-strip-pB">—</div>
+        <div class="popup-kpi-sub">Kronisk forstyrrelse</div>
+      </div>
+      <div class="popup-kpi-cell">
+        <div class="popup-kpi-label">Scenario C</div>
+        <div class="popup-kpi-val" style="color:var(--red)" id="scm-strip-pC">—</div>
+        <div class="popup-kpi-sub">Systemkollaps</div>
+      </div>
+      <div class="popup-kpi-cell">
+        <div class="popup-kpi-label">Brent 12 mnd (A)</div>
+        <div class="popup-kpi-val" style="color:var(--amber);font-size:15px" id="scm-strip-brentA">—</div>
+        <div class="popup-kpi-sub">EIA normalisering</div>
+      </div>
+      <div class="popup-kpi-cell">
+        <div class="popup-kpi-label">Perera-skader</div>
+        <div class="popup-kpi-val" style="color:var(--red);font-size:15px">Irreversible</div>
+        <div class="popup-kpi-sub">Uavh. av scenario-utgang</div>
+      </div>
+    </div>
+
     <!-- Sannsynlighetsvelger -->
-    <div style="background:var(--surface);padding:12px 24px;border-bottom:1px solid var(--border);flex-shrink:0">
-      <div class="popup-prob-row">
+    <div class="popup-kpi-strip" style="padding:12px 24px">
+      <div class="popup-prob-row" style="margin-bottom:0;width:100%">
         <div class="popup-prob-seg selected" id="scm-seg-a" onclick="scModalTab('a')" style="background:linear-gradient(135deg,#166534,#14532D)">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
             <div>
@@ -7955,7 +7984,7 @@ window.nav = function(el) {
       <div class="popup-tab tab-green active" id="scm-tab-a" onclick="scModalTab('a')">A — Rask oppløsning</div>
       <div class="popup-tab tab-amber" id="scm-tab-b" onclick="scModalTab('b')">B — Kronisk forstyrrelse</div>
       <div class="popup-tab tab-red" id="scm-tab-c" onclick="scModalTab('c')">C — Systemkollaps</div>
-      <div class="popup-tab tab-red" id="scm-tab-irrev" onclick="scModalTab('irrev')" style="margin-left:auto">Perera: Irreversible skader</div>
+      <div class="popup-tab" id="scm-tab-irrev" onclick="scModalTab('irrev')" style="margin-left:auto">⚠ Perera: Irreversible skader</div>
     </div>
 
     <!-- Body -->
@@ -8017,6 +8046,10 @@ window.nav = function(el) {
           <div><div class="popup-kapital-head" style="color:var(--amber)">Hold</div>Halvledere (helium vedvarer) · Matvare (avlingstap 2026) · Gulf-obligasjoner</div>
           <div><div class="popup-kapital-head" style="color:var(--red)">Unngå</div>Iranske eiendeler · Container Gulfen · Kortsiktig long olje</div>
         </div>
+        <div class="popup-conclusion">
+          <div class="popup-conclusion-label">Analytisk konklusjon — Scenario A</div>
+          <div class="popup-conclusion-text" id="scm-a-konklusjon">Rask diplomatisk løsning gir lavest strukturelt tap, men Perera-skadene er allerede låst: 200 heliumcontainere, Train 4/6, bangladeshisk avling 2026. Brent normaliseres til <span id="scm-a-brent-conk">—</span> over 12 mnd. BNP-tap: <span id="scm-a-bnp-conk">—</span> pp. Energimarkedet vil ikke returnere til 2025-strukturen.</div>
+        </div>
       </div>
 
       <!-- ══ PANEL B ══ -->
@@ -8071,6 +8104,10 @@ window.nav = function(el) {
           <div><div class="popup-kapital-head" style="color:var(--amber)">Barbell</div>80 % robuste aktiva + 20 % asymmetrisk oppside. Long volatilitet. Short EU gasskrevende industri.</div>
           <div><div class="popup-kapital-head" style="color:var(--red)">Short/unngå</div>EU energiintensiv industri · EM-obligasjoner · Flyfrakt Gulfen</div>
         </div>
+        <div class="popup-conclusion">
+          <div class="popup-conclusion-label">Analytisk konklusjon — Scenario B</div>
+          <div class="popup-conclusion-text">Yuan-tollregime institusjonaliserer en permanent ny energiarkitektur. Brent <span id="scm-b-brent-conk">—</span> over 12 mnd — strukturelt høyere gulv. BNP-tap: <span id="scm-b-bnp-conk">—</span> pp. Goodspeed type-1 resesjonstrigger. Fed handlingslam: KPI +<span id="scm-b-cpi-conk">—</span> pp hindrer kutt mens resesjonsrisiko hindrer heving. Fishmans asymmetri: de-dollarisering akselererer.</div>
+        </div>
       </div>
 
       <!-- ══ PANEL C ══ -->
@@ -8115,6 +8152,10 @@ window.nav = function(el) {
           <div><div class="popup-kapital-head" style="color:var(--green)">80 % — Robuste</div>Gull · Treasuries (korte) · CHF · NOK · Kontanter · Forsvar · Matprodusenter</div>
           <div><div class="popup-kapital-head" style="color:var(--amber)">20 % — Asymmetrisk</div>OTM call energi · Volatilitetsprodukter · Ex-Kina halvledere · Alt. helium</div>
           <div><div class="popup-kapital-head" style="color:var(--red)">Unngå absolutt</div>EU industri · EM-obligasjoner · Halvleder via helium · Lang duration usikre valutaer · Luftfart · Shipping Gulfen</div>
+        </div>
+        <div class="popup-conclusion">
+          <div class="popup-conclusion-label">Analytisk konklusjon — Scenario C · Taleb-kaskade</div>
+          <div class="popup-conclusion-text">NDS Simultaneity Problem materialisert: Iran/Taiwan/Russland simultant. Brent <span id="scm-c-brent-conk">—</span>. BNP-tap <span id="scm-c-bnp-conk">—</span> pp — 1930-analog. Taleb: dette er Extremistan, ikke Mediocristan. Alle modeller kalibrert for normalscenarier. Barbell er eneste forsvarbare posisjon.</div>
         </div>
       </div>
 
@@ -8229,67 +8270,98 @@ function scModalTab(tab) {
 }
 
 function syncScenarioModalParams() {
-  // Hent verdier fra kalkulator
-  var dur      = parseInt((document.getElementById('sl-duration') || {}).value) || 4;
-  var oilShock = parseInt((document.getElementById('sl-oil')      || {}).value) || 13;
-  var conflict = parseInt((document.getElementById('sl-conflict') || {}).value) || 1;
-  var brentLive = window._brentLive || 108;
-  var brentPeak = Math.round(brentLive + oilShock * (1 + conflict * 0.3));
-
-  var confNames = ['','Begrenset','Eskalert','Full krig'];
-  var durTxt = dur === 1 ? '1 uke' : dur + ' uker';
-
-  // Header-parametre
   var s = function(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; };
+  var col = function(id, c) { var el = document.getElementById(id); if (el) el.style.color = c; };
+
+  // ── Hent live kalkulator-verdier ──────────────────────────────
+  var dur       = parseInt((document.getElementById('sl-duration') || {}).value) || 4;
+  var oilShock  = parseInt((document.getElementById('sl-oil')      || {}).value) || 13;
+  var conflict  = parseInt((document.getElementById('sl-conflict') || {}).value) || 1;
+  var brentLive = window._brentLive || 108;
+  var wtiLive   = window._wtiLive   || brentLive * 0.97;
+  var cm        = conflict === 1 ? 1 : conflict === 2 ? 1.5 : 2.2;
+  var confNames = ['','Begrenset','Eskalert','Full krig'];
+  var durTxt    = dur === 1 ? '1 uke' : dur + ' uker';
+  var brentPeak = Math.round(brentLive + oilShock * cm);
+
+  // ── Hent sannsynligheter dynamisk fra kalkulator-panelet ──────
+  var pA = parseFloat((document.getElementById('sc-pA') || {}).textContent) || 20;
+  var pB = parseFloat((document.getElementById('sc-pB') || {}).textContent) || 55;
+  var pC = parseFloat((document.getElementById('sc-pC') || {}).textContent) || 25;
+  // Normaliser slik at A+B+C = 100
+  var totP = pA + pB + pC; if (totP > 0) { pA = pA/totP*100; pB = pB/totP*100; pC = pC/totP*100; }
+  var pAstr = Math.round(pA) + ' %';
+  var pBstr = Math.round(pB) + ' %';
+  var pCstr = Math.round(pC) + ' %';
+
+  // ── HEADER ────────────────────────────────────────────────────
+  s('scm-brent-live', brentLive.toFixed(2) + ' $');
   s('scm-dur',  durTxt);
-  s('scm-oil',  '+' + oilShock + ' $/fat');
-  s('scm-conf', confNames[conflict] || conflict);
+  s('scm-oil',  '+' + oilShock + ' $/fat · ' + (confNames[conflict] || conflict));
   s('scm-peak', '~' + brentPeak + ' $');
 
-  // Hent sannsynligheter fra eksisterende sc-pA/B/C hvis de finnes
-  var pA = (document.getElementById('sc-pA') || {}).textContent || '20 %';
-  var pB = (document.getElementById('sc-pB') || {}).textContent || '55 %';
-  var pC = (document.getElementById('sc-pC') || {}).textContent || '25 %';
-  s('scm-pA', pA); s('scm-pB', pB); s('scm-pC', pC);
-
-  // Sannsynlighetsbar bredde
-  var numA = parseFloat(pA) || 20;
-  var numB = parseFloat(pB) || 55;
-  var numC = parseFloat(pC) || 25;
-  var bBar = function(id, w) { var el = document.getElementById(id); if (el) el.style.width = w + '%'; };
-  bBar('scm-bar-a', numA); bBar('scm-bar-b', numB); bBar('scm-bar-c', numC);
-
-  // KPI Scenario A — dynamisk
-  var bnpA = Math.max(0.3, (oilShock * 0.023 * dur / 8 * 0.48)).toFixed(1);
+  // ── KPI-STRIP ─────────────────────────────────────────────────
+  s('scm-strip-pA', pAstr);
+  s('scm-strip-pB', pBstr);
+  s('scm-strip-pC', pCstr);
   var brentA_lo = Math.round(brentLive * 0.72);
   var brentA_hi = Math.round(brentLive * 0.82);
-  s('scm-a-prob',   pA);
-  s('scm-a-norm',   dur <= 4 ? '2–4 uker' : dur <= 10 ? '6–8 uker' : '8–12 uker');
-  s('scm-a-brent',  brentA_lo + '–' + brentA_hi + ' $');
-  s('scm-a-bnp',    '−' + bnpA + ' pp');
+  s('scm-strip-brentA', brentA_lo + '–' + brentA_hi + ' $');
+
+  // ── SANNSYNLIGHETSVELGER ──────────────────────────────────────
+  s('scm-pA', pAstr); s('scm-pB', pBstr); s('scm-pC', pCstr);
+  var bBar = function(id, w) { var el = document.getElementById(id); if (el) el.style.width = Math.max(4, w) + '%'; };
+  bBar('scm-bar-a', pA); bBar('scm-bar-b', pB); bBar('scm-bar-c', pC);
+
+  // ── SCENARIO A ────────────────────────────────────────────────
+  var bnpA = Math.max(0.3, (oilShock * 0.023 * (dur/4) * 0.48 * 1)).toFixed(1);
+  s('scm-a-prob',       pAstr);
+  s('scm-a-norm',       dur <= 4 ? '2–4 uker' : dur <= 10 ? '6–8 uker' : '8–12 uker');
+  s('scm-a-brent',      brentA_lo + '–' + brentA_hi + ' $');
+  s('scm-a-bnp',        '−' + bnpA + ' pp');
   s('scm-a-dur-detail', dur <= 4 ? '4–6 uker' : '6–10 uker');
 
-  // KPI Scenario B — dynamisk
-  var cpiB = (oilShock * 0.025 + conflict * 0.15).toFixed(1);
+  // ── SCENARIO B ────────────────────────────────────────────────
+  var cpiB    = (oilShock * 0.025 * cm).toFixed(1);
   var brentB_lo = Math.round(brentLive * (0.9 + conflict * 0.08));
   var brentB_hi = Math.round(brentLive * (1.1 + conflict * 0.12));
-  var bnpB_lo = (oilShock * 0.023 * 0.6 + conflict * 0.3).toFixed(1);
-  var bnpB_hi = (oilShock * 0.023 * 0.8 + conflict * 0.5).toFixed(1);
-  s('scm-b-prob',  pB);
-  s('scm-b-reg',   conflict >= 3 ? 'Stengt · yuan-kontroll' : 'Delvis åpen · yuan-toll');
+  var bnpB_lo = (oilShock * 0.023 * cm * 0.6).toFixed(1);
+  var bnpB_hi = (oilShock * 0.023 * cm * 0.85).toFixed(1);
+  s('scm-b-prob',  pBstr);
+  s('scm-b-reg',   conflict >= 3 ? 'Stengt · yuan-kontroll' : conflict >= 2 ? 'Delvis åpen · eskalert' : 'Delvis åpen · yuan-toll');
   s('scm-b-brent', brentB_lo + '–' + brentB_hi + ' $');
   s('scm-b-bnp',   '−' + bnpB_lo + '–' + bnpB_hi + ' pp');
   s('scm-b-cpi',   cpiB);
 
-  // KPI Scenario C — dynamisk
-  var brentC_lo = Math.round(brentLive * (1.3 + conflict * 0.1));
-  var brentC_hi = Math.round(brentLive * (1.7 + conflict * 0.15));
-  var bnpC_lo = (oilShock * 0.04 + conflict * 0.8 + dur * 0.1).toFixed(0);
-  var bnpC_hi = (oilShock * 0.06 + conflict * 1.2 + dur * 0.15).toFixed(0);
-  s('scm-c-prob',   pC);
-  s('scm-c-status', dur > 16 ? 'Stengt 12+ mnd.' : 'Stengt ' + dur + '+ uker');
+  // ── SCENARIO C ────────────────────────────────────────────────
+  var brentC_lo = Math.round(brentLive * (1.3 + conflict * 0.12));
+  var brentC_hi = Math.round(brentLive * (1.7 + conflict * 0.18));
+  var bnpC_lo   = Math.round(oilShock * 0.04 * cm + dur * 0.12);
+  var bnpC_hi   = Math.round(oilShock * 0.065 * cm + dur * 0.18);
+  s('scm-c-prob',   pCstr);
+  s('scm-c-status', dur > 16 ? 'Stengt 12+ mnd.' : 'Stengt ' + dur + '+ uker · blokkade');
   s('scm-c-brent',  brentC_lo + '–' + brentC_hi + ' $');
   s('scm-c-bnp',    '−' + bnpC_lo + '–' + bnpC_hi + ' pp');
+
+  // ── KPI-FARGER dynamisk ───────────────────────────────────────
+  // Scenario A: rød BNP hvis bnpA > 1.5
+  var aEl = document.getElementById('scm-a-bnp');
+  if (aEl) aEl.style.color = parseFloat(bnpA) > 1.5 ? 'var(--red)' : 'var(--amber)';
+  // Scenario B: rød BNP
+  var bEl = document.getElementById('scm-b-bnp');
+  if (bEl) bEl.style.color = 'var(--red)';
+  // Scenario C: alltid rød
+  var cEl = document.getElementById('scm-c-bnp');
+  if (cEl) cEl.style.color = 'var(--red)';
+
+  // ── KONKLUSJONER ──────────────────────────────────────────────
+  s('scm-a-brent-conk', brentA_lo + '–' + brentA_hi + ' $');
+  s('scm-a-bnp-conk',   bnpA);
+  s('scm-b-brent-conk', brentB_lo + '–' + brentB_hi + ' $');
+  s('scm-b-bnp-conk',   bnpB_lo + '–' + bnpB_hi);
+  s('scm-b-cpi-conk',   cpiB);
+  s('scm-c-brent-conk', brentC_lo + '–' + brentC_hi + ' $');
+  s('scm-c-bnp-conk',   bnpC_lo + '–' + bnpC_hi);
 }
 </script>
 <!-- ═══════════════════════════════════════════════════════════════
