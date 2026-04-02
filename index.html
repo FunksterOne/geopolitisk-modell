@@ -1002,7 +1002,7 @@ input[type=range]::-webkit-slider-thumb {
         </div>
         <div class="slider-group" style="margin-bottom:0">
           <div class="slider-meta">
-            <span class="slider-label">Oljeprissjokk (utover dagens <span id="hz-base-price">~101 $</span>)</span>
+            <span class="slider-label">Oljeprissjokk (utover dagens ~101 $)</span>
             <span class="slider-val" id="out-oil" style="font-size:15px">+13 $/fat</span>
           </div>
           <input type="range" min="0" max="115" value="13" step="1" id="sl-oil" oninput="updateSliderLabel(this); debouncedCalc()">
@@ -1670,7 +1670,7 @@ input[type=range]::-webkit-slider-thumb {
 <div class="panel" id="panel-kapital">
   <div class="panel-header">
     <div class="panel-title">Kapitalimplikasjoner</div>
-    <div class="panel-sub">Oppdatert <span id="dyn-kap-date"></span> · To analytiske lag: overordnet strategi og spesifikke implikasjoner forankret i Perera-data, markedspriser og de seks analytiske rammeverk</div>
+    <div class="panel-sub">To analytiske lag: overordnet strategi og spesifikke implikasjoner forankret i Perera-data og de seks analytiske rammeverk</div>
   </div>
 
   <!-- ═══════════════════════════════════════════════════════
@@ -1678,78 +1678,6 @@ input[type=range]::-webkit-slider-thumb {
        ═══════════════════════════════════════════════════════ -->
   <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
     <div class="section-label" style="margin-top:0;margin-bottom:0">Lag 1 — Overordnet strategi og porteføljefordeling</div>
-    <div style="font-size:10px;color:var(--faint)" id="kap-ts">Priser: Stooq.com · oppdateres av build.py</div>
-  </div>
-
-  <!-- Markedsstatus per 1. april -->
-  <!-- Rad 1: Energi og metaller -->
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px">
-    <div class="stat-card" style="border-left:3px solid var(--amber)">
-      <div class="stat-label">Brent råolje</div>
-      <div class="stat-value" style="font-size:18px;color:var(--amber)" id="kap-brent-val">-</div>
-      <div class="stat-sub" id="kap-brent-sub">Stooq cb.f</div>
-    </div>
-    <div class="stat-card" style="border-left:3px solid var(--amber)">
-      <div class="stat-label">Gull spot</div>
-      <div class="stat-value" style="font-size:18px;color:var(--amber)" id="kap-gold-val">-</div>
-      <div class="stat-sub" id="kap-gold-sub">Stooq gc.f</div>
-    </div>
-    <div class="stat-card" style="border-left:3px solid var(--navy)">
-      <div class="stat-label">Kobber COMEX</div>
-      <div class="stat-value" style="font-size:18px;color:var(--navy)" id="kap-copper-val">-</div>
-      <div class="stat-sub" id="kap-copper-sub">Stooq hg.f</div>
-    </div>
-    <div class="stat-card" style="border-left:3px solid var(--red)">
-      <div class="stat-label">LME Aluminium</div>
-      <div class="stat-value" style="font-size:18px;color:var(--red)" id="kap-alum-val">-</div>
-      <div class="stat-sub" id="kap-alum-sub">Stooq lad.f</div>
-    </div>
-  </div>
-  <!-- Rad 2b: Energi og valuta -->
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px">
-    <div class="stat-card" style="border-left:3px solid var(--amber)">
-      <div class="stat-label">WTI råolje</div>
-      <div class="stat-value" style="font-size:18px;color:var(--amber)" id="kap-wti-val">-</div>
-      <div class="stat-sub" id="kap-wti-sub">Stooq cl.f</div>
-    </div>
-    <div class="stat-card" style="border-left:3px solid var(--amber)">
-      <div class="stat-label">Naturgass (Henry Hub)</div>
-      <div class="stat-value" style="font-size:18px;color:var(--amber)" id="kap-gas-val">-</div>
-      <div class="stat-sub" id="kap-gas-sub">Stooq ng.f · $/MMBtu</div>
-    </div>
-    <div class="stat-card" style="border-left:3px solid var(--faint)">
-      <div class="stat-label">EUR/USD</div>
-      <div class="stat-value" style="font-size:18px" id="kap-eurusd-val">-</div>
-      <div class="stat-sub" id="kap-eurusd-sub">Stooq eurusd</div>
-    </div>
-    <div class="stat-card" style="border-left:3px solid var(--faint)">
-      <div class="stat-label">Sølv ($/oz)</div>
-      <div class="stat-value" style="font-size:18px" id="kap-silver-val">-</div>
-      <div class="stat-sub" id="kap-silver-sub">Stooq si.f</div>
-    </div>
-  </div>
-  <!-- Rad 3: Renter og valuta -->
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
-    <div class="stat-card" style="border-left:3px solid var(--navy)">
-      <div class="stat-label">US 10Y Treasury</div>
-      <div class="stat-value" style="font-size:18px;color:var(--navy)" id="kap-us10y-val">-</div>
-      <div class="stat-sub" id="kap-us10y-sub">Stooq 10yusy.b</div>
-    </div>
-    <div class="stat-card" style="border-left:3px solid var(--navy)">
-      <div class="stat-label">Tysk 10Y Bund</div>
-      <div class="stat-value" style="font-size:18px;color:var(--navy)" id="kap-de10y-val">-</div>
-      <div class="stat-sub" id="kap-de10y-sub">Stooq 10ydeuy.b</div>
-    </div>
-    <div class="stat-card" style="border-left:3px solid var(--faint)">
-      <div class="stat-label">USD/NOK</div>
-      <div class="stat-value" style="font-size:18px" id="kap-usdnok-val">-</div>
-      <div class="stat-sub" id="kap-usdnok-sub">Stooq usdnok</div>
-    </div>
-    <div class="stat-card" style="border-left:3px solid var(--faint)">
-      <div class="stat-label">EUR/NOK</div>
-      <div class="stat-value" style="font-size:18px" id="kap-eurnok-val">-</div>
-      <div class="stat-sub" id="kap-eurnok-sub">Stooq eurnok</div>
-    </div>
   </div>
 
   <!-- Talebs barbell — overordnet -->
@@ -2012,7 +1940,7 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 
   <div class="footnote">
-    Markedspriser per 1. april 2026 · Brent: CNBC/ICE · Gull: JM Bullion/Goodreturns ($4 654, +2,8 % intradag) · LME Kobber: MacroMicro (31. mars) · LME Aluminium: LME/Fastmarkets · US 10Y: Tradeweb · Gull-prognose: J.P. Morgan Global Research · Kobber-prognose: Fastmarkets<br>
+    Markedspriser: se Kapitalimplikasjoner-panelet for analytiske posisjoner<br>
     Halvard Nordang — Affectum AS · Konfidensielt · Ikke investeringsrådgivning
   </div>
 </div>
@@ -3645,7 +3573,7 @@ input[type=range]::-webkit-slider-thumb {
     </div>
   </div>
 
-  <!-- INJECT_POINT -->
+
 
   <!-- ══════════════════════════════════════════════════
        MAL FOR NYE OPPDATERINGER
@@ -3734,32 +3662,10 @@ function calcHormuz() {
   // (slider label set by updateSliderLabel)
 
   const cm = conflictMult[conflict];
-  const baseOil = window._brentLive || 101; // Stooq cb.f — oppdateres av build.py
-  // Oppdater etikett i slider dynamisk
-  const bpEl = document.getElementById('hz-base-price');
-  if (bpEl) bpEl.textContent = '~' + Math.round(baseOil) + ' $';
-  const peakOil = Math.round(baseOil + oilShock * cm);
-  const normalOil = Math.round(72 + oilShock * cm * 0.12); // decay toward pre-conflict ~72 $
+  const baseOil = 101; // Brent ~101 $/fat per 1. april 2026
 
-  // CPI effect: ~0.03 pp per $1 oil shock, delayed one quarter
-  const cpiEffect = (oilShock * cm * 0.03).toFixed(1);
-
-  // GDP cumulative effect
-  const gdpEffectPerQ = gdpBase * cm;
-  const gdpCumulative = (gdpEffectPerQ * Math.min(dur, 4) * 0.65).toFixed(1);
-
-  // Duration label
-  const durLabels = {1:'3–6 mnd.', 2:'6–9 mnd.', 3:'9–12 mnd.', 4:'12–18 mnd.', 5:'15–24 mnd.', 6:'18–30 mnd.', 7:'24–36 mnd.', 8:'2–4 år'};
-
-  document.getElementById('cr-brent').textContent    = '∼' + peakOil + ' $';
-  document.getElementById('cr-gdp').textContent      = '−' + gdpCumulative + ' pp';
-  document.getElementById('cr-cpi').textContent      = '+' + cpiEffect + ' pp';
-  document.getElementById('cr-duration-out').textContent = durLabels[dur];
-
-  // Risk score
-  const score = oilShock * cm * 0.4 + gdpBase * cm * 3.5 + dur * 5;
   let riskLbl, riskCol;
-  if (score < 20)      { riskLbl = 'Lav';     riskCol = '#14532D'; }
+  if      (score < 25) { riskLbl = 'Lav';     riskCol = '#14532D'; }
   else if (score < 45) { riskLbl = 'Moderat'; riskCol = '#92400E'; }
   else if (score < 80) { riskLbl = 'Høy'; riskCol = '#C53030'; }
   else                 { riskLbl = 'Ekstrem'; riskCol = '#7F1D1D'; }
@@ -4068,7 +3974,6 @@ function initAnalyseProgress() {
 
 // ── LIVE BRENT PRICE (Yahoo Finance BZ=F) ──────────────────────────────────
 // Brent-pris vises via TradingView live widget (se Oversikt-panelet)
-// window._brentLive brukes fortsatt av Hormuz-kalkulatoren hvis satt av build.py
 
 document.addEventListener('DOMContentLoaded', initAnalyseProgress);
 
@@ -4124,7 +4029,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var mnd = MONTHS[d.getMonth()];
   var aar = d.getFullYear();
   var dato = dag + '. ' + mnd + ' ' + aar;
-  var ids = ['dyn-topbar-date','dyn-oversikt-date','dyn-makro-date','dyn-makro-sect1','dyn-makro-sect2','dyn-kap-date'];
+  var ids = ['dyn-topbar-date','dyn-oversikt-date','dyn-makro-date','dyn-makro-sect1','dyn-makro-sect2'];
   ids.forEach(function(id) {
     var el = document.getElementById(id);
     if (el) el.textContent = dato;
