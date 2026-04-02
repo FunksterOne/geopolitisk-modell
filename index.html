@@ -816,12 +816,10 @@ input[type=range]::-webkit-slider-thumb {
     <span class="nav-dot" style="background:#1D9E75"></span>Om modellen
   </div>
 
-  <div class="nav-item" data-panel="kina" onclick="nav(this)">
-    <span class="nav-dot" style="background:#C63D2F"></span>Kinas posisjon
-  </div>
+
 
   <div class="nav-item" data-panel="kapital" onclick="nav(this)">
-    <span class="nav-dot" style="background:#D4537E"></span>Kapitalimplikasjoner
+    <span class="nav-dot" style="background:#D4537E"></span>Investeringsråd
   </div>
   <div class="nav-item" data-panel="makro" onclick="nav(this)">
     <span class="nav-dot" style="background:#0F6E56"></span>Makrodata
@@ -830,9 +828,7 @@ input[type=range]::-webkit-slider-thumb {
   <div class="nav-item" data-panel="nyheter" onclick="nav(this)">
     <span class="nav-dot" style="background:#0E7490;box-shadow:0 0 0 2px rgba(14,116,144,.3)"></span>Nyheter
   </div>
-  <div class="nav-item" data-panel="logg" onclick="nav(this)">
-    <span class="nav-dot" style="background:#B8B7B0"></span>Modellens tilblivelse
-  </div>
+
   <div class="sidebar-footer">
     En syntese av seks analytiske rammeverk.<br>
     Kildegrunnlag:<br>Goodspeed · Fishman · Miran<br>NDS (2026) · NSS (2026) · Taleb
@@ -865,39 +861,37 @@ input[type=range]::-webkit-slider-thumb {
     </div>
   </div>
 
+  <!-- ════════════════════════════════════════════════════
+       KNAPPERAD — skalerbar for fremtidige knapper
+  ══════════════════════════════════════════════════════ -->
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+    <button id="tshm-btn" onclick="applyTSHM()" title="Synkroniser parametere fra Trumpometer-signaler (TSHM-modellen)" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.2);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
+      <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid)">⟳ Synk fra Trumpometer</span>
+    </button>
+    <span class="tt-trigger" data-tt="tt-tshm" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:9px;font-weight:700;cursor:help;border:1px solid var(--border-md)">?</span>
+    <div style="width:1px;height:18px;background:var(--border);flex-shrink:0"></div>
+    <button onclick="openScenarioModal()" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy);border:none;border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s;box-shadow:var(--shadow)">
+      <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:white">⬡ Vis scenarier</span>
+    </button>
+    <button onclick="openHormuzModal()" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--red-lt);border:1px solid rgba(197,48,48,.25);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
+      <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--red)">▲ Mer om Hormuz</span>
+    </button>
+    <button onclick="openKinaModal()" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--amber-lt);border:1px solid rgba(146,64,14,.25);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
+      <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--amber)">🇨🇳 Kinas posisjon</span>
+    </button>
+  </div>
+
   <!-- ════════════════════════════════════════════════════════════
        RAD 1: HORMUZ (venstre) + TRUMPOMETER (høyre)
-       Felles designspråk: hvit kort, subtil ramme, konsistent typografi
   ═══════════════════════════════════════════════════════════════ -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
 
     <!-- ── HORMUZ-KALKULATOR ─────────────────────────────────── -->
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 22px;box-shadow:var(--shadow)">
       <!-- Header -->
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">
-        <div>
-          <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:3px">Hormuz-kalkulator</div>
-          <div style="font-size:13px;font-weight:600;color:var(--text)">Juster parametere — live konsekvenser</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <!-- TSHM-knapp -->
-          <button id="tshm-btn" onclick="applyTSHM()" title="Synkroniser parametere fra Trumpometer-signaler (TSHM-modellen)" style="display:flex;align-items:center;gap:5px;padding:5px 10px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.2);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
-            <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid)">⟳ Synk fra Trumpometer</span>
-          </button>
-          <span class="tt-trigger" data-tt="tt-tshm" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:9px;font-weight:700;cursor:help;border:1px solid var(--border-md)" title="Forklaring av TSHM-modellen">?</span>
-          <!-- Vis Scenarier-knapp -->
-          <button onclick="openScenarioModal()" style="display:flex;align-items:center;gap:5px;padding:5px 11px;background:var(--navy);border:none;border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s;box-shadow:var(--shadow)">
-            <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:white">⬡ Vis scenarier</span>
-          </button>
-          <!-- Mer om Hormuz-knapp -->
-          <button onclick="openHormuzModal()" style="display:flex;align-items:center;gap:5px;padding:5px 11px;background:var(--red-lt);border:1px solid rgba(197,48,48,.25);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
-            <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--red)">▲ Mer om Hormuz</span>
-          </button>
-          <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;background:var(--red-lt);border-radius:20px;border:1px solid rgba(197,48,48,.15)">
-            <div style="width:5px;height:5px;border-radius:50%;background:var(--red);animation:pulse 2s infinite"></div>
-            <span style="font-size:10px;font-weight:600;color:var(--red)">Brent <span id="live-brent-stat">—</span></span>
-          </div>
-        </div>
+      <div style="margin-bottom:16px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:3px">Hormuz-kalkulator</div>
+        <div style="font-size:13px;font-weight:600;color:var(--text)">Juster parametere — live konsekvenser</div>
       </div>
 
       <!-- TSHM-statusboks (skjult inntil synk kjøres) -->
@@ -2083,7 +2077,7 @@ input[type=range]::-webkit-slider-thumb {
 <!-- ─── KAPITAL ─── -->
 <div class="panel" id="panel-kapital">
   <div class="panel-header">
-    <div class="panel-title">Kapitalimplikasjoner</div>
+    <div class="panel-title">Investeringsråd</div>
     <div class="panel-sub">To analytiske lag: overordnet strategi og spesifikke implikasjoner forankret i Perera-data og de seks analytiske rammeverk</div>
   </div>
 
@@ -2352,7 +2346,7 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 
   <div class="footnote">
-    Markedspriser: se Kapitalimplikasjoner-panelet for analytiske posisjoner<br>
+    Markedspriser: se Investeringsråd-panelet for analytiske posisjoner<br>
     Halvard Nordang — Affectum AS · Konfidensielt · Ikke investeringsrådgivning
   </div>
 </div>
@@ -2741,7 +2735,7 @@ input[type=range]::-webkit-slider-thumb {
     </div>
 
     <div class="relevance-box">
-      <div class="relevance-label">Analytisk nøkkelpunkt — Goodspeed · Taleb · kapitalimplikasjoner</div>
+      <div class="relevance-label">Analytisk nøkkelpunkt — Goodspeed · Taleb · investeringsråd</div>
       Goodspeed dokumenterer at energisjokk er involvert i 10 av 12 resesjoner i USA siden 1945. Hormuz-stengningen er nøyaktig den typen brå og diskontinuerlig energisjokk han beskriver — ikke en gradvis prisstigning, men en strukturell forstyrrelse av forsyningskjeden. Dallas Feds estimat på −2,9 prosentpoeng annualisert BNP-effekt ved ett kvartal stengning er en Goodspeed-type-1-hendelse. Talebs poeng: ingen av de eksisterende modellene er kalibrert for dette. March 2026 CPI-dataene (2,4 %) reflekterer ennå ikke Hormuz-effekten — det vil komme i april og mai-rapportene.
     </div>
   </div>
@@ -3041,455 +3035,6 @@ input[type=range]::-webkit-slider-thumb {
 </div>
 
 
-<!-- ─── KINA-POSISJONEN ─── -->
-<div class="panel" id="panel-kina">
-  <div class="panel-header">
-    <div class="panel-title">Kinas posisjon i det globale bildet</div>
-    <div class="panel-sub">Sjeldne jordarter, kritiske metaller og prosesseringsmakt — koblet til Fishman, NDS (2026) og Taleb</div>
-  </div>
-
-  <!-- INNLEDNINGSBOKS -->
-  <div style="font-size:13.5px;line-height:1.82;color:var(--text);font-weight:300;margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-left:3px solid #C63D2F;border-radius:0 var(--radius) var(--radius) 0;padding:14px 18px;box-shadow:var(--shadow)">
-    Kinas strategiske makt i globale verdikjeder ligger ikke i gruvene — den ligger i kjemien og industrien. Prosessering av sjeldne jordarter og kritiske metaller er kapitalintensivt, teknologisk krevende og miljømessig belastende. Vestlige land har i 30–40 år outsourcet nettopp dette. Resultatet er et strukturelt avhengighetsforhold som ikke kan reverseres på få år, uavhengig av politisk vilje. Eksportkontrollene fra 2025–2026 er ikke anomalier — de er demonstrasjoner av en makt som alltid har eksistert.
-  </div>
-
-  <!-- NØKKELTALL PROSESSERING -->
-  <div class="section-label">Kinas kontroll — produksjon vs. prosessering <span class="tt-trigger" data-tt="tt-kina-kontroll" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
-
-    <!-- Produksjon -->
-    <div class="card" style="border-top:3px solid #92400E">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#92400E;margin-bottom:12px">Produksjon (upstream)</div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-            <span style="font-size:12px;color:var(--muted)">Global utvinning av sjeldne jordarter</span>
-            <span style="font-size:13px;font-weight:700;color:var(--text)">~70 %</span>
-          </div>
-          <div class="risk-track"><div class="risk-fill" style="width:70%;background:#92400E"></div></div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-            <span style="font-size:12px;color:var(--muted)">Verdens største reserver</span>
-            <span style="font-size:13px;font-weight:700;color:var(--text)">44 mill. t</span>
-          </div>
-          <div class="risk-track"><div class="risk-fill" style="width:60%;background:#92400E"></div></div>
-        </div>
-      </div>
-      <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--faint);line-height:1.55">Produksjon er <em>ikke</em> det avgjørende maktpunktet. Råstoff fra Myanmar, Australia og USA sendes tilbake til Kina for prosessering.</div>
-    </div>
-
-    <!-- Prosessering -->
-    <div class="card" style="border-top:3px solid #C63D2F">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#C63D2F;margin-bottom:12px">Prosessering (midstream) — det virkelige maktpunktet</div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-            <span style="font-size:12px;color:var(--muted)">Global prosessering/raffinering REE</span>
-            <span style="font-size:13px;font-weight:700;color:#C63D2F">85–90 %</span>
-          </div>
-          <div class="risk-track"><div class="risk-fill" style="width:88%;background:#C63D2F"></div></div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-            <span style="font-size:12px;color:var(--muted)">Tunge REE (dysprosium, terbium)</span>
-            <span style="font-size:13px;font-weight:700;color:#C63D2F">Nær monopol</span>
-          </div>
-          <div class="risk-track"><div class="risk-fill" style="width:95%;background:#C63D2F"></div></div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-            <span style="font-size:12px;color:var(--muted)">Batteriproduksjonskapasitet globalt</span>
-            <span style="font-size:13px;font-weight:700;color:#C63D2F">~78 %</span>
-          </div>
-          <div class="risk-track"><div class="risk-fill" style="width:78%;background:#C63D2F"></div></div>
-        </div>
-      </div>
-      <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--faint);line-height:1.55">Prosessering er kapitakrevende, teknologisk krevende og miljøbelastende. Vestlige land har outsourcet dette i 30–40 år.</div>
-    </div>
-  </div>
-
-  <!-- KRITISKE METALLER UTOVER REE -->
-  <div class="section-label">Kinas dominans utover sjeldne jordarter — kritiske metaller</div>
-  <div class="card" style="margin-bottom:16px">
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px 8px">
-
-      <div>
-        <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:6px">Nikkelraffinering</div>
-        <div style="font-size:22px;font-weight:700;color:#C63D2F;line-height:1">68 %</div>
-        <div class="risk-track" style="margin-top:6px"><div class="risk-fill" style="width:68%;background:#C63D2F"></div></div>
-        <div style="font-size:10px;color:var(--faint);margin-top:4px">EV-batterier, stål</div>
-      </div>
-
-      <div>
-        <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:6px">Litiumraffinering</div>
-        <div style="font-size:22px;font-weight:700;color:#C63D2F;line-height:1">59 %</div>
-        <div class="risk-track" style="margin-top:6px"><div class="risk-fill" style="width:59%;background:#C63D2F"></div></div>
-        <div style="font-size:10px;color:var(--faint);margin-top:4px">Batterier, energilagring</div>
-      </div>
-
-      <div>
-        <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:6px">Koboltraffinering</div>
-        <div style="font-size:22px;font-weight:700;color:#C63D2F;line-height:1">73 %</div>
-        <div class="risk-track" style="margin-top:6px"><div class="risk-fill" style="width:73%;background:#C63D2F"></div></div>
-        <div style="font-size:10px;color:var(--faint);margin-top:4px">Katodemateriell, forsvar</div>
-      </div>
-
-      <div>
-        <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:6px">Kobberraffinering</div>
-        <div style="font-size:22px;font-weight:700;color:#92400E;line-height:1">40 %</div>
-        <div class="risk-track" style="margin-top:6px"><div class="risk-fill" style="width:40%;background:#92400E"></div></div>
-        <div style="font-size:10px;color:var(--faint);margin-top:4px">Infrastruktur, elektronikk</div>
-      </div>
-
-      <div style="grid-column:span 2">
-        <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:6px">Batterikomponenter — anoder</div>
-        <div style="font-size:22px;font-weight:700;color:#C63D2F;line-height:1">85 %</div>
-        <div class="risk-track" style="margin-top:6px"><div class="risk-fill" style="width:85%;background:#C63D2F"></div></div>
-        <div style="font-size:10px;color:var(--faint);margin-top:4px">Grafittanoder — EV-er og energilagring</div>
-      </div>
-
-      <div style="grid-column:span 2">
-        <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:6px">Batterikomponenter — katoder</div>
-        <div style="font-size:22px;font-weight:700;color:#C63D2F;line-height:1">70 %</div>
-        <div class="risk-track" style="margin-top:6px"><div class="risk-fill" style="width:70%;background:#C63D2F"></div></div>
-        <div style="font-size:10px;color:var(--faint);margin-top:4px">NMC/LFP-katoder — dominerende teknologi</div>
-      </div>
-
-    </div>
-    <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:11.5px;font-weight:500;color:var(--text)">
-      Kina er «the chokepoint» i hele grønn teknologi + høyteknologiske verdikjeder — EV-er, vindkraft, våpensystemer og halvledere.
-    </div>
-  </div>
-
-  <!-- FLASKEHALSEN -->
-  <div class="section-label">Prosessering som strategisk flaskehals <span class="tt-trigger" data-tt="tt-flaskehals" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-
-    <div class="card">
-      <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:10px">Hvorfor prosessering gir makt</div>
-      <div class="imp-row" style="padding:8px 0">
-        <div class="imp-icon" style="background:#FCEBEB;color:#C63D2F;font-size:11px">K</div>
-        <div><div class="imp-title" style="font-size:12px">Kapitalintensivt</div><div class="imp-desc">Krever massiv industriell infrastruktur. Ikke mulig å bygge opp på 2–3 år.</div></div>
-      </div>
-      <div class="imp-row" style="padding:8px 0">
-        <div class="imp-icon" style="background:#FCEBEB;color:#C63D2F;font-size:11px">T</div>
-        <div><div class="imp-title" style="font-size:12px">Teknologisk krevende</div><div class="imp-desc">Kjemisk separasjon av tunge REE krever tiår med know-how. Ikke tilgjengelig i Vesten.</div></div>
-      </div>
-      <div class="imp-row" style="padding:8px 0;border-bottom:none">
-        <div class="imp-icon" style="background:#FCEBEB;color:#C63D2F;font-size:11px">M</div>
-        <div><div class="imp-title" style="font-size:12px">Miljøbelastende</div><div class="imp-desc">Vestlige land outsourcet nettopp fordi det er regulatorisk og politisk vanskelig å gjøre hjemme.</div></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:10px">Kina kontrollerer flaskehalsen i</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div style="background:var(--red-lt);border-radius:var(--radius);padding:10px 12px">
-          <div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:2px">EV-er</div>
-          <div style="font-size:10.5px;color:var(--muted)">Magneter, batterier, motorer</div>
-        </div>
-        <div style="background:var(--red-lt);border-radius:var(--radius);padding:10px 12px">
-          <div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:2px">Vindkraft</div>
-          <div style="font-size:10.5px;color:var(--muted)">NdFeB-magneter i turbiner</div>
-        </div>
-        <div style="background:var(--red-lt);border-radius:var(--radius);padding:10px 12px">
-          <div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:2px">Forsvar</div>
-          <div style="font-size:10.5px;color:var(--muted)">Guidede missiler, radar, sensorer</div>
-        </div>
-        <div style="background:var(--red-lt);border-radius:var(--radius);padding:10px 12px">
-          <div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:2px">Halvledere</div>
-          <div style="font-size:10.5px;color:var(--muted)">Germanium, gallium — eksportkontroll 2023</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- EKSPORTKONTROLLER 2025-2026 -->
-  <div class="section-label">Eksportkontroller og «moratorium» — 2025–2026 <span class="tt-trigger" data-tt="tt-eksport" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-  <div class="card" style="margin-bottom:14px">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
-      <div style="padding:14px 18px 14px 0;border-right:1px solid var(--border)">
-        <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:10px">Faktisk situasjon</div>
-        <div class="timeline-row">
-          <div class="tl-date">2025</div>
-          <div><div class="tl-text">Kina innfører eksportrestriksjoner på sjeldne jordarter og kritiske metaller</div></div>
-        </div>
-        <div class="timeline-row">
-          <div class="tl-date">2025–nov. 2026</div>
-          <div><div class="tl-text">Delvis suspensjon («moratorium») — men lisensregime opprettholdes</div></div>
-        </div>
-        <div class="timeline-row" style="border-bottom:none">
-          <div class="tl-date">2026 (pågående)</div>
-          <div><div class="tl-text">Redusert/stanset eksport av tunge REE spesifikt til USA. Selektiv tilgang for andre.</div></div>
-        </div>
-      </div>
-      <div style="padding:14px 0 14px 18px">
-        <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:10px">Tolkning</div>
-        <div style="font-size:12.5px;line-height:1.75;color:var(--text)">
-          Dette er ikke et fullstendig moratorium i klassisk forstand. Det er en <strong>strategisk pause med selektiv tilgang og lisenskontroll</strong> — et midlertidig geopolitisk våpen på pause.
-        </div>
-        <div style="margin-top:12px;background:var(--red-lt);border-radius:var(--radius);padding:10px 12px;font-size:11.5px;line-height:1.65;color:#7F1D1D">
-          <strong>Kina begrenser de mest strategiske materialene</strong>, ikke nødvendigvis volumene totalt. Eksportvolumer var rekordhøye i 2025, men kritiske tunge REE er strammet inn. Prisen på enkeltmetaller har nesten doblet seg i 2026.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TIDSHORISONTER -->
-  <div class="section-label">Konsekvenser — tre tidshorisonter <span class="tt-trigger" data-tt="tt-konsekvenser" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
-
-    <div class="card" style="border-top:3px solid var(--red)">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-bottom:10px">Kort sikt (0–3 år)</div>
-      <div style="font-size:12px;line-height:1.7;color:var(--text)">
-        Tilbudsrisiko øker kraftig. Små volum gir stor prispåvirkning — nesten dobling av enkelt-REE-priser i 2026. Flaskehalser i magneter, halvledere og forsvarsindustri inntrer raskt.
-      </div>
-      <div style="margin-top:10px;font-size:11px;font-weight:600;color:var(--red)">Goodspeed-kobling: «supply shock trigger»</div>
-    </div>
-
-    <div class="card" style="border-top:3px solid var(--amber)">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-bottom:10px">Mellomlang sikt (3–10 år)</div>
-      <div style="font-size:12px;line-height:1.7;color:var(--text)">
-        Diversifisering forsøkes av USA, Australia og EU. Men prosessering er fortsatt problemet. Kina vil fortsatt dominere &gt;60 % av markedet og kontrollere ~90 % av tung REE-prosessering.
-      </div>
-      <div style="margin-top:10px;font-size:11px;font-weight:600;color:var(--amber)">Fishman-kobling: asymmetri — lettere å rive ned enn å bygge opp</div>
-    </div>
-
-    <div class="card" style="border-top:3px solid #888780">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#888780;margin-bottom:10px">Lang sikt (10+ år)</div>
-      <div style="font-size:12px;line-height:1.7;color:var(--text)">
-        Tre mulige scenarier: (1) Delvis avkobling — parallelle forsyningskjeder. (2) Vedvarende kinesisk dominans — mest sannsynlig. (3) Teknologisk substitusjon — magnetfrie løsninger, redusert REE-avhengighet.
-      </div>
-      <div style="margin-top:10px;font-size:11px;font-weight:600;color:#888780">Taleb-kobling: scenario 3 er den sorte svanen</div>
-    </div>
-  </div>
-
-  <!-- MAKROØKONOMISKE KONSEKVENSER -->
-  <div class="section-label">Makroøkonomiske konsekvenser</div>
-  <div class="matrix" style="margin-bottom:16px">
-    <div class="mbox" style="background:var(--red-lt);border:1px solid rgba(197,48,48,.18)">
-      <div class="mbox-title" style="color:var(--red)">A) Inflasjon og kostnadspress</div>
-      <div class="mbox-body" style="color:#7F1D1D">REE inngår i EV-er, energi og elektronikk. Høyere råvarepriser gir kostnadsdrevet inflasjon — Goodspeeds fjerde resesjonstrigger aktivert via et annet forsyningspunkt enn energi.</div>
-    </div>
-    <div class="mbox" style="background:var(--amber-lt);border:1px solid rgba(146,64,14,.15)">
-      <div class="mbox-title" style="color:var(--amber)">B) Industriell fragmentering</div>
-      <div class="mbox-body" style="color:#78350F">«Friend-shoring» og geopolitisk blokkdannelse gir mindre effektiv global handel. Lavere produktivitetsvekst. Mirans handelsomstrukturering vanskeliggjøres.</div>
-    </div>
-    <div class="mbox" style="background:var(--navy-lt);border:1px solid rgba(31,56,100,.12)">
-      <div class="mbox-title" style="color:var(--navy)">C) Lavere global vekst</div>
-      <div class="mbox-body" style="color:#1F3864">UNCTAD peker allerede på svak global vekst (~2,6 %). REE-flaskehalser kan forsinke grønn omstilling og redusere investeringer i teknologisektoren strukturelt.</div>
-    </div>
-    <div class="mbox" style="background:var(--purple-lt);border:1px solid rgba(59,7,100,.12)">
-      <div class="mbox-title" style="color:var(--purple)">D) Strategisk usikkerhet</div>
-      <div class="mbox-body" style="color:#4C1D95">REE fungerer som «supply shock trigger» — sammenlignbart med olje på 1970-tallet. Eksperter omtaler dette som «structural leverage» i globale verdikjeder.</div>
-    </div>
-  </div>
-
-  <!-- ANALYTISK KOBLING -->
-  <div class="section-label">Kobling til de seks analytiske rammeverk</div>
-  <div class="card">
-    <div class="imp-row">
-      <div class="imp-icon" style="background:#E1F5EE;color:#085041;font-size:10px;font-weight:700">EF</div>
-      <div>
-        <div class="imp-title">Fishman — det umulige trevalget</div>
-        <div class="imp-desc">USA valgte geopolitisk konkurranse (halvledersanksjoner mot Huawei) og ga opp dyp integrasjon. Kinas REE-eksportkontroller er svaret: et speilvendt Fishman-trekk. Asymmetrien er strukturell — USA kan ikke raskt bygge opp prosesseringskapasitet som Kina har bygd over 30 år.</div>
-      </div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:#FCEBEB;color:var(--red);font-size:10px;font-weight:700">NDS</div>
-      <div>
-        <div class="imp-title">National Defense Strategy (2026) — Line of Effort 4</div>
-        <div class="imp-desc">NDS krever nasjonal mobilisering av forsvarsindustriell base. Guidede missiler, radar og avanserte sensorer er avhengig av tunge REE (dysprosium, terbium) som Kina nær monopol-kontrollerer. NDS autoriserer operasjoner som forsterker nettopp det behovet den sier må løses.</div>
-      </div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:#FAECE7;color:#7C2D12;font-size:10px;font-weight:700">NSS</div>
-      <div>
-        <div class="imp-title">National Security Strategy (2026) — kritiske forsyningskjeder</div>
-        <div class="imp-desc">NSS er eksplisitt på at sikker tilgang til kritiske råvarer er en nasjonal prioritet. Men ønsket om «Energy Dominance» og REE-uavhengighet kolliderer med realiteten: prosesseringskapasiteten eksisterer ikke utenfor Kina, og kan ikke bygges på kortere enn 10–15 år.</div>
-      </div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:#E6F1FB;color:#0C447C;font-size:10px;font-weight:700">NT</div>
-      <div>
-        <div class="imp-title">Taleb — den perspektivavhengige sorte svanen</div>
-        <div class="imp-desc">Teknologisk substitusjon (scenario 3 over lang sikt) er den sorte svanen ingen modeller er kalibrert for. Magnetfrie motorer, natriumbatterier og redusert REE-avhengighet kan endre hele maktgeometrien — men er ikke priset inn. Alle øvrige analyser antar Mediocristans lineære forsyningskjeder.</div>
-      </div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:#EEEDFE;color:#3C3489;font-size:10px;font-weight:700">GS</div>
-      <div>
-        <div class="imp-title">Goodspeed — REE som fjerde resesjonstrigger</div>
-        <div class="imp-desc">Goodspeeds tre klassiske triggere er energisjokk, krig og kredittkontraksjon. REE-forsyningssjokk er en fjerde, strukturell variant: kostnadsdrevet inflasjon i industrisektorer som ikke har alternativer. Kombinert med Hormuz-sjokket gir dette simultant press fra to uavhengige forsyningspunkter.</div>
-      </div>
-    </div>
-    <div class="imp-row" style="border-bottom:none">
-      <div class="imp-icon" style="background:#FAEEDA;color:#633806;font-size:10px;font-weight:700">SM</div>
-      <div>
-        <div class="imp-title">Miran — handelspolitikkens blinde flekk</div>
-        <div class="imp-desc">Mirans plan for å rebalansere det globale handelssystemet via tariffer forutsetter at handelsflyten er relativt fri. REE-prosesseringsmonopolet er en strukturell assymetri som tariffer ikke løser — og som i verste fall forsterker, ved at kinesisk gjengjeldelse i REE-eksport treffer amerikanske forsvarsprogrammer direkte.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- BUNNLINJE -->
-  <div class="diag-box" style="margin-top:14px">
-    <div class="diag-label">Bunnlinje — «structural leverage» <span class="tt-trigger" data-tt="tt-bunnlinje" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-    Kinas makt ligger ikke i gruvene — den ligger i kjemien og industrien. Med ~70 % av produksjon, ~90 % av prosessering og nær monopol på tunge REE-komponenter har Kina i praksis en opsjon på å strupe verdens tilgang til kritiske innsatsfaktorer for forsvar, energiomstilling og høyteknologi — når som helst. Eksportkontrollene fra 2025–2026 er ikke et tilfeldig sanksjonsregime. De er en demonstrasjon av at makten finnes, at den kan brukes, og at motvekten ikke eksisterer.
-  </div>
-
-  <div class="footnote" style="margin-top:16px">
-
-  <!-- RÅVAREPRISER LIVE -->
-  <div class="section-label" style="margin-top:14px">Råvarepriser — sjeldne jordarter og kritiske metaller</div>
-
-  <!-- Kildeguide -->
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px">
-    <div style="background:var(--navy-lt);border:1px solid rgba(31,56,100,.15);border-radius:var(--radius);padding:12px 14px">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:6px">Tier 1 — Industriell benchmark</div>
-      <div style="font-size:11.5px;font-weight:600;color:var(--text);margin-bottom:3px">Shanghai Metals Market (SMM)</div>
-      <div style="font-size:11px;color:var(--muted);line-height:1.55">Daglige spotpriser i RMB/tonn for leveranser til kinesiske verk, VAT ekskl. Prisoversatt til USD. Brukt av magnetprodusenter og OEM-er globalt.</div>
-      <div style="margin-top:7px;font-size:10px;color:var(--faint)">metal.com/Rare-Earth-Metals</div>
-    </div>
-    <div style="background:var(--navy-lt);border:1px solid rgba(31,56,100,.15);border-radius:var(--radius);padding:12px 14px">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:6px">Tier 1 — Benchmark metaller</div>
-      <div style="font-size:11.5px;font-weight:600;color:var(--text);margin-bottom:3px">London Metal Exchange (LME)</div>
-      <div style="font-size:11px;color:var(--muted);line-height:1.55">Offisielle settlement-priser for kobolt, nikkel og kobber. Globalt autoritative benchmarks under UK Benchmarks Regulation.</div>
-      <div style="margin-top:7px;font-size:10px;color:var(--faint)">lme.com · Fastmarkets MB</div>
-    </div>
-    <div style="background:var(--navy-lt);border:1px solid rgba(31,56,100,.15);border-radius:var(--radius);padding:12px 14px">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:6px">Tier 2 — Analysekilde</div>
-      <div style="font-size:11.5px;font-weight:600;color:var(--text);margin-bottom:3px">Benchmark Mineral Intelligence</div>
-      <div style="font-size:11px;color:var(--muted);line-height:1.55">Ledende uavhengig priskilde for batterimineraler. Brukt av sentralbanker og industrielle innkjøpere. IOSCO-assurert.</div>
-      <div style="margin-top:7px;font-size:10px;color:var(--faint)">benchmarkminerals.com</div>
-    </div>
-  </div>
-
-  <!-- Viktig merknad om tospor -->
-  <div style="background:#FFFBEB;border:1px solid rgba(146,64,14,.2);border-radius:var(--radius);padding:10px 14px;margin-bottom:14px;font-size:11.5px;line-height:1.65;color:var(--text)">
-    <strong style="color:var(--amber)">Tosporet prissetting:</strong> Industrielle kjøpere betaler SMM-referansepris (Dy₂O₃ ~191 $/kg, mars 2026), mens privatinvestorer betaler retailpris (~930 $/kg). Differansen på 3–5× reflekterer forhandlermargin og likviditetspremie. Geopolitisk analyse bruker industriell SMM-pris.
-  </div>
-
-  <!-- PRISER: SJELDNE JORDARTER -->
-  <div class="section-label" style="margin-top:0">Sjeldne jordarter — industriell spotpris (SMM/Fastmarkets, mars 2026)</div>
-  <table class="compare-table" style="margin-bottom:16px">
-    <thead>
-      <tr>
-        <th>Metall</th>
-        <th>Pris (industri)</th>
-        <th>YTD-endring 2026</th>
-        <th>Bruksområde</th>
-        <th>Kinas andel</th>
-        <th>Kilde</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Dysprosium (Dy₂O₃)</strong></td>
-        <td><span class="num alert-cell">~191 $/kg</span></td>
-        <td class="alert-cell">+&gt;100 % YTD</td>
-        <td>EV-magneter, vindturbiner, forsvar</td>
-        <td class="alert-cell">&gt;90 % prosessering</td>
-        <td style="font-size:10px;color:var(--faint)">SMM, 6. mars 2026</td>
-      </tr>
-      <tr>
-        <td><strong>Terbium (Tb₄O₇)</strong></td>
-        <td><span class="num alert-cell">~840–848 $/kg</span></td>
-        <td class="alert-cell">+103 % YTD</td>
-        <td>Høytemp. magneter, forsvar, SOFC</td>
-        <td class="alert-cell">Nær monopol</td>
-        <td style="font-size:10px;color:var(--faint)">SMM/Rare Earth Exchanges, mars 2026</td>
-      </tr>
-      <tr>
-        <td><strong>Neodymium (NdPr oksid)</strong></td>
-        <td><span class="num warn-cell">~97–100 $/kg</span></td>
-        <td class="warn-cell">+47 % YTD</td>
-        <td>NdFeB-magneter, EV, vindkraft</td>
-        <td class="alert-cell">~85 % prosessering</td>
-        <td style="font-size:10px;color:var(--faint)">SMM/Rare Earth Exchanges, 30. mars 2026</td>
-      </tr>
-      <tr>
-        <td><strong>Praseodymium (Pr)</strong></td>
-        <td><span class="num warn-cell">~121–124 $/kg</span></td>
-        <td class="warn-cell">Stigende</td>
-        <td>NdPr-legeringer, magneter, katalysatorer</td>
-        <td class="alert-cell">~85 % prosessering</td>
-        <td style="font-size:10px;color:var(--faint)">SMM/Rare Earth Exchanges, mars 2026</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- PRISER: KRITISKE METALLER (LME) -->
-  <div class="section-label" style="margin-top:0">Kritiske metaller — LME og Benchmark MI (jan.–mars 2026)</div>
-  <table class="compare-table" style="margin-bottom:16px">
-    <thead>
-      <tr>
-        <th>Metall</th>
-        <th>Pris (LME/spotmarked)</th>
-        <th>Utvikling 2025–2026</th>
-        <th>Nøkkeldrivere</th>
-        <th>Kinas raffinering</th>
-        <th>Kilde</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Litium karbonat</strong></td>
-        <td><span class="num alert-cell">Kraftig oppgang</span></td>
-        <td class="alert-cell">+78,3 % på én mnd.</td>
-        <td>VAT-kutt EV-eksport, DRC-restriksjoner</td>
-        <td class="alert-cell">~59 %</td>
-        <td style="font-size:10px;color:var(--faint)">Benchmark MI / Credendo, feb. 2026</td>
-      </tr>
-      <tr>
-        <td><strong>Kobolt</strong></td>
-        <td><span class="num warn-cell">Stigende</span></td>
-        <td class="warn-cell">Opp jan. 2026</td>
-        <td>DRC-forstyrrelser, eksportkvote forlenget</td>
-        <td class="alert-cell">~73 %</td>
-        <td style="font-size:10px;color:var(--faint)">LME Cobalt (Fastmarkets MB), mars 2026</td>
-      </tr>
-      <tr>
-        <td><strong>Nikkel</strong></td>
-        <td><span class="num warn-cell">~17 000 $/t (topp feb.)</span></td>
-        <td class="warn-cell">+~30 % mnd/mnd jan. 2026</td>
-        <td>Indonesia reduserte produksjonskvote 2026</td>
-        <td class="alert-cell">~68 %</td>
-        <td style="font-size:10px;color:var(--faint)">LME Nickel / Benchmark MI, feb. 2026</td>
-      </tr>
-      <tr>
-        <td><strong>Kobber</strong></td>
-        <td><span class="num warn-cell">Høy volatilitet</span></td>
-        <td class="warn-cell">Spekulativt drevet</td>
-        <td>Sterkere dollar, svak Kina-sentiment</td>
-        <td class="alert-cell">~40 %</td>
-        <td style="font-size:10px;color:var(--faint)">LME Copper, feb.–mars 2026</td>
-      </tr>
-      <tr>
-        <td><strong>Gallium / Germanium</strong></td>
-        <td><span class="num alert-cell">Eksportkontroll</span></td>
-        <td class="alert-cell">Kinesisk eksportforbud siden 2023</td>
-        <td>Halvlederinnsats, direkte eksportkontroll</td>
-        <td class="alert-cell">&gt;80 % begge</td>
-        <td style="font-size:10px;color:var(--faint)">SMM / USGS, 2026</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- Kina Rare Earth Price Index -->
-  <div class="relevance-box" style="margin-bottom:14px">
-    <div class="relevance-label">Kinas offisielle REE-prisindeks — per 30. mars 2026</div>
-    Kinas statlige REE-prisindeks (2010 = 100) steg fra ~160–180 (stabil 2024–2025) til topp over 300 tidlig i 2026, og har nå trukket tilbake til 255,7. Oppgangen skjedde — nedgangen skjer. Tolkning fra Rare Earth Exchanges (30. mars 2026): de mest strategiske materialene (dysprosium, terbium) stiger ikke lenger innenfor Kina — men stiger kraftig <em>utenfor</em>. Et tydelig prisskille er i ferd med å danne seg: Kina styrer innenlandske priser, mens det globale ex-Kina-markedet prises med knapphetspremie. Dette er Fishmans asymmetri i prisdataform.
-  </div>
-
-        Datagrunnlag: US Geological Survey (USGS) · BloombergNEF · IEA Critical Minerals Report 2024 · Rhodium Group · UNCTAD Trade Report 2025 · Kinas handelsstatistikk (General Administration of Customs) · NDS (2026) · NSS (2026)
-  </div>
-</div>
-
-
-<!-- MODELLENS TILBLIVELSE -->
-
 
 <!-- ─── TRUMPOMETER ─── -->
 <div class="panel" id="panel-trumpometer">
@@ -3628,158 +3173,7 @@ input[type=range]::-webkit-slider-thumb {
 </div>
 
 
-<div class="panel" id="panel-logg">
-  <div class="panel-header">
-    <div class="panel-title">Modellens tilblivelse</div>
-    <div class="panel-sub">Kronologisk logg over hvordan denne analytiske investormodellen ble til</div>
-  </div>
 
-  <div style="font-size:13.5px;line-height:1.82;color:var(--text);font-weight:300;margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--navy);border-radius:0 var(--radius) var(--radius) 0;padding:14px 18px;box-shadow:var(--shadow)">
-    Denne modellen ble til i en sammenhengende arbeidsdag 31. mars 2026, utviklet av Halvard Nordang (Affectum AS) i samarbeid med Claude (Anthropic, Sonnet 4.6). Loggen nedenfor dokumenterer utviklingsforløpet, tekniske valg og datakilder.
-  </div>
-
-  <div class="section-label" style="margin-top:0">Kronologisk utviklingslogg</div>
-  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px">
-    <div style="display:flex;border-bottom:1px solid var(--border);">
-      <div style="width:188px;flex-shrink:0;background:#1F3864;color:white;padding:16px 18px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;opacity:.55;margin-bottom:4px">Steg 1</div>
-        <div style="font-size:13px;font-weight:600;line-height:1.35;margin-bottom:6px">Analytisk grunnlag</div>
-        <div style="font-size:10px;opacity:.6;line-height:1.4">Word-dokumentet som utgangspunkt</div>
-      </div>
-      <div style="padding:16px 20px;flex:1;font-size:12.5px;color:var(--text);line-height:1.75">Halvard hadde utarbeidet <em>Geopolitisk_Systemanalyse_2026_12.docx</em> — en syntese av Goodspeed, Fishman, Miran, NDS (2026), NSS (2026) og Taleb. Oppdraget: «Bygg dette som en HTML.»</div>
-    </div>
-    <div style="display:flex;border-bottom:1px solid var(--border);">
-      <div style="width:188px;flex-shrink:0;background:#2E5D9E;color:white;padding:16px 18px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;opacity:.55;margin-bottom:4px">Steg 2</div>
-        <div style="font-size:13px;font-weight:600;line-height:1.35;margin-bottom:6px">Første HTML-modell</div>
-        <div style="font-size:10px;opacity:.6;line-height:1.4">Seks paneler · DM Serif + DM Sans</div>
-      </div>
-      <div style="padding:16px 20px;flex:1;font-size:12.5px;color:var(--text);line-height:1.75">Frittstående HTML-fil med sidebar-navigasjon, klikk-ekspanderende analytikerkort, tre-slider Hormuz-kalkulator, scenariotabs og kapitalimplikasjoner med barbell-modell. Mørkeblå fargepalett.</div>
-    </div>
-    <div style="display:flex;border-bottom:1px solid var(--border);">
-      <div style="width:188px;flex-shrink:0;background:#0F6E56;color:white;padding:16px 18px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;opacity:.55;margin-bottom:4px">Steg 3</div>
-        <div style="font-size:13px;font-weight:600;line-height:1.35;margin-bottom:6px">Makrodata integrert</div>
-        <div style="font-size:10px;opacity:.6;line-height:1.4">BLS · Fed · ECB · NBS · Dallas Fed</div>
-      </div>
-      <div style="padding:16px 20px;flex:1;font-size:12.5px;color:var(--text);line-height:1.75">Nytt «Makrodata»-panel med fem underseksjoner. Nøkkeltall: Fed 3,50-3,75 % (18. mars), US KPI 2,4 % (BLS feb.), kjerne PCE 2,7 % (FOMC SEP), ECB 2,00 % (19. mars), BNP euroson 0,9 %. Kina: NBS 5,0 % vs. Rhodium 2,5-3,0 %.</div>
-    </div>
-    <div style="display:flex;border-bottom:1px solid var(--border);">
-      <div style="width:188px;flex-shrink:0;background:#C53030;color:white;padding:16px 18px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;opacity:.55;margin-bottom:4px">Steg 4</div>
-        <div style="font-size:13px;font-weight:600;line-height:1.35;margin-bottom:6px">Hormuz-kalkulator utbedret</div>
-        <div style="font-size:10px;opacity:.6;line-height:1.4">Fire slidere · regional eksponering · Taleb-kaskade</div>
-      </div>
-      <div style="padding:16px 20px;flex:1;font-size:12.5px;color:var(--text);line-height:1.75">Fire slidere med konfliktnivå-multiplikatorer (1,0/1,5/2,2), fem primære utfall, differensiert eksponering USA/EU/Kina, Goodspeed-intensitetsmåler og dynamisk Taleb-kaskade. Autogenerert norsk analysetekst.</div>
-    </div>
-    <div style="display:flex;border-bottom:1px solid var(--border);">
-      <div style="width:188px;flex-shrink:0;background:#888780;color:white;padding:16px 18px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;opacity:.55;margin-bottom:4px">Steg 5</div>
-        <div style="font-size:13px;font-weight:600;line-height:1.35;margin-bottom:6px">Analysedokument</div>
-        <div style="font-size:10px;opacity:.6;line-height:1.4">Word-tekst strukturert som lesevisning</div>
-      </div>
-      <div style="padding:16px 20px;flex:1;font-size:12.5px;color:var(--text);line-height:1.75">Word-dokumentet lest via pandoc og gjengitt med innholdsfortegnelse, lesefremdriftslinje, ni hoveddeler, tabeller og blokksitater.</div>
-    </div>
-    <div style="display:flex;border-bottom:1px solid var(--border);">
-      <div style="width:188px;flex-shrink:0;background:#D85A30;color:white;padding:16px 18px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;opacity:.55;margin-bottom:4px">Steg 6</div>
-        <div style="font-size:13px;font-weight:600;line-height:1.35;margin-bottom:6px">Oversikt forbedret</div>
-        <div style="font-size:10px;opacity:.6;line-height:1.4">Innledning · Brent live · Miran kompakt</div>
-      </div>
-      <div style="padding:16px 20px;flex:1;font-size:12.5px;color:var(--text);line-height:1.75">Innledningsboks i full bredde, Brent oppdatert til ~113 $/fat (CNBC/ICE, 31. mars 2026, +55 % i mars — historisk rekord), fire sekundære nøkkeltall og Mirans forutsetninger i kompakt grid.</div>
-    </div>
-    <div style="display:flex;border-bottom:1px solid var(--border);">
-      <div style="width:188px;flex-shrink:0;background:#BA7517;color:white;padding:16px 18px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;opacity:.55;margin-bottom:4px">Steg 7</div>
-        <div style="font-size:13px;font-weight:600;line-height:1.35;margin-bottom:6px">Stolpediagram</div>
-        <div style="font-size:10px;opacity:.6;line-height:1.4">GS-band · ankerpunkter · hover-tooltip</div>
-      </div>
-      <div style="padding:16px 20px;flex:1;font-size:12.5px;color:var(--text);line-height:1.75">Linjediagram erstattet av stolpediagram med tre faser, historiske ankerpunkter (~72 $, ~89 $, 127 $), Goldman Sachs risikopremiebånd 14-18 $/fat, hover-tooltip og animasjon.</div>
-    </div>
-    <div style="display:flex;border-bottom:1px solid var(--border);">
-      <div style="width:188px;flex-shrink:0;background:#C63D2F;color:white;padding:16px 18px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;opacity:.55;margin-bottom:4px">Steg 8</div>
-        <div style="font-size:13px;font-weight:600;line-height:1.35;margin-bottom:6px">Kinas posisjon</div>
-        <div style="font-size:10px;opacity:.6;line-height:1.4">REE · kritiske metaller · priser</div>
-      </div>
-      <div style="padding:16px 20px;flex:1;font-size:12.5px;color:var(--text);line-height:1.75">Panel for Kinas ~85-90 % REE-prosessering, dominans i kritiske metaller, eksportkontroller 2025-2026, tidshorisontanalyse og prisdata fra SMM/LME. Koblet til alle seks rammeverk.</div>
-    </div>
-    <div style="display:flex;">
-      <div style="width:188px;flex-shrink:0;background:#B8B7B0;color:white;padding:16px 18px">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;opacity:.55;margin-bottom:4px">Steg 9</div>
-        <div style="font-size:13px;font-weight:600;line-height:1.35;margin-bottom:6px">Denne loggen</div>
-        <div style="font-size:10px;opacity:.6;line-height:1.4">Modellens tilblivelse dokumentert</div>
-      </div>
-      <div style="padding:16px 20px;flex:1;font-size:12.5px;color:var(--text);line-height:1.75">Kronologisk dokumentasjon av utviklingsforløpet, tekniske valg og datakilder. Modellen er 188+ KB HTML, ti menyvalg, ingen eksterne avhengigheter utover Google Fonts.</div>
-    </div>
-  </div>
-
-  <div class="section-label">Iterative forbedringer underveis</div>
-  <div class="card">
-    <div class="imp-row">
-      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
-      <div><div class="imp-title">Syntaksfeil — apostrofer i kvartalsetiketter</div><div class="imp-desc">Q1'26-format i JS-strenger utloste Unexpected number. Rettet til Q1-26.</div></div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
-      <div><div class="imp-title">Basispris 85 $ til 113 $ i Hormuz-kalkulator</div><div class="imp-desc">Oppdatert til Brent ~113 $/fat per 31. mars 2026 (CNBC/ICE) med korreksjon av normaliseringsnivaa og GS-band.</div></div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
-      <div><div class="imp-title">Stolper viste seg ikke ved aapning av fanen</div><div class="imp-desc">calcHormuz() ble bare kalt ved sliderinteraksjon. Fikset ved aa kalle funksjonen i nav() ved panelaktivering.</div></div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
-      <div><div class="imp-title">Duplikat panel-ID (panel-kina)</div><div class="imp-desc">To komplette Kina-paneler med identisk ID. CSS display:none virket ikke for etterfolgende paneler. Det gamle panelet fjernet.</div></div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
-      <div><div class="imp-title">Innhold utenfor panel-div (denne loggen)</div><div class="imp-desc">Tekniske detaljer og Iterative forbedringer flot utenfor panel-logg-diven. Rotaarsak: ubalanserte div-tags. Panelet rekonstruert.</div></div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
-      <div><div class="imp-title">Tidshorisont 5-15 aar til 5-10 aar</div><div class="imp-desc">Alle forekomster av fem til femten aar og 5-15 aar oppdatert til 5-10 aar.</div></div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
-      <div><div class="imp-title">1. april 2026 — Live markedspriser via Stooq.com</div><div class="imp-desc">9 Stooq-tickere testet og bekreftet (9/9 OK). build.py henter priser og injiserer i index.html via DOMContentLoaded. Kobber og sølv korrigert for COMEX cent-format (divisor 100). Yahoo Finance og TradingView widgets avvist etter grundig testing.</div></div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
-      <div><div class="imp-title">1. april 2026 — GitHub pipeline satt opp</div><div class="imp-desc">Git installert (v2.53.0 via winget). Repo pushet til github.com/FunksterOne/geopolitisk-modell. GitHub Pages aktivert. GitHub Actions workflow (daglig.yml) kjoerer build.py kl. 04:05 UTC. Task Scheduler kjoerer sync_brief.py kl. 06:02. Modell live paa funksterone.github.io/geopolitisk-modell.</div></div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
-      <div><div class="imp-title">1. april 2026 — Scenarioanalyse rebuilt med Perera-kausalitet</div><div class="imp-desc">Tre scenarier (A/B/C) fullstendig erstattet med Perera (2026) som empirisk fundament. 44 datapunkter. Sektorvis tidsakse over 36 maaneder. Kaskademodell med P1/S2/T3. Ikke-reversible skader dokumentert.</div></div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
-      <div><div class="imp-title">1. april 2026 — Kapitalimplikasjoner utvidet til 12 prisinstrumenter</div><div class="imp-desc">To-lags struktur: overordnet strategi + spesifikke implikasjoner. Fordelingsmatrise per scenario A/B/C. Vektet anbefaling (27 % energi, 21 % forsvar, 16 % gull osv.). WTI, naturgass, EUR/USD og sølv lagt til.</div></div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
-      <div><div class="imp-title">1. april 2026 — build.py forbedret med retry-logikk og fallback-cache</div><div class="imp-desc">Retry 3 ganger med 2 sekunders forsinkelse. Fallback til .price_cache.json ved N/A eller nettverksfeil. Hormuz-kalkulator kobler dynamisk til _brentLive. Sliderens basiprisetikett oppdateres automatisk. GitHub Actions oppgradert til FORCE_JAVASCRIPT_ACTIONS_TO_NODE24.</div></div>
-    </div>
-    <div class="imp-row" style="border-bottom:none">
-      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy);font-size:13px">&#10003;</div>
-      <div><div class="imp-title">1. april 2026 — Teknisk dokumentasjon</div><div class="imp-desc">Word-dokument (Geopolitisk_Pipeline_Dokumentasjon.docx) generert med full beskrivelse av daglig pipeline, Stooq-tickere, GitHub Actions, Task Scheduler, repo-struktur og konflikthaandtering.</div></div>
-    </div>
-  </div>
-
-  <div class="section-label">Tekniske detaljer</div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
-    <div class="stat-card"><div class="stat-label">Filstørrelse</div><div class="stat-value" style="font-size:20px">~295 KB</div><div class="stat-sub">Selvforsynt HTML · ingen rammeverk</div></div>
-    <div class="stat-card"><div class="stat-label">Menyvalg</div><div class="stat-value" style="font-size:20px">12</div><div class="stat-sub">Inkl. Nyheter og Modellstatus</div></div>
-    <div class="stat-card"><div class="stat-label">Datakilder</div><div class="stat-value" style="font-size:20px">12+</div><div class="stat-sub">BLS · Fed · ECB · NBS · SMM · LME · m.fl.</div></div>
-    <div class="stat-card"><div class="stat-label">Analysedato</div><div class="stat-value" style="font-size:20px">31/3–2/4</div><div class="stat-sub">Halvard Nordang — Affectum AS</div></div>
-  </div>
-
-  <div class="footnote" style="margin-top:16px">
-    Modell bygget av Claude (Anthropic Sonnet 4.6) &middot; Analytisk grunnlag og faglige beslutninger: Halvard Nordang, Affectum AS &middot; 31. mars–1. april 2026
-  </div>
-
-</div>
-<!-- ─── LØPENDE OPPDATERINGER ─── -->
 <div class="panel" id="panel-nyheter">
   <div class="panel-header">
     <div class="panel-title">Nyheter</div>
@@ -4622,11 +4016,11 @@ function runSearch(q) {
 
   var panelNames = {
     'panel-oversikt':'Dashboard','panel-analytikere':'Om modellen',
-'panel-kina':'Kinas posisjon',
 
-    'panel-kapital':'Kapitalimplikasjoner','panel-makro':'Makrodata',
+
+    'panel-kapital':'Investeringsråd','panel-makro':'Makrodata',
     'panel-nyheter':'Nyheter',
-    'panel-logg':'Modellens tilblivelse'
+
   };
 
   document.querySelectorAll('.panel').forEach(function(panel) {
@@ -5326,7 +4720,7 @@ window.nav = function(el) {
 
 <div class="tt-box" id="tt-lag2">
   <h4>Lag 2 — Spesifikke implikasjoner</h4>
-  Detaljerte kapitalimplikasjoner per tema, forankret i Perera-data og de seks analytiske rammeverkene. Hvert tema identifiserer strukturelle vinnere, tapere og asymmetriske posisjoner basert på empiriske data — ikke generelle råd.
+  Detaljerte investeringsråd per tema, forankret i Perera-data og de seks analytiske rammeverkene. Hvert tema identifiserer strukturelle vinnere, tapere og asymmetriske posisjoner basert på empiriske data — ikke generelle råd.
 </div>
 
 <div class="tt-box" id="tt-strategi-diag">
@@ -7001,7 +6395,7 @@ window.nav = function(el) {
     <!-- Footer -->
     <div id="sc-modal-footer" class="popup-footer">
       <span class="popup-footer-note">Perera (2026) · Dallas Fed (mars 2026) · Goodspeed (2025)</span>
-      <button class="popup-footer-btn" onclick="nav(document.querySelector('[data-panel=kapital]'));closeScenarioModal()">Se Kapitalimplikasjoner →</button>
+      <button class="popup-footer-btn" onclick="nav(document.querySelector('[data-panel=kapital]'));closeScenarioModal()">Se Investeringsråd →</button>
     </div>
 
   </div><!-- /sc-modal -->
@@ -7560,7 +6954,7 @@ function syncScenarioModalParams() {
     <!-- Footer -->
     <div id="hz-modal-footer" class="popup-footer">
       <span class="popup-footer-note">Dallas Fed (mars 2026) · Goodspeed (2025) · Kilian (2009) · ECB (mars 2026)</span>
-      <button class="popup-footer-btn" onclick="nav(document.querySelector('[data-panel=kapital]'));closeHormuzModal()">Se Kapitalimplikasjoner →</button>
+      <button class="popup-footer-btn" onclick="nav(document.querySelector('[data-panel=kapital]'));closeHormuzModal()">Se Investeringsråd →</button>
     </div>
 
   </div><!-- /hz-modal -->
@@ -7894,5 +7288,302 @@ function drawHzmGraf() {
   canvas.onmouseleave = function() { if (tooltip) tooltip.style.display='none'; };
 }
 </script>
+<!-- ═══════════════════════════════════════════════════════════════
+     KINA MODAL — «Kinas posisjon» popup
+═══════════════════════════════════════════════════════════════ -->
+<div id="kina-modal-overlay" class="popup-overlay" onclick="if(event.target===this)closeKinaModal()">
+  <div id="kina-modal" class="popup-modal popup-wide">
+
+    <!-- Header -->
+    <div class="popup-head">
+      <div class="popup-head-left">
+        <div class="popup-head-title">Kinas posisjon i det globale bildet</div>
+        <div class="popup-head-params">
+          <div class="popup-head-pill">REE-prosessering: <strong style="color:#FCA5A5">85–90 %</strong></div>
+          <div class="popup-head-pill">Tunge REE: <strong style="color:#FCA5A5">Nær monopol</strong></div>
+          <div class="popup-head-pill">Eksportkontroll: <strong style="color:#FCA5A5">Aktiv 2025–26</strong></div>
+        </div>
+        <div class="popup-head-sub">Sjeldne jordarter · Kritiske metaller · Prosessermakt · Kobling til seks analytiske rammeverk</div>
+      </div>
+      <button class="popup-close-btn" onclick="closeKinaModal()">✕</button>
+    </div>
+
+    <!-- KPI-strip -->
+    <div class="popup-kpi-strip">
+      <div class="popup-kpi-cell">
+        <div class="popup-kpi-label">REE-prosessering</div>
+        <div class="popup-kpi-val" style="color:var(--red)">85–90 %</div>
+        <div class="popup-kpi-sub">Kinas globale andel</div>
+      </div>
+      <div class="popup-kpi-cell">
+        <div class="popup-kpi-label">Tunge REE</div>
+        <div class="popup-kpi-val" style="color:var(--red);font-size:15px">Monopol</div>
+        <div class="popup-kpi-sub">Dysprosium · Terbium</div>
+      </div>
+      <div class="popup-kpi-cell">
+        <div class="popup-kpi-label">Batterikapasitet</div>
+        <div class="popup-kpi-val" style="color:var(--red)">~78 %</div>
+        <div class="popup-kpi-sub">Global produksjon</div>
+      </div>
+      <div class="popup-kpi-cell">
+        <div class="popup-kpi-label">Dysprosium YTD</div>
+        <div class="popup-kpi-val" style="color:var(--red)">+100 %</div>
+        <div class="popup-kpi-sub">~191 $/kg (SMM mars 2026)</div>
+      </div>
+      <div class="popup-kpi-cell">
+        <div class="popup-kpi-label">Reversibelt?</div>
+        <div class="popup-kpi-val" style="color:var(--amber);font-size:14px">10–15 år</div>
+        <div class="popup-kpi-sub">Prosesseringskapasitet ex-Kina</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="popup-tabs">
+      <div class="popup-tab active" id="kina-tab-ree"       onclick="kinaTab('ree')">REE og prosessering</div>
+      <div class="popup-tab"        id="kina-tab-metaller"  onclick="kinaTab('metaller')">Kritiske metaller</div>
+      <div class="popup-tab"        id="kina-tab-eksport"   onclick="kinaTab('eksport')">Eksportkontroller</div>
+      <div class="popup-tab"        id="kina-tab-konsekvenser" onclick="kinaTab('konsekvenser')">Konsekvenser</div>
+      <div class="popup-tab"        id="kina-tab-rammeverk" onclick="kinaTab('rammeverk')">Kobling — 6 rammeverk</div>
+    </div>
+
+    <!-- Body -->
+    <div id="kina-modal-body" class="popup-body">
+
+      <!-- ══ REE OG PROSESSERING ══ -->
+      <div class="popup-panel active" id="kina-p-ree">
+        <div class="popup-info-box accent-red">
+          <div class="popup-info-box-label" style="color:var(--red)">Kjernepoeng</div>
+          <div class="popup-info-box-text">Kinas strategiske makt ligger ikke i gruvene — den ligger i kjemien og industrien. Prosessering av sjeldne jordarter er kapitalintensivt, teknologisk krevende og miljøbelastende. Vestlige land har outsourcet dette i 30–40 år. Resultatet er et strukturelt avhengighetsforhold som ikke kan reverseres på få år, uavhengig av politisk vilje.</div>
+        </div>
+
+        <div class="popup-section-label no-border">Produksjon vs. prosessering — det virkelige maktpunktet <span class="tt-trigger" data-tt="tt-kina-kontroll" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+          <div class="popup-info-box" style="border-top:3px solid var(--amber)">
+            <div class="popup-info-box-label" style="color:var(--amber)">Produksjon (upstream)</div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px">
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:11.5px"><span style="color:var(--muted)">Global utvinning REE</span><strong>~70 %</strong></div>
+                <div style="height:5px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:70%;height:100%;background:var(--amber);border-radius:3px"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:11.5px"><span style="color:var(--muted)">Verdens største reserver</span><strong>44 mill. t</strong></div>
+                <div style="height:5px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:60%;height:100%;background:var(--amber);border-radius:3px"></div></div>
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--faint);line-height:1.55">Produksjon er <em>ikke</em> det avgjørende maktpunktet. Råstoff fra Myanmar, Australia og USA sendes tilbake til Kina for prosessering.</div>
+          </div>
+          <div class="popup-info-box" style="border-top:3px solid var(--red)">
+            <div class="popup-info-box-label" style="color:var(--red)">Prosessering (midstream) — det virkelige maktpunktet</div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px">
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:11.5px"><span style="color:var(--muted)">Global prosessering REE</span><strong style="color:var(--red)">85–90 %</strong></div>
+                <div style="height:5px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:88%;height:100%;background:var(--red);border-radius:3px"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:11.5px"><span style="color:var(--muted)">Tunge REE (Dy, Tb)</span><strong style="color:var(--red)">Nær monopol</strong></div>
+                <div style="height:5px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:95%;height:100%;background:var(--red);border-radius:3px"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:11.5px"><span style="color:var(--muted)">Batteriproduksjon globalt</span><strong style="color:var(--red)">~78 %</strong></div>
+                <div style="height:5px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:78%;height:100%;background:var(--red);border-radius:3px"></div></div>
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--faint);line-height:1.55">Kapitalintensivt, teknologisk krevende, miljøbelastende. Vestlige land har outsourcet dette i 30–40 år.</div>
+          </div>
+        </div>
+
+        <!-- Flaskehalser -->
+        <div class="popup-section-label">Kina kontrollerer flaskehalsen i <span class="tt-trigger" data-tt="tt-flaskehals" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+          <div style="background:var(--red-lt);border-radius:var(--radius);padding:11px 13px"><div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:3px">EV-er</div><div style="font-size:11px;color:var(--muted)">Magneter, batterier, motorer</div></div>
+          <div style="background:var(--red-lt);border-radius:var(--radius);padding:11px 13px"><div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:3px">Vindkraft</div><div style="font-size:11px;color:var(--muted)">NdFeB-magneter i turbiner</div></div>
+          <div style="background:var(--red-lt);border-radius:var(--radius);padding:11px 13px"><div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:3px">Forsvar</div><div style="font-size:11px;color:var(--muted)">Guidede missiler, radar, sensorer</div></div>
+          <div style="background:var(--red-lt);border-radius:var(--radius);padding:11px 13px"><div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:3px">Halvledere</div><div style="font-size:11px;color:var(--muted)">Germanium, gallium — eksportkontroll 2023</div></div>
+        </div>
+
+        <!-- Bunnlinje -->
+        <div class="popup-conclusion">
+          <div class="popup-conclusion-label">Bunnlinje — «structural leverage» <span class="tt-trigger" data-tt="tt-bunnlinje" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
+          <div class="popup-conclusion-text">Kinas makt ligger ikke i gruvene — den ligger i kjemien og industrien. Med ~70 % av produksjon, ~90 % av prosessering og nær monopol på tunge REE har Kina en opsjon på å strupe verdens tilgang til kritiske innsatsfaktorer for forsvar, energiomstilling og høyteknologi. Eksportkontrollene fra 2025–2026 er en demonstrasjon av at makten finnes, at den kan brukes, og at motvekten ikke eksisterer.</div>
+        </div>
+      </div>
+
+      <!-- ══ KRITISKE METALLER ══ -->
+      <div class="popup-panel" id="kina-p-metaller">
+        <div class="popup-section-label no-border">Kinas dominans utover sjeldne jordarter — raffinering og prosessering</div>
+        <div class="popup-kpi-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:14px">
+          <div class="popup-kpi-card"><div class="popup-kpi-card-label">Nikkelraffinering</div><div class="popup-kpi-card-val" style="color:var(--red)">68 %</div><div class="popup-kpi-card-sub">EV-batterier, stål</div></div>
+          <div class="popup-kpi-card"><div class="popup-kpi-card-label">Litiumraffinering</div><div class="popup-kpi-card-val" style="color:var(--red)">59 %</div><div class="popup-kpi-card-sub">Batterier, energilagring</div></div>
+          <div class="popup-kpi-card"><div class="popup-kpi-card-label">Koboltraffinering</div><div class="popup-kpi-card-val" style="color:var(--red)">73 %</div><div class="popup-kpi-card-sub">Katodemateriell, forsvar</div></div>
+          <div class="popup-kpi-card"><div class="popup-kpi-card-label">Kobberraffinering</div><div class="popup-kpi-card-val" style="color:var(--amber)">40 %</div><div class="popup-kpi-card-sub">Infrastruktur, elektronikk</div></div>
+          <div class="popup-kpi-card"><div class="popup-kpi-card-label">Batterianoder</div><div class="popup-kpi-card-val" style="color:var(--red)">85 %</div><div class="popup-kpi-card-sub">Grafitt — EV og energilagring</div></div>
+          <div class="popup-kpi-card"><div class="popup-kpi-card-label">Batterikatoder</div><div class="popup-kpi-card-val" style="color:var(--red)">70 %</div><div class="popup-kpi-card-sub">NMC/LFP — dominerende teknologi</div></div>
+        </div>
+        <div class="popup-info-box accent-red" style="margin-bottom:14px">
+          <div class="popup-info-box-label" style="color:var(--red)">Kjernekonklusjon</div>
+          <div class="popup-info-box-text">Kina er «the chokepoint» i hele grønn teknologi + høyteknologiske verdikjeder — EV-er, vindkraft, våpensystemer og halvledere.</div>
+        </div>
+
+        <div class="popup-section-label">REE-priser — sjeldne jordarter (SMM/Fastmarkets, mars 2026)</div>
+        <table class="popup-perera-table" style="margin-bottom:14px">
+          <thead><tr><th>Metall</th><th>Industripris</th><th>YTD-endring</th><th>Bruksområde</th><th>Kinas andel</th></tr></thead>
+          <tbody>
+            <tr><td>Dysprosium (Dy₂O₃)</td><td style="font-weight:700;color:var(--red)">~191 $/kg</td><td style="color:var(--red)">+&gt;100 %</td><td>EV-magneter, vindturbiner, forsvar</td><td style="color:var(--red)">&gt;90 % prosessering</td></tr>
+            <tr><td>Terbium (Tb₄O₇)</td><td style="font-weight:700;color:var(--red)">~840–848 $/kg</td><td style="color:var(--red)">+103 %</td><td>Høytemp. magneter, forsvar</td><td style="color:var(--red)">Nær monopol</td></tr>
+            <tr><td>Neodymium (NdPr)</td><td style="font-weight:700;color:var(--amber)">~97–100 $/kg</td><td style="color:var(--amber)">+47 %</td><td>NdFeB-magneter, EV, vindkraft</td><td style="color:var(--red)">~85 %</td></tr>
+            <tr><td>Gallium / Germanium</td><td style="font-weight:700;color:var(--red)">Eksportkontroll</td><td style="color:var(--red)">Forbud siden 2023</td><td>Halvledere, direkte restriksjon</td><td style="color:var(--red)">&gt;80 % begge</td></tr>
+          </tbody>
+        </table>
+
+        <div class="popup-section-label">Kritiske metaller — LME og Benchmark MI (jan.–mars 2026)</div>
+        <table class="popup-perera-table" style="margin-bottom:14px">
+          <thead><tr><th>Metall</th><th>Prisnivå</th><th>Utvikling</th><th>Kinas raffinering</th></tr></thead>
+          <tbody>
+            <tr><td>Litium karbonat</td><td style="color:var(--red)">Kraftig oppgang</td><td style="color:var(--red)">+78,3 % på én mnd.</td><td style="color:var(--red)">~59 %</td></tr>
+            <tr><td>Kobolt</td><td style="color:var(--amber)">Stigende</td><td style="color:var(--amber)">Opp jan. 2026</td><td style="color:var(--red)">~73 %</td></tr>
+            <tr><td>Nikkel</td><td style="color:var(--amber)">~17 000 $/t</td><td style="color:var(--amber)">+~30 % mnd/mnd</td><td style="color:var(--red)">~68 %</td></tr>
+            <tr><td>Kobber</td><td style="color:var(--amber)">Høy volatilitet</td><td style="color:var(--amber)">Spekulativt drevet</td><td style="color:var(--amber)">~40 %</td></tr>
+          </tbody>
+        </table>
+
+        <div class="popup-info-box accent-amber">
+          <div class="popup-info-box-label" style="color:var(--amber)">Tosporet prissetting</div>
+          <div class="popup-info-box-text">Industrielle kjøpere betaler SMM-referansepris (Dy₂O₃ ~191 $/kg, mars 2026), mens privatinvestorer betaler retailpris (~930 $/kg). Differansen på 3–5× reflekterer forhandlermargin og likviditetspremie. Kinas REE-prisindeks (2010=100): topp over 300 tidlig 2026, nå 255,7. De mest strategiske materialene stiger <em>utenfor</em> Kina — innenlandsk pris kontrolleres.</div>
+        </div>
+      </div>
+
+      <!-- ══ EKSPORTKONTROLLER ══ -->
+      <div class="popup-panel" id="kina-p-eksport">
+        <div class="popup-section-label no-border">Eksportkontroller og «moratorium» — 2025–2026 <span class="tt-trigger" data-tt="tt-eksport" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+          <div class="popup-info-box accent-red">
+            <div class="popup-info-box-label" style="color:var(--red)">Faktisk situasjon</div>
+            <div style="display:flex;flex-direction:column;gap:0">
+              <div class="popup-tl-row"><div class="popup-tl-date" style="background:var(--amber-lt);color:var(--amber)">2025</div><div><div class="popup-tl-title">Eksportrestriksjoner innføres</div><div class="popup-tl-body">Sjeldne jordarter og kritiske metaller underlegges eksportkontroll.</div></div></div>
+              <div class="popup-tl-row"><div class="popup-tl-date" style="background:var(--amber-lt);color:var(--amber)">2025–nov. 26</div><div><div class="popup-tl-title">Delvis suspensjon</div><div class="popup-tl-body">«Moratorium» — men lisensregime opprettholdes og håndheves selektivt.</div></div></div>
+              <div class="popup-tl-row"><div class="popup-tl-date" style="background:var(--red-lt);color:var(--red)">2026 pågående</div><div><div class="popup-tl-title">Selektiv restriksjon mot USA</div><div class="popup-tl-body">Redusert/stanset eksport av tunge REE spesifikt til USA. Andre land: selektiv tilgang.</div></div></div>
+            </div>
+          </div>
+          <div class="popup-info-box accent-navy">
+            <div class="popup-info-box-label" style="color:var(--navy-mid)">Tolkning</div>
+            <div class="popup-info-box-text" style="margin-bottom:10px">Dette er ikke et fullstendig moratorium i klassisk forstand. Det er en <strong>strategisk pause med selektiv tilgang og lisenskontroll</strong> — et midlertidig geopolitisk våpen på pause.</div>
+            <div style="background:var(--red-lt);border-radius:var(--radius);padding:10px 12px;font-size:11.5px;line-height:1.65;color:#7F1D1D">
+              <strong>Kina begrenser de mest strategiske materialene</strong>, ikke nødvendigvis volumene totalt. Prisen på enkeltmetaller har nesten doblet seg i 2026.
+            </div>
+          </div>
+        </div>
+
+        <div class="popup-conclusion">
+          <div class="popup-conclusion-label">Fishmans asymmetri i prisdataform</div>
+          <div class="popup-conclusion-text">De mest strategiske materialene (dysprosium, terbium) stiger ikke lenger innenfor Kina — men stiger kraftig utenfor. Et tydelig prisskille dannes: Kina styrer innenlandske priser, mens det globale ex-Kina-markedet prises med knapphetspremie. Dette er Fishmans asymmetri synlig i tall.</div>
+        </div>
+      </div>
+
+      <!-- ══ KONSEKVENSER ══ -->
+      <div class="popup-panel" id="kina-p-konsekvenser">
+        <div class="popup-section-label no-border">Tre tidshorisonter <span class="tt-trigger" data-tt="tt-konsekvenser" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
+        <div class="popup-kaskade-grid" style="margin-bottom:14px">
+          <div class="popup-kaskade-col" style="background:rgba(197,48,48,.03)">
+            <div class="popup-kaskade-head" style="color:var(--red)">Kort sikt (0–3 år)</div>
+            <div class="popup-kaskade-body">Tilbudsrisiko øker kraftig. Nesten dobling av enkelt-REE-priser i 2026. Flaskehalser i magneter, halvledere og forsvarsindustri inntrer raskt.</div>
+            <div class="popup-kaskade-footer" style="color:var(--red)">Goodspeed: «supply shock trigger»</div>
+          </div>
+          <div class="popup-kaskade-col" style="background:rgba(146,64,14,.03)">
+            <div class="popup-kaskade-head" style="color:var(--amber)">Mellomlang sikt (3–10 år)</div>
+            <div class="popup-kaskade-body">Diversifisering forsøkes av USA, Australia og EU. Men prosessering er fortsatt problemet. Kina vil fortsatt dominere &gt;60 % og kontrollere ~90 % av tung REE-prosessering.</div>
+            <div class="popup-kaskade-footer" style="color:var(--amber)">Fishman: lettere å rive ned enn å bygge opp</div>
+          </div>
+          <div class="popup-kaskade-col">
+            <div class="popup-kaskade-head" style="color:var(--faint)">Lang sikt (10+ år)</div>
+            <div class="popup-kaskade-body">(1) Delvis avkobling — parallelle kjeder. (2) Vedvarende kinesisk dominans — mest sannsynlig. (3) Teknologisk substitusjon — magnetfrie løsninger.</div>
+            <div class="popup-kaskade-footer" style="color:var(--navy)">Taleb: scenario 3 er den sorte svanen</div>
+          </div>
+        </div>
+
+        <div class="popup-section-label">Makroøkonomiske konsekvenser</div>
+        <div class="popup-kapital" style="grid-template-columns:1fr 1fr;margin-bottom:14px">
+          <div><div class="popup-kapital-head" style="color:var(--red)">A — Inflasjon og kostnadspress</div>REE inngår i EV-er, energi og elektronikk. Kostnadsdrevet inflasjon. Goodspeeds fjerde resesjonstrigger aktivert via et annet forsyningspunkt enn energi.</div>
+          <div><div class="popup-kapital-head" style="color:var(--amber)">B — Industriell fragmentering</div>«Friend-shoring» og blokkdannelse gir mindre effektiv global handel. Lavere produktivitetsvekst. Mirans handelsomstrukturering vanskeliggjøres.</div>
+          <div><div class="popup-kapital-head" style="color:var(--navy)">C — Lavere global vekst</div>UNCTAD: global vekst ~2,6 %. REE-flaskehalser kan forsinke grønn omstilling og redusere teknologiinvesteringer strukturelt.</div>
+          <div><div class="popup-kapital-head" style="color:var(--purple)">D — Strategisk usikkerhet</div>REE som «supply shock trigger» — sammenlignbart med olje på 1970-tallet. «Structural leverage» i globale verdikjeder.</div>
+        </div>
+      </div>
+
+      <!-- ══ KOBLING — 6 RAMMEVERK ══ -->
+      <div class="popup-panel" id="kina-p-rammeverk">
+        <div class="popup-info-box accent-navy" style="margin-bottom:14px">
+          <div class="popup-info-box-label" style="color:var(--navy-mid)">Analytisk kobling</div>
+          <div class="popup-info-box-text">Kinas REE-posisjon berører alle seks analytiske rammeverk i modellen — hver på sin måte, og hver med sitt eget asymmetriske aspekt.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="popup-info-box accent-green" style="padding:11px 14px">
+            <div class="popup-info-box-label" style="color:var(--green)">Fishman — det umulige trevalget</div>
+            <div class="popup-info-box-text">USA valgte geopolitisk konkurranse (halvledersanksjoner mot Huawei) og ga opp dyp integrasjon. Kinas REE-eksportkontroller er svaret: et speilvendt Fishman-trekk. Asymmetrien er strukturell — USA kan ikke raskt bygge opp prosesseringskapasitet som Kina har bygd over 30 år.</div>
+          </div>
+          <div class="popup-info-box accent-red" style="padding:11px 14px">
+            <div class="popup-info-box-label" style="color:var(--red)">NDS (2026) — Line of Effort 4</div>
+            <div class="popup-info-box-text">NDS krever nasjonal mobilisering av forsvarsindustriell base. Guidede missiler, radar og avanserte sensorer er avhengig av tunge REE (dysprosium, terbium) som Kina nær monopol-kontrollerer. NDS autoriserer operasjoner som forsterker nettopp det behovet den sier må løses.</div>
+          </div>
+          <div class="popup-info-box" style="border-left:3px solid var(--coral);background:var(--coral-lt);padding:11px 14px">
+            <div class="popup-info-box-label" style="color:var(--coral)">NSS (2026) — kritiske forsyningskjeder</div>
+            <div class="popup-info-box-text">NSS er eksplisitt på at sikker tilgang til kritiske råvarer er en nasjonal prioritet. Men ønsket om «Energy Dominance» og REE-uavhengighet kolliderer med realiteten: prosesseringskapasiteten eksisterer ikke utenfor Kina og kan ikke bygges på kortere enn 10–15 år.</div>
+          </div>
+          <div class="popup-info-box accent-navy" style="padding:11px 14px">
+            <div class="popup-info-box-label" style="color:var(--navy-mid)">Taleb — den perspektivavhengige sorte svanen</div>
+            <div class="popup-info-box-text">Teknologisk substitusjon (magnetfrie motorer, natriumbatterier) er den sorte svanen ingen modeller er kalibrert for. Kan endre hele maktgeometrien — men er ikke priset inn. Alle øvrige analyser antar Mediocristans lineære forsyningskjeder.</div>
+          </div>
+          <div class="popup-info-box" style="border-left:3px solid #3C3489;background:#EEEDFE;padding:11px 14px">
+            <div class="popup-info-box-label" style="color:#3C3489">Goodspeed — REE som fjerde resesjonstrigger</div>
+            <div class="popup-info-box-text">Goodspeeds tre klassiske triggere er energisjokk, krig og kredittkontraksjon. REE-forsyningssjokk er en fjerde, strukturell variant: kostnadsdrevet inflasjon i industrisektorer uten alternativer. Kombinert med Hormuz-sjokket: simultant press fra to uavhengige forsyningspunkter.</div>
+          </div>
+          <div class="popup-info-box accent-amber" style="padding:11px 14px">
+            <div class="popup-info-box-label" style="color:var(--amber)">Miran — handelspolitikkens blinde flekk</div>
+            <div class="popup-info-box-text">Mirans plan forutsetter relativt fri handelsflyt. REE-prosesseringsmonopolet er en strukturell asymmetri som tariffer ikke løser — og som kan forsterkes, ved at kinesisk gjengjeldelse i REE-eksport treffer amerikanske forsvarsprogrammer direkte.</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /popup-body -->
+
+    <!-- Footer -->
+    <div class="popup-footer">
+      <span class="popup-footer-note">USGS · BloombergNEF · IEA Critical Minerals Report 2024 · SMM · LME · Benchmark MI · NDS (2026) · NSS (2026)</span>
+      <button class="popup-footer-btn" onclick="nav(document.querySelector('[data-panel=kapital]'));closeKinaModal()">Se Investeringsråd →</button>
+    </div>
+
+  </div><!-- /kina-modal -->
+</div><!-- /kina-modal-overlay -->
+
+<script>
+var _kinaModalOpen = false;
+function openKinaModal() {
+  var el = document.getElementById('kina-modal-overlay');
+  if (!el) return;
+  el.classList.add('visible');
+  _kinaModalOpen = true;
+  document.body.style.overflow = 'hidden';
+  kinaTab('ree');
+}
+function closeKinaModal() {
+  var el = document.getElementById('kina-modal-overlay');
+  if (el) el.classList.remove('visible');
+  _kinaModalOpen = false;
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && _kinaModalOpen) closeKinaModal();
+});
+function kinaTab(tab) {
+  ['ree','metaller','eksport','konsekvenser','rammeverk'].forEach(function(t) {
+    var tEl = document.getElementById('kina-tab-' + t);
+    var pEl = document.getElementById('kina-p-' + t);
+    if (tEl) tEl.classList.toggle('active', t === tab);
+    if (pEl) pEl.classList.toggle('active', t === tab);
+  });
+  var body = document.getElementById('kina-modal-body');
+  if (body) body.scrollTop = 0;
+}
+</script>
+
 </body>
 </html>
