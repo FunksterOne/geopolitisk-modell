@@ -3448,127 +3448,138 @@ input[type=range]::-webkit-slider-thumb {
 <div class="panel" id="panel-trumpometer">
   <div class="panel-header">
     <div class="panel-title">Trumpometer</div>
-    <div class="panel-sub">Analyserer Trumps siste uttalelser fra RSS-nyhetene · Karaktersatt 1–5 etter tyngde og relevans · Oppdateres ved sidelasting</div>
+    <div class="panel-sub">Analyserer Trumps uttalelser fra RSS-nyhetene · Scoret 0–100 etter tyngde og relevans · Oppdateres ved sidelasting</div>
   </div>
 
   <style>
-  /* Speedometer */
-  #trump-speedometer { position:relative;width:260px;height:140px;margin:0 auto; }
-  #trump-needle { transform-origin:50% 100%;transition:transform 1.2s cubic-bezier(.34,1.56,.64,1); }
-  .trump-score-badge { display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:10px;font-weight:800;color:white;flex-shrink:0; }
-  .trump-item { display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--border); }
+  #trump-needle { transition: transform 1.4s cubic-bezier(0.34,1.56,0.64,1); }
+  .trump-score-badge { display:inline-flex;align-items:center;justify-content:center;border-radius:6px;font-weight:600; }
+  .trump-item { display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border); }
   .trump-item:last-child { border-bottom:none; }
-  .trump-cat-badge { font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap; }
-  .trump-stars { color:#BA7517;font-size:11px;letter-spacing:1px; }
+  .trump-badge { font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap; }
   </style>
 
   <!-- SPEEDOMETER + STATS -->
-  <div style="display:grid;grid-template-columns:280px 1fr;gap:24px;margin-bottom:20px;align-items:start">
+  <div style="display:grid;grid-template-columns:300px 1fr;gap:28px;margin-bottom:20px;align-items:start">
 
     <!-- Speedometer -->
     <div style="text-align:center">
-      <div id="trump-speedometer">
-        <svg viewBox="0 0 260 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-          <!-- Bakgrunnsark -->
-          <defs>
-            <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%"   stop-color="#14532D"/>
-              <stop offset="33%"  stop-color="#BA7517"/>
-              <stop offset="66%"  stop-color="#C53030"/>
-              <stop offset="100%" stop-color="#7F1D1D"/>
-            </linearGradient>
-            <clipPath id="gaugeClip">
-              <path d="M20,130 A110,110 0 0,1 240,130"/>
-            </clipPath>
-          </defs>
-          <!-- Skive-bue — tykk buelinje med gradient -->
-          <path d="M25,130 A105,105 0 0,1 235,130" fill="none" stroke="url(#gaugeGrad)" stroke-width="18" stroke-linecap="round"/>
-          <!-- Skive-bue bakgrunn -->
-          <path d="M25,130 A105,105 0 0,1 235,130" fill="none" stroke="rgba(0,0,0,.07)" stroke-width="20" stroke-linecap="round"/>
-          <path d="M25,130 A105,105 0 0,1 235,130" fill="none" stroke="url(#gaugeGrad)" stroke-width="18" stroke-linecap="round"/>
-          <!-- Tickmarks -->
-          <g stroke="rgba(0,0,0,.18)" stroke-width="1.5">
-            <!-- 0,1,2,3,4,5 -->
-            <line x1="130" y1="27" x2="130" y2="40" transform="rotate(-90 130 130)"/>
-            <line x1="130" y1="27" x2="130" y2="35" transform="rotate(-54 130 130)"/>
-            <line x1="130" y1="27" x2="130" y2="35" transform="rotate(-18 130 130)"/>
-            <line x1="130" y1="27" x2="130" y2="35" transform="rotate(18 130 130)"/>
-            <line x1="130" y1="27" x2="130" y2="35" transform="rotate(54 130 130)"/>
-            <line x1="130" y1="27" x2="130" y2="40" transform="rotate(90 130 130)"/>
-          </g>
-          <!-- Labels -->
-          <text x="22"  y="128" font-size="9" fill="#14532D" font-weight="700" text-anchor="middle">0</text>
-          <text x="50"  y="65"  font-size="9" fill="#14532D" font-weight="700" text-anchor="middle">25</text>
-          <text x="130" y="30"  font-size="9" fill="#BA7517" font-weight="700" text-anchor="middle">50</text>
-          <text x="210" y="65"  font-size="9" fill="#C53030" font-weight="700" text-anchor="middle">75</text>
-          <text x="238" y="128" font-size="9" fill="#7F1D1D" font-weight="700" text-anchor="middle">100</text>
-          <!-- Nål -->
-          <g id="trump-needle" transform="rotate(-90 130 130)">
-            <line x1="130" y1="130" x2="130" y2="40" stroke="#1F3864" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="130" cy="130" r="7" fill="#1F3864"/>
-            <circle cx="130" cy="130" r="3" fill="white"/>
-          </g>
-        </svg>
-      </div>
-
-      <!-- Numerisk score under -->
-      <div style="margin-top:4px">
-        <div style="font-size:36px;font-weight:800;color:var(--navy);line-height:1" id="trump-score-num">—</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px" id="trump-score-label">Beregner...</div>
+      <svg id="trump-gauge" viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:300px">
+        <defs>
+          <linearGradient id="tGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stop-color="#27500A"/>
+            <stop offset="25%"  stop-color="#639922"/>
+            <stop offset="50%"  stop-color="#BA7517"/>
+            <stop offset="75%"  stop-color="#C53030"/>
+            <stop offset="100%" stop-color="#7F1D1D"/>
+          </linearGradient>
+        </defs>
+        <!-- Track -->
+        <path d="M28,144 A112,112 0 0,1 252,144" fill="none" stroke="#D3D1C7" stroke-width="20" stroke-linecap="round"/>
+        <!-- Colored arc -->
+        <path id="trump-arc" d="M28,144 A112,112 0 0,1 252,144" fill="none" stroke="url(#tGrad)" stroke-width="20" stroke-linecap="round" stroke-dasharray="352" stroke-dashoffset="352"/>
+        <!-- Ticks -->
+        <g id="trump-ticks" stroke="rgba(0,0,0,.18)" stroke-width="1.5"></g>
+        <!-- Zone labels -->
+        <text x="22"  y="150" font-size="9" fill="#27500A"  font-weight="600" text-anchor="middle">0</text>
+        <text x="62"  y="64"  font-size="9" fill="#639922"  font-weight="600" text-anchor="middle">25</text>
+        <text x="140" y="26"  font-size="9" fill="#BA7517"  font-weight="600" text-anchor="middle">50</text>
+        <text x="218" y="64"  font-size="9" fill="#C53030"  font-weight="600" text-anchor="middle">75</text>
+        <text x="258" y="150" font-size="9" fill="#7F1D1D"  font-weight="600" text-anchor="middle">100</text>
+        <!-- Zone text -->
+        <text x="44"  y="110" font-size="8" fill="#639922" text-anchor="middle">lav</text>
+        <text x="92"  y="52"  font-size="8" fill="#BA7517" text-anchor="middle">moderat</text>
+        <text x="188" y="52"  font-size="8" fill="#C53030" text-anchor="middle">høy</text>
+        <text x="234" y="110" font-size="8" fill="#7F1D1D" text-anchor="middle">kritisk</text>
+        <!-- Needle -->
+        <g id="trump-needle" transform="rotate(-90 140 144)">
+          <line x1="140" y1="144" x2="140" y2="44" stroke="rgba(0,0,0,.1)" stroke-width="5" stroke-linecap="round"/>
+          <line x1="140" y1="144" x2="140" y2="44" stroke="#1F3864" stroke-width="3" stroke-linecap="round"/>
+          <line x1="140" y1="144" x2="140" y2="158" stroke="#1F3864" stroke-width="3" stroke-linecap="round"/>
+        </g>
+        <circle cx="140" cy="144" r="9" fill="#1F3864"/>
+        <circle cx="140" cy="144" r="4" fill="white"/>
+      </svg>
+      <div style="margin-top:6px">
+        <div style="font-size:40px;font-weight:700;line-height:1;color:var(--navy)" id="trump-score-num">—</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;height:16px" id="trump-score-label">Beregner...</div>
+        <div style="font-size:10px;color:var(--faint);margin-top:2px">Trumpometer-score (0–100)</div>
       </div>
     </div>
 
     <!-- Statistikk -->
-    <div style="display:flex;flex-direction:column;gap:8px;padding-top:8px">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:4px">Siste 24 timer</div>
+    <div style="display:flex;flex-direction:column;gap:10px;padding-top:4px">
+      <div style="font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--faint)">Siste 24 timer</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
         <div class="stat-card" style="padding:10px 12px;text-align:center">
           <div class="stat-label">Trump-nyheter</div>
-          <div class="stat-value" style="font-size:24px" id="trump-count">—</div>
-          <div class="stat-sub">siste 24 timer</div>
+          <div class="stat-value" style="font-size:26px" id="trump-count">—</div>
+          <div class="stat-sub">siste 24t</div>
         </div>
         <div class="stat-card" style="padding:10px 12px;text-align:center">
           <div class="stat-label">Gjennomsnitt</div>
-          <div class="stat-value" style="font-size:24px" id="trump-avg">—</div>
+          <div class="stat-value" style="font-size:26px" id="trump-avg">—</div>
           <div class="stat-sub">poeng (0–100)</div>
         </div>
         <div class="stat-card" style="padding:10px 12px;text-align:center">
           <div class="stat-label">Høyeste poeng</div>
-          <div class="stat-value" style="font-size:24px;color:var(--red)" id="trump-max">—</div>
-          <div class="stat-sub">tyngste nyhet (0–100)</div>
+          <div class="stat-value" style="font-size:26px;color:var(--red)" id="trump-max">—</div>
+          <div class="stat-sub">tyngste nyhet</div>
         </div>
         <div class="stat-card" style="padding:10px 12px;text-align:center">
-          <div class="stat-label">Dominerende tema</div>
-          <div class="stat-value" style="font-size:14px;color:var(--navy)" id="trump-top-cat">—</div>
-          <div class="stat-sub">mest omtalt</div>
+          <div class="stat-label">Topp tema</div>
+          <div class="stat-value" style="font-size:15px;line-height:1.3" id="trump-top-cat">—</div>
+          <div class="stat-sub">dominerende</div>
         </div>
       </div>
-      <div style="font-size:10px;color:var(--faint);margin-top:4px" id="trump-updated">Henter nyheter...</div>
+      <div style="font-size:10px;color:var(--faint)" id="trump-updated">Henter nyheter...</div>
     </div>
   </div>
 
-  <!-- NYHETSSTRØM: Trump-nyheter rangert -->
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-    <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)">Trump-nyheter — rangert etter tyngde</div>
-    <div style="display:flex;gap:6px">
-      <button onclick="trumpFilter('alle')" class="news-filter active" data-tf="alle" style="font-size:9px;padding:2px 9px">Alle</button>
-      <button onclick="trumpFilter('80')" class="news-filter" data-tf="80" style="font-size:9px;padding:2px 9px;background:#FCEBEB;color:var(--red);border-color:var(--red)">80–100 Kritisk</button>
-      <button onclick="trumpFilter('60')" class="news-filter" data-tf="60" style="font-size:9px;padding:2px 9px;background:#FEF2F2;color:#C06000;border-color:#C06000">60–79 Høy</button>
-      <button onclick="trumpFilter('40')" class="news-filter" data-tf="40" style="font-size:9px;padding:2px 9px">40–59 Moderat</button>
+  <!-- FILTER — tre rader -->
+  <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px">
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <span style="font-size:9px;font-weight:700;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;width:72px;flex-shrink:0">Tema</span>
+      <button onclick="trumpFilter('tema','alle')" class="news-filter active" data-tf="alle">Alle</button>
+      <button onclick="trumpFilter('tema','hormuz')"      class="news-filter" data-tf="hormuz"      style="background:#FCEBEB;color:#791F1F;border-color:#F09595">Hormuz</button>
+      <button onclick="trumpFilter('tema','energi')"      class="news-filter" data-tf="energi"      style="background:#FAEEDA;color:#633806;border-color:#EF9F27">Energi</button>
+      <button onclick="trumpFilter('tema','kina')"        class="news-filter" data-tf="kina"        style="background:#FCEBEB;color:#791F1F;border-color:#F09595">Kina</button>
+      <button onclick="trumpFilter('tema','makro')"       class="news-filter" data-tf="makro"       style="background:#EEEDFE;color:#3C3489;border-color:#AFA9EC">Makro</button>
+      <button onclick="trumpFilter('tema','geopolitikk')" class="news-filter" data-tf="geopolitikk" style="background:#E1F5EE;color:#085041;border-color:#5DCAA5">Geopolitikk</button>
+      <button onclick="trumpFilter('tema','kapital')"     class="news-filter" data-tf="kapital"     style="background:#E6F1FB;color:#0C447C;border-color:#85B7EB">Kapital</button>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <span style="font-size:9px;font-weight:700;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;width:72px;flex-shrink:0">Rammeverk</span>
+      <button onclick="trumpFilter('fw','alle')"       class="news-filter active" data-fw="alle">Alle</button>
+      <button onclick="trumpFilter('fw','goodspeed')"  class="news-filter" data-fw="goodspeed"  style="background:#EEEDFE;color:#3C3489;border-color:#AFA9EC">Goodspeed</button>
+      <button onclick="trumpFilter('fw','fishman')"    class="news-filter" data-fw="fishman"    style="background:#E1F5EE;color:#085041;border-color:#5DCAA5">Fishman</button>
+      <button onclick="trumpFilter('fw','miran')"      class="news-filter" data-fw="miran"      style="background:#FAEEDA;color:#633806;border-color:#EF9F27">Miran</button>
+      <button onclick="trumpFilter('fw','nds')"        class="news-filter" data-fw="nds"        style="background:#FCEBEB;color:#791F1F;border-color:#F09595">NDS</button>
+      <button onclick="trumpFilter('fw','nss')"        class="news-filter" data-fw="nss"        style="background:#FAECE7;color:#712B13;border-color:#F0997B">NSS</button>
+      <button onclick="trumpFilter('fw','taleb')"      class="news-filter" data-fw="taleb"      style="background:#E6F1FB;color:#0C447C;border-color:#85B7EB">Taleb</button>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <span style="font-size:9px;font-weight:700;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;width:72px;flex-shrink:0">Score</span>
+      <button onclick="trumpFilter('score','0')"  class="news-filter active" data-sf="0">Alle score</button>
+      <button onclick="trumpFilter('score','80')" class="news-filter" data-sf="80" style="background:#FCEBEB;color:#791F1F;border-color:#F09595">80–100 Kritisk</button>
+      <button onclick="trumpFilter('score','60')" class="news-filter" data-sf="60" style="background:#FAEEDA;color:#633806;border-color:#EF9F27">60–79 Høy</button>
+      <button onclick="trumpFilter('score','40')" class="news-filter" data-sf="40" style="background:#EEEDFE;color:#3C3489;border-color:#AFA9EC">40–59 Moderat</button>
     </div>
   </div>
 
-  <div id="trump-feed" style="display:flex;flex-direction:column;gap:0">
+  <!-- NYHETSFEED -->
+  <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:8px">Trump-nyheter — rangert etter tyngde</div>
+  <div id="trump-feed">
     <div style="text-align:center;padding:40px;color:var(--faint);font-size:12px">
-      <div style="font-size:24px;margin-bottom:8px">⟳</div>
-      Henter Trump-nyheter fra RSS...
+      <div style="font-size:22px;margin-bottom:8px">⟳</div>Henter Trump-nyheter...
     </div>
   </div>
 
   <div class="footnote" style="margin-top:16px">
-    Kilde: Alle RSS-feeder i Nyheter-panelet · Automatisk scoring basert på nøkkelord, ordstyrke og kategoritilhørighet · Karakter 1–5 der 5 = maksimal geopolitisk tyngde
+    Kilde: alle RSS-feeder i Nyheter · Scoring: ordstyrke + kategori (tema + rammeverk) + ferskhet · 0–100 der 100 = maksimal geopolitisk tyngde
   </div>
 </div>
+
 
 <div class="panel" id="panel-logg">
   <div class="panel-header">
@@ -5811,170 +5822,172 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+
 // ── TRUMPOMETER ──────────────────────────────────────────────────────────────
 
-var _trumpFilter = 'alle';
+var _trumpTemaFilter  = 'alle';
+var _trumpFwFilter    = 'alle';
+var _trumpScoreFilter = 0;
 
-// Scorer en nyhet på en skala 0-100 etter Trump-relevans og tyngde
+// Tegn tick-marks på speedometeret (kjøres én gang)
+(function() {
+  var g = document.getElementById('trump-ticks');
+  if (!g) return;
+  for (var i = 0; i <= 10; i++) {
+    var angle = (-180 + i * 18) * Math.PI / 180;
+    var cx = 140, cy = 144, r = 112;
+    var x1 = cx + r * Math.cos(angle);
+    var y1 = cy + r * Math.sin(angle);
+    var ri = i % 5 === 0 ? 95 : 103;
+    var x2 = cx + ri * Math.cos(angle);
+    var y2 = cy + ri * Math.sin(angle);
+    var line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', x1.toFixed(1)); line.setAttribute('y1', y1.toFixed(1));
+    line.setAttribute('x2', x2.toFixed(1)); line.setAttribute('y2', y2.toFixed(1));
+    line.setAttribute('stroke', 'rgba(0,0,0,.2)');
+    line.setAttribute('stroke-width', i % 5 === 0 ? '2' : '1');
+    g.appendChild(line);
+  }
+})();
+
+function setTrumpNeedle(score) {
+  var needle = document.getElementById('trump-needle');
+  if (needle) needle.setAttribute('transform', 'rotate(' + (-90 + score * 1.8) + ' 140 144)');
+  var arc = document.getElementById('trump-arc');
+  if (arc) arc.setAttribute('stroke-dashoffset', (352 - score / 100 * 352).toFixed(1));
+  var numEl = document.getElementById('trump-score-num');
+  if (numEl) { numEl.textContent = score; numEl.style.color = trumpScoreColor(score); }
+  var labels = { 80:'Kritisk signalnivå — handl nå', 60:'Høy aktivitet — følg nøye',
+                 40:'Moderat aktivitet', 20:'Lav aktivitet', 0:'Ingen Trump-signaler siste 24t' };
+  var lbl = score >= 80 ? labels[80] : score >= 60 ? labels[60] : score >= 40 ? labels[40] : score >= 20 ? labels[20] : labels[0];
+  var el = document.getElementById('trump-score-label');
+  if (el) el.textContent = lbl;
+}
+
 function scoreTrumpItem(item) {
   var text = (item.title + ' ' + (item.desc || '')).toLowerCase();
-
-  // Må inneholde Trump (eller nære assosiasjoner) for å telle
   var trumpTerms = ['trump','donald trump','white house','mar-a-lago','truth social',
                     'hegseth','rubio','bessent','navarro','vance','musk','doge'];
-  var hasTrump = trumpTerms.some(function(t) { return text.indexOf(t) !== -1; });
-  if (!hasTrump) return 0;
-
-  var score = 10; // Grunnverdi (10/100) for alle Trump-nyheter
-
-  // ── ORDSTYRKE ──────────────────────────────────────────────────────────
-  // Nivå 5: eksistensielle/militære/geopolitiske ord (+15 per treff, maks +40)
-  var strong5 = ['nuclear','war','attack','strike','missile','threat','ultimatum',
-                 'iran','hormuz','china','taiwan','nato','sanction','executive order',
-                 'tariff','declare','emergency','fire','resign','impeach','collapse',
-                 'crisis','bomb','military','troops','invasion','deploy'];
-  // Nivå 4: økonomi, handel, markeder (+10 per treff, maks +25)
-  var strong4 = ['deal','agreement','trade','negotiate','rate','fed','interest',
-                 'gdp','recession','dollar','market','inflation','oil','energy',
-                 'russia','ukraine','israel','saudi','gulf','opec'];
-  // Nivå 3: politikk, policy (+5 per treff, maks +15)
-  var strong3 = ['statement','speech','announce','sign','veto','congress','senate',
-                 'policy','regulation','budget','deficit','debt','spending'];
-  // Nivå svak: trekker litt (-3 per treff, maks -10)
-  var weak    = ['tweet','post','said','claim','suggest','consider','may','might',
-                 'report','source','plan','meeting','talk','call'];
-
-  var s5 = strong5.filter(function(w) { return text.indexOf(w) !== -1; }).length;
-  var s4 = strong4.filter(function(w) { return text.indexOf(w) !== -1; }).length;
-  var s3 = strong3.filter(function(w) { return text.indexOf(w) !== -1; }).length;
-  var sw = weak.filter(function(w)    { return text.indexOf(w) !== -1; }).length;
-
-  score += Math.min(40, s5 * 15);
-  score += Math.min(25, s4 * 10);
-  score += Math.min(15, s3 * 5);
-  score -= Math.min(10, sw * 3);
-
-  // ── KATEGORI-BOOST ─────────────────────────────────────────────────────
+  if (!trumpTerms.some(function(t) { return text.indexOf(t) !== -1; })) return 0;
+  var score = 10;
+  // Ordstyrke
+  var s5 = ['nuclear','war','attack','strike','missile','threat','ultimatum','hormuz',
+            'iran','china','taiwan','nato','sanction','executive order','tariff',
+            'declare','emergency','fire','resign','impeach','collapse','crisis',
+            'bomb','military','troops','invasion','deploy'];
+  var s4 = ['deal','agreement','trade','negotiate','rate','fed','interest','gdp',
+            'recession','dollar','market','inflation','oil','energy','russia',
+            'ukraine','israel','saudi','gulf','opec'];
+  var s3 = ['statement','speech','announce','sign','veto','congress','senate',
+            'policy','regulation','budget','deficit','debt','spending'];
+  var sw = ['tweet','post','said','claim','suggest','consider','may','might',
+            'report','source','plan','meeting','talk','call'];
+  score += Math.min(40, s5.filter(function(w){ return text.indexOf(w)!==-1; }).length * 15);
+  score += Math.min(25, s4.filter(function(w){ return text.indexOf(w)!==-1; }).length * 10);
+  score += Math.min(15, s3.filter(function(w){ return text.indexOf(w)!==-1; }).length * 5);
+  score -= Math.min(10, sw.filter(function(w){ return text.indexOf(w)!==-1; }).length * 3);
+  // Tema-boost
   var cats = item.cats || [];
-  if (cats.indexOf('hormuz')      !== -1) score += 20;
-  if (cats.indexOf('kina')        !== -1) score += 12;
-  if (cats.indexOf('geopolitikk') !== -1) score += 10;
-  if (cats.indexOf('makro')       !== -1) score += 8;
-  if (cats.indexOf('energi')      !== -1) score += 7;
-  if (cats.indexOf('kapital')     !== -1) score += 5;
-  // Rammeverk-kategorier
-  if (cats.indexOf('goodspeed')   !== -1) score += 8;
-  if (cats.indexOf('fishman')     !== -1) score += 6;
-  if (cats.indexOf('miran')       !== -1) score += 6;
-  if (cats.indexOf('nds')         !== -1) score += 10;
-  if (cats.indexOf('taleb')       !== -1) score += 5;
-
-  // ── FERSKHET-BOOST ─────────────────────────────────────────────────────
-  var ageHours = (Date.now() - item.date.getTime()) / 3600000;
-  if (ageHours < 3)  score += 8;
-  else if (ageHours < 8)  score += 4;
-  else if (ageHours < 24) score += 1;
-
-  // Klem til 0-100
+  var temaBoost = { hormuz:25, kina:15, geopolitikk:12, energi:10, makro:10, kapital:6 };
+  var fwBoost   = { nds:15, goodspeed:12, miran:10, nss:10, fishman:8, taleb:6 };
+  cats.forEach(function(c) {
+    if (temaBoost[c]) score += temaBoost[c];
+    if (fwBoost[c])   score += fwBoost[c];
+  });
+  // Kombinasjonsbonus
+  if (cats.indexOf('hormuz') !== -1) score += 10;
+  if (cats.indexOf('nds')    !== -1) score += 8;
+  if (cats.indexOf('miran')  !== -1) score += 8;
+  // Ferskhet
+  var ageH = (Date.now() - item.date.getTime()) / 3600000;
+  if (ageH < 3) score += 8; else if (ageH < 8) score += 4; else if (ageH < 24) score += 1;
   return Math.min(100, Math.max(0, Math.round(score)));
 }
 
 function trumpScoreColor(s) {
-  if (s >= 80) return '#7F1D1D';
-  if (s >= 60) return '#C53030';
-  if (s >= 40) return '#C06000';
-  if (s >= 20) return '#BA7517';
-  return '#14532D';
+  return s >= 80 ? '#7F1D1D' : s >= 60 ? '#C53030' : s >= 40 ? '#C06000' : s >= 20 ? '#BA7517' : '#27500A';
+}
+function trumpScoreWord(s) {
+  return s >= 80 ? 'Kritisk' : s >= 60 ? 'Høy' : s >= 40 ? 'Moderat' : s >= 20 ? 'Lav' : 'Svak';
+}
+function trumpScoreBg(s) {
+  return s >= 80 ? '#FCEBEB' : s >= 60 ? '#FEF2F2' : s >= 40 ? '#FAEEDA' : s >= 20 ? '#EAF3DE' : '#F1EFE8';
 }
 
-function trumpStars(s) {
-  // Viser score som en liten tekst-label
-  if (s >= 80) return 'Kritisk';
-  if (s >= 60) return 'Høy';
-  if (s >= 40) return 'Moderat';
-  if (s >= 20) return 'Lav';
-  return 'Svak';
-}
+var TEMA_COLORS = {
+  hormuz:      { bg:'#FCEBEB', color:'#791F1F' },
+  energi:      { bg:'#FAEEDA', color:'#633806' },
+  kina:        { bg:'#FCEBEB', color:'#791F1F' },
+  makro:       { bg:'#EEEDFE', color:'#3C3489' },
+  geopolitikk: { bg:'#E1F5EE', color:'#085041' },
+  kapital:     { bg:'#E6F1FB', color:'#0C447C' },
+};
+var FW_COLORS = {
+  goodspeed: { bg:'#EEEDFE', color:'#3C3489' },
+  fishman:   { bg:'#E1F5EE', color:'#085041' },
+  miran:     { bg:'#FAEEDA', color:'#633806' },
+  nds:       { bg:'#FCEBEB', color:'#791F1F' },
+  nss:       { bg:'#FAECE7', color:'#712B13' },
+  taleb:     { bg:'#E6F1FB', color:'#0C447C' },
+};
+var FW_KEYS = ['goodspeed','fishman','miran','nds','nss','taleb'];
 
-function trumpFilterBtn(val) {
-  _trumpFilter = val;
-  document.querySelectorAll('[data-tf]').forEach(function(b) {
-    b.classList.toggle('active', b.dataset.tf === val);
-  });
+function trumpFilter(type, val) {
+  if (type === 'tema') {
+    _trumpTemaFilter = val;
+    document.querySelectorAll('[data-tf]').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.tf === val);
+    });
+  } else if (type === 'fw') {
+    _trumpFwFilter = val;
+    document.querySelectorAll('[data-fw]').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.fw === val);
+    });
+  } else if (type === 'score') {
+    _trumpScoreFilter = parseInt(val);
+    document.querySelectorAll('[data-sf]').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.sf === val);
+    });
+  }
   renderTrumpFeed();
 }
-window.trumpFilter = trumpFilterBtn;
+window.trumpFilter = trumpFilter;
 
 function updateTrumpometer() {
   if (!_newsItems || _newsItems.length === 0) return;
-
-  var now = Date.now();
-  var h24 = 24 * 3600000;
-
-  // Score alle nyheter
+  var now = Date.now(), h24 = 86400000;
   var scored = _newsItems.map(function(item) {
     return { item: item, score: scoreTrumpItem(item) };
   }).filter(function(s) { return s.score > 0; });
-
-  // Lagre på window for filter-bruk
   window._trumpScored = scored;
 
-  // Kun siste 24t for metrikker
-  var recent = scored.filter(function(s) {
-    return (now - s.item.date.getTime()) < h24;
-  });
+  var recent = scored.filter(function(s) { return (now - s.item.date.getTime()) < h24; });
+  var count  = recent.length;
+  var avg    = count > 0 ? recent.reduce(function(a,s) { return a+s.score; },0) / count : 0;
+  var max    = count > 0 ? Math.max.apply(null, recent.map(function(s) { return s.score; })) : 0;
 
-  var count = recent.length;
-  var avg   = count > 0 ? recent.reduce(function(a,s) { return a + s.score; }, 0) / count : 0;
-  var max   = count > 0 ? Math.max.apply(null, recent.map(function(s) { return s.score; })) : 0;
-
-  // Kategoritelling
   var catCount = {};
   recent.forEach(function(s) {
-    (s.item.cats || []).forEach(function(c) { catCount[c] = (catCount[c] || 0) + 1; });
+    (s.item.cats||[]).forEach(function(c) { catCount[c]=(catCount[c]||0)+1; });
   });
-  var topCat = Object.keys(catCount).sort(function(a,b) { return catCount[b]-catCount[a]; })[0] || '—';
-  var catLabels = {hormuz:'Hormuz',energi:'Energi',kina:'Kina',makro:'Makro',
-                   geopolitikk:'Geopolitikk',kapital:'Kapital',
-                   goodspeed:'Goodspeed',fishman:'Fishman',miran:'Miran',
-                   taleb:'Taleb',nds:'NDS',nss:'NSS'};
+  var topCat = Object.keys(catCount).sort(function(a,b){ return catCount[b]-catCount[a]; })[0]||'—';
+  var catLabels = { hormuz:'Hormuz',energi:'Energi',kina:'Kina',makro:'Makro',
+                    geopolitikk:'Geopolitikk',kapital:'Kapital',
+                    goodspeed:'Goodspeed',fishman:'Fishman',miran:'Miran',
+                    taleb:'Taleb',nds:'NDS',nss:'NSS' };
 
-  // Speedometer-score (0-100): vektet gjennomsnitt + volum-faktor
-  // Avg allerede 0-100. Volume-faktor: log(count+1)/log(20) klemt til 0-1
-  var volFactor = count > 0 ? Math.min(1, Math.log(count + 1) / Math.log(20)) : 0;
-  var meterScore = count > 0
-    ? Math.round(avg * 0.7 + avg * volFactor * 0.3)
-    : 0;
-  meterScore = Math.min(100, Math.max(0, meterScore));
+  var volFactor = count > 0 ? Math.min(1, Math.log(count+1)/Math.log(20)) : 0;
+  var meterScore = count > 0 ? Math.min(100, Math.round(avg*0.7 + avg*volFactor*0.3)) : 0;
 
-  // Oppdater UI
-  var s = function(id, v) { var el=document.getElementById(id); if(el) el.textContent=v; };
+  var s = function(id,v) { var el=document.getElementById(id); if(el) el.textContent=v; };
   s('trump-count', count);
   s('trump-avg',   Math.round(avg));
   s('trump-max',   Math.round(max));
-  s('trump-top-cat', catLabels[topCat] || topCat);
-  s('trump-score-num', meterScore);
+  s('trump-top-cat', catLabels[topCat]||topCat);
 
-  var scoreLabel = meterScore >= 80 ? 'Kritisk signalnivå — handl nå'
-                 : meterScore >= 60 ? 'Høy aktivitet — følg nøye'
-                 : meterScore >= 40 ? 'Moderat aktivitet'
-                 : meterScore >= 20 ? 'Lav aktivitet'
-                 : 'Ingen Trump-signaler siste 24t';
-  s('trump-score-label', scoreLabel);
+  setTrumpNeedle(meterScore);
 
-  // Score-farge
-  var numEl = document.getElementById('trump-score-num');
-  if (numEl) numEl.style.color = trumpScoreColor(meterScore);
-
-  // Roter nål: -90° = 0 (venstre), +90° = 100 (høyre)
-  var needle = document.getElementById('trump-needle');
-  if (needle) {
-    var deg = -90 + (meterScore / 100) * 180;
-    needle.setAttribute('transform', 'rotate(' + deg + ' 130 130)');
-  }
-
-  // Timestamp
-  var ts = new Date().toLocaleTimeString('no-NO', {hour:'2-digit',minute:'2-digit'});
+  var ts = new Date().toLocaleTimeString('no-NO',{hour:'2-digit',minute:'2-digit'});
   s('trump-updated', count + ' Trump-nyheter siste 24t · Oppdatert ' + ts);
 
   renderTrumpFeed();
@@ -5984,85 +5997,89 @@ function renderTrumpFeed() {
   var feed = document.getElementById('trump-feed');
   if (!feed || !window._trumpScored) return;
 
-  var scored = window._trumpScored.slice().sort(function(a, b) {
-    // Rangering: score DESC, deretter dato DESC
-    if (b.score !== a.score) return b.score - a.score;
-    return b.item.date - a.item.date;
+  var items = window._trumpScored.slice().sort(function(a,b) {
+    return b.score !== a.score ? b.score - a.score : b.item.date - a.item.date;
+  }).filter(function(s) {
+    if (s.score < _trumpScoreFilter) return false;
+    if (_trumpTemaFilter !== 'alle' && (s.item.cats||[]).indexOf(_trumpTemaFilter) === -1) return false;
+    if (_trumpFwFilter   !== 'alle' && (s.item.cats||[]).indexOf(_trumpFwFilter)   === -1) return false;
+    return true;
   });
 
-  // Filter
-  if (_trumpFilter !== 'alle') {
-    var minScore = parseInt(_trumpFilter);
-    scored = scored.filter(function(s) { return s.score >= minScore; });
-  }
-
-  if (scored.length === 0) {
+  if (items.length === 0) {
     feed.innerHTML = '<div style="text-align:center;padding:30px;color:var(--faint);font-size:12px">Ingen Trump-nyheter matcher filteret</div>';
     return;
   }
 
   feed.innerHTML = '';
-  scored.forEach(function(s, idx) {
+  items.forEach(function(s) {
     var item  = s.item;
     var score = s.score;
-    var scoreR = Math.round(score);
     var col   = trumpScoreColor(score);
+    var bg    = trumpScoreBg(score);
+    var word  = trumpScoreWord(score);
     var cats  = item.cats || [];
-    var primaryCat = cats[0] || 'geopolitikk';
-    var catStyle = (_catColors && _catColors[primaryCat]) || { bg:'#E1F5EE', color:'#085041', label:'Geopolitikk' };
+
+    // Tema-badges (kun kjente temakategorier)
+    var temaKeys = ['hormuz','energi','kina','makro','geopolitikk','kapital'];
+    var temaBadges = cats.filter(function(c){ return temaKeys.indexOf(c)!==-1; }).slice(0,2).map(function(c){
+      var tc = TEMA_COLORS[c]||{bg:'#F1EFE8',color:'#444441'};
+      return '<span class="trump-badge" style="background:'+tc.bg+';color:'+tc.color+'">' + c.charAt(0).toUpperCase()+c.slice(1) + '</span>';
+    }).join('');
+
+    // Rammeverk-badges
+    var fwBadges = cats.filter(function(c){ return FW_KEYS.indexOf(c)!==-1; }).slice(0,2).map(function(c){
+      var fc = FW_COLORS[c]||{bg:'#EEEDFE',color:'#3C3489'};
+      return '<span class="trump-badge" style="background:'+fc.bg+';color:'+fc.color+'">' + c.toUpperCase() + '</span>';
+    }).join('');
+
+    // Signalnøkkelord
+    var text = (item.title+' '+(item.desc||'')).toLowerCase();
+    var signalWords = ['nuclear','war','attack','strike','ultimatum','threat','sanction',
+                       'tariff','emergency','declare','iran','hormuz','china','taiwan',
+                       'nato','military','fed','rate','recession'];
+    var matched = signalWords.filter(function(w){ return text.indexOf(w)!==-1; }).slice(0,3);
 
     // Alder
     var ageMs = Date.now() - item.date.getTime();
-    var ageStr;
-    if (ageMs < 3600000)       ageStr = Math.round(ageMs/60000) + ' min';
-    else if (ageMs < 86400000) ageStr = Math.round(ageMs/3600000) + 't siden';
-    else                        ageStr = item.date.toLocaleDateString('no-NO', {day:'numeric',month:'short'});
+    var ageStr = ageMs < 3600000 ? Math.round(ageMs/60000)+'min' :
+                 ageMs < 86400000 ? Math.round(ageMs/3600000)+'t' :
+                 item.date.toLocaleDateString('no-NO',{day:'numeric',month:'short'});
 
-    // Beskriv ordstyrke
-    var text = (item.title + ' ' + (item.desc||'')).toLowerCase();
-    var signalWords = ['nuclear','war','attack','strike','ultimatum','threat','sanction',
-                       'tariff','emergency','declare','iran','hormuz','china','taiwan'];
-    var matched = signalWords.filter(function(w) { return text.indexOf(w) !== -1; });
-    var signalLabel = matched.length > 0 ? matched.slice(0,2).join(', ') : '';
+    // Trunkert beskrivelse
+    var tmp = document.createElement('div');
+    tmp.innerHTML = item.desc||'';
+    var desc = (tmp.textContent||'').trim().replace(/\s+/g,' ').substring(0,110);
+    if ((tmp.textContent||'').length > 110) desc += '…';
 
     var el = document.createElement('div');
     el.className = 'trump-item';
-
-    // Score-badge farger per nivå
-    var badgeBg = score >= 80 ? '#7F1D1D' : score >= 60 ? '#C53030' : score >= 40 ? '#C06000' : score >= 20 ? '#BA7517' : '#14532D';
-    var scoreLabel2 = trumpStars(score); // Kritisk/Høy/Moderat/Lav/Svak
-
     el.innerHTML =
-      '<div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;width:44px">' +
-        '<div class="trump-score-badge" style="background:' + badgeBg + ';width:36px;height:22px;border-radius:4px;font-size:13px;font-weight:800">' + score + '</div>' +
-        '<div style="font-size:8px;font-weight:600;color:' + badgeBg + ';white-space:nowrap">' + scoreLabel2 + '</div>' +
+      '<div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;width:48px">' +
+        '<div class="trump-score-badge" style="background:'+bg+';color:'+col+';width:40px;height:24px;font-size:14px">'+score+'</div>' +
+        '<div style="font-size:9px;font-weight:600;color:'+col+'">'+word+'</div>' +
       '</div>' +
       '<div style="flex:1;min-width:0">' +
-        '<div style="display:flex;align-items:center;gap:5px;margin-bottom:2px;flex-wrap:wrap">' +
-          '<span class="trump-cat-badge" style="background:' + catStyle.bg + ';color:' + catStyle.color + '">' + catStyle.label + '</span>' +
-          (signalLabel ? '<span style="font-size:9px;color:var(--faint);font-style:italic">' + signalLabel + '</span>' : '') +
-          '<span style="font-size:9px;color:var(--faint);margin-left:auto">' + item.source + '</span>' +
+        '<div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;margin-bottom:3px">' +
+          temaBadges + fwBadges +
+          (matched.length ? '<span style="font-size:9px;color:var(--faint);font-style:italic">· '+matched.join(', ')+'</span>' : '') +
+          '<span style="font-size:9px;color:var(--faint);margin-left:auto">'+item.source+'</span>' +
         '</div>' +
-        '<a href="' + item.link + '" target="_blank" rel="noopener" style="font-size:12px;font-weight:600;color:var(--text);text-decoration:none;line-height:1.4;display:block;margin-bottom:2px">' +
-          item.title +
-        '</a>' +
-        (item.desc ? '<div style="font-size:10.5px;color:var(--muted);line-height:1.5">' +
-          (function(){var d=document.createElement('div');d.innerHTML=item.desc;return (d.textContent||'').trim().substring(0,120)+'…';})() +
-        '</div>' : '') +
+        '<a href="'+item.link+'" target="_blank" rel="noopener" style="font-size:12px;font-weight:600;color:var(--text);text-decoration:none;line-height:1.4;display:block;margin-bottom:2px">' + item.title + '</a>' +
+        (desc ? '<div style="font-size:10.5px;color:var(--muted);line-height:1.4">'+desc+'</div>' : '') +
       '</div>' +
-      '<div style="flex-shrink:0;text-align:right;min-width:50px">' +
-        '<div style="font-size:9px;font-weight:600;color:' + col + '">' + ageStr + '</div>' +
-        '<div style="font-size:8px;color:var(--faint);margin-top:2px">' + score.toFixed(1) + '/5</div>' +
+      '<div style="flex-shrink:0;text-align:right;min-width:40px">' +
+        '<div style="font-size:10px;font-weight:600;color:'+col+'">'+ageStr+'</div>' +
+        '<div style="font-size:9px;color:var(--faint);margin-top:1px">'+score+'/100</div>' +
       '</div>';
-
     feed.appendChild(el);
   });
 }
 
-// Koble til renderNews og nav
-var _origRenderNews = window.renderNews;
+// Koble til eksisterende renderNews
+var _origRenderTrump = window.renderNews;
 window.renderNews = function() {
-  if (_origRenderNews) _origRenderNews();
+  if (_origRenderTrump) _origRenderTrump();
   updateTrumpometer();
 };
 
@@ -6071,7 +6088,7 @@ window.nav = function(el) {
   if (_origNavTrump) _origNavTrump(el);
   if (el && el.dataset && el.dataset.panel === 'trumpometer') {
     if (_newsItems && _newsItems.length > 0) updateTrumpometer();
-    else fetchAllNews();
+    else if (typeof fetchAllNews === 'function') fetchAllNews();
   }
 };
 
