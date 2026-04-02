@@ -33,7 +33,6 @@
   --coral-lt:  #FFF7ED;
   --radius:    10px;
   --radius-lg: 16px;
-  --nav-w:     224px;
   --shadow:    0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
   --shadow-md: 0 2px 8px rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.06);
 }
@@ -96,67 +95,6 @@ body {
   flex: 1;
   overflow: hidden;
   height: calc(100vh - 88px);
-}
-
-/* ── SIDEBAR ────────────────────────────────── */
-.sidebar {
-  width: var(--nav-w);
-  flex-shrink: 0;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  padding: 20px 0;
-}
-
-.nav-section-label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--faint);
-  padding: 0 18px 8px;
-  margin-top: 6px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 18px;
-  cursor: pointer;
-  font-size: 13px;
-  color: var(--muted);
-  border-left: 2px solid transparent;
-  transition: all 0.14s ease;
-  user-select: none;
-  font-weight: 400;
-}
-.nav-item:hover {
-  background: var(--bg);
-  color: var(--text);
-}
-.nav-item.active {
-  color: var(--navy);
-  font-weight: 500;
-  border-left-color: var(--navy);
-  background: var(--navy-lt);
-}
-.nav-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.sidebar-footer {
-  margin-top: auto;
-  padding: 16px 18px;
-  border-top: 1px solid var(--border);
-  font-size: 11px;
-  color: var(--faint);
-  line-height: 1.5;
 }
 
 /* ── MAIN ───────────────────────────────────── */
@@ -716,9 +654,7 @@ input[type=range]::-webkit-slider-thumb {
 /* ── RESPONSIVE ── RESPONSIVE ── RESPONSIVE ─────────────────────────────── */
 @media (max-width: 860px) {
   .layout { flex-direction: column; height: auto; overflow: visible; }
-  .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); flex-direction: row; overflow-x: auto; padding: 10px 0; }
-  .nav-section-label { display: none; }
-  .nav-item { border-left: none; border-bottom: 2px solid transparent; white-space: nowrap; padding: 8px 14px; }
+
   .nav-item.active { border-left: none; border-bottom-color: var(--navy); background: transparent; }
   .main { padding: 20px 18px 40px; }
   .stat-grid-3 { grid-template-columns: 1fr 1fr; }
@@ -727,7 +663,6 @@ input[type=range]::-webkit-slider-thumb {
   .matrix { grid-template-columns: 1fr; }
   .barbell { flex-direction: column; }
   .barbell-left { border-right: none; border-bottom: 1px solid var(--border); }
-  .sidebar-footer { display: none; }
 }
 </style>
 <style>
@@ -807,33 +742,7 @@ input[type=range]::-webkit-slider-thumb {
 
 <div class="layout">
 
-<aside class="sidebar">
-  <div class="nav-section-label">Navigasjon</div>
-  <div class="nav-item active" data-panel="oversikt" onclick="nav(this)">
-    <span class="nav-dot" style="background:#7F77DD"></span>Dashboard
-  </div>
-  <div class="nav-item" data-panel="analytikere" onclick="nav(this)">
-    <span class="nav-dot" style="background:#1D9E75"></span>Om modellen
-  </div>
 
-
-
-  <div class="nav-item" data-panel="kapital" onclick="nav(this)">
-    <span class="nav-dot" style="background:#D4537E"></span>Investeringsråd
-  </div>
-  <div class="nav-item" data-panel="makro" onclick="nav(this)">
-    <span class="nav-dot" style="background:#0F6E56"></span>Makrodata
-  </div>
-
-  <div class="nav-item" data-panel="nyheter" onclick="nav(this)">
-    <span class="nav-dot" style="background:#0E7490;box-shadow:0 0 0 2px rgba(14,116,144,.3)"></span>Nyheter
-  </div>
-
-  <div class="sidebar-footer">
-    En syntese av seks analytiske rammeverk.<br>
-    Kildegrunnlag:<br>Goodspeed · Fishman · Miran<br>NDS (2026) · NSS (2026) · Taleb
-  </div>
-</aside>
 
 <main class="main">
 
@@ -878,6 +787,19 @@ input[type=range]::-webkit-slider-thumb {
     </button>
     <button onclick="openKinaModal()" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--amber-lt);border:1px solid rgba(146,64,14,.25);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
       <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--amber)">🇨🇳 Kinas posisjon</span>
+    </button>
+    <button onclick="openKapitalModal()" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--green-lt);border:1px solid rgba(20,83,45,.25);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
+      <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--green)">★ Investeringsråd</span>
+    </button>
+    <div style="width:1px;height:18px;background:var(--border);flex-shrink:0"></div>
+    <button onclick="nav(document.querySelector('[data-panel=makro]'))" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.2);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
+      <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid)">📊 Makrodata</span>
+    </button>
+    <button onclick="nav(document.querySelector('[data-panel=nyheter]'))" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.2);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
+      <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid)">📰 Nyheter</span>
+    </button>
+    <button onclick="nav(document.querySelector('[data-panel=analytikere]'))" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.2);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
+      <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid)">📖 Om modellen</span>
     </button>
   </div>
 
@@ -2075,281 +1997,6 @@ input[type=range]::-webkit-slider-thumb {
 </div>
 
 <!-- ─── KAPITAL ─── -->
-<div class="panel" id="panel-kapital">
-  <div class="panel-header">
-    <div class="panel-title">Investeringsråd</div>
-    <div class="panel-sub">To analytiske lag: overordnet strategi og spesifikke implikasjoner forankret i Perera-data og de seks analytiske rammeverk</div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════
-       LAG 1 — OVERORDNET STRATEGI OG PORTEFØLJEFORDELING
-       ═══════════════════════════════════════════════════════ -->
-  <div class="section-label" style="margin-top:0;margin-bottom:12px">Lag 1 — Overordnet strategi og porteføljefordeling</div>
-
-  <!-- Talebs barbell — overordnet -->
-  <div class="section-label">Taleb barbell — overordnet porteføljestruktur <span class="tt-trigger" data-tt="tt-barbell" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-  <div class="barbell" style="margin-bottom:16px">
-    <div class="barbell-side barbell-left">
-      <div class="barbell-pct" style="color:var(--green)">80 %</div>
-      <div class="barbell-title" style="color:var(--green)">Robuste kjerneposisjoner</div>
-      <div class="barbell-item" style="color:var(--teal)">
-        Fysiske realaktiva med produksjonsverdi<br>
-        Energiinfrastruktur med inntektsstrøm<br>
-        Forsvarsindustri (NDS Line of Effort 4)<br>
-        Kortsiktige statsobligasjoner NOK/CHF<br>
-        Kritiske råvarer — fysisk eksponering
-      </div>
-    </div>
-    <div class="barbell-side barbell-right">
-      <div class="barbell-pct" style="color:var(--amber)">20 %</div>
-      <div class="barbell-title" style="color:var(--amber)">Asymmetriske posisjoner</div>
-      <div class="barbell-item" style="color:var(--coral)">
-        Begrenset tapsrisiko · stor konveks oppsideeksponering<br>
-        Lang volatilitet energi og metaller<br>
-        Ex-Taiwan halvlederkapasitet (ASML, Intel)<br>
-        Cape of Good Hope-rederier (strukturell omruting)<br>
-        Nordamerikansk LNG-eksportinfrastruktur
-      </div>
-    </div>
-  </div>
-
-  <!-- Strategisk diagnose -->
-  <div class="diag-box" style="margin-bottom:16px">
-    <div class="diag-label">Strategisk diagnose — 1. april 2026 <span class="tt-trigger" data-tt="tt-strategi-diag" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-    Vi befinner oss i Goodspeeds verste kategori: alle tre resesjonstriggers aktive simultant. Gull korreksjon fra $5 594 (jan-topp) til mars-bunn ~$4 200, nå tilbake ~$4 654 (+2,8 % 1. april) — rebounds teknisk — det er posisjonsjustering i et volatilt marked. J.P. Morgan fastholder $5 055 som snitt for Q4 2026 — $4 654 er fortsatt langt under det målet. Kobber på $12 200/t og aluminium +52 % siden Hormuz signaliserer at råvaremarkedene er i et strukturelt nytt regime. US 10Y ned fra 4,44 % til 4,32 % reflekterer at vekstfrykten nå overstiger inflasjonsfrykten — Powells «vi ser gjennom forsyningssjokk». Markedet er ikke priset for Scenario C. Unngå middels risiko.
-  </div>
-
-  <!-- Fordeling per scenario -->
-  <div class="section-label">Anbefalt fordeling per scenario-vekting <span class="tt-trigger" data-tt="tt-fordeling" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);margin-bottom:20px">
-    <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:white;background:var(--navy)">
-      <div style="padding:8px 12px">Aktivaklasse</div>
-      <div style="padding:8px 12px;text-align:center;border-left:1px solid rgba(255,255,255,.15)">Scenario A (20 %)<br><span style="font-weight:400;opacity:.7">Rask oppløsning</span></div>
-      <div style="padding:8px 12px;text-align:center;border-left:1px solid rgba(255,255,255,.15)">Scenario B (55 %)<br><span style="font-weight:400;opacity:.7">Kronisk forstyrrelse</span></div>
-      <div style="padding:8px 12px;text-align:center;border-left:1px solid rgba(255,255,255,.15)">Scenario C (25 %)<br><span style="font-weight:400;opacity:.7">Systemkollaps</span></div>
-    </div>
-    <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid var(--border);font-size:12px">
-      <div style="padding:9px 12px;font-weight:500;color:var(--text);background:rgba(0,0,0,.02)">Energiinfrastruktur</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--green);font-weight:600">20 %</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--green);font-weight:600">30 %</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--green);font-weight:600">25 %</div>
-    </div>
-    <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid var(--border);font-size:12px">
-      <div style="padding:9px 12px;font-weight:500;color:var(--text);background:rgba(0,0,0,.02)">Forsvarsindustri</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--green);font-weight:600">15 %</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--green);font-weight:600">20 %</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--green);font-weight:600">25 %</div>
-    </div>
-    <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid var(--border);font-size:12px">
-      <div style="padding:9px 12px;font-weight:500;color:var(--text);background:rgba(0,0,0,.02)">Gull og reelle verdier</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--amber);font-weight:600">10 %</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--amber);font-weight:600">15 %</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--green);font-weight:600">20 %</div>
-    </div>
-    <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid var(--border);font-size:12px">
-      <div style="padding:9px 12px;font-weight:500;color:var(--text);background:rgba(0,0,0,.02)">Kritiske råvarer</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--amber);font-weight:600">10 %</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--amber);font-weight:600">15 %</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--amber);font-weight:600">15 %</div>
-    </div>
-    <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid var(--border);font-size:12px">
-      <div style="padding:9px 12px;font-weight:500;color:var(--text);background:rgba(0,0,0,.02)">Asymmetriske posisjoner</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--amber);font-weight:600">15 %</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--amber);font-weight:600">15 %</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--amber);font-weight:600">10 %</div>
-    </div>
-    <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-bottom:1px solid var(--border);font-size:12px">
-      <div style="padding:9px 12px;font-weight:500;color:var(--text);background:rgba(0,0,0,.02)">Statsobligasjoner kortsiktig</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--green);font-weight:600">20 %</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--amber);font-weight:600">5 %</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--green);font-weight:600">15 %</div>
-    </div>
-    <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;font-size:12px">
-      <div style="padding:9px 12px;font-weight:500;color:var(--text);background:rgba(0,0,0,.02)">Unngå (middels risiko)</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--red);font-weight:600">10 %</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--red);font-weight:600">0 %</div>
-      <div style="padding:9px 12px;text-align:center;border-left:1px solid var(--border);color:var(--red);font-weight:600">0 %</div>
-    </div>
-  </div>
-
-  <!-- Vektet anbefalt fordeling -->
-  <div style="background:var(--navy-lt);border:1px solid rgba(31,56,100,.15);border-radius:var(--radius);padding:12px 16px;margin-bottom:24px;font-size:12px;line-height:1.7;color:var(--text)">
-    <strong style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid);display:block;margin-bottom:5px">Vektet anbefaling basert på scenariosannsynligheter (A:20 % · B:55 % · C:25 %)</strong>
-    Energiinfrastruktur <strong>27 %</strong> · Forsvarsindustri <strong>21 %</strong> · Gull/reelle verdier <strong>16 %</strong> · Kritiske råvarer <strong>14 %</strong> · Asymmetriske posisjoner <strong>14 %</strong> · Statsobligasjoner kortsiktig <strong>9 %</strong> · Middels risiko/eksponering <strong>0 %</strong>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════
-       LAG 2 — SPESIFIKKE IMPLIKASJONER
-       ═══════════════════════════════════════════════════════ -->
-  <div class="section-label">Lag 2 — Spesifikke implikasjoner per tema <span class="tt-trigger" data-tt="tt-lag2" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-
-  <!-- Tema 1: Energi -->
-  <div class="card" style="margin-bottom:12px">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
-      <div>
-        <div style="font-size:13px;font-weight:600;color:var(--text)">Energiinfrastruktur</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px">Brent ~104 $ · LNG-bortfall &gt;26 % globalt · Perera: Train 4 og 6 ødelagt</div>
-      </div>
-      <span style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:#F0FDF4;color:var(--green);white-space:nowrap">STRUKTURELL VINNER</span>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-      <div style="background:var(--green-lt);border-radius:var(--radius);padding:10px 12px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green);margin-bottom:5px">Nordamerikansk LNG</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--text)">Sabine Pass, Corpus Christi, Freeport LNG. Qatar-bortfallet (+26 % av global prod.) er en direkte markedsåpning for US LNG-eksport. Strukturell etterspørsel fra Europa 2026–2030.</div>
-      </div>
-      <div style="background:var(--green-lt);border-radius:var(--radius);padding:10px 12px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green);margin-bottom:5px">Norsk energiinfrastruktur</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--text)">Equinor, Aker BP. Norge er nå Europas viktigste gassleverandør. EIA: Hormuz-sjokket øker norsk gass-premium. Stabil politisk risiko. NOK-eksponering som valutabeskyttelse.</div>
-      </div>
-      <div style="background:var(--green-lt);border-radius:var(--radius);padding:10px 12px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green);margin-bottom:5px">Cape of Good Hope-rederier</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--text)">Perera: 2 000 fartøy strandet, supertanker ×4 ($800K/dag). Rederier med Cape-kapasitet (Frontline, Euronav) er direkte vinnere av Hormuz-omruting. Strukturell +14 dager per tur = varig fraktvolumsøkning.</div>
-      </div>
-    </div>
-    <div style="margin-top:10px;padding:8px 12px;background:var(--bg);border-radius:6px;font-size:11px;color:var(--muted)">
-      <strong style="color:var(--text)">Unngå:</strong> Containerrederier eksponert mot Suez (direkte negativ) · Gulf-stat energiinfrastruktur (politisk risiko vedvarer) · Europeisk energiintensiv industri (stål, kjemikalier, glass — direkte offer for høye gasspriser)
-    </div>
-  </div>
-
-  <!-- Tema 2: Forsvar -->
-  <div class="card" style="margin-bottom:12px">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
-      <div>
-        <div style="font-size:13px;font-weight:600;color:var(--text)">Forsvarsindustri</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px">NDS (2026) Line of Effort 4 · NATO 5 %-mål · Strukturell og konjunkturuavhengig</div>
-      </div>
-      <span style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:#F0FDF4;color:var(--green);white-space:nowrap">TOPP PRIORITET</span>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-      <div style="background:var(--green-lt);border-radius:var(--radius);padding:10px 12px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green);margin-bottom:5px">US Aerospace & Defense</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--text)">RTX, L3Harris, Northrop, Lockheed. NDS autoriserer massiv kapasitetsutbygging — ikke bare innkjøp, men produksjonskapasitet. Backlog på 5–8 år ved nåværende økningstakt.</div>
-      </div>
-      <div style="background:var(--green-lt);border-radius:var(--radius);padding:10px 12px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green);margin-bottom:5px">Europeisk forsvar</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--text)">Rheinmetall, KNDS, Saab, Kongsberg. Trumps Nato-trusseler tvinger Europa til selvstendighet. NDS 5 %-kravet innebærer dobling av europeisk forsvarsbudsjett. Rheinmetall kapasitetsutbygging 2025–2030 er historisk.</div>
-      </div>
-      <div style="background:var(--green-lt);border-radius:var(--radius);padding:10px 12px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green);margin-bottom:5px">Forsvarsteknologi og cyber</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--text)">Palantir, Anduril, Shield AI (privat). NDS identifiserer «cyber og AI» som kritisk kapasitet. Uansett scenarioutfall øker cyberforsvarsbudsjettet. Lavkorrelert med olje/renter.</div>
-      </div>
-    </div>
-    <div style="margin-top:10px;padding:8px 12px;background:var(--bg);border-radius:6px;font-size:11px;color:var(--muted)">
-      <strong style="color:var(--text)">Merk:</strong> Forsvar er den eneste sektoren med positiv avkastningsforventning i alle tre Perera-scenarier. Konjunkturuavhengig — budsjettene øker uavhengig av om det er resesjon eller ikke.
-    </div>
-  </div>
-
-  <!-- Tema 3: Gull og reelle verdier -->
-  <div class="card" style="margin-bottom:12px">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
-      <div>
-        <div style="font-size:13px;font-weight:600;color:var(--text)">Gull og reelle verdier</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px">~$4 400/oz (-21 % fra $5 594 jan-topp) · J.P. Morgan: $5 055 Q4 2026 · Sentralbanketterspørsel 585 t/kvartal</div>
-      </div>
-      <span style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:#FFFBEB;color:var(--amber);white-space:nowrap">KJØP VED KORREKSJON</span>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-      <div style="background:var(--amber-lt);border-radius:var(--radius);padding:10px 12px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--amber);margin-bottom:5px">Fysisk gull — primær</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--text)">Korreksjonen fra $5 594 (jan-topp) til $4 400 (mars-bunn) er delvis reversert — gull handler ~$4 654 per 1. april (+2,8 % i dag). Teknisk korreksjon, ikke fundamental. Sentralbanketterspørsel 585 t/kvartal vedvarer. J.P. Morgan fastholder $5 055 for Q4 2026. Taleb: fysisk gull er den eneste eiendelen som overlever Scenario C strukturelt.</div>
-      </div>
-      <div style="background:var(--amber-lt);border-radius:var(--radius);padding:10px 12px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--amber);margin-bottom:5px">Gull og sølv miners</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--text)">Newmont, Agnico Eagle, Wheaton Precious Metals. Miners er levered beta på gullpris. Fra $4 654 til J.P. Morgans $5 055-mål er +8,6 % — miners gir typisk 2–3× beta. Sølv: spotpris ~$74/oz (ned 1,5 % i dag, -20 % i mars), industrielt + safe haven.</div>
-      </div>
-      <div style="background:var(--amber-lt);border-radius:var(--radius);padding:10px 12px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--amber);margin-bottom:5px">Norske statsobligasjoner</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--text)">NOK er den eneste G10-valutaen med positivt bytteforhold i et vedvarende energisjokk-regime. Norge er energieksportør. Norges Bank har handlingsrom. Norsk 10Y som trygg havn for europeisk kapital.</div>
-      </div>
-    </div>
-    <div style="margin-top:10px;padding:8px 12px;background:var(--bg);border-radius:6px;font-size:11px;color:var(--muted)">
-      <strong style="color:var(--text)">Kritisk distinksjon:</strong> Fysisk gull vs. gull-ETF — i Scenario C er motpartsrisikoen i ETF ikke neglisjerbar. Taleb-barbellen anbefaler fysisk beholdning i kjernen.
-    </div>
-  </div>
-
-  <!-- Tema 4: Kritiske råvarer -->
-  <div class="card" style="margin-bottom:12px">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
-      <div>
-        <div style="font-size:13px;font-weight:600;color:var(--text)">Kritiske råvarer — Perera-forankret</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px">Kobber $12 200/t · Aluminium $3 500/t · Helium 200 ISO-containere tapt · Gallium +123 %</div>
-      </div>
-      <span style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:#FFFBEB;color:var(--amber);white-space:nowrap">STRUKTURELL KNAPPHET</span>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-      <div style="background:var(--navy-lt);border-radius:var(--radius);padding:10px 12px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy-mid);margin-bottom:5px">Kobber — strukturell langsiktig long</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--text)">LME $12 200/t (rekord $13 270 i jan.). Fastmarkets snitt-prognose 2026: $10 943/t — selv basiscase er historisk høyt. Geopolitisk fragmentering (CME-LME spread +30 % i 2025) forblir. Elektrifisering + AI-datacenterbygging er permanent etterspørselsøkning. Freeport-McMoRan, Southern Copper.</div>
-      </div>
-      <div style="background:var(--navy-lt);border-radius:var(--radius);padding:10px 12px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy-mid);margin-bottom:5px">Aluminium — Gulf-bortfall prises inn</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--text)">Perera: Alba (Bahrain), EGA Abu Dhabi og Qatalum stengt/redusert. LME $3 500/t (+52 % siden Hormuz). Gulf-kapasitet på 2+ mill. t/år ute av drift. Ex-Gulf produsenter (Norsk Hydro, Alcoa Canada, Rusal ex-sanksjon) er direkte vinnere. Fastmarkets: aluminium over $3 000 er ny normal.</div>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div style="background:var(--red-lt);border-radius:var(--radius);padding:10px 12px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--red);margin-bottom:5px">Helium — irreversibel knapphet</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--text)">Perera: 200 ISO-containere fordampet — permanent tap. 33 % av global kapasitet borte. Air Products (Wyoming), Messer (Algerie), Linde (diversifisert). Halvlederindustrien betaler hvilken pris som helst for helium. Strukturell prisvekst 2026–2030.</div>
-      </div>
-      <div style="background:var(--red-lt);border-radius:var(--radius);padding:10px 12px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--red);margin-bottom:5px">Sjeldne jordarter — Kinas eksportkontroll</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--text)">Dysprosium +100 % YTD, Terbium +103 % YTD (SMM mars 2026). Gallium +123 % (Kina-eksportforbud). NDS Line of Effort 4 krever nettopp disse materialene. MP Materials (USA), Lynas (Australia) — de to eneste ikke-kinesiske prosesseringsselskapene i skala.</div>
-      </div>
-    </div>
-    <div style="margin-top:10px;padding:8px 12px;background:var(--bg);border-radius:6px;font-size:11px;color:var(--muted)">
-      <strong style="color:var(--text)">Fishman-kobling:</strong> Eksportkontroller på gallium og germanium er speilvendte Fishman-trekk fra Kina. Asymmetrien er strukturell — USA kan ikke bygge opp prosesseringskapasitet på kortere enn 10–15 år.
-    </div>
-  </div>
-
-  <!-- Tema 5: Halvledere og teknologi -->
-  <div class="card" style="margin-bottom:12px">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
-      <div>
-        <div style="font-size:13px;font-weight:600;color:var(--text)">Halvledere — selektiv eksponering</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px">DRAM +298 % · NVIDIA -30–40 % produksjonskutt · Heliumknapphet · Bromin-mangel Sør-Korea</div>
-      </div>
-      <span style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:#FCEBEB;color:var(--red);white-space:nowrap">SELEKTIV — IKKE BRED</span>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-      <div style="background:var(--green-lt);border-radius:var(--radius);padding:10px 12px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green);margin-bottom:5px">Ex-Taiwan fab-kapasitet</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--text)">ASML (leverandør til alle fabs — monopol på EUV), Intel Foundry Services (Ohio, Arizona), Samsung Austin. Perera: Taiwan-risiko (Scenario C) gjør geografisk diversifisering av fabrikasjon til sikkerhetsspørsmål.</div>
-      </div>
-      <div style="background:var(--green-lt);border-radius:var(--radius);padding:10px 12px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--green);margin-bottom:5px">Halvledermaterialer ex-Kina</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--text)">Entegris (process chemicals), Shin-Etsu (silicon wafers), Umicore (kobolt-kjemi). Helium- og gallium-alternativene. Perera: strukturell materialmangel gir leverandørmakt til de som har ex-Kina forsyningskjeder.</div>
-      </div>
-      <div style="background:var(--red-lt);border-radius:var(--radius);padding:10px 12px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--red);margin-bottom:5px">Unngå: Kina-eksponerte</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--text)">NVIDIA (Kina-eksport sanksjonert + Gulf-kapex-pause), Qualcomm (Kina-omsetning 60 %+), Broadcom (datacenter-eksponering utsatt). Fishman: halvlederkrigen er strukturell uten avslutningsbetingelse.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Tema 6: Unngå -->
-  <div class="card" style="margin-bottom:16px;border-left:3px solid var(--red)">
-    <div style="font-size:13px;font-weight:600;color:var(--red);margin-bottom:12px">Systematisk unngå — Perera-motivert</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-      <div>
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--red);margin-bottom:5px">Europeisk energiintensiv industri</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--muted)">BASF, ThyssenKrupp, Salzgitter, AGC Glass. Direkte offer for TTF-gass ×3–4. Perera: Industriell nedstengning innen 8 uker ved Scenario B. ECB-prognosen kuttet 0,3 pp på 3 uker — mer kommer.</div>
-      </div>
-      <div>
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--red);margin-bottom:5px">EM-obligasjoner importavhengige land</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--text-muted)">Pakistan (gjødsel -78 %), Bangladesh (83 % fabrikker stengt), Egypt (importavhengig), Irak (statsinntekter -$8–10 mrd./mnd.). Perera: humanitær krise + IMF-program + default-risiko simultant.</div>
-      </div>
-      <div>
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--red);margin-bottom:5px">«Middels risiko» generelt</div>
-        <div style="font-size:11.5px;line-height:1.65;color:var(--muted)">Taleb: bredt diversifiserte porteføljer gir lineær nedsideeksponering uten tilstrekkelig oppsidepotensial i Extremistan. Standard 60/40 er optimalisert for Mediocristan. Vi er i Extremistan.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="footnote">
-    Markedspriser: se Investeringsråd-panelet for analytiske posisjoner<br>
-    Halvard Nordang — Affectum AS · Konfidensielt · Ikke investeringsrådgivning
-  </div>
-</div>
 
 
 <!-- ─── MAKRODATA ─── -->
@@ -3234,7 +2881,6 @@ input[type=range]::-webkit-slider-thumb {
 
 <script>
 function nav(el) {
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('panel-' + el.dataset.panel).classList.add('active');
@@ -4018,7 +3664,7 @@ function runSearch(q) {
     'panel-oversikt':'Dashboard','panel-analytikere':'Om modellen',
 
 
-    'panel-kapital':'Investeringsråd','panel-makro':'Makrodata',
+    'panel-makro':'Makrodata',
     'panel-nyheter':'Nyheter',
 
   };
@@ -6395,7 +6041,7 @@ window.nav = function(el) {
     <!-- Footer -->
     <div id="sc-modal-footer" class="popup-footer">
       <span class="popup-footer-note">Perera (2026) · Dallas Fed (mars 2026) · Goodspeed (2025)</span>
-      <button class="popup-footer-btn" onclick="nav(document.querySelector('[data-panel=kapital]'));closeScenarioModal()">Se Investeringsråd →</button>
+      <button class="popup-footer-btn" onclick="openKapitalModal();closeScenarioModal()">Se Investeringsråd →</button>
     </div>
 
   </div><!-- /sc-modal -->
@@ -6954,7 +6600,7 @@ function syncScenarioModalParams() {
     <!-- Footer -->
     <div id="hz-modal-footer" class="popup-footer">
       <span class="popup-footer-note">Dallas Fed (mars 2026) · Goodspeed (2025) · Kilian (2009) · ECB (mars 2026)</span>
-      <button class="popup-footer-btn" onclick="nav(document.querySelector('[data-panel=kapital]'));closeHormuzModal()">Se Investeringsråd →</button>
+      <button class="popup-footer-btn" onclick="openKapitalModal();closeHormuzModal()">Se Investeringsråd →</button>
     </div>
 
   </div><!-- /hz-modal -->
@@ -7548,7 +7194,7 @@ function drawHzmGraf() {
     <!-- Footer -->
     <div class="popup-footer">
       <span class="popup-footer-note">USGS · BloombergNEF · IEA Critical Minerals Report 2024 · SMM · LME · Benchmark MI · NDS (2026) · NSS (2026)</span>
-      <button class="popup-footer-btn" onclick="nav(document.querySelector('[data-panel=kapital]'));closeKinaModal()">Se Investeringsråd →</button>
+      <button class="popup-footer-btn" onclick="openKapitalModal();closeKinaModal()">Se Investeringsråd →</button>
     </div>
 
   </div><!-- /kina-modal -->
@@ -7581,6 +7227,265 @@ function kinaTab(tab) {
     if (pEl) pEl.classList.toggle('active', t === tab);
   });
   var body = document.getElementById('kina-modal-body');
+  if (body) body.scrollTop = 0;
+}
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     INVESTERINGSRÅD MODAL
+═══════════════════════════════════════════════════════════════ -->
+<div id="kapital-modal-overlay" class="popup-overlay" onclick="if(event.target===this)closeKapitalModal()">
+  <div id="kapital-modal" class="popup-modal popup-wide">
+
+    <!-- Header -->
+    <div class="popup-head">
+      <div class="popup-head-left">
+        <div class="popup-head-title">Investeringsråd</div>
+        <div class="popup-head-params">
+          <div class="popup-head-pill">Taleb barbell: <strong style="color:#FCA5A5">80/20</strong></div>
+          <div class="popup-head-pill">Diagnose: <strong style="color:#FCA5A5">Alle tre triggere aktive</strong></div>
+          <div class="popup-head-pill">Markedsregime: <strong style="color:#FCA5A5">Extremistan</strong></div>
+        </div>
+        <div class="popup-head-sub">To analytiske lag · Perera-data og seks rammeverk · Konfidensielt · Ikke investeringsrådgivning</div>
+      </div>
+      <button class="popup-close-btn" onclick="closeKapitalModal()">✕</button>
+    </div>
+
+    <!-- KPI-strip -->
+    <div class="popup-kpi-strip">
+      <div class="popup-kpi-cell">
+        <div class="popup-kpi-label">Robuste kjerneposisjoner</div>
+        <div class="popup-kpi-val" style="color:var(--green)">80 %</div>
+        <div class="popup-kpi-sub">Energi · Forsvar · Gull · Råvarer</div>
+      </div>
+      <div class="popup-kpi-cell">
+        <div class="popup-kpi-label">Asymmetriske posisjoner</div>
+        <div class="popup-kpi-val" style="color:var(--amber)">20 %</div>
+        <div class="popup-kpi-sub">Konveks oppsideeksponering</div>
+      </div>
+      <div class="popup-kpi-cell">
+        <div class="popup-kpi-label">Middels risiko</div>
+        <div class="popup-kpi-val" style="color:var(--red)">0 %</div>
+        <div class="popup-kpi-sub">Unngå · Extremistan-logikk</div>
+      </div>
+      <div class="popup-kpi-cell">
+        <div class="popup-kpi-label">Vektet energiinfrastruktur</div>
+        <div class="popup-kpi-val" style="color:var(--green)">27 %</div>
+        <div class="popup-kpi-sub">A:20%·B:55%·C:25% vektet</div>
+      </div>
+      <div class="popup-kpi-cell">
+        <div class="popup-kpi-label">Vektet forsvar</div>
+        <div class="popup-kpi-val" style="color:var(--green)">21 %</div>
+        <div class="popup-kpi-sub">Positiv i alle tre scenarioer</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="popup-tabs">
+      <div class="popup-tab active" id="kap-tab-strategi"  onclick="kapitalTab('strategi')">Overordnet strategi</div>
+      <div class="popup-tab"        id="kap-tab-temaer"    onclick="kapitalTab('temaer')">Temaer — Kjøp og hold</div>
+      <div class="popup-tab tab-red" id="kap-tab-unngaa"  onclick="kapitalTab('unngaa')">Systematisk unngå</div>
+    </div>
+
+    <!-- Body -->
+    <div id="kapital-modal-body" class="popup-body">
+
+      <!-- ══ OVERORDNET STRATEGI ══ -->
+      <div class="popup-panel active" id="kap-p-strategi">
+
+        <!-- Taleb barbell -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+          <div class="popup-info-box accent-green">
+            <div class="popup-info-box-label" style="color:var(--green)">80 % — Robuste kjerneposisjoner</div>
+            <div style="font-size:12px;line-height:1.72;color:var(--text)">
+              Fysiske realaktiva med produksjonsverdi<br>
+              Energiinfrastruktur med inntektsstrøm<br>
+              Forsvarsindustri (NDS Line of Effort 4)<br>
+              Kortsiktige statsobligasjoner NOK/CHF<br>
+              Kritiske råvarer — fysisk eksponering
+            </div>
+          </div>
+          <div class="popup-info-box accent-amber">
+            <div class="popup-info-box-label" style="color:var(--amber)">20 % — Asymmetriske posisjoner</div>
+            <div style="font-size:12px;line-height:1.72;color:var(--text)">
+              Begrenset tapsrisiko · stor konveks oppsideeksponering<br>
+              Lang volatilitet energi og metaller<br>
+              Ex-Taiwan halvlederkapasitet (ASML, Intel)<br>
+              Cape of Good Hope-rederier (strukturell omruting)<br>
+              Nordamerikansk LNG-eksportinfrastruktur
+            </div>
+          </div>
+        </div>
+
+        <!-- Strategisk diagnose -->
+        <div class="popup-conclusion" style="margin-top:0;margin-bottom:14px">
+          <div class="popup-conclusion-label">Strategisk diagnose — 1. april 2026 <span class="tt-trigger" data-tt="tt-strategi-diag" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
+          <div class="popup-conclusion-text">Vi befinner oss i Goodspeeds verste kategori: alle tre resesjonstriggers aktive simultant. Gull korreksjon fra $5 594 (jan-topp) til mars-bunn ~$4 200, nå tilbake ~$4 654 — teknisk, ikke fundamental. J.P. Morgan fastholder $5 055 som snitt for Q4 2026. Kobber $12 200/t og aluminium +52 % siden Hormuz signaliserer strukturelt nytt råvareregime. US 10Y ned fra 4,44 % til 4,32 %: vekstfrykt overstiger nå inflasjonsfrykten. Markedet er ikke priset for Scenario C. Unngå middels risiko.</div>
+        </div>
+
+        <!-- Fordelingsmatrise per scenario -->
+        <div class="popup-section-label no-border">Anbefalt fordeling per scenario-vekting <span class="tt-trigger" data-tt="tt-fordeling" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
+        <div class="popup-cmp-table" style="margin-bottom:12px">
+          <div class="popup-cmp-head" style="grid-template-columns:160px 1fr 1fr 1fr">
+            <div>Aktivaklasse</div>
+            <div>A (20 %) — Rask oppløsning</div>
+            <div>B (55 %) — Kronisk forstyrrelse</div>
+            <div>C (25 %) — Systemkollaps</div>
+          </div>
+          <div class="popup-cmp-row" style="grid-template-columns:160px 1fr 1fr 1fr"><div class="popup-cmp-label">Energiinfrastruktur</div><div style="font-weight:700;color:var(--green)">20 %</div><div style="font-weight:700;color:var(--green)">30 %</div><div style="font-weight:700;color:var(--green)">25 %</div></div>
+          <div class="popup-cmp-row" style="grid-template-columns:160px 1fr 1fr 1fr"><div class="popup-cmp-label">Forsvarsindustri</div><div style="font-weight:700;color:var(--green)">15 %</div><div style="font-weight:700;color:var(--green)">20 %</div><div style="font-weight:700;color:var(--green)">25 %</div></div>
+          <div class="popup-cmp-row" style="grid-template-columns:160px 1fr 1fr 1fr"><div class="popup-cmp-label">Gull og reelle verdier</div><div style="font-weight:700;color:var(--amber)">10 %</div><div style="font-weight:700;color:var(--amber)">15 %</div><div style="font-weight:700;color:var(--green)">20 %</div></div>
+          <div class="popup-cmp-row" style="grid-template-columns:160px 1fr 1fr 1fr"><div class="popup-cmp-label">Kritiske råvarer</div><div style="font-weight:700;color:var(--amber)">10 %</div><div style="font-weight:700;color:var(--amber)">15 %</div><div style="font-weight:700;color:var(--amber)">15 %</div></div>
+          <div class="popup-cmp-row" style="grid-template-columns:160px 1fr 1fr 1fr"><div class="popup-cmp-label">Asymmetriske pos.</div><div style="font-weight:700;color:var(--amber)">15 %</div><div style="font-weight:700;color:var(--amber)">15 %</div><div style="font-weight:700;color:var(--amber)">10 %</div></div>
+          <div class="popup-cmp-row" style="grid-template-columns:160px 1fr 1fr 1fr"><div class="popup-cmp-label">Statsobligasjoner korte</div><div style="font-weight:700;color:var(--green)">20 %</div><div style="font-weight:700;color:var(--amber)">5 %</div><div style="font-weight:700;color:var(--green)">15 %</div></div>
+          <div class="popup-cmp-row" style="grid-template-columns:160px 1fr 1fr 1fr"><div class="popup-cmp-label">Unngå (middels risiko)</div><div style="font-weight:700;color:var(--red)">10 %</div><div style="font-weight:700;color:var(--red)">0 %</div><div style="font-weight:700;color:var(--red)">0 %</div></div>
+        </div>
+
+        <!-- Vektet anbefaling -->
+        <div class="popup-info-box accent-navy">
+          <div class="popup-info-box-label" style="color:var(--navy-mid)">Vektet anbefaling — A:20% · B:55% · C:25%</div>
+          <div class="popup-info-box-text">Energiinfrastruktur <strong>27 %</strong> · Forsvarsindustri <strong>21 %</strong> · Gull/reelle verdier <strong>16 %</strong> · Kritiske råvarer <strong>14 %</strong> · Asymmetriske posisjoner <strong>14 %</strong> · Statsobligasjoner kortsiktig <strong>9 %</strong> · Middels risiko/eksponering <strong>0 %</strong></div>
+        </div>
+      </div>
+
+      <!-- ══ TEMAER — KJØP OG HOLD ══ -->
+      <div class="popup-panel" id="kap-p-temaer">
+
+        <!-- Energi -->
+        <div class="popup-info-box accent-green" style="padding:13px 16px;margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="popup-info-box-label" style="color:var(--green);margin-bottom:0">Energiinfrastruktur</div>
+            <span style="font-size:9px;font-weight:700;padding:2px 9px;border-radius:10px;background:var(--green-lt);color:var(--green);border:1px solid rgba(20,83,45,.2)">STRUKTURELL VINNER</span>
+          </div>
+          <div style="font-size:10px;color:var(--faint);margin-bottom:8px">Brent ~104 $ · LNG-bortfall &gt;26 % globalt · Perera: Train 4 og 6 ødelagt</div>
+          <div class="popup-sektor-grid" style="margin-bottom:8px">
+            <div style="background:white;border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--green);margin-bottom:4px">Nordamerikansk LNG</div><div style="font-size:11px;color:var(--muted);line-height:1.6">Sabine Pass, Corpus Christi, Freeport. Qatar-bortfall (+26 % av global prod.) er direkte markedsåpning. Strukturell etterspørsel fra Europa 2026–2030.</div></div>
+            <div style="background:white;border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--green);margin-bottom:4px">Norsk energiinfrastruktur</div><div style="font-size:11px;color:var(--muted);line-height:1.6">Equinor, Aker BP. Norge er nå Europas viktigste gassleverandør. Stabil politisk risiko. NOK-eksponering som valutabeskyttelse.</div></div>
+            <div style="background:white;border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--green);margin-bottom:4px">Cape of Good Hope-rederier</div><div style="font-size:11px;color:var(--muted);line-height:1.6">Frontline, Euronav. Perera: supertanker ×4 ($800K/dag). Strukturell +14 dager per tur = varig fraktvolumsøkning.</div></div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);padding:7px 10px;background:rgba(0,0,0,.03);border-radius:6px"><strong style="color:var(--text)">Unngå:</strong> Containerrederier eksponert mot Suez · Gulf-stat energiinfrastruktur · Europeisk energiintensiv industri</div>
+        </div>
+
+        <!-- Forsvar -->
+        <div class="popup-info-box accent-green" style="padding:13px 16px;margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="popup-info-box-label" style="color:var(--green);margin-bottom:0">Forsvarsindustri</div>
+            <span style="font-size:9px;font-weight:700;padding:2px 9px;border-radius:10px;background:var(--green-lt);color:var(--green);border:1px solid rgba(20,83,45,.2)">TOPP PRIORITET</span>
+          </div>
+          <div style="font-size:10px;color:var(--faint);margin-bottom:8px">NDS (2026) Line of Effort 4 · NATO 5 %-mål · Konjunkturuavhengig</div>
+          <div class="popup-sektor-grid" style="margin-bottom:8px">
+            <div style="background:white;border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--green);margin-bottom:4px">US Aerospace &amp; Defense</div><div style="font-size:11px;color:var(--muted);line-height:1.6">RTX, L3Harris, Northrop, Lockheed. Backlog 5–8 år. NDS autoriserer produksjonskapasitetsutbygging, ikke bare innkjøp.</div></div>
+            <div style="background:white;border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--green);margin-bottom:4px">Europeisk forsvar</div><div style="font-size:11px;color:var(--muted);line-height:1.6">Rheinmetall, KNDS, Saab, Kongsberg. Trumps NATO-trusseler tvinger Europa til selvstendighet. Dobling av europeisk forsvarsbudsjett.</div></div>
+            <div style="background:white;border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--green);margin-bottom:4px">Forsvarsteknologi og cyber</div><div style="font-size:11px;color:var(--muted);line-height:1.6">Palantir, Anduril. NDS: «cyber og AI» kritisk kapasitet. Lavkorrelert med olje/renter. Positiv i alle tre scenarioer.</div></div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);padding:7px 10px;background:rgba(0,0,0,.03);border-radius:6px"><strong style="color:var(--text)">Merk:</strong> Forsvar er den eneste sektoren med positiv avkastningsforventning i alle tre Perera-scenarier.</div>
+        </div>
+
+        <!-- Gull -->
+        <div class="popup-info-box accent-amber" style="padding:13px 16px;margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="popup-info-box-label" style="color:var(--amber);margin-bottom:0">Gull og reelle verdier</div>
+            <span style="font-size:9px;font-weight:700;padding:2px 9px;border-radius:10px;background:var(--amber-lt);color:var(--amber);border:1px solid rgba(146,64,14,.2)">KJØP VED KORREKSJON</span>
+          </div>
+          <div style="font-size:10px;color:var(--faint);margin-bottom:8px">~$4 400/oz · J.P. Morgan: $5 055 Q4 2026 · Sentralbanketterspørsel 585 t/kvartal</div>
+          <div class="popup-sektor-grid" style="margin-bottom:8px">
+            <div style="background:white;border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--amber);margin-bottom:4px">Fysisk gull — primær</div><div style="font-size:11px;color:var(--muted);line-height:1.6">Korreksjon fra $5 594 til $4 654 — teknisk, ikke fundamental. J.P. Morgan: $5 055 Q4 2026. Taleb: fysisk gull overlever Scenario C strukturelt.</div></div>
+            <div style="background:white;border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--amber);margin-bottom:4px">Gull og sølv miners</div><div style="font-size:11px;color:var(--muted);line-height:1.6">Newmont, Agnico Eagle, Wheaton. Miners gir 2–3× beta på gullpris. Sølv: ~$74/oz, industrielt + safe haven.</div></div>
+            <div style="background:white;border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--amber);margin-bottom:4px">Norske statsobligasjoner</div><div style="font-size:11px;color:var(--muted);line-height:1.6">NOK: eneste G10-valuta med positivt bytteforhold i vedvarende energisjokk. Norges Bank har handlingsrom. Trygg havn for europeisk kapital.</div></div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);padding:7px 10px;background:rgba(0,0,0,.03);border-radius:6px"><strong style="color:var(--text)">Kritisk distinksjon:</strong> Fysisk gull vs. gull-ETF — i Scenario C er motpartsrisikoen i ETF ikke neglisjerbar.</div>
+        </div>
+
+        <!-- Kritiske råvarer -->
+        <div class="popup-info-box" style="border-left:3px solid var(--navy);background:var(--navy-lt);padding:13px 16px;margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="popup-info-box-label" style="color:var(--navy-mid);margin-bottom:0">Kritiske råvarer — Perera-forankret</div>
+            <span style="font-size:9px;font-weight:700;padding:2px 9px;border-radius:10px;background:var(--amber-lt);color:var(--amber);border:1px solid rgba(146,64,14,.2)">STRUKTURELL KNAPPHET</span>
+          </div>
+          <div style="font-size:10px;color:var(--faint);margin-bottom:8px">Kobber $12 200/t · Aluminium $3 500/t (+52 %) · Helium 200 ISO-cont. tapt · Gallium +123 %</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <div style="background:white;border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--navy-mid);margin-bottom:4px">Kobber</div><div style="font-size:11px;color:var(--muted);line-height:1.6">LME $12 200/t. Elektrifisering + AI-datacenter er permanent etterspørselsøkning. Freeport-McMoRan, Southern Copper.</div></div>
+            <div style="background:white;border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--navy-mid);margin-bottom:4px">Aluminium</div><div style="font-size:11px;color:var(--muted);line-height:1.6">Perera: Gulf-kapasitet 2+ Mt/år ute. Norsk Hydro, Alcoa Canada direkte vinnere. Fastmarkets: $3 000 er ny normal.</div></div>
+            <div style="background:white;border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--red);margin-bottom:4px">Helium</div><div style="font-size:11px;color:var(--muted);line-height:1.6">200 ISO-cont. fordampet — permanent tap. 33 % av global kapasitet borte. Air Products, Messer, Linde.</div></div>
+            <div style="background:white;border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--red);margin-bottom:4px">Sjeldne jordarter</div><div style="font-size:11px;color:var(--muted);line-height:1.6">Dy +100 %, Tb +103 % YTD. MP Materials (USA), Lynas (Australia) — eneste ikke-kinesiske prosesseringsselskaper i skala.</div></div>
+          </div>
+        </div>
+
+        <!-- Halvledere -->
+        <div class="popup-info-box accent-red" style="padding:13px 16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="popup-info-box-label" style="color:var(--red);margin-bottom:0">Halvledere — selektiv eksponering</div>
+            <span style="font-size:9px;font-weight:700;padding:2px 9px;border-radius:10px;background:var(--red-lt);color:var(--red);border:1px solid rgba(197,48,48,.2)">SELEKTIV — IKKE BRED</span>
+          </div>
+          <div style="font-size:10px;color:var(--faint);margin-bottom:8px">DRAM +298 % · NVIDIA -30–40 % produksjonskutt · Heliumknapphet</div>
+          <div class="popup-sektor-grid">
+            <div style="background:var(--green-lt);border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--green);margin-bottom:4px">Ex-Taiwan fab-kapasitet</div><div style="font-size:11px;color:var(--muted);line-height:1.6">ASML (monopol EUV), Intel Foundry (Ohio/Arizona), Samsung Austin. Taiwan-risiko gjør geografisk diversifisering til sikkerhetsspørsmål.</div></div>
+            <div style="background:var(--green-lt);border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--green);margin-bottom:4px">Materialer ex-Kina</div><div style="font-size:11px;color:var(--muted);line-height:1.6">Entegris, Shin-Etsu, Umicore. Helium- og gallium-alternativene. Strukturell materialmangel gir leverandørmakt.</div></div>
+            <div style="background:var(--red-lt);border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--red);margin-bottom:4px">Unngå: Kina-eksponerte</div><div style="font-size:11px;color:var(--muted);line-height:1.6">NVIDIA (sanksjonert), Qualcomm (60 %+ Kina-omsetning), Broadcom. Halvlederkrigen er strukturell uten avslutningsbetingelse.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SYSTEMATISK UNNGÅ ══ -->
+      <div class="popup-panel" id="kap-p-unngaa">
+        <div class="popup-info-box accent-red" style="margin-bottom:14px">
+          <div class="popup-info-box-label" style="color:var(--red)">Taleb — Unngå middels risiko i Extremistan</div>
+          <div class="popup-info-box-text">Bredt diversifiserte porteføljer gir lineær nedsideeksponering uten tilstrekkelig oppsidepotensial i Extremistan. Standard 60/40 er optimalisert for Mediocristan. Vi er i Extremistan.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="popup-info-box" style="border-left:3px solid var(--red);background:var(--red-lt);padding:11px 14px">
+            <div class="popup-info-box-label" style="color:var(--red)">Europeisk energiintensiv industri</div>
+            <div class="popup-info-box-text">BASF, ThyssenKrupp, Salzgitter, AGC Glass. Direkte offer for TTF-gass ×3–4. Perera: Industriell nedstengning innen 8 uker ved Scenario B. ECB-prognosen kuttet 0,3 pp — mer kommer.</div>
+          </div>
+          <div class="popup-info-box" style="border-left:3px solid var(--red);background:var(--red-lt);padding:11px 14px">
+            <div class="popup-info-box-label" style="color:var(--red)">EM-obligasjoner — importavhengige land</div>
+            <div class="popup-info-box-text">Pakistan (gjødsel -78 %), Bangladesh (83 % fabrikker stengt), Egypt (importavhengig), Irak (-$8–10 mrd./mnd.). Perera: humanitær krise + IMF-program + default-risiko simultant.</div>
+          </div>
+          <div class="popup-info-box" style="border-left:3px solid var(--red);background:var(--red-lt);padding:11px 14px">
+            <div class="popup-info-box-label" style="color:var(--red)">«Middels risiko» generelt</div>
+            <div class="popup-info-box-text">Bredt diversifiserte porteføljer, standard 60/40, europeisk industrieksponering uten hedge, lang duration i usikre valutaer, containerrederier eksponert mot Suez, Kina-eksponerte teknologiaksjer.</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /popup-body -->
+
+    <!-- Footer -->
+    <div class="popup-footer">
+      <span class="popup-footer-note">Perera (2026) · Taleb (2007) · Goodspeed (2025) · Halvard Nordang — Affectum AS · Ikke investeringsrådgivning</span>
+      <button class="popup-footer-btn" onclick="closeKapitalModal()">Lukk</button>
+    </div>
+
+  </div><!-- /kapital-modal -->
+</div><!-- /kapital-modal-overlay -->
+
+<script>
+var _kapitalModalOpen = false;
+function openKapitalModal() {
+  var el = document.getElementById('kapital-modal-overlay');
+  if (!el) return;
+  el.classList.add('visible');
+  _kapitalModalOpen = true;
+  document.body.style.overflow = 'hidden';
+  kapitalTab('strategi');
+}
+function closeKapitalModal() {
+  var el = document.getElementById('kapital-modal-overlay');
+  if (el) el.classList.remove('visible');
+  _kapitalModalOpen = false;
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && _kapitalModalOpen) closeKapitalModal();
+});
+function kapitalTab(tab) {
+  ['strategi','temaer','unngaa'].forEach(function(t) {
+    var tEl = document.getElementById('kap-tab-' + t);
+    var pEl = document.getElementById('kap-p-' + t);
+    if (tEl) tEl.classList.toggle('active', t === tab);
+    if (pEl) pEl.classList.toggle('active', t === tab);
+  });
+  var body = document.getElementById('kapital-modal-body');
   if (body) body.scrollTop = 0;
 }
 </script>
