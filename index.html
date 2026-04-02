@@ -445,6 +445,37 @@ input[type=range]::-webkit-slider-thumb {
 .taleb-title { font-size: 13px; font-weight: 600; margin-bottom: 7px; }
 .taleb-body { font-size: 12px; color: var(--muted); line-height: 1.65; }
 
+/* ── OM MODELLEN — FANER ─────────────────────── */
+.om-tab {
+  font-size: 11px; font-weight: 600; padding: 7px 16px;
+  border: 1px solid var(--border-md); border-radius: 8px;
+  cursor: pointer; color: var(--muted); background: var(--surface);
+  transition: all 0.14s; letter-spacing: 0.03em; text-transform: uppercase;
+  font-family: 'DM Sans', sans-serif;
+}
+.om-tab:hover { background: var(--navy-lt); color: var(--navy); border-color: rgba(31,56,100,.2); }
+.om-tab.active { background: var(--navy); color: white; border-color: transparent; }
+.om-panel { display: none; animation: fadein .18s ease; }
+.om-panel.active { display: block; }
+
+/* Ekspanderende analytiker-kort */
+.ana-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); margin-bottom: 8px;
+  box-shadow: var(--shadow); overflow: hidden; transition: box-shadow .15s;
+}
+.ana-card:hover { box-shadow: var(--shadow-md); }
+.ana-card-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 18px; cursor: pointer;
+}
+.ana-card-head:hover { background: var(--bg); }
+.ana-card-body {
+  display: none; border-top: 1px solid var(--border);
+  animation: fadein .18s ease;
+}
+.ana-card-body.open { display: block; }
+
 /* ── DIVIDER ────────────────────────────────── */
 .divider { height: 1px; background: var(--border); margin: 22px 0; }
 
@@ -777,17 +808,11 @@ input[type=range]::-webkit-slider-thumb {
   <div class="nav-item" data-panel="scenarier" onclick="nav(this)">
     <span class="nav-dot" style="background:#BA7517"></span>Scenarier
   </div>
-  <div class="nav-item" data-panel="taleb" onclick="nav(this)">
-    <span class="nav-dot" style="background:#378ADD"></span>Taleb-rammeverk
-  </div>
   <div class="nav-item" data-panel="kapital" onclick="nav(this)">
     <span class="nav-dot" style="background:#D4537E"></span>Kapitalimplikasjoner
   </div>
   <div class="nav-item" data-panel="makro" onclick="nav(this)">
     <span class="nav-dot" style="background:#0F6E56"></span>Makrodata
-  </div>
-  <div class="nav-item" data-panel="analyse" onclick="nav(this)">
-    <span class="nav-dot" style="background:#888780"></span>Analysedokument
   </div>
 
   <div class="nav-item" data-panel="nyheter" onclick="nav(this)">
@@ -1155,110 +1180,769 @@ input[type=range]::-webkit-slider-thumb {
 
 </div>
 
-<!-- ─── ANALYTIKERNE ─── -->
+<!-- ─── OM MODELLEN (Merged: Analytikere + Taleb + Analysedokument) ─── -->
 <div class="panel" id="panel-analytikere">
   <div class="panel-header">
     <div class="panel-title">Om modellen</div>
-    <div class="panel-sub">Seks analytiske rammeverk · klikk på en analytiker for å se kjernebidrag og begrensning</div>
+    <div class="panel-sub">Seks analytiske rammeverk · Talebs epistemologi · Fullstendig analysedokument — alt på ett sted</div>
   </div>
 
-  <div style="font-size:13.5px;line-height:1.82;color:var(--text);font-weight:300;margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--navy);border-radius:0 var(--radius) var(--radius) 0;padding:14px 18px;box-shadow:var(--shadow)">
-    Dette er en analytisk modell basert på en syntese av seks sentrale verk som til sammen beskriver den geopolitiske og makroøkonomiske virkeligheten per 31. mars 2026. Modellen integrerer makroøkonomisk resesjonsteori (Goodspeed), kartlegging av det amerikanske sanksjonsapparatet (Fishman), handelspolitisk arkitektur (Miran), offisielle amerikanske forsvars- og sikkerhetsstrategier, og erkjennelsesteori for investorer under dyp usikkerhet (Taleb). Modellen inkluderer også en dedikert analyse av Kinas posisjon i globale verdikjeder — herunder landets nær-monopol på prosessering av sjeldne jordarter og kritiske metaller, og bruken av eksportkontroller som strategisk virkemiddel. Situasjonen er kritisk: Hormuz-stredet har vært stengt i 31 dager, Brent-råolje handler nær rekordnivåer, og alle tre av Goodspeeds klassiske resesjonstriggers er aktive simultant. Bruk navigasjonen til venstre for å gå i dybden på hvert analytisk rammeverk, kjøre Hormuz-kalkulatoren, sammenligne scenarier eller lese det fullstendige analysedokumentet.
+  <!-- ══════════════════════════════════════════════════════
+       FANE-NAVIGASJON
+  ══════════════════════════════════════════════════════ -->
+  <div style="display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap" id="om-tabs">
+    <button class="om-tab active" data-tab="oversikt" onclick="omTab('oversikt',this)">Oversikt</button>
+    <button class="om-tab" data-tab="analytikere" onclick="omTab('analytikere',this)">Analytikerne</button>
+    <button class="om-tab" data-tab="taleb" onclick="omTab('taleb',this)">Talebs rammeverk</button>
+    <button class="om-tab" data-tab="syntese" onclick="omTab('syntese',this)">Syntesen</button>
+    <button class="om-tab" data-tab="dokument" onclick="omTab('dokument',this)">Analysedokument</button>
   </div>
 
-  <div class="author-grid">
-    <div class="author-card" onclick="selectAuthor('goodspeed',this)">
-      <div class="author-head"><span class="author-dot" style="background:#7F77DD"></span><span class="author-name">Tyler Goodspeed</span></div>
-      <div class="author-role">Sjefsøkonom, ExxonMobil — tidligere fungerende leder, CEA under Trump</div>
-      <span class="author-tag" style="background:#EEEDFE;color:#3C3489">Makroøkonomi</span>
-    </div>
-    <div class="author-card" onclick="selectAuthor('fishman',this)">
-      <div class="author-head"><span class="author-dot" style="background:#1D9E75"></span><span class="author-name">Edward Fishman</span></div>
-      <div class="author-role">Columbia University — tidligere sanksjonssjef, State Department</div>
-      <span class="author-tag" style="background:#E1F5EE;color:#085041">Økonomisk krigføring</span>
-    </div>
-    <div class="author-card" onclick="selectAuthor('miran',this)">
-      <div class="author-head"><span class="author-dot" style="background:#BA7517"></span><span class="author-name">Stephen Miran</span></div>
-      <div class="author-role">Leder, Council of Economic Advisers — tidligere sjefsstrateg, Hudson Bay Capital</div>
-      <span class="author-tag" style="background:#FAEEDA;color:#633806">Handelspolitikk</span>
-    </div>
-    <div class="author-card" onclick="selectAuthor('nds',this)">
-      <div class="author-head"><span class="author-dot" style="background:#E24B4A"></span><span class="author-name">National Defense Strategy (2026)</span></div>
-      <div class="author-role">Signert av Pete Hegseth, Department of War — 23. januar 2026</div>
-      <span class="author-tag" style="background:#FCEBEB;color:#791F1F">Forsvarsstrategi</span>
-    </div>
-    <div class="author-card" onclick="selectAuthor('nss',this)">
-      <div class="author-head"><span class="author-dot" style="background:#D85A30"></span><span class="author-name">National Security Strategy (2026)</span></div>
-      <div class="author-role">Det hvite hus — Trump-administrasjonens overordnede sikkerhetsstrategi</div>
-      <span class="author-tag" style="background:#FAECE7;color:#7C2D12">Sikkerhetsstrategi</span>
-    </div>
-    <div class="author-card" onclick="selectAuthor('taleb',this)">
-      <div class="author-head"><span class="author-dot" style="background:#378ADD"></span><span class="author-name">Nassim Nicholas Taleb</span></div>
-      <div class="author-role">Professor, NYU — forfatter av The Black Swan (2007), Incerto-serien</div>
-      <span class="author-tag" style="background:#E6F1FB;color:#0C447C">Erkjennelsesteori</span>
-    </div>
-  </div>
+  <!-- ══════════════════════════════════════════════════════
+       TAB 1: OVERSIKT
+  ══════════════════════════════════════════════════════ -->
+  <div class="om-panel active" id="om-oversikt">
 
-  <div class="author-detail" id="detail-goodspeed">
-    <div class="detail-header">
-      <div><div class="detail-name">Tyler Goodspeed</div><div class="detail-book">Recession: The Real Reasons Economies Shrink (2025)</div></div>
-      <span class="author-tag" style="background:#EEEDFE;color:#3C3489">Makroøkonomi</span>
+    <!-- Modellbeskrivelse -->
+    <div style="font-size:13.5px;line-height:1.82;color:var(--text);font-weight:300;margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--navy);border-radius:0 var(--radius) var(--radius) 0;padding:16px 20px;box-shadow:var(--shadow)">
+      Dette er en analytisk modell basert på en syntese av seks sentrale verk som til sammen beskriver den geopolitiske og makroøkonomiske virkeligheten per 31. mars 2026. Modellen integrerer makroøkonomisk resesjonsteori (Goodspeed), kartlegging av det amerikanske sanksjonsapparatet (Fishman), handelspolitisk arkitektur (Miran), offisielle amerikanske forsvars- og sikkerhetsstrategier, og erkjennelsesteori for investorer under dyp usikkerhet (Taleb).
     </div>
-    <div class="detail-thesis">Resesjoner myrdes — de dør ikke av naturlige årsaker. Energisjokk er involvert i 10 av 12 resesjoner i USA siden 1945. Resesjoner er diskontinuerlige: de begynner ikke med en langsom avmatning, men med et brått hopp i arbeidsledigheten. Etter sjokket gjenopptas veksten langs den samme trenden som før — ingen kreativ destruksjon, all smerte og ingen gevinst. Goodspeed avviser eksplisitt at ekspansiv finanspolitikk kan forkorte resesjoner.</div>
-    <div class="detail-gap-label">Analytisk begrensning</div>
-    <div class="detail-gap">Goodspeed vet at resesjoner er sjokkdrevne. Han kan ikke vite at det neste sjokket vil ligne de foregående. All erfaring er erfaringen av svaner som var hvite — inntil den sorte svanen i Australia ble oppdaget.</div>
-  </div>
 
-  <div class="author-detail" id="detail-fishman">
-    <div class="detail-header">
-      <div><div class="detail-name">Edward Fishman</div><div class="detail-book">Chokepoints: American Power in the Age of Economic Warfare (2025)</div></div>
-      <span class="author-tag" style="background:#E1F5EE;color:#085041">Økonomisk krigføring</span>
+    <!-- Situasjonsstatus -->
+    <div class="section-label" style="margin-top:0;border-top:none;padding-top:0">Situasjonsstatus — per 2. april 2026</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px">
+      <div style="background:var(--red-lt);border:1px solid rgba(197,48,48,.2);border-radius:var(--radius);padding:14px 16px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-bottom:6px">Hormuz-status</div>
+        <div style="font-size:18px;font-weight:700;color:var(--red);line-height:1;margin-bottom:4px">Stengt 31 dager</div>
+        <div style="font-size:11px;color:var(--muted)">Siden 4. mars 2026 — IEA: historisk krise</div>
+      </div>
+      <div style="background:var(--amber-lt);border:1px solid rgba(146,64,14,.2);border-radius:var(--radius);padding:14px 16px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-bottom:6px">Goodspeed-status</div>
+        <div style="font-size:18px;font-weight:700;color:var(--amber);line-height:1;margin-bottom:4px">3 av 3 triggere</div>
+        <div style="font-size:11px;color:var(--muted)">Energi · Krig · Kreditt — simultant aktive</div>
+      </div>
+      <div style="background:var(--navy-lt);border:1px solid rgba(31,56,100,.15);border-radius:var(--radius);padding:14px 16px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);margin-bottom:6px">Mirans smale sti</div>
+        <div style="font-size:18px;font-weight:700;color:var(--navy);line-height:1;margin-bottom:4px">Stengt</div>
+        <div style="font-size:11px;color:var(--muted)">Alle 5 forutsetninger brutt per 31. mars</div>
+      </div>
     </div>
-    <div class="detail-thesis">Paradigmeskiftet: fra sanksjoner som virkemiddel for atferdsendring (Iran 2012 — reversible, med avslutningsbetingelse) til sanksjoner som strategisk svekkelse (Kina 2018 — permanente, ingen avslutningsbetingelse definert). Sikkerhetsrådgiver Jake Sullivan formulerte det eksplisitt: målet er størst mulig teknologisk forsprang. Det umulige trevalget: stater kan ikke på én og samme tid opprettholde dyp økonomisk integrasjon, ivareta økonomisk sikkerhet og engasjere seg i geopolitisk konkurranse.</div>
-    <div class="detail-gap-label">Analytisk begrensning</div>
-    <div class="detail-gap">Fishman diagnostiserer asymmetrien presist — det er lettere å rive ned enn å bygge opp. Han vet ikke når erosjonen av dollarsystemet når et vippepunkt. Kollapsen av spenningen vil ikke ligne noe vi har sett historisk.</div>
-  </div>
 
-  <div class="author-detail" id="detail-miran">
-    <div class="detail-header">
-      <div><div class="detail-name">Stephen Miran</div><div class="detail-book">A User's Guide to Restructuring the Global Trading System (november 2024)</div></div>
-      <span class="author-tag" style="background:#FAEEDA;color:#633806">Handelspolitikk</span>
+    <!-- Modellkart / flytdiagram -->
+    <div class="section-label">Hvordan rammeverk henger sammen</div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow);margin-bottom:20px;overflow-x:auto">
+      <div style="display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;gap:0;align-items:center;min-width:560px">
+        <!-- Kolonne 1: Makrodiagnose -->
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:4px;text-align:center">Makrodiagnose</div>
+          <div style="background:#EEEDFE;border:1px solid rgba(60,52,137,.2);border-radius:8px;padding:10px 12px;text-align:center">
+            <div style="font-size:10px;font-weight:700;color:#3C3489;margin-bottom:2px">Goodspeed</div>
+            <div style="font-size:10px;color:var(--muted)">Resesjonstriggers</div>
+          </div>
+          <div style="background:#FAEEDA;border:1px solid rgba(99,56,6,.2);border-radius:8px;padding:10px 12px;text-align:center">
+            <div style="font-size:10px;font-weight:700;color:#633806;margin-bottom:2px">Miran</div>
+            <div style="font-size:10px;color:var(--muted)">Triffin + tariffer</div>
+          </div>
+          <div style="background:#E1F5EE;border:1px solid rgba(8,80,65,.2);border-radius:8px;padding:10px 12px;text-align:center">
+            <div style="font-size:10px;font-weight:700;color:#085041;margin-bottom:2px">Fishman</div>
+            <div style="font-size:10px;color:var(--muted)">Sanksjonsarkitektur</div>
+          </div>
+        </div>
+        <!-- Pil 1 -->
+        <div style="text-align:center;font-size:20px;color:var(--faint)">→</div>
+        <!-- Kolonne 2: Strategidokumenter -->
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:4px;text-align:center">Strategirammeverk</div>
+          <div style="background:#FCEBEB;border:1px solid rgba(121,31,31,.2);border-radius:8px;padding:10px 12px;text-align:center">
+            <div style="font-size:10px;font-weight:700;color:#791F1F;margin-bottom:2px">NDS (2026)</div>
+            <div style="font-size:10px;color:var(--muted)">Department of War</div>
+          </div>
+          <div style="background:#FAECE7;border:1px solid rgba(124,45,18,.2);border-radius:8px;padding:10px 12px;text-align:center">
+            <div style="font-size:10px;font-weight:700;color:#7C2D12;margin-bottom:2px">NSS (2026)</div>
+            <div style="font-size:10px;color:var(--muted)">Energy Dominance</div>
+          </div>
+          <div style="background:#E6F1FB;border:1px solid rgba(12,68,124,.2);border-radius:8px;padding:10px 12px;text-align:center">
+            <div style="font-size:10px;font-weight:700;color:#0C447C;margin-bottom:2px">Taleb</div>
+            <div style="font-size:10px;color:var(--muted)">Epistemologi</div>
+          </div>
+        </div>
+        <!-- Pil 2 -->
+        <div style="text-align:center;font-size:20px;color:var(--faint)">→</div>
+        <!-- Kolonne 3: Hormuz-diagnose -->
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:4px;text-align:center">Empirisk test</div>
+          <div style="background:linear-gradient(135deg,var(--red-lt),var(--amber-lt));border:1px solid rgba(197,48,48,.25);border-radius:8px;padding:16px 12px;text-align:center;flex:1">
+            <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:4px">Hormuz 2026</div>
+            <div style="font-size:10px;color:var(--muted);line-height:1.5">Alle 6 rammeverk<br>testes simultant<br>— i sanntid</div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="detail-thesis">Triffin-dilemmaet: USA har hatt underskudd på betalingsbalansen hvert eneste år siden 1982, bortsett fra to kvartaler i 1991. Det er ikke et markedsavvik — det er et systemtrekk. Løsningen er Mar-a-Lago Accord: en moderne Plaza-avtale der sikkerhetsparaplyen kobles til handelsvilkårene. Zoltan Poszar (2024) formulerte logikken presist: «Security zones have barbed wires: unless you swap your bills for bonds, tariffs will keep you out.» Mirans mest ærlige setning: «There is a path, but it is narrow.» Alle fem forutsetninger er brutt per 31. mars 2026.</div>
-    <div class="detail-gap-label">Analytisk begrensning</div>
-    <div class="detail-gap">Kalkunproblemet: Miran modellerer valutakursoffset på 2018–2019-data og estimerer inflasjonseffekter med fire desimaler — epistemisk arroganse. Han er kalkunen som fikk mat 999 dager på rad. Dag 1000 var 28. februar 2026.</div>
-  </div>
 
-  <div class="author-detail" id="detail-nds">
-    <div class="detail-header">
-      <div><div class="detail-name">National Defense Strategy (2026)</div><div class="detail-book">Signert av forsvarsminister Pete Hegseth, 23. januar 2026</div></div>
-      <span class="author-tag" style="background:#FCEBEB;color:#791F1F">Forsvarsstrategi</span>
+    <!-- Kildeoversikt kompakt -->
+    <div class="section-label">Seks kilder — én syntese</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">
+      <div style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
+        <div style="width:28px;height:28px;border-radius:50%;background:#EEEDFE;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#3C3489">GS</div>
+        <div><div style="font-size:12px;font-weight:600;color:var(--text)">Tyler Goodspeed</div><div style="font-size:10px;color:var(--muted)">Recession (2025)</div></div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.4">Energisjokk involvert i 10/12 resesjoner siden 1945. Resesjoner drepes — de dør ikke.</div>
+        <div><span style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:#EEEDFE;color:#3C3489;padding:3px 8px;border-radius:10px">Makroøkonomi</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
+        <div style="width:28px;height:28px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#085041">EF</div>
+        <div><div style="font-size:12px;font-weight:600;color:var(--text)">Edward Fishman</div><div style="font-size:10px;color:var(--muted)">Chokepoints (2025)</div></div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.4">Fra atferdsendring til strategisk svekkelse. Det umulige trevalget.</div>
+        <div><span style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:#E1F5EE;color:#085041;padding:3px 8px;border-radius:10px">Sanksjoner</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
+        <div style="width:28px;height:28px;border-radius:50%;background:#FAEEDA;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#633806">SM</div>
+        <div><div style="font-size:12px;font-weight:600;color:var(--text)">Stephen Miran</div><div style="font-size:10px;color:var(--muted)">A User's Guide (2024)</div></div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.4">Triffin-dilemmaet. Mar-a-Lago Accord. «There is a path, but it is narrow.»</div>
+        <div><span style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:#FAEEDA;color:#633806;padding:3px 8px;border-radius:10px">Handelspolitikk</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
+        <div style="width:28px;height:28px;border-radius:50%;background:#FCEBEB;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#791F1F">NDS</div>
+        <div><div style="font-size:12px;font-weight:600;color:var(--text)">Nat. Defense Strategy</div><div style="font-size:10px;color:var(--muted)">Hegseth, jan. 2026</div></div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.4">Department of War. The Simultaneity Problem materialisert mars 2026.</div>
+        <div><span style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:#FCEBEB;color:#791F1F;padding:3px 8px;border-radius:10px">Forsvar</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
+        <div style="width:28px;height:28px;border-radius:50%;background:#FAECE7;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#7C2D12">NSS</div>
+        <div><div style="font-size:12px;font-weight:600;color:var(--text)">Nat. Security Strategy</div><div style="font-size:10px;color:var(--muted)">Det hvite hus, 2026</div></div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.4">Energy Dominance undergravet av den militærpolitikken strategien applauderer.</div>
+        <div><span style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:#FAECE7;color:#7C2D12;padding:3px 8px;border-radius:10px">Sikkerhet</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
+        <div style="width:28px;height:28px;border-radius:50%;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#0C447C">NT</div>
+        <div><div style="font-size:12px;font-weight:600;color:var(--text)">Nassim Nicholas Taleb</div><div style="font-size:10px;color:var(--muted)">The Black Swan (2007)</div></div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.4">Alle fem andre analytikere er kalibrert for Mediocristan. Geopolitikk 2026 er Extremistan.</div>
+        <div><span style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:#E6F1FB;color:#0C447C;padding:3px 8px;border-radius:10px">Epistemologi</span></div>
+      </div>
     </div>
-    <div class="detail-thesis">Fire innsatslinjer: hjemlandsforsvar, avskrekking av Kina i Indo-Stillehavet, økt byrdedeling med allierte (5 % av BNP) og nasjonal mobilisering av forsvarsindustriell base. Dokumentet identifiserer selv «The Simultaneity Problem» — at Kina, Russland, Iran og Nord-Korea kan handle koordinert eller opportunistisk på tvers av fronter på én og samme tid. NDS autoriserte Operation Midnight Hammer (juni 2025) og Operation Epic Fury (28. februar 2026).</div>
-    <div class="detail-gap-label">Analytisk begrensning</div>
-    <div class="detail-gap">Dokumentet identifiserte «The Simultaneity Problem» — og materialiserte det i mars 2026. NDS vet ikke at de operative valgene det autoriserer kan underminere de strategiske målene det forfølger.</div>
-  </div>
 
-  <div class="author-detail" id="detail-nss">
-    <div class="detail-header">
-      <div><div class="detail-name">National Security Strategy (2026)</div><div class="detail-book">Det hvite hus — Trump-administrasjonens overordnede sikkerhetsstrategi</div></div>
-      <span class="author-tag" style="background:#FAECE7;color:#7C2D12">Sikkerhetsstrategi</span>
+    <!-- Hva mangler i hver kilde -->
+    <div class="section-label">Hva mangler i hver kilde</div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow)">
+      <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)">
+        <div style="padding:11px 16px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);border-right:1px solid var(--border)">Analytiker</div>
+        <div style="padding:11px 16px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)">Analytisk begrensning</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)">
+        <div style="padding:11px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;font-weight:600;color:#3C3489">Goodspeed</span></div>
+        <div style="padding:11px 16px;font-size:11px;color:var(--muted)">Vet ikke at det neste sjokket vil ligne de foregående. All erfaring er erfaringen av hvite svaner.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)">
+        <div style="padding:11px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;font-weight:600;color:#085041">Fishman</span></div>
+        <div style="padding:11px 16px;font-size:11px;color:var(--muted)">Vet ikke når erosjonen av dollarsystemet når et vippepunkt. Kollapsen vil ikke ligne noe historisk.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)">
+        <div style="padding:11px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;font-weight:600;color:#633806">Miran</span></div>
+        <div style="padding:11px 16px;font-size:11px;color:var(--muted)">Epistemisk arroganse: regner med fire desimaler på en feil modell. Kalkunen dag 999.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)">
+        <div style="padding:11px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;font-weight:600;color:#791F1F">NDS</span></div>
+        <div style="padding:11px 16px;font-size:11px;color:var(--muted)">Identifiserte The Simultaneity Problem — og autoriserte operasjonene som materialiserte det.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)">
+        <div style="padding:11px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;font-weight:600;color:#7C2D12">NSS</span></div>
+        <div style="padding:11px 16px;font-size:11px;color:var(--muted)">Applauderer Iran-politikken som utløste Hormuz-stengningen — som undergraver Energy Dominance-strategien.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr">
+        <div style="padding:11px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;font-weight:600;color:#0C447C">Taleb</span></div>
+        <div style="padding:11px 16px;font-size:11px;color:var(--muted)">Leverer ingen svar — bare presisjonen i spørsmålene. Den eneste som spør om svarene er mulige å gi.</div>
+      </div>
     </div>
-    <div class="detail-thesis">Det bredeste og mest åpenhjertige av de offisielle dokumentene: «Energy Dominance» som strategisk fundament, Europa beskrevet som truet av «civilizational erasure», og «eight peace deals» inkludert Israel–Iran. NSS er like mye et politisk program som en sikkerhetsstrategi og opererer i en tidshorisont som overskrider Goodspeeds konjunktursyklus. Det er det eneste av de seks kildene som eksplisitt navngir energi som et strategisk middel, ikke bare et mål.</div>
-    <div class="detail-gap-label">Analytisk begrensning — total ironi</div>
-    <div class="detail-gap">NSS applauderer den militære Iran-politikken som utløste Hormuz-stengningen — og Hormuz-stengningen er det som mest akutt truer den energidominansen NSS fremhever som grunnpillar. NSS lister «eight peace deals» inkludert Israel–Iran. Per 31. mars 2026 er dette fortellingsfeilen i offisiell utgave.</div>
-  </div>
+  </div><!-- /om-oversikt -->
 
-  <div class="author-detail" id="detail-taleb">
-    <div class="detail-header">
-      <div><div class="detail-name">Nassim Nicholas Taleb</div><div class="detail-book">The Black Swan: The Impact of the Highly Improbable (2007)</div></div>
-      <span class="author-tag" style="background:#E6F1FB;color:#0C447C">Erkjennelsesteori</span>
+  <!-- ══════════════════════════════════════════════════════
+       TAB 2: ANALYTIKERNE (klikk-ekspanderende kort)
+  ══════════════════════════════════════════════════════ -->
+  <div class="om-panel" id="om-analytikere">
+
+    <div style="font-size:12px;color:var(--muted);margin-bottom:16px">Klikk på en analytiker for full analyse, kjernepåstand og epistemisk begrensning.</div>
+
+    <!-- Goodspeed -->
+    <div class="ana-card" id="acard-goodspeed">
+      <div class="ana-card-head" onclick="toggleAna('goodspeed')">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:50%;background:#EEEDFE;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#3C3489;flex-shrink:0">GS</div>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--text)">Tyler Goodspeed</div>
+            <div style="font-size:11px;color:var(--muted)">Sjefsøkonom, ExxonMobil · fungerende CEA-leder under Trump</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:#EEEDFE;color:#3C3489;padding:4px 10px;border-radius:10px">Makroøkonomi</span>
+          <span class="ana-chevron" id="chev-goodspeed" style="font-size:14px;color:var(--faint);transition:transform .2s">▸</span>
+        </div>
+      </div>
+      <div class="ana-card-body" id="abody-goodspeed">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:18px 18px 18px">
+          <div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#3C3489;margin-bottom:8px">Kilde</div>
+            <div style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:12px">Recession: The Real Reasons Economies Shrink (2025)</div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#3C3489;margin-bottom:8px">Kjernepåstand</div>
+            <div style="font-size:12px;line-height:1.7;color:var(--text)">Resesjoner myrdes — de dør ikke av naturlige årsaker. Energisjokk er involvert i 10 av 12 resesjoner i USA siden 1945. Resesjoner er diskontinuerlige: de begynner med et brått hopp i arbeidsledigheten, ikke en langsom avmatning. Etter sjokket gjenopptas veksten langs den samme trenden — ingen kreativ destruksjon, all smerte og ingen gevinst.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-bottom:8px">Analytisk begrensning</div>
+            <div style="font-size:12px;line-height:1.7;color:var(--muted);margin-bottom:16px">Goodspeed vet at resesjoner er sjokkdrevne. Han kan ikke vite at det neste sjokket vil ligne de foregående. All erfaring er erfaringen av svaner som var hvite.</div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#3C3489;margin-bottom:8px">Relevans for Hormuz 2026</div>
+            <div style="font-size:12px;line-height:1.7;color:var(--text)">Alle tre triggere — energisjokk, krig og kredittkontraksjon — er simultant aktive. Goodspeed kaller dette sin verste scenariokategori.</div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="detail-thesis">Den sorte svanen er perspektivavhengig: for Iran var Khamenei-drapet utenkelig; for planleggerne var det et mål. For begge er Hormuz-konsekvensene en sort svane. Fortellingsfeilen: vi konstruerer retrospektive forklaringer som gjør hendelser fremstå som planlagte. Alle de andre analytikerne er kalibrert for Mediocristan — geopolitikk 2026 er Extremistan, der én observasjon kan dominere hele fordelingens tyngdepunkt og historisk erfaring er en aktivt villedende rettesnor.</div>
-    <div class="detail-gap-label">Analytisk begrensning</div>
-    <div class="detail-gap">Taleb leverer ingen svar — bare presisjonen i spørsmålene. Han er den eneste av de seks kildene som stiller spørsmål ved om svarene de andre gir, er mulige å gi.</div>
+
+    <!-- Fishman -->
+    <div class="ana-card" id="acard-fishman">
+      <div class="ana-card-head" onclick="toggleAna('fishman')">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#085041;flex-shrink:0">EF</div>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--text)">Edward Fishman</div>
+            <div style="font-size:11px;color:var(--muted)">Columbia University · tidligere sanksjonssjef, State Department</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:#E1F5EE;color:#085041;padding:4px 10px;border-radius:10px">Sanksjoner</span>
+          <span class="ana-chevron" id="chev-fishman" style="font-size:14px;color:var(--faint);transition:transform .2s">▸</span>
+        </div>
+      </div>
+      <div class="ana-card-body" id="abody-fishman">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:18px">
+          <div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#085041;margin-bottom:8px">Kilde</div>
+            <div style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:12px">Chokepoints: American Power in the Age of Economic Warfare (2025)</div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#085041;margin-bottom:8px">Kjernepåstand</div>
+            <div style="font-size:12px;line-height:1.7;color:var(--text)">Paradigmeskiftet: fra sanksjoner som atferdsendring (Iran 2012 — reversible) til sanksjoner som strategisk svekkelse (Kina 2018 — permanente). Jake Sullivan: målet er størst mulig teknologisk forsprang. Det umulige trevalget: stater kan ikke opprettholde dyp integrasjon, ivareta sikkerhet og engasjere seg i geopolitisk konkurranse — samtidig.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-bottom:8px">Analytisk begrensning</div>
+            <div style="font-size:12px;line-height:1.7;color:var(--muted);margin-bottom:16px">Fishman diagnostiserer asymmetrien presist — det er lettere å rive ned enn å bygge opp. Han vet ikke når erosjonen av dollarsystemet når et vippepunkt.</div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#085041;margin-bottom:8px">Nøkkelsitat</div>
+            <div style="font-size:12px;line-height:1.7;font-style:italic;color:var(--muted);border-left:2px solid #1D9E75;padding-left:10px">«Man kan beordre Exxon ut av Russland, men ikke inn igjen.»</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Miran -->
+    <div class="ana-card" id="acard-miran">
+      <div class="ana-card-head" onclick="toggleAna('miran')">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:50%;background:#FAEEDA;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#633806;flex-shrink:0">SM</div>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--text)">Stephen Miran</div>
+            <div style="font-size:11px;color:var(--muted)">Leder, Council of Economic Advisers · tidligere Hudson Bay Capital</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:#FAEEDA;color:#633806;padding:4px 10px;border-radius:10px">Handelspolitikk</span>
+          <span class="ana-chevron" id="chev-miran" style="font-size:14px;color:var(--faint);transition:transform .2s">▸</span>
+        </div>
+      </div>
+      <div class="ana-card-body" id="abody-miran">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:18px">
+          <div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#633806;margin-bottom:8px">Kilde</div>
+            <div style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:12px">A User's Guide to Restructuring the Global Trading System (nov. 2024)</div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#633806;margin-bottom:8px">Kjernepåstand</div>
+            <div style="font-size:12px;line-height:1.7;color:var(--text)">Triffin-dilemmaet: USA har hatt underskudd på betalingsbalansen hvert eneste år siden 1982, bortsett fra to kvartaler i 1991. Mar-a-Lago Accord: en moderne Plaza-avtale der sikkerhetsparaplyen kobles til handelsvilkårene. Zoltan Poszar: «Security zones have barbed wires.»</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-bottom:8px">Den smale stien — status</div>
+            <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:14px">
+              <div style="display:flex;align-items:center;gap:8px;font-size:11px">
+                <span style="color:var(--red);font-weight:700">✗</span><span style="color:var(--muted)">Valutakurskompensasjon demper inflasjon</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:11px">
+                <span style="color:var(--red);font-weight:700">✗</span><span style="color:var(--muted)">Billig energi som prisdempende faktor</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:11px">
+                <span style="color:var(--red);font-weight:700">✗</span><span style="color:var(--muted)">Gradvis implementering</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:11px">
+                <span style="color:var(--red);font-weight:700">✗</span><span style="color:var(--muted)">Fed-koordinering er mulig</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:11px">
+                <span style="color:var(--red);font-weight:700">✗</span><span style="color:var(--muted)">Stabile makrobetingelser</span>
+              </div>
+            </div>
+            <div style="font-size:11px;font-weight:600;color:var(--red);padding:8px 12px;background:var(--red-lt);border-radius:6px">5 av 5 forutsetninger brutt per 31. mars 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NDS -->
+    <div class="ana-card" id="acard-nds">
+      <div class="ana-card-head" onclick="toggleAna('nds')">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:50%;background:#FCEBEB;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#791F1F;flex-shrink:0">NDS</div>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--text)">National Defense Strategy (2026)</div>
+            <div style="font-size:11px;color:var(--muted)">Signert av Pete Hegseth, Department of War — 23. januar 2026</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:#FCEBEB;color:#791F1F;padding:4px 10px;border-radius:10px">Forsvarsstrategi</span>
+          <span class="ana-chevron" id="chev-nds" style="font-size:14px;color:var(--faint);transition:transform .2s">▸</span>
+        </div>
+      </div>
+      <div class="ana-card-body" id="abody-nds">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:18px">
+          <div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#791F1F;margin-bottom:8px">Fire innsatslinjer</div>
+            <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:14px">
+              <div style="font-size:11px;color:var(--text);padding:5px 8px;background:var(--bg);border-radius:5px">🏠 Hjemlandsforsvar</div>
+              <div style="font-size:11px;color:var(--text);padding:5px 8px;background:var(--bg);border-radius:5px">🌏 Avskrekking av Kina i Indo-Stillehavet</div>
+              <div style="font-size:11px;color:var(--text);padding:5px 8px;background:var(--bg);border-radius:5px">🤝 Byrdedeling (5 % av BNP for allierte)</div>
+              <div style="font-size:11px;color:var(--text);padding:5px 8px;background:var(--bg);border-radius:5px">🏭 Forsvarsindustriell mobilisering</div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-bottom:8px">The Simultaneity Problem</div>
+            <div style="font-size:12px;line-height:1.7;color:var(--muted);margin-bottom:12px">NDS identifiserer selv at Kina, Russland, Iran og Nord-Korea kan handle koordinert på tvers av fronter. Det slående: nettopp dette scenariet materialiserte seg mellom signeringen i januar og Hormuz-stengningen i mars 2026.</div>
+            <div style="font-size:11px;color:var(--red);font-weight:600;padding:8px 12px;background:var(--red-lt);border-radius:6px">NDS autoriserte Operation Midnight Hammer (2025) og Operation Epic Fury (28. feb. 2026)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NSS -->
+    <div class="ana-card" id="acard-nss">
+      <div class="ana-card-head" onclick="toggleAna('nss')">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:50%;background:#FAECE7;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#7C2D12;flex-shrink:0">NSS</div>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--text)">National Security Strategy (2026)</div>
+            <div style="font-size:11px;color:var(--muted)">Det hvite hus — Trump-administrasjonens overordnede sikkerhetsstrategi</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:#FAECE7;color:#7C2D12;padding:4px 10px;border-radius:10px">Sikkerhetsstrategi</span>
+          <span class="ana-chevron" id="chev-nss" style="font-size:14px;color:var(--faint);transition:transform .2s">▸</span>
+        </div>
+      </div>
+      <div class="ana-card-body" id="abody-nss">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:18px">
+          <div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7C2D12;margin-bottom:8px">Kjernepåstand</div>
+            <div style="font-size:12px;line-height:1.7;color:var(--text)">«Energy Dominance» som strategisk fundament. Europa beskrevet som truet av «civilizational erasure». Lister «eight peace deals» inkludert Israel–Iran. Det eneste dokumentet som eksplisitt navngir energi som et strategisk middel, ikke bare et mål.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-bottom:8px">Total ironi — fortellingsfeilen i offisiell utgave</div>
+            <div style="font-size:12px;line-height:1.7;color:var(--muted)">NSS applauderer Iran-politikken som utløste Hormuz-stengningen — og Hormuz-stengningen er det som mest akutt truer den energidominansen NSS fremhever som grunnpillar. Per 31. mars 2026 er «eight peace deals»-listen en av de mer slående kollisjonene mellom offisielt narrativ og faktisk virkelighet.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Taleb -->
+    <div class="ana-card" id="acard-taleb">
+      <div class="ana-card-head" onclick="toggleAna('taleb')">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:50%;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#0C447C;flex-shrink:0">NT</div>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--text)">Nassim Nicholas Taleb</div>
+            <div style="font-size:11px;color:var(--muted)">Professor, NYU — The Black Swan (2007), Incerto-serien</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:#E6F1FB;color:#0C447C;padding:4px 10px;border-radius:10px">Erkjennelsesteori</span>
+          <span class="ana-chevron" id="chev-taleb" style="font-size:14px;color:var(--faint);transition:transform .2s">▸</span>
+        </div>
+      </div>
+      <div class="ana-card-body" id="abody-taleb">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:18px">
+          <div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0C447C;margin-bottom:8px">Kjernepåstand</div>
+            <div style="font-size:12px;line-height:1.7;color:var(--text)">Den sorte svanen er perspektivavhengig. Fortellingsfeilen: vi konstruerer retrospektive forklaringer som gjør hendelser fremstå som planlagte. Alle de andre analytikerne er kalibrert for Mediocristan — geopolitikk 2026 er Extremistan, der én observasjon kan dominere hele fordelingens tyngdepunkt.</div>
+          </div>
+          <div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0C447C;margin-bottom:8px">Analytisk begrensning</div>
+            <div style="font-size:12px;line-height:1.7;color:var(--muted);margin-bottom:12px">Taleb leverer ingen svar — bare presisjonen i spørsmålene. Han er den eneste av de seks kildene som stiller spørsmål ved om svarene de andre gir, er mulige å gi.</div>
+            <div style="font-size:12px;font-style:italic;color:var(--navy);border-left:2px solid var(--navy-mid);padding-left:10px;line-height:1.7">«What may be a Black Swan surprise for a turkey is not a Black Swan surprise for its butcher.»</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /om-analytikere -->
+
+  <!-- ══════════════════════════════════════════════════════
+       TAB 3: TALEBS RAMMEVERK
+  ══════════════════════════════════════════════════════ -->
+  <div class="om-panel" id="om-taleb">
+
+    <!-- Sitat -->
+    <div class="quote-card" style="margin-bottom:20px">
+      <div class="quote-text">«What may be a Black Swan surprise for a turkey is not a Black Swan surprise for its butcher.»</div>
+      <div class="quote-source">Nassim Nicholas Taleb — The Black Swan (2007)</div>
+    </div>
+
+    <!-- Mediocristan vs Extremistan -->
+    <div class="taleb-grid" style="margin-bottom:20px">
+      <div class="taleb-box">
+        <div class="taleb-title" style="color:var(--navy)">Mediocristan</div>
+        <div class="taleb-body">Verden der utfall er tilnærmet normalfordelt og historisk erfaring er en fornuftig rettesnor. Goodspeeds plucking model, Mirans tariffmodeller og begge strategidokumentene er kalibrert her — implisitt og uten å vite det.</div>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)">
+          <div style="font-size:10px;font-weight:600;color:var(--navy);margin-bottom:6px">Kjennetegn</div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:11px;color:var(--muted)">✓ Historiske data er representative</div>
+            <div style="font-size:11px;color:var(--muted)">✓ Normalfordeling fungerer</div>
+            <div style="font-size:11px;color:var(--muted)">✓ Gjennomsnitt er meningsfullt</div>
+          </div>
+        </div>
+      </div>
+      <div class="taleb-box" style="border-color:rgba(197,48,48,0.25)">
+        <div class="taleb-title" style="color:var(--red)">Extremistan <span style="font-size:11px;font-weight:400;color:var(--red);background:var(--red-lt);padding:2px 8px;border-radius:10px;margin-left:6px">Geopolitikk 2026</span></div>
+        <div class="taleb-body">Verden der én observasjon kan dominere hele fordelingens tyngdepunkt. Sjeldne hendelser bærer mesteparten av konsekvensen. Historisk erfaring er en aktivt villedende rettesnor.</div>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(197,48,48,.15)">
+          <div style="font-size:10px;font-weight:600;color:var(--red);margin-bottom:6px">Kjennetegn</div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:11px;color:var(--muted)">✗ Historiske data aktivt villedende</div>
+            <div style="font-size:11px;color:var(--muted)">✗ Normalfordeling umulig å kalibrere</div>
+            <div style="font-size:11px;color:var(--muted)">✗ En hendelse overstyrer alle andre</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fortellingsfeilen -->
+    <div class="section-label">Fortellingsfeilen — i praksis
+      <span class="tt-trigger" data-tt="tt-fortelling" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span>
+    </div>
+    <div class="card card-accent" style="margin-bottom:16px">
+      <div style="font-size:13px;line-height:1.75;color:var(--text);margin-bottom:10px">
+        For Iran var drapet på Khamenei under Operation Epic Fury utenkelig — en sort svane. For planleggerne var det et mål. For begge parter er Hormuz-stengningens makroøkonomiske konsekvenser en sort svane. I ettertid vil alle forklare det som åpenbart og forutsigbart — det er fortellingsfeilen.
+      </div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.65">
+        I komplekse systemer er sorte svaner ikke absolutte — de er perspektivavhengige. Det som er «forventet» fra ett ståsted er «umulig» fra et annet. Alle de offisielle strategidokumentene er strukturelt ute av stand til å se sin egen sorte svane.
+      </div>
+    </div>
+
+    <!-- Taleb mot de fem -->
+    <div class="section-label">Talebs kritikk av de fem andre
+      <span class="tt-trigger" data-tt="tt-taleb-kritikk" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span>
+    </div>
+    <div class="card">
+      <div class="imp-row">
+        <div class="imp-icon" style="background:#EEEDFE;color:#3C3489;font-size:10px;font-weight:700">GS</div>
+        <div><div class="imp-title">Mot Goodspeed</div><div class="imp-desc">Hva gir deg belegg for at det neste sjokket vil ligne de foregående? All erfaring er erfaringen av svaner som var hvite — slutninger trukket fra historisk erfaring har en fundamental begrensning.</div></div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-icon" style="background:#E1F5EE;color:#085041;font-size:10px;font-weight:700">EF</div>
+        <div><div class="imp-title">Mot Fishman</div><div class="imp-desc">BNP Paribas-boten (9 mrd. $, 2014) var ikke gradvis — det var en diskontinuitet. Fishmans analyse diagnostiserer spenningen presist; men kollapsen vil ikke ligne noe vi har sett historisk.</div></div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-icon" style="background:#FAEEDA;color:#633806;font-size:10px;font-weight:700">SM</div>
+        <div><div class="imp-title">Mot Miran</div><div class="imp-desc">Epistemisk arroganse: kalkulatoren regner på en feil modell med fire desimaler. Miran er kalkunen som fikk mat 999 dager på rad. Dag 1000 var 28. februar 2026.</div></div>
+      </div>
+      <div class="imp-row">
+        <div class="imp-icon" style="background:#FCEBEB;color:#791F1F;font-size:10px;font-weight:700">NDS</div>
+        <div><div class="imp-title">Mot NDS (2026)</div><div class="imp-desc">Identifiserte «The Simultaneity Problem» — men var strukturelt ute av stand til å se at selve operasjonene dokumentet autoriserte var det som materialiserte det.</div></div>
+      </div>
+      <div class="imp-row" style="border:none">
+        <div class="imp-icon" style="background:#FAECE7;color:#7C2D12;font-size:10px;font-weight:700">NSS</div>
+        <div><div class="imp-title">Mot NSS (2026)</div><div class="imp-desc">Lister «eight peace deals» inkludert Israel–Iran. Per 31. mars 2026 er dette fortellingsfeilen i offisiell utgave — narrativ om kontroll over ukontrollerbare systemer.</div></div>
+      </div>
+    </div>
+
+    <!-- Praktisk implikasjon for investor -->
+    <div class="section-label">Praktisk implikasjon for kapitalforvaltere</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="background:var(--green-lt);border:1px solid rgba(20,83,45,.2);border-radius:var(--radius);padding:14px 16px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--green);margin-bottom:8px">✓ Barbell-strategi</div>
+        <div style="font-size:12px;color:var(--text);line-height:1.65">80–90 % i det sikreste. 10–20 % i asymmetriske posisjoner med begrenset tapsrisiko og stor gevinstmulighet.</div>
+      </div>
+      <div style="background:var(--red-lt);border:1px solid rgba(197,48,48,.2);border-radius:var(--radius);padding:14px 16px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--red);margin-bottom:8px">✗ Unngå middels risiko</div>
+        <div style="font-size:12px;color:var(--text);line-height:1.65">Lineær nedsideeksponering uten tilstrekkelig oppsidepotensial. «Balanserte porteføljer» befinner seg i dette farlige midtområdet.</div>
+      </div>
+    </div>
+  </div><!-- /om-taleb -->
+
+  <!-- ══════════════════════════════════════════════════════
+       TAB 4: SYNTESEN
+  ══════════════════════════════════════════════════════ -->
+  <div class="om-panel" id="om-syntese">
+
+    <div style="font-size:13.5px;line-height:1.82;color:var(--text);font-weight:300;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--navy);border-radius:0 var(--radius) var(--radius) 0;padding:16px 20px;box-shadow:var(--shadow)">
+      Sammenstilt produserer de seks kildene en diagnose av et system i strukturell overbelastning, der alle de primære risikofaktorene er under simultant press, og der belastningene forsterker hverandre snarere enn å utlikne hverandre.
+    </div>
+
+    <!-- Syntesediagnose -->
+    <div class="section-label" style="margin-top:0;border-top:none;padding-top:0">Syntesediagnose per 31. mars 2026</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+      <div style="display:grid;grid-template-columns:80px 1fr;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
+        <div style="background:#EEEDFE;padding:14px 12px;display:flex;align-items:center;justify-content:center;text-align:center"><span style="font-size:10px;font-weight:700;color:#3C3489">Goodspeed</span></div>
+        <div style="background:var(--surface);padding:12px 16px;font-size:12px;color:var(--text);line-height:1.6">Simultane sjokk på tvers av energi, krig og kredittmarked — hans verste scenariokategori. Alle tre triggere aktive.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:80px 1fr;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
+        <div style="background:#E1F5EE;padding:14px 12px;display:flex;align-items:center;justify-content:center;text-align:center"><span style="font-size:10px;font-weight:700;color:#085041">Fishman</span></div>
+        <div style="background:var(--surface);padding:12px 16px;font-size:12px;color:var(--text);line-height:1.6">Maximum pressure-politikken drev Iran mot avkroken. Privatsektoren kondisjonert bort fra Iran kan ikke beordres tilbake. Asymmetrien er strukturell.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:80px 1fr;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
+        <div style="background:#FAEEDA;padding:14px 12px;display:flex;align-items:center;justify-content:center;text-align:center"><span style="font-size:10px;font-weight:700;color:#633806">Miran</span></div>
+        <div style="background:var(--surface);padding:12px 16px;font-size:12px;color:var(--text);line-height:1.6">Den smale stien eksisterer ikke lenger. Alle fem forutsetninger er brutt per 31. mars 2026. Fed kan verken heve eller kutte.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:80px 1fr;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
+        <div style="background:#FCEBEB;padding:14px 12px;display:flex;align-items:center;justify-content:center;text-align:center"><span style="font-size:10px;font-weight:700;color:#791F1F">NDS</span></div>
+        <div style="background:var(--surface);padding:12px 16px;font-size:12px;color:var(--text);line-height:1.6">Operation Midnight Hammer og Epic Fury autorisert. The Simultaneity Problem materialisert mars 2026 — nøyaktig som fryktet.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:80px 1fr;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
+        <div style="background:#FAECE7;padding:14px 12px;display:flex;align-items:center;justify-content:center;text-align:center"><span style="font-size:10px;font-weight:700;color:#7C2D12">NSS</span></div>
+        <div style="background:var(--surface);padding:12px 16px;font-size:12px;color:var(--text);line-height:1.6">Energy Dominance undergravet av den militærpolitikken dokumentet applauderer. Fortellingsfeilen i offisiell utgave.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:80px 1fr;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)">
+        <div style="background:#E6F1FB;padding:14px 12px;display:flex;align-items:center;justify-content:center;text-align:center"><span style="font-size:10px;font-weight:700;color:#0C447C">Taleb</span></div>
+        <div style="background:var(--surface);padding:12px 16px;font-size:12px;color:var(--text);line-height:1.6">Alle modeller kalibrert for en verden som ikke lenger finnes. Bygg robusthet — ikke prediksjon.</div>
+      </div>
+    </div>
+
+    <!-- Hormuz som empirisk test -->
+    <div class="section-label">Hormuz som empirisk test av alle seks rammeverk</div>
+    <div style="background:linear-gradient(135deg,#FEF2F2,#FFFBEB);border:1px solid rgba(197,48,48,.2);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:20px">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+        <div style="text-align:center">
+          <div style="font-size:22px;font-weight:700;color:var(--red);line-height:1">−2,9 pp</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px">BNP-effekt annualisert<br>Dallas Fed (mars 2026)</div>
+        </div>
+        <div style="text-align:center;border-left:1px solid rgba(197,48,48,.2);border-right:1px solid rgba(197,48,48,.2)">
+          <div style="font-size:22px;font-weight:700;color:var(--amber);line-height:1">98 $</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px">WTI-prognose<br>ved stengning 1 kvartal</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:22px;font-weight:700;color:var(--navy);line-height:1">20 %</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px">Global oljeforsyning<br>forstyrret via Hormuz</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Den fatale samvirkningen -->
+    <div class="section-label">Den fatale samvirkningen</div>
+    <div class="card card-accent">
+      <div style="font-size:13px;line-height:1.75;color:var(--text);margin-bottom:10px">Hvert av de offisielle dokumentene er internt koherent. Sammenstilt produserer de et system der hvert valg øker sannsynligheten for det scenariet man minst ønsker.</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.65">Dette er ikke inkompetanse. Det er den strukturelle logikken i et geopolitisk system under fundamentalt skifte — et klassisk kollektivt handlingsproblem der hvert lands rasjonelle valg samlet gir et resultat ingen ønsket.</div>
+    </div>
+
+    <!-- Konklusjon -->
+    <div class="section-label">Konklusjonen — kalkunen og slakteren</div>
+    <div style="background:var(--navy);border-radius:var(--radius-lg);padding:20px 24px;color:white">
+      <div style="font-size:13px;font-style:italic;opacity:.75;margin-bottom:14px;line-height:1.7">«What may be a Black Swan surprise for a turkey is not a Black Swan surprise for its butcher. The objective should be to 'avoid being the turkey'.» — Nassim Taleb</div>
+      <div style="font-size:13px;line-height:1.75;opacity:.9">Den analytisk riktige responsen er ikke en ny modell med høyere presisjon. Det er <strong>robusthet</strong>: strukturer og posisjoner som tåler et bredt spekter av utfall, inkludert utfall vi ennå ikke har tenkt på. Det er det Taleb kaller å unngå å være kalkunen.</div>
+    </div>
+  </div><!-- /om-syntese -->
+
+  <!-- ══════════════════════════════════════════════════════
+       TAB 5: ANALYSEDOKUMENT (intakt fra originalen)
+  ══════════════════════════════════════════════════════ -->
+  <div class="om-panel" id="om-dokument">
+
+    <div class="analyse-progress" id="analyse-progress">
+      <div style="font-size:11px;color:var(--faint);white-space:nowrap">Lesefremdrift</div>
+      <div class="progress-track"><div class="progress-fill" id="analyse-progress-fill"></div></div>
+      <div class="progress-lbl" id="analyse-progress-pct">0 %</div>
+    </div>
+
+    <div class="analyse-toc">
+      <a class="toc-item" href="#adoc-sammendrag">Sammendrag</a>
+      <a class="toc-item" href="#adoc-i">I. Innledning</a>
+      <a class="toc-item" href="#adoc-ii">II. Goodspeed</a>
+      <a class="toc-item" href="#adoc-iii">III. Fishman</a>
+      <a class="toc-item" href="#adoc-iv">IV. Miran</a>
+      <a class="toc-item" href="#adoc-v">V. NDS &amp; NSS</a>
+      <a class="toc-item" href="#adoc-vi">VI. Syntesen</a>
+      <a class="toc-item" href="#adoc-vii">VII. Taleb</a>
+      <a class="toc-item" href="#adoc-viii">VIII. Kapital</a>
+      <a class="toc-item" href="#adoc-ix">IX. Konklusjon</a>
+    </div>
+
+
+    <!-- SAMMENDRAG -->
+    <h1 id="adoc-sammendrag">Sammendrag</h1>
+    <p>Dette dokumentet er en analytisk syntese av seks sentrale verk som til sammen gir det mest presise tilgjengelige bildet av den geopolitiske og makroøkonomiske virkeligheten per 31. mars 2026. Dokumentet kombinerer makroøkonomisk teori, geopolitisk analyse, amerikansk forsvars- og sikkerhetsstrategi og epistemologisk rammeverk for å nå konklusjoner som er relevante for langsiktige kapitalallokerings- og strategibeslutninger.</p>
+
+    <!-- I -->
+    <h1 id="adoc-i">I. Innledning: Dokumentets oppbygging og analytiske metode</h1>
+    <h2>1.1 Kildene og forfatterne</h2>
+    <p>Dette dokumentet er ikke et tradisjonelt makroøkonomisk notat, og det er heller ikke en geopolitisk statusrapport. Det er en syntese av seks verk fra ulike faglige tradisjoner som til sammen gir et sammenhengende bilde av den verdensordenen vi faktisk befinner oss i per 31. mars 2026.</p>
+    <p><strong>Tyler Goodspeed</strong> er sjefsøkonom i ExxonMobil og var tidligere fungerende leder for Council of Economic Advisers under Trump. Han har doktorgrader i økonomi fra Cambridge og i historie fra Harvard. Hans bok <em>Recession: The Real Reasons Economies Shrink</em> (2025) er en historisk-økonomisk analyse av resesjoner i USA og Storbritannia fra 1700-tallet til i dag. I dette dokumentet representerer Goodspeed det makroøkonomiske rammeverket: hva som faktisk utløser resesjoner, og hvorfor konvensjonell syklusteori er utilstrekkelig.</p>
+    <p><strong>Edward Fishman</strong> er tidligere sanksjonssjef i det amerikanske utenriksdepartementet, der han hadde sentrale roller i utformingen av sanksjoner mot både Russland og Iran. Han underviser nå ved Columbia University og er seniorforsker ved Center on Global Energy Policy. Hans bok <em>Chokepoints: American Power in the Age of Economic Warfare</em> (2025) er den mest autoriserte historiske gjennomgangen av fremveksten av økonomisk krigføring. I dette dokumentet representerer Fishman den institusjonelle analysen: hvordan sanksjonsapparatet ble bygget, brukt og overbrukt.</p>
+    <p><strong>Stephen Miran</strong> er nå sittende leder for Council of Economic Advisers under president Trump, utnevnt i 2025. Han skrev analysen <em>A User's Guide to Restructuring the Global Trading System</em> (november 2024) mens han var sjefsstrateg i hedgefondet Hudson Bay Capital. Dokumentet er den intellektuelle blåkopien for faktisk gjennomført handelspolitikk under Trump 2.0. I dette dokumentet representerer Miran den politiske arkitekturen: Triffin-dilemmaet som makroøkonomisk diagnose og tariff- og valutapolitikk som behandling.</p>
+    <p><strong>National Defense Strategy (2026)</strong> ble signert av forsvarsminister Pete Hegseth 23. januar 2026 og er det overordnede strategidokumentet for Department of War — det nye navnet på Department of Defense. I dette dokumentet behandles NDS som uttrykk for den operative militærstrategien som autoriserte og kontekstualiserte Iran-operasjonene i 2025 og 2026.</p>
+    <p><strong>National Security Strategy (2026)</strong> er Det hvite hus' overordnede dokument for amerikansk utenriks- og sikkerhetspolitikk under Trumps andre administrasjon. NSS er det bredeste av de offisielle dokumentene, og det eneste som eksplisitt adresserer både økonomisk makt, militærmakt og det Miran kaller «sikkerhetsparaplyen».</p>
+    <p><strong>Nassim Nicholas Taleb</strong> er tidligere opsjonshandler, nå professor ved New York University og forfatter av <em>The Black Swan: The Impact of the Highly Improbable</em> (2007). I dette dokumentet representerer Taleb det epistemologiske rammeverket: en fundamental kritikk av alle modellbaserte spådommer under dyp usikkerhet.</p>
+    <p><strong>Zoltan Poszar</strong> er makroanalytiker og grunnlegger av Ex Uno Plures. Han siteres fordi hans analyse av Mar-a-Lago Accord (2024) er den mest presise formuleringen av logikken bak Mirans plan.</p>
+    <p><strong>Jake Sullivan</strong> var nasjonal sikkerhetsrådgiver under president Biden 2021–2025. Han siteres som den konkrete personen bak paradigmeskiftet fra atferdsendring til strategisk svekkelse av Kina.</p>
+
+    <h2>1.2 Ingen av kildene er alene tilstrekkelig</h2>
+    <p>Goodspeed mangler geopolitisk dybde. Fishman mangler makroøkonomisk modellering. Miran mangler en teori om hva som skjer når forutsetningene for planen bryter sammen. NDS og NSS mangler epistemisk ydmykhet. Taleb mangler konkretisering rettet mot kapitalforvaltere. Sammenstilt utfyller de hverandre på måter som produserer en analyse ingen av dem ville ha nådd alene.</p>
+
+    <h2>1.3 Dokumentets struktur</h2>
+    <p>Dokumentet følger en logisk sekvens fra diagnose til implikasjon: Goodspeed gir det makroøkonomiske fundamentet; Fishman kartlegger sanksjonsarkitekturen; Miran presenterer handelsplanen og dens forutsetninger; NDS og NSS gir de offisielle strategidokumentene; den store syntesen setter alle seks mot hverandre; Taleb gir det epistemologiske rammeverket; og kapittelene VIII og IX trekker implikasjoner for kapitalallokering.</p>
+
+    <h2>1.4 En merknad om tidspunkt</h2>
+    <p>Analysen er skrevet per 31. mars 2026. USA gjennomførte <strong>Operation Midnight Hammer</strong> mot Iran i juni 2025 — en operasjon som ødela store deler av det iranske kjernevåpenprogrammet. I februar 2026 gjennomførte USA og Israel <strong>Operation Epic Fury</strong>, som inkluderte drapet på Irans øverste leder, ayatollah Ali Khamenei. Som svar erklærte iranske styrker Hormuz-stredet stengt fra 4. mars 2026. Den europeiske sentralbanken utsatte planlagte rentekutt 19. mars. Brent-råolje handles i et 80–90-dollarsbelte, og analytikere diskuterer 200-dollarsscenarier ved langvarig stengning.</p>
+    <p>Dokumentene vi analyserer ble alle skrevet før disse hendelsene. Det gjør dem ikke irrelevante — det gjør dem mer avslørende. Når man leser dem mot bakgrunnen av det som faktisk skjedde, ser man hva strategene fikk rett og hva de tok feil om. Det er der den dypeste lærdommen ligger.</p>
+
+    <!-- II -->
+    <h1 id="adoc-ii">II. Goodspeed: Resesjoner er ikke syklusfenomener — de drepes</h1>
+    <h2>2.1 Kjernetesen og dens historiske fundament</h2>
+    <p>Kjernetesen er enkel og kraftfull: resesjoner er ikke den uunngåelige nedturen som følger en uholdbar oppgang. Ekspansjoner dør ikke av naturlige årsaker — de myrdes. Morderne har konsistente profiler gjennom historien: energisjokk, krig og kredittkontraksjon, gjerne i kombinasjon.</p>
+    <p>Goodspeed fremhever to punkter som er undervurderte i konvensjonell makroøkonomi. For det første er resesjoner diskontinuerlige, ikke gradvise — de innledes med et brått og plutselig hopp i arbeidsledigheten. Arbeidsmarkedet er dermed en ledende indikator, ikke en etterhinkendes. For det andre er resesjoner etter et endt sjokk ikke kreativt destruktive: veksten gjenopptas langs den samme trenden som før. Schumpeter-ideen er i stor grad en myte — all smerte, ingen gevinst.</p>
+
+    <h2>2.2 Energisjokk som den avgjørende faktoren</h2>
+    <p>Goodspeeds mest slående empiriske funn er at energisjokk er involvert i 10 av 12 resesjoner i USA siden 1945. Det er ikke et marginalt funn — det er strukturelt. Goodspeed argumenterer overbevisende for at energisjokket i 2008 — da Brent nærmet seg 150 dollar fatet — var en viktig medvirkende årsak til finanskriseresesjonen. Den gjennomsnittlige amerikanske husholdningen brukte rundt 2 000 dollar ekstra per år på energi i 2008, før finansmarkedene kollapset.</p>
+    <div class="infobox">
+      <div class="infobox-title">Goodspeeds resesjonstrigger-hierarki</div>
+      Energisjokk (strukturell) — involvert i 10 av 12 resesjoner siden 1945. Krig og geopolitisk forstyrrelse — direkte via ressursavbrudd og økt usikkerhet. Kredittkontraksjoner — historiske eksempler: 1948, 1970 og 1980. Pengepolitiske feil — den store depresjonen. Pandemier og eksogene sjokk — 2020 som et ekstremt eksempel.
+    </div>
+
+    <h2>2.3 Goodspeed og konvensjonell makroøkonomi</h2>
+    <p>Goodspeed avviser eksplisitt den keynesianske forestillingen om at ekspansiv finanspolitikk kan forkorte resesjoner. Dataene hans viser at resesjoners dybde og varighet er statistisk sett ikke ulik før og etter 1945, til tross for den kraftige veksten i statlig intervensjon. For investorer: sentralbankers rentesetting og regjeringers stimuluspakker er nødvendige som buffer, men få fungerer som effektiv brems. Det er sjokket som avgjør, og sjokket er i stor grad utenfor politikkens kontroll.</p>
+
+    <!-- III -->
+    <h1 id="adoc-iii">III. Fishman: Den nye økonomiske krigføringens arkitektur</h1>
+    <h2>3.1 Fra skipsblokade til banktelegram</h2>
+    <p>Irakembargoen på 1990-tallet krevde en tretten år lang, døgnkontinuerlig skipsblokade — en militæroperasjon forkledd som handelspolitikk. Overgangen til det moderne sanksjonsapparatet begynte med Stuart Levy som første understatssekretær for terrorisme og finansiell etterretning i Treasury Department fra 2006. Levys innsikt: USA trengte ikke noen marine — det trengte bare å true bankenes tilgang til det amerikanske finanssystemet. Direktører i Deutsche Bank og embetsmenn i Hanoi reagerte raskere på trusler om sanksjonslister enn på diplomatiske noter.</p>
+
+    <h2>3.2 Det avgjørende paradigmeskiftet</h2>
+    <p>Fishmans viktigste bidrag er påvisningen av overgangen fra sanksjoner som atferdsendring til sanksjoner som strategisk svekkelse. Iran 2012: reversible sanksjoner med avslutningsbetingelse. Kina 2018: permanente eksportkontroller, ingen avslutningsbetingelse definert. Bidens sikkerhetsrådgiver Jake Sullivan formulerte det eksplisitt: målet er størst mulig teknologisk forsprang.</p>
+    <table class="doc-table">
+      <thead><tr><th>Epoke</th><th>Kjennetegn og eksempel</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Atferdsendring (Iran 2012)</strong></td><td>Sanksjoner er midlertidige. Reversibilitet er selve insentivsystemet. Iran reduserer oljeeksporten med 80 % og kommer til forhandlingsbordet.</td></tr>
+        <tr><td><strong>Strategisk svekkelse (Kina 2018–)</strong></td><td>Sanksjoner er permanente. Huawei nektes tilgang til avanserte brikker. Sullivan: størst mulig teknologisk forsprang. Ingen avslutningsbetingelse.</td></tr>
+        <tr><td><strong>Hybridform (Russland 2022)</strong></td><td>Frysing av 300 mrd. dollar i sentralbankreserver. Oljepristak. Delvis virksomt, men Russland tilpasser seg via Kina og skyggeflåter.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>3.3 Det umulige trevalget og Hormuz som krysningspunkt</h2>
+    <p>Fishmans geoøkonomiske umulige trevalg: stater kan ikke på én og samme tid opprettholde dyp økonomisk integrasjon, ivareta økonomisk sikkerhet og engasjere seg i geopolitisk konkurranse. Hormuz-krisen er et konkret bevis: 20 % av verdens oljeforsyning er forstyrret, Europa sliter med nesten doble gasspriser.</p>
+    <p>Fishmans advarsel — formulert før mars 2026 — var at det er langt lettere å ødelegge økonomiske relasjoner enn å bygge dem opp igjen. Man kan beordre Exxon ut av Russland, men ikke inn igjen. Det økonomiske apparatet er asymmetrisk: lettere å rive ned enn å bygge opp. Denne asymmetrien er strukturell og ikke politikkstyrt.</p>
+
+    <!-- IV -->
+    <h1 id="adoc-iv">IV. Miran: Triffin-dilemmaet og den smale stien</h1>
+    <h2>4.1 Analysen og dens politiske vekt</h2>
+    <p>Mirans analyse <em>A User's Guide to Restructuring the Global Trading System</em> (november 2024) er den intellektuelle blåkopien for faktisk gjennomført handelspolitikk under Trump 2.0. Hvert virkemiddel han beskriver — gradvis tariffeskalering, skalabaserte tariffer, bruk av IEEPA-loven og Mar-a-Lago Accord — er siden blitt til enten faktisk politikk eller aktiv diskusjon i Washington.</p>
+
+    <h2>4.2 Triffin-dilemmaet: Strukturell overvaluering av dollaren</h2>
+    <p>For å forsyne verden med nok dollar til å finansiere global handel må USA eksportere kapital. Det medfører permanente underskudd på betalingsbalansen. Resultatet er en kronisk overvaluert dollar som undergraver industrisektorens konkurranseevne. Mirans mest slående belegg: USA har hatt underskudd på betalingsbalansen hvert eneste år siden 1982, bortsett fra to kvartaler i 1991. En halv generasjon uten ett eneste år i balanse er ikke et markedsavvik — det er et systemtrekk.</p>
+
+    <h2>4.3 Mar-a-Lago Accord</h2>
+    <p>Det mer ambisiøse konseptet: en moderne Plaza-avtale der handelspartnere konverterer kortsiktige dollarreserver til langsiktige amerikanske statsobligasjoner, aksepterer en svakere dollar og får tilgang til den amerikanske sikkerhetsparaplyen. Zoltan Poszar formulerte kjernen presist: <em>«Security zones have barbed wires: unless you swap your bills for bonds, tariffs will keep you out.»</em></p>
+
+    <h2>4.4 Den smale stien — og hva som gikk galt</h2>
+    <blockquote>«There is a path by which these policies can be implemented without material adverse consequences, but it is narrow.» — Stephen Miran</blockquote>
+    <table class="doc-table">
+      <thead><tr><th>Forutsetning</th><th>Status per 31. mars 2026</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Valutakurskompensasjon demper inflasjon</strong></td><td>Hormuz-sjokket skaper energiinflasjonspress fra en helt annen retning. Fed fanget mellom to motstridende mandat.</td></tr>
+        <tr><td><strong>Billig energi som prisdempende faktor</strong></td><td>Brent i 80–90-dollarsbeltet. 200 $-scenarier diskuteres.</td></tr>
+        <tr><td><strong>Gradvis implementering</strong></td><td>25 % tariffer på Canada og Mexico innført som sjokk. Operation Epic Fury et historisk vendepunkt.</td></tr>
+        <tr><td><strong>Fed-koordinering er mulig</strong></td><td>ECB utsatte rentekutt 19. mars. Fed kan verken heve eller kutte.</td></tr>
+        <tr><td><strong>Stabile makrobetingelser</strong></td><td>Hormuz-krisen utløser simultant alle tre av Goodspeeds resesjonstriggers.</td></tr>
+      </tbody>
+    </table>
+
+    <!-- V -->
+    <h1 id="adoc-v">V. National Defense Strategy (2026) og National Security Strategy (2026)</h1>
+    <h2>5.1 Department of War: En symbolsk erklæring</h2>
+    <p>Navneskiftet fra Department of Defense til Department of War er ikke bare terminologisk. Det er en erklæring om strategisk tenkning. «Defense» er reaktivt; «War» er aktivt og instrumentelt. National Defense Strategy (2026) ble signert 23. januar 2026. Operation Midnight Hammer ble gjennomført i juni 2025. Operation Epic Fury 28. februar 2026. Iran stengte Hormuz 4. mars. NDS er ikke et dokument som reagerer på en krise — det er det strategiske rammeverket som autoriserte den.</p>
+
+    <h2>5.2 The Simultaneity Problem</h2>
+    <p>NDS' ærligste avsnitt fastslår at USA og dets allierte må være forberedt på at Kina, Russland, Iran og Nord-Korea kan handle koordinert på tvers av fronter på en gang. Dokumentet innrømmer at alliertes utilstrekkelige forsvarsbudsjetter gjør dette scenariet farligere. Det slående er at nettopp dette scenariet materialiserte seg mellom NDS-signeringen i januar og Hormuz-stengningen i mars.</p>
+
+    <h2>5.3 NSS: Det ideologiske prosjektet</h2>
+    <p>NSS vil ha «restoration and reinvigoration of American spiritual and cultural health». Det beskriver Europa som truet av «civilizational erasure». Under overskriften «Energy Dominance» argumenteres det for at billig og rikelig energi er et fundament for reindustrialisering og geopolitisk innflytelse. Ironien er total: Hormuz-krisen — et direkte resultat av den militære Iran-politikken NSS applauderer — er det som mest akutt truer den energidominansen strategien fremhever.</p>
+
+    <h2>5.4 Den narrative feilslutningen</h2>
+    <p>NSS lister «eight peace deals» inkludert Israel–Iran. Per 31. mars 2026 — med Hormuz stengt og iranske angrep på skipsfart — er dette en av de mer slående kollisjonene mellom offisielt narrativ og faktisk virkelighet. Det illustrerer Talebs poeng om at vi konstruerer narrativer som gjør hendelser fremstå som planlagte, mens de er produkter av systemer ingen kontrollerer fullt ut.</p>
+
+    <!-- VI -->
+    <h1 id="adoc-vi">VI. Den store syntesen: Seks perspektiver, én diagnose</h1>
+    <h2>6.1 Hva sammenstillingen avslører</h2>
+    <p>Sammenstilt produserer de seks kildene en diagnose av et system i strukturell overbelastning, der ikke bare én ting er galt, men der alle de primære risikofaktorene er under simultant press, og der belastningene forsterker hverandre snarere enn å utlikne hverandre.</p>
+    <div class="infobox">
+      <div class="infobox-title">Syntesediagnose per 31. mars 2026</div>
+      <strong>Goodspeed:</strong> Simultane sjokk på tvers av energi, krig og kredittmarked — hans verste scenariokategori. <strong>Fishman:</strong> Maximum pressure-politikken drev Iran mot avkroken. Privatsektoren kondisjonert bort fra Iran kan ikke beordres tilbake. <strong>Miran:</strong> Den smale stien eksisterer ikke lenger. <strong>NDS:</strong> Operation Midnight Hammer og Epic Fury autorisert. The Simultaneity Problem materialisert. <strong>NSS:</strong> Energy Dominance undergravet av militærpolitikken dokumentet applauderer. <strong>Taleb:</strong> Alle modeller kalibrert for en verden som ikke lenger finnes.
+    </div>
+
+    <h2>6.2 Den fatale samvirkningen</h2>
+    <p>Hvert av de offisielle dokumentene er internt koherent. Sammenstilt produserer de et system der hvert valg øker sannsynligheten for det scenariet man minst ønsker. Dette er ikke inkompetanse. Det er den strukturelle logikken i et geopolitisk system under fundamentalt skifte — et klassisk kollektivt handlingsproblem der hvert lands rasjonelle valg samlet gir et resultat ingen ønsket.</p>
+
+    <h2>6.3 Hormuz som empirisk test</h2>
+    <p>Dallas Fed estimerte i mars 2026 at én kvartals Hormuz-stengning forventes å løfte WTI til 98 dollar og redusere global BNP-vekst med 2,9 prosentpoeng annualisert. Sjefen for Det internasjonale energibyrået beskrev situasjonen som den største globale energisikkerhetskrisen i historien. Alle seks rammeverk testes simultant — i sanntid.</p>
+
+    <!-- VII -->
+    <h1 id="adoc-vii">VII. Taleb: Erkjennelsesteori, svarte svaner og investorers rammeverk</h1>
+    <h2>7.1 Hva Taleb egentlig sier</h2>
+    <p>Talebs definisjon av en sort svane har tre komponenter: hendelsen er utenfor normalforventningen; den har ekstremt store konsekvenser; og etter at den har skjedd, konstruerer vi retrospektive forklaringer som gjør den fremstå som forutsigbar. Det tredje punktet — fortellingsfeilen — er Talebs egentlige bidrag og radikalt undervurdert.</p>
+
+    <h2>7.2 Mediocristan og Extremistan</h2>
+    <p><strong>Mediocristan</strong> er verden der utfall er tilnærmet normalfordelt og historisk erfaring er en fornuftig rettesnor. Goodspeeds plucking model er kalibrert her.</p>
+    <p><strong>Extremistan</strong> er verden der én observasjon kan dominere hele fordelingens tyngdepunkt, og der historisk erfaring er en aktivt villedende rettesnor. Geopolitikk i 2026 er dypt Extremistan. Alle fem andre analytikere bygger på den stilltause forutsetningen om at verden ligner Mediocristan.</p>
+
+    <h2>7.3 Taleb mot de andre analytikerne</h2>
+    <p><strong>Mot Goodspeed:</strong> Hva gir deg belegg for at det neste sjokket vil ligne de foregående? All erfaring er erfaringen av svaner som var hvite.</p>
+    <p><strong>Mot Fishman:</strong> BNP Paribas-bøten på 9 mrd. dollar (2014) var ikke gradvis — det var en diskontinuitet. Kollapsen av spenningen vil ikke ligne noe historisk.</p>
+    <p><strong>Mot Miran:</strong> Epistemisk arroganse — kalkulatoren regner på en feil modell med fire desimaler. Miran er kalkunen som fikk mat 999 dager på rad. Dag 1000 var 28. februar 2026.</p>
+
+    <h2>7.4 Perspektivavhengige svarte svaner</h2>
+    <blockquote>«What may be a Black Swan surprise for a turkey is not a Black Swan surprise for its butcher.» — Nassim Taleb</blockquote>
+    <p>For Iran var Khamenei-drapet utenkelig. For planleggerne var det et mål. For begge er Hormuz-konsekvensene en sort svane. I komplekse systemer er sorte svaner perspektivavhengige — alle de offisielle strategidokumentene er strukturelt ute av stand til å se sin egen sorte svane.</p>
+
+    <!-- VIII -->
+    <h1 id="adoc-viii">VIII. Implikasjoner for kapitalallokering og strategisk robusthet</h1>
+    <h2>8.1 Barbell-strategien</h2>
+    <p>Talebs praktiske anbefaling: 85–90 % i de sikreste instrumentene og 10–15 % i spekulative posisjoner med begrenset tapsrisiko men stor gevinstmulighet. Unngå middels risiko — det gir lineær nedsideeksponering uten tilstrekkelig oppsidepotensial. De fleste såkalt balanserte porteføljer befinner seg i nettopp dette farlige midtområdet.</p>
+
+    <h2>8.2 Fire strukturelle temaer</h2>
+    <table class="doc-table">
+      <thead><tr><th>Tema</th><th>Kildegrunnlag</th><th>Analytisk begrunnelse</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Forsvarsindustriell ekspansjon</strong></td><td>NDS (2026), NSS (2026), Miran</td><td>Nasjonal mobilisering. Allierte pålagt 5 % av BNP til forsvar.</td></tr>
+        <tr><td><strong>Energiinfrastruktur og resiliens</strong></td><td>Goodspeed, NSS (2026), Hormuz</td><td>Hormuz dokumenterer strukturell sårbarhet. Europeisk LNG-behov akutt.</td></tr>
+        <tr><td><strong>Kritiske råvarer og mineraler</strong></td><td>NSS (2026), Fishman</td><td>Halvlederkrigen med Kina er strukturell, ikke konjunkturell.</td></tr>
+        <tr><td><strong>Finansiell infrastruktur og dollarposisjon</strong></td><td>Miran, Fishman, NSS (2026)</td><td>Triffin-dilemmaet styrker behovet for finansiell robusthet uansett utfall.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>8.3 Systematisk underprisede risikoer</h2>
+    <ul>
+      <li><strong>Goodspeed-sjokket via Hormuz:</strong> Langvarig stengning utløser en global resesjon ingen rentemodeller er kalibrert for.</li>
+      <li><strong>Taleb-kaskaden:</strong> Primærsjokk → sekundære (Japan, Sør-Korea) → tertiære finansielle sjokk: mislighold, valutakriser, kapitalflukt.</li>
+      <li><strong>Fishman-erosjonen:</strong> Aggressiv bruk av dollar-hegemoni fremskynder de-dollariseringen — dempet men akkumulerende effekt over 5–10 år.</li>
+      <li><strong>NDS/NSS-gapet:</strong> Europa brukte to generasjoner på å demontere forsvar. Det tar minst ett tiår å bygge det opp igjen.</li>
+    </ul>
+
+    <div class="infobox">
+      <div class="infobox-title">Den strategiske bunnlinjen</div>
+      Bygg robusthet, ikke prediksjon. Unngå middels risiko. De fire strukturelle temaene er forankret på tvers av scenarier. Den nærmeste konkrete risikoen er kombinasjonen av langvarig Hormuz-stengning og en handlingslammet sentralbank som produserer stagflasjonspress i en økonomi allerede sent i konjunktursyklusen. Det er ikke gitt at det skjer. Men det er heller ikke priset inn.
+    </div>
+
+    <!-- IX -->
+    <h1 id="adoc-ix">IX. Konklusjon: Kalkunen og slakteren</h1>
+    <blockquote>«What may be a Black Swan surprise for a turkey is not a Black Swan surprise for its butcher. The objective should be to 'avoid being the turkey', by identifying areas of vulnerability in order to 'turn the Black Swans white'.» — Nassim Taleb</blockquote>
+    <p>De seks analytikerne gir til sammen det beste tilgjengelige kartet over det geopolitiske og makroøkonomiske terrenget vi befinner oss i. Men de er alle skrevet av mennesker i institusjoner der insentivsystemer belønner det å ha en klar fortelling, og straffer det å si «dette vet vi ikke».</p>
+    <p>Goodspeed vet at resesjoner er sjokkdrevne — men ikke at det neste vil ligne de foregående. Fishman vet at sanksjonsapparatet eroderer sitt eget fundament — men ikke når erosjonen når et vippepunkt. Miran vet at Triffin-dilemmaet er reelt — men visste ikke at den smale stien ville bli stengt. NDS og NSS vet at et sterkt USA forutsetter byrdedeling og reindustrialisering — men vet ikke at de operative valgene de autoriserer kan underminere de strategiske målene de forfølger.</p>
+    <p>Det vi vet, er dette: vi befinner oss i et regime der sjokk delvis er utløst av politiske valg, der belastningene forsterker hverandre, og der alle eksisterende modeller er kalibrert for en verden som er lagt bak oss. Den analytisk riktige responsen er ikke en ny modell med høyere presisjon. Det er robusthet: strukturer og posisjoner som tåler et bredt spekter av utfall, inkludert utfall vi ennå ikke har tenkt på.</p>
+    <p>Det er det Taleb kaller å unngå å være kalkunen. Og det er den eneste praktisk fornuftige konklusjonen av en grundig lesning av seks ekstraordinære intellekter.</p>
+
+    <div style="margin-top:32px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:11px;color:var(--faint);font-style:italic">Analysedokument datert 31. mars 2026</span>
+      <span style="font-size:11px;color:var(--faint);font-style:italic">Halvard Nordang — Affectum AS · Konfidensielt</span>
+    </div>
+
   </div>
 </div>
+
+  </div><!-- /om-dokument -->
+
+</div><!-- /panel-analytikere -->
 
 <!-- ─── HORMUZ ─── -->
 <div class="panel" id="panel-hormuz">
@@ -1992,7 +2676,7 @@ input[type=range]::-webkit-slider-thumb {
 </div>
 
 <!-- ─── TALEB ─── -->
-<div class="panel" id="panel-taleb">
+<div class="panel" id="panel-taleb" style="display:none">
   <div class="panel-header">
     <div class="panel-title">Talebs rammeverk</div>
     <div class="panel-sub">Erkjennelsesteori for kapitalforvaltere under dyp usikkerhet</div>
@@ -2803,7 +3487,7 @@ input[type=range]::-webkit-slider-thumb {
 </div>
 
 <!-- ─── ANALYSEDOKUMENT ─── -->
-<div class="panel" id="panel-analyse">
+<div class="panel" id="panel-analyse" style="display:none">
   <div class="panel-header">
     <div class="panel-title">Analysedokument</div>
     <div class="panel-sub">Geopolitisk Systemanalyse 2026 — fullstendig analytisk grunnlag for modellen · Halvard Nordang, Affectum AS</div>
@@ -3830,6 +4514,30 @@ function selectAuthor(key, card) {
   currentAuthor = key;
 }
 
+// ── OM MODELLEN: fane-navigasjon ───────────────────
+function omTab(tabId, btn) {
+  document.querySelectorAll('.om-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.om-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  const panel = document.getElementById('om-' + tabId);
+  if (panel) panel.classList.add('active');
+}
+
+// ── OM MODELLEN: ekspanderende analytiker-kort ─────
+function toggleAna(key) {
+  const body = document.getElementById('abody-' + key);
+  const chev = document.getElementById('chev-' + key);
+  if (!body) return;
+  const isOpen = body.classList.contains('open');
+  // Lukk alle andre
+  document.querySelectorAll('.ana-card-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.ana-chevron').forEach(c => { c.textContent = '▸'; c.style.transform = ''; });
+  if (!isOpen) {
+    body.classList.add('open');
+    if (chev) { chev.textContent = '▾'; chev.style.transform = 'rotate(0deg)'; }
+  }
+}
+
 // Fast slider label update — runs on every input event without debounce
 function updateSliderLabel(slider) {
   const id = slider.id;
@@ -4310,8 +5018,10 @@ function initAnalyseProgress() {
   if (!body || !main || !fill) return;
 
   main.addEventListener('scroll', function() {
-    const panel = document.getElementById('panel-analyse');
+    const panel = document.getElementById('panel-analytikere');
+    const omDoc = document.getElementById('om-dokument');
     if (!panel || !panel.classList.contains('active')) return;
+    if (!omDoc || !omDoc.classList.contains('active')) return;
     const totalH = body.scrollHeight;
     const viewH  = main.clientHeight;
     const scrolled = main.scrollTop;
@@ -4349,9 +5059,9 @@ function runSearch(q) {
   var panelNames = {
     'panel-oversikt':'Dashboard','panel-analytikere':'Om modellen',
     'panel-hormuz':'Hormuz-krisen','panel-kina':'Kinas posisjon',
-    'panel-scenarier':'Scenarier','panel-taleb':'Taleb-rammeverk',
+    'panel-scenarier':'Scenarier',
     'panel-kapital':'Kapitalimplikasjoner','panel-makro':'Makrodata',
-    'panel-analyse':'Analysedokument','panel-nyheter':'Nyheter',
+    'panel-nyheter':'Nyheter',
     'panel-logg':'Modellens tilblivelse'
   };
 
