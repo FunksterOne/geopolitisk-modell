@@ -803,6 +803,8 @@ input[type=range]::-webkit-slider-thumb {
 
 <!-- ─── OVERSIKT ─── -->
 <div class="panel active" id="panel-oversikt">
+
+  <!-- TOPPRAD: Tittel + live priser -->
   <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap">
     <div style="flex-shrink:0">
       <div class="panel-title" style="margin-bottom:4px">Den nye verdensordenen</div>
@@ -823,208 +825,308 @@ input[type=range]::-webkit-slider-thumb {
     </div>
   </div>
 
-  <!-- ══ 1. SYSTEMSTATUS-BANNER ══════════════════════════════════════════ -->
-  <div style="background:linear-gradient(135deg,#FEF2F2,#FFF1F1);border:1px solid rgba(197,48,48,.2);border-left:4px solid var(--red);border-radius:var(--radius-lg);padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;gap:16px;box-shadow:var(--shadow)">
-    <div style="flex:1">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-        <div style="width:9px;height:9px;border-radius:50%;background:var(--red);animation:pulse 2s infinite;flex-shrink:0"></div>
-        <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red)">Systemstatus · <span id="sys-status-lbl">Kritisk</span></span>
+  <!-- ════════════════════════════════════════════════════════════════════
+       MISSION CONTROL — Hormuz-kalkulatoren integrert
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div style="background:var(--navy);border-radius:12px;padding:20px 24px;margin-bottom:20px;box-shadow:0 4px 24px rgba(15,30,60,.18)">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:3px">Hormuz-kalkulator</div>
+        <div style="font-size:13px;font-weight:600;color:white">Juster parametere — konsekvensene beregnes umiddelbart</div>
       </div>
-      <div style="font-size:13.5px;font-weight:500;color:var(--text);line-height:1.5" id="sys-status-txt">Alle tre Goodspeed-triggere aktive simultant · Hormuz stengt dag 30+ · Liberation Day-tariffer (apr. 2025) delvis kjent ugyldig av Høyesterett</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:7px;height:7px;border-radius:50%;background:#C53030;animation:pulse 2s infinite"></div>
+        <span style="font-size:10px;font-weight:600;color:rgba(255,255,255,.5)">Brent live: <span id="live-brent-stat" style="color:rgba(255,255,255,.85)">—</span></span>
+      </div>
     </div>
-    <div style="margin-left:auto;text-align:right;flex-shrink:0">
-      <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:4px">Mest sannsynlig scenario</div>
-      <div style="font-size:15px;font-weight:700;color:var(--amber)">B — Kronisk forstyrrelse</div>
-      <div style="font-size:11px;color:var(--muted)">55 % sannsynlighet · Perera (2026)</div>
+
+    <!-- Tre slidere i én rad -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:18px">
+
+      <!-- Varighet -->
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,.6);letter-spacing:.03em">Varighet
+            <span class="tt-trigger" data-tt="tt-varighet" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:rgba(255,255,255,.12);color:rgba(255,255,255,.6);font-size:8px;font-weight:700;cursor:help;border:1px solid rgba(255,255,255,.2);margin-left:4px;vertical-align:middle">?</span>
+          </span>
+          <span style="font-size:16px;font-weight:700;color:white" id="out-duration">4 uker</span>
+        </div>
+        <input type="range" min="1" max="26" value="4" step="1" id="sl-duration"
+               oninput="updateSliderLabel(this); debouncedCalc()"
+               style="width:100%;accent-color:#7F77DD;cursor:pointer">
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.3);margin-top:3px">
+          <span>1u</span><span>8u</span><span>16u</span><span>26u</span>
+        </div>
+      </div>
+
+      <!-- Oljeprissjokk -->
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,.6);">Oljeprissjokk (utover Brent <span id="brent-base-lbl" style="color:rgba(255,255,255,.5)">~108 $</span>)
+            <span class="tt-trigger" data-tt="tt-oljepris" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:rgba(255,255,255,.12);color:rgba(255,255,255,.6);font-size:8px;font-weight:700;cursor:help;border:1px solid rgba(255,255,255,.2);margin-left:4px;vertical-align:middle">?</span>
+          </span>
+          <span style="font-size:16px;font-weight:700;color:white" id="out-oil">+13 $/fat</span>
+        </div>
+        <input type="range" min="0" max="115" value="13" step="1" id="sl-oil"
+               oninput="updateSliderLabel(this); debouncedCalc()"
+               style="width:100%;accent-color:#C53030;cursor:pointer">
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.3);margin-top:3px">
+          <span>0</span><span>+30</span><span>+60</span><span>+90</span><span>+115 $</span>
+        </div>
+      </div>
+
+      <!-- Konfliktnivå -->
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,.6);">Konfliktnivå
+            <span class="tt-trigger" data-tt="tt-konflikt" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:rgba(255,255,255,.12);color:rgba(255,255,255,.6);font-size:8px;font-weight:700;cursor:help;border:1px solid rgba(255,255,255,.2);margin-left:4px;vertical-align:middle">?</span>
+          </span>
+          <span style="font-size:16px;font-weight:700;color:white" id="out-conflict">Begrenset</span>
+        </div>
+        <input type="range" min="1" max="3" value="1" step="1" id="sl-conflict"
+               oninput="updateSliderLabel(this); debouncedCalc()"
+               style="width:100%;accent-color:#BA7517;cursor:pointer">
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.3);margin-top:3px">
+          <span>Begrenset</span><span style="text-align:center">Eskalert</span><span style="text-align:right">Full krig</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Beregningsresultater — fem nøkkeltall -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1)">
+      <div style="text-align:center">
+        <div style="font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px">Brent topp</div>
+        <div style="font-size:20px;font-weight:800;color:#FF8080;line-height:1" id="cr-brent">~121 $</div>
+      </div>
+      <div style="text-align:center;border-left:1px solid rgba(255,255,255,.08)">
+        <div style="font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px">BNP kumulativt
+          <span class="tt-trigger" data-tt="bnp-tooltip" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.1);color:rgba(255,255,255,.5);font-size:7px;font-weight:700;cursor:help;border:1px solid rgba(255,255,255,.15);margin-left:2px;vertical-align:middle">?</span>
+        </div>
+        <div style="font-size:20px;font-weight:800;color:#FF8080;line-height:1" id="cr-gdp">—</div>
+        <div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden;margin-top:6px"><div id="gdp-bar" style="height:100%;border-radius:2px;background:#FF8080;transition:width .4s ease;width:24%"></div></div>
+      </div>
+      <div style="text-align:center;border-left:1px solid rgba(255,255,255,.08)">
+        <div style="font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px">KPI-effekt
+          <span class="tt-trigger" data-tt="tt-kpi" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.1);color:rgba(255,255,255,.5);font-size:7px;font-weight:700;cursor:help;border:1px solid rgba(255,255,255,.15);margin-left:2px;vertical-align:middle">?</span>
+        </div>
+        <div style="font-size:20px;font-weight:800;color:#FCD25A;line-height:1" id="cr-cpi">—</div>
+      </div>
+      <div style="text-align:center;border-left:1px solid rgba(255,255,255,.08)">
+        <div style="font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px">BNP per kv.
+          <span style="font-size:8px;color:rgba(255,255,255,.3)">(Kilian)</span>
+        </div>
+        <div style="font-size:20px;font-weight:800;color:rgba(255,255,255,.85);line-height:1" id="out-gdp">—</div>
+      </div>
+      <div style="text-align:center;border-left:1px solid rgba(255,255,255,.08)">
+        <div style="font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px">Resesjonsrisiko
+          <span class="tt-trigger" data-tt="tt-resesjon" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.1);color:rgba(255,255,255,.5);font-size:7px;font-weight:700;cursor:help;border:1px solid rgba(255,255,255,.15);margin-left:2px;vertical-align:middle">?</span>
+        </div>
+        <div style="font-size:20px;font-weight:800;line-height:1" id="cr-risk">—</div>
+      </div>
     </div>
   </div>
 
-  <!-- ══ 1b. LIVE FRA HORMUZ-KALKULATOREN ══════════════════════════════ -->
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
-    <div style="background:var(--navy-lt);border:1px solid var(--border-md);border-radius:var(--radius);padding:10px 14px;text-align:center">
-      <div style="font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:4px">Brent topp</div>
-      <div style="font-size:20px;font-weight:700;color:var(--red)" id="dash-cr-brent">—</div>
+  <!-- ════════════════════════════════════════════════════════════════════
+       SCENARIOKONSEKVENSPANEL — dynamisk, umiddelbar visuell respons
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <div style="margin-bottom:20px">
+    <div style="font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin-bottom:10px">Konsekvenser — dynamisk fra kalkulatoren ovenfor</div>
+
+    <div style="display:flex;gap:8px" id="dash-sc-cols">
+
+      <!-- Scenario A -->
+      <div id="dash-sc-col-a" style="flex:1;border-radius:8px;overflow:hidden;cursor:pointer;transition:all .2s ease;border:2px solid transparent" onclick="scSelect('a');nav(document.querySelector('[data-panel=scenarier]'))">
+        <div style="background:linear-gradient(135deg,#14532D,#166534);color:white;padding:12px 14px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6">Scenario A</div>
+            <div style="font-size:22px;font-weight:800;line-height:1" id="dash-pA">20 %</div>
+          </div>
+          <div style="font-size:11px;font-weight:700;margin-bottom:8px">Rask oppløsning</div>
+          <div style="height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;margin-bottom:8px">
+            <div id="dash-fill-a" style="height:100%;background:rgba(255,255,255,.6);border-radius:2px;width:20%;transition:width .5s ease"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <div style="display:flex;justify-content:space-between;font-size:10px">
+              <span style="opacity:.55">Brent 12mnd</span><strong id="dash-sc-brent-a">—</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px">
+              <span style="opacity:.55">BNP-tap</span><strong id="dash-sc-bnp-a">—</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px">
+              <span style="opacity:.55">Normalisert</span><strong id="dash-sc-dur-a">—</strong>
+            </div>
+          </div>
+          <div style="margin-top:8px;font-size:9px;opacity:.6;border-top:1px solid rgba(255,255,255,.15);padding-top:6px" id="dash-sc-sub-a">Forhandlingsutgang</div>
+        </div>
+      </div>
+
+      <!-- Scenario B -->
+      <div id="dash-sc-col-b" style="flex:1;border-radius:8px;overflow:hidden;cursor:pointer;transition:all .2s ease;border:2px solid var(--amber)" onclick="scSelect('b');nav(document.querySelector('[data-panel=scenarier]'))">
+        <div style="background:linear-gradient(135deg,#78350F,#92400E);color:white;padding:12px 14px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6">Scenario B ★</div>
+            <div style="font-size:22px;font-weight:800;line-height:1" id="dash-pB">55 %</div>
+          </div>
+          <div style="font-size:11px;font-weight:700;margin-bottom:8px">Kronisk forstyrrelse</div>
+          <div style="height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;margin-bottom:8px">
+            <div id="dash-fill-b" style="height:100%;background:rgba(255,255,255,.6);border-radius:2px;width:55%;transition:width .5s ease"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <div style="display:flex;justify-content:space-between;font-size:10px">
+              <span style="opacity:.55">Brent 12mnd</span><strong id="dash-sc-brent-b">—</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px">
+              <span style="opacity:.55">BNP-tap</span><strong id="dash-sc-bnp-b">—</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px">
+              <span style="opacity:.55">Regime</span><strong id="dash-sc-dur-b">—</strong>
+            </div>
+          </div>
+          <div style="margin-top:8px;font-size:9px;opacity:.6;border-top:1px solid rgba(255,255,255,.15);padding-top:6px" id="dash-sc-sub-b">Yuan-tollregime</div>
+        </div>
+      </div>
+
+      <!-- Scenario C -->
+      <div id="dash-sc-col-c" style="flex:1;border-radius:8px;overflow:hidden;cursor:pointer;transition:all .2s ease;border:2px solid transparent" onclick="scSelect('c');nav(document.querySelector('[data-panel=scenarier]'))">
+        <div style="background:linear-gradient(135deg,#7F1D1D,#991B1B);color:white;padding:12px 14px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6">Scenario C</div>
+            <div style="font-size:22px;font-weight:800;line-height:1" id="dash-pC">25 %</div>
+          </div>
+          <div style="font-size:11px;font-weight:700;margin-bottom:8px">Systemkollaps</div>
+          <div style="height:3px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden;margin-bottom:8px">
+            <div id="dash-fill-c" style="height:100%;background:rgba(255,255,255,.6);border-radius:2px;width:25%;transition:width .5s ease"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <div style="display:flex;justify-content:space-between;font-size:10px">
+              <span style="opacity:.55">Brent 12mnd</span><strong id="dash-sc-brent-c">—</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px">
+              <span style="opacity:.55">BNP-tap</span><strong id="dash-sc-bnp-c">—</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px">
+              <span style="opacity:.55">Hormuz</span><strong id="dash-sc-dur-c">—</strong>
+            </div>
+          </div>
+          <div style="margin-top:8px;font-size:9px;opacity:.6;border-top:1px solid rgba(255,255,255,.15);padding-top:6px" id="dash-sc-sub-c">NDS Simultaneity</div>
+        </div>
+      </div>
+
     </div>
-    <div style="background:var(--navy-lt);border:1px solid var(--border-md);border-radius:var(--radius);padding:10px 14px;text-align:center">
-      <div style="font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:4px">BNP-effekt kumulativ <span class="tt-trigger" data-tt="bnp-tooltip" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:rgba(30,60,120,.2);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:2px;vertical-align:middle">?</span></div>
-      <div style="font-size:20px;font-weight:700;color:var(--red)" id="dash-cr-gdp">—</div>
-    </div>
-    <div style="background:var(--navy-lt);border:1px solid var(--border-md);border-radius:var(--radius);padding:10px 14px;text-align:center">
-      <div style="font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:4px">KPI-effekt <span class="tt-trigger" data-tt="tt-kpi" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:rgba(30,60,120,.2);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:2px;vertical-align:middle">?</span></div>
-      <div style="font-size:20px;font-weight:700;color:var(--amber)" id="dash-cr-cpi">—</div>
-    </div>
-    <div style="background:var(--navy-lt);border:1px solid var(--border-md);border-radius:var(--radius);padding:10px 14px;text-align:center">
-      <div style="font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:4px">Resesjonsrisiko</div>
-      <div style="font-size:20px;font-weight:700" id="dash-cr-risk">—</div>
-      <div style="font-size:8px;color:var(--faint);margin-top:2px"><a href="#" onclick="nav(document.querySelector('[data-panel=hormuz]'));return false" style="color:var(--navy-mid);text-decoration:none">Juster i Hormuz →</a></div>
-    </div>
+    <div style="text-align:right;margin-top:6px;font-size:9px;color:var(--faint)">Klikk på et scenario for full analyse → <a href="#" onclick="nav(document.querySelector('[data-panel=scenarier]'));return false" style="color:var(--navy-mid);text-decoration:none;font-weight:600">Scenarioanalyse</a></div>
   </div>
 
+  <!-- ════════════════════════════════════════════════════════════════════
+       SYSTEMSTATUS + NØKKELTALL + HENDELSER + GOODSPEED
+  ═══════════════════════════════════════════════════════════════════════ -->
 
-
-  <!-- ══ 3. TRE KOLONNER: NØKKELTALL | HENDELSER | GOODSPEED+MIRAN ═══════ -->
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
+  <!-- Tre kolonner: Nøkkeltall | Hendelser | Goodspeed+Miran -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px">
 
     <!-- Nøkkeltall -->
-    <div class="card" style="margin-bottom:0;padding:14px 16px">
-      <div class="section-label" style="margin-top:0">Nøkkeltall <span class="tt-trigger" data-tt="tt-nokkeltall" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-      <div style="display:flex;flex-direction:column;gap:5px">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:11px;color:var(--muted)">Fed-rente</span>
-          <span style="font-size:12px;font-weight:600;color:var(--text)">3,50–3,75 %</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:11px;color:var(--muted)">ECB-rente</span>
-          <span style="font-size:12px;font-weight:600;color:var(--text)">2,00 %</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:11px;color:var(--muted)">US KPI (feb.)</span>
-          <span style="font-size:12px;font-weight:600;color:var(--amber)">2,4 %</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:11px;color:var(--muted)">Brent (live)</span>
-          <span style="font-size:12px;font-weight:600;color:var(--red)" id="kn-brent">— $</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:11px;color:var(--muted)">WTI (live)</span>
-          <span style="font-size:12px;font-weight:600;color:var(--red)" id="kn-wti">— $</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:11px;color:var(--muted)">Hormuz stengt</span>
-          <span style="font-size:12px;font-weight:600;color:var(--red)" id="kn-hormuz-dag">30+ dager</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:4px 0">
-          <span style="font-size:11px;color:var(--muted)">VIX (live)</span>
-          <span style="font-size:12px;font-weight:600" id="kn-vix">—</span>
-        </div>
+    <div class="card" style="margin-bottom:0;padding:12px 14px">
+      <div class="section-label" style="margin-top:0;margin-bottom:10px">Nøkkeltall <span class="tt-trigger" data-tt="tt-nokkeltall" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">Fed-rente</span><span style="font-size:12px;font-weight:600">3,50–3,75 %</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">ECB-rente</span><span style="font-size:12px;font-weight:600">2,00 %</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">US KPI (feb.)</span><span style="font-size:12px;font-weight:600;color:var(--amber)">2,4 %</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">Brent (live)</span><span style="font-size:12px;font-weight:600;color:var(--red)" id="kn-brent">— $</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">WTI (live)</span><span style="font-size:12px;font-weight:600;color:var(--red)" id="kn-wti">— $</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">Hormuz stengt</span><span style="font-size:12px;font-weight:600;color:var(--red)" id="kn-hormuz-dag">30+ dager</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:3px 0"><span style="font-size:11px;color:var(--muted)">VIX (live)</span><span style="font-size:12px;font-weight:600" id="kn-vix">—</span></div>
       </div>
     </div>
 
-    <!-- Siste hendelser — dynamisk RSS -->
-    <div class="card" style="margin-bottom:0;padding:14px 16px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <!-- Siste hendelser -->
+    <div class="card" style="margin-bottom:0;padding:12px 14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
         <div class="section-label" style="margin-top:0;margin-bottom:0">Siste hendelser <span class="tt-trigger" data-tt="tt-hendelser" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div style="display:flex;align-items:center;gap:4px">
-          <div style="width:6px;height:6px;border-radius:50%;background:#C53030;animation:pulse 2s infinite"></div>
-          <span style="font-size:9px;color:var(--faint)" id="dash-news-status">Henter...</span>
-        </div>
+        <div style="display:flex;align-items:center;gap:4px"><div style="width:6px;height:6px;border-radius:50%;background:#C53030;animation:pulse 2s infinite"></div><span style="font-size:9px;color:var(--faint)" id="dash-news-status">Henter...</span></div>
       </div>
       <div id="dash-news-feed" style="display:flex;flex-direction:column;gap:0">
         <div class="dash-news-static">
-          <div style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
-            <span style="font-size:9px;font-weight:600;color:var(--amber);white-space:nowrap;padding-top:2px;min-width:52px;text-align:right">31. mars</span>
-            <span style="font-size:11px;color:var(--text);line-height:1.4">Trump: exit-signaler · Hegseth: ikke USAs ansvar</span>
-          </div>
-          <div style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
-            <span style="font-size:9px;font-weight:600;color:var(--navy);white-space:nowrap;padding-top:2px;min-width:52px;text-align:right">18–19. mars</span>
-            <span style="font-size:11px;color:var(--text);line-height:1.4">Fed og ECB holder renten</span>
-          </div>
-          <div style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
-            <span style="font-size:9px;font-weight:600;color:var(--red);white-space:nowrap;padding-top:2px;min-width:52px;text-align:right">4. mars</span>
-            <span style="font-size:11px;color:var(--text);line-height:1.4">Hormuz stengt · Brent +55 %</span>
-          </div>
-          <div style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
-            <span style="font-size:9px;font-weight:600;color:var(--red);white-space:nowrap;padding-top:2px;min-width:52px;text-align:right">28. feb.</span>
-            <span style="font-size:11px;color:var(--text);line-height:1.4">Operation Epic Fury · Khamenei drept</span>
-          </div>
-          <div style="display:flex;gap:8px;align-items:flex-start;padding:5px 0">
-            <span style="font-size:9px;font-weight:600;color:var(--muted);white-space:nowrap;padding-top:2px;min-width:52px;text-align:right">Jun. 2025</span>
-            <span style="font-size:11px;color:var(--text);line-height:1.4">Midnight Hammer · Irans kjerneanlegg</span>
-          </div>
+          <div style="display:flex;gap:8px;align-items:flex-start;padding:4px 0;border-bottom:1px solid var(--border)"><span style="font-size:9px;font-weight:600;color:var(--amber);white-space:nowrap;padding-top:2px;min-width:52px;text-align:right">31. mars</span><span style="font-size:11px;color:var(--text);line-height:1.4">Trump: exit-signaler · Hegseth: ikke USAs ansvar</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;padding:4px 0;border-bottom:1px solid var(--border)"><span style="font-size:9px;font-weight:600;color:var(--navy);white-space:nowrap;padding-top:2px;min-width:52px;text-align:right">18–19. mars</span><span style="font-size:11px;color:var(--text);line-height:1.4">Fed og ECB holder renten</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;padding:4px 0;border-bottom:1px solid var(--border)"><span style="font-size:9px;font-weight:600;color:var(--red);white-space:nowrap;padding-top:2px;min-width:52px;text-align:right">4. mars</span><span style="font-size:11px;color:var(--text);line-height:1.4">Hormuz stengt · Brent +55 %</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;padding:4px 0;border-bottom:1px solid var(--border)"><span style="font-size:9px;font-weight:600;color:var(--red);white-space:nowrap;padding-top:2px;min-width:52px;text-align:right">28. feb.</span><span style="font-size:11px;color:var(--text);line-height:1.4">Operation Epic Fury · Khamenei drept</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start;padding:4px 0"><span style="font-size:9px;font-weight:600;color:var(--muted);white-space:nowrap;padding-top:2px;min-width:52px;text-align:right">Jun. 2025</span><span style="font-size:11px;color:var(--text);line-height:1.4">Midnight Hammer · Irans kjerneanlegg</span></div>
         </div>
       </div>
     </div>
 
-    <!-- Goodspeed-meter + Miran -->
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div class="card" style="margin-bottom:0;padding:14px 16px;flex:1">
-        <div class="section-label" style="margin-top:0">Goodspeed resesjonsmeter <span class="tt-trigger" data-tt="tt-gs-meter" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div style="display:flex;flex-direction:column;gap:7px">
+    <!-- Goodspeed + Miran -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="card" style="margin-bottom:0;padding:12px 14px;flex:1">
+        <div class="section-label" style="margin-top:0;margin-bottom:8px">Goodspeed resesjonsmeter <span class="tt-trigger" data-tt="tt-gs-meter" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
+        <div style="display:flex;flex-direction:column;gap:6px">
           <div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:3px">
-              <span style="font-size:10px;color:var(--text)">Energisjokk</span>
-              <span style="font-size:10px;font-weight:600" id="gs-t1-lbl" style="color:var(--red)">Aktiv</span>
-            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:10px;color:var(--text)">Energisjokk</span><span style="font-size:10px;font-weight:600" id="gs-t1-lbl" style="color:var(--red)">Aktiv</span></div>
             <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div id="gs-t1-bar" style="height:100%;border-radius:2px;background:var(--red);transition:width .6s ease;width:90%"></div></div>
           </div>
           <div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:3px">
-              <span style="font-size:10px;color:var(--text)">Krig / geopolitisk</span>
-              <span style="font-size:10px;font-weight:600" id="gs-t2-lbl" style="color:var(--red)">Aktiv</span>
-            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:10px;color:var(--text)">Krig / geopolitisk</span><span style="font-size:10px;font-weight:600" id="gs-t2-lbl" style="color:var(--red)">Aktiv</span></div>
             <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div id="gs-t2-bar" style="height:100%;border-radius:2px;background:var(--red);transition:width .6s ease;width:85%"></div></div>
           </div>
           <div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:3px">
-              <span style="font-size:10px;color:var(--text)">Kredittkontraksjon</span>
-              <span style="font-size:10px;font-weight:600" id="gs-t3-lbl" style="color:var(--amber)">Bygger opp</span>
-            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:10px;color:var(--text)">Kredittkontraksjon</span><span style="font-size:10px;font-weight:600" id="gs-t3-lbl" style="color:var(--amber)">Bygger opp</span></div>
             <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div id="gs-t3-bar" style="height:100%;border-radius:2px;background:var(--amber);transition:width .6s ease;width:55%"></div></div>
           </div>
-          <div style="margin-top:4px;padding-top:8px;border-top:1px solid var(--border)">
-            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-              <span style="font-size:10px;font-weight:600;color:var(--text)">Samlet resesjonsrisiko</span>
-              <span style="font-size:11px;font-weight:700" id="gs-total-lbl">Kritisk</span>
-            </div>
+          <div style="margin-top:2px;padding-top:6px;border-top:1px solid var(--border)">
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:10px;font-weight:600">Samlet resesjonsrisiko</span><span style="font-size:11px;font-weight:700" id="gs-total-lbl">Kritisk</span></div>
             <div style="height:5px;background:var(--border);border-radius:3px;overflow:hidden"><div id="gs-total-bar-dash" style="height:100%;border-radius:3px;background:var(--red);transition:width .6s ease;width:82%"></div></div>
           </div>
         </div>
       </div>
-      <div class="card" style="margin-bottom:0;padding:12px 16px">
-        <div class="section-label" style="margin-top:0">Mirans smale sti <span class="tt-trigger" data-tt="tt-miran-sti" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div style="display:flex;flex-direction:column;gap:3px">
-          <div style="display:flex;justify-content:space-between"><span style="font-size:10.5px;color:var(--muted)">Valutakurskompensasjon</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
-          <div style="display:flex;justify-content:space-between"><span style="font-size:10.5px;color:var(--muted)">Billig energi</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
-          <div style="display:flex;justify-content:space-between"><span style="font-size:10.5px;color:var(--muted)">Gradvis implementering</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
-          <div style="display:flex;justify-content:space-between"><span style="font-size:10.5px;color:var(--muted)">Fed-koordinering</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
-          <div style="display:flex;justify-content:space-between"><span style="font-size:10.5px;color:var(--muted)">Stabile makroforhold</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
-          <div style="margin-top:4px;padding-top:4px;border-top:1px solid var(--border);font-size:9px;color:var(--faint)">5/5 forutsetninger brutt · Miran (2024)</div>
+      <div class="card" style="margin-bottom:0;padding:10px 14px">
+        <div class="section-label" style="margin-top:0;margin-bottom:6px">Mirans smale sti <span class="tt-trigger" data-tt="tt-miran-sti" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:var(--muted)">Valutakurskompensasjon</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:var(--muted)">Billig energi</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:var(--muted)">Gradvis implementering</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:var(--muted)">Fed-koordinering</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:var(--muted)">Stabile makroforhold</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
+          <div style="margin-top:3px;font-size:9px;color:var(--faint);border-top:1px solid var(--border);padding-top:3px">5/5 brutt · Miran (2024)</div>
         </div>
       </div>
     </div>
-
   </div>
 
-  <!-- ══ 4. MODELLSTATUS — dynamisk fra Hormuz-kalkulator ════════════════ -->
-  <div style="margin-bottom:16px">
-    <div class="section-label">Modellstatus — holder de analytiske forutsetningene? <span class="tt-trigger" data-tt="tt-gs-tre" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-
-    <!-- 4a. Goodspeed triggers — tre kort -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">
-      <div class="stat-card" id="ms-gs1" style="border-left:3px solid var(--red)">
-        <div class="stat-label">Goodspeed trigger 1 — Energisjokk</div>
-        <div class="stat-value" id="ms-gs1-val" style="color:var(--red);font-size:15px">● Aktiv</div>
-        <div class="stat-sub" id="ms-gs1-sub">Brent <span id="ms-brent-live">—</span> · Hormuz dag <span id="ms-hormuz-dag">30+</span></div>
-      </div>
-      <div class="stat-card" id="ms-gs2" style="border-left:3px solid var(--red)">
-        <div class="stat-label">Goodspeed trigger 2 — Krig</div>
-        <div class="stat-value" style="color:var(--red);font-size:15px">● Aktiv</div>
-        <div class="stat-sub">USA/Iran-konflikt · Hegseth exit-signal</div>
-      </div>
-      <div class="stat-card" id="ms-gs3" style="border-left:3px solid var(--amber)">
-        <div class="stat-label">Goodspeed trigger 3 — Kreditt</div>
-        <div class="stat-value" id="ms-gs3-val" style="color:var(--amber);font-size:15px">● Bygger opp</div>
-        <div class="stat-sub">Fed handlingslam · PCE <span id="ms-pce">2,7</span> % hindrer kutt</div>
-      </div>
+  <!-- Goodspeed-triggere (modellstatus) -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">
+    <div class="stat-card" id="ms-gs1" style="border-left:3px solid var(--red);padding:10px 12px">
+      <div class="stat-label">Goodspeed trigger 1 — Energisjokk</div>
+      <div class="stat-value" id="ms-gs1-val" style="color:var(--red);font-size:14px">● Aktiv</div>
+      <div class="stat-sub">Brent <span id="ms-brent-live">—</span> · Hormuz dag <span id="ms-hormuz-dag">30+</span></div>
     </div>
-
-    <!-- 4b. Hormuz + Fishman — to kort -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-      <div class="stat-card" style="border-left:3px solid var(--red)">
-        <div class="stat-label">Hormuz-stredet</div>
-        <div class="stat-value" style="color:var(--red);font-size:15px">● Stengt</div>
-        <div class="stat-sub">Dag 30+ per <span id="ms-dato">2. april 2026</span> · Iran erklærte 4. mars · <span id="ms-exit">USA exit-signal aktiv</span></div>
-      </div>
-      <div class="stat-card" style="border-left:3px solid var(--amber)">
-        <div class="stat-label">Fishmans asymmetri <span class="tt-trigger" data-tt="tt-fishman-status" style="display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:3px;vertical-align:middle">?</span></div>
-        <div class="stat-value" style="color:var(--amber);font-size:15px">● Strukturell skade</div>
-        <div class="stat-sub">Yuan-tollregime etablert · de-dollarisering akselererer · Perera-skader irreversible</div>
-      </div>
+    <div class="stat-card" style="border-left:3px solid var(--red);padding:10px 12px">
+      <div class="stat-label">Goodspeed trigger 2 — Krig</div>
+      <div class="stat-value" style="color:var(--red);font-size:14px">● Aktiv</div>
+      <div class="stat-sub">USA/Iran · Hegseth exit-signal</div>
     </div>
-
+    <div class="stat-card" id="ms-gs3" style="border-left:3px solid var(--amber);padding:10px 12px">
+      <div class="stat-label">Goodspeed trigger 3 — Kreditt</div>
+      <div class="stat-value" id="ms-gs3-val" style="color:var(--amber);font-size:14px">● Bygger opp</div>
+      <div class="stat-sub">Fed handlingslam · PCE <span id="ms-pce">2,7</span> % hindrer kutt</div>
+    </div>
   </div>
 
-  <!-- ══ 5. KJERNEDIAGNOSE ══════════════════════════════════════════════ -->
+  <!-- Hormuz + Fishman -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+    <div class="stat-card" style="border-left:3px solid var(--red);padding:10px 12px">
+      <div class="stat-label">Hormuz-stredet</div>
+      <div class="stat-value" style="color:var(--red);font-size:14px">● Stengt</div>
+      <div class="stat-sub">Dag 30+ per <span id="ms-dato">2. april 2026</span> · 4. mars 2026 · <span id="ms-exit">USA exit-signal aktiv</span></div>
+    </div>
+    <div class="stat-card" style="border-left:3px solid var(--amber);padding:10px 12px">
+      <div class="stat-label">Fishmans asymmetri <span class="tt-trigger" data-tt="tt-fishman-status" style="display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:3px;vertical-align:middle">?</span></div>
+      <div class="stat-value" style="color:var(--amber);font-size:14px">● Strukturell skade</div>
+      <div class="stat-sub">Yuan-tollregime etablert · de-dollarisering · Perera-skader irreversible</div>
+    </div>
+  </div>
+
+  <!-- Kjernediagnose -->
   <div class="diag-box" style="margin-bottom:0">
     <div class="diag-label">Kjernediagnose <span class="tt-trigger" data-tt="tt-kjernediagnose" style="display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);font-size:7px;font-weight:700;cursor:help;border:1px solid rgba(255,255,255,.25);margin-left:4px;vertical-align:middle">?</span></div>
     Rasjonelle beslutninger på enkeltaktørnivå produserer irrasjonelle resultater på systemnivå. Mirans plan forutsetter billig energi. National Defense Strategy (2026) autoriserer operasjoner som utløser et energisjokk. National Security Strategy (2026) søker energidominans, men undergraver den gjennom Hormuz-stengningen. Vi befinner oss i et strukturelt skifte av den globale ordenen som vil ta fem til ti år å konsolidere.
@@ -5299,6 +5401,70 @@ function syncDashboard() {
   // Brent live i Goodspeed trigger 1-kortet
   var msBrent = document.getElementById('ms-brent-live');
   if (msBrent && window._brentLive) msBrent.textContent = '~' + Math.round(window._brentLive) + ' $';
+
+  // ── SYNK DASHBOARD-SCENARIENE ────────────────────────────────────────
+  // Henter verdier fra scenario-elementene og speiler i dashboard
+  function ds(src, dst) {
+    var s = document.getElementById(src);
+    var d = document.getElementById(dst);
+    if (s && d) d.textContent = s.textContent;
+  }
+  ds('sc-pA', 'dash-pA'); ds('sc-pB', 'dash-pB'); ds('sc-pC', 'dash-pC');
+  ds('sc-a-brent', 'dash-sc-brent-a');
+  ds('sc-b-brent', 'dash-sc-brent-b');
+  ds('sc-c-brent', 'dash-sc-brent-c');
+  ds('sc-a-bnp', 'dash-sc-bnp-a');
+  ds('sc-b-bnp', 'dash-sc-bnp-b');
+  ds('sc-c-bnp', 'dash-sc-bnp-c');
+  ds('sc-a-dur', 'dash-sc-dur-a');
+  ds('sc-b-dur', 'dash-sc-dur-b');
+  ds('sc-c-dur', 'dash-sc-dur-c');
+  ds('sc-a-trigger-short', 'dash-sc-sub-a');
+  ds('sc-b-trigger-short', 'dash-sc-sub-b');
+  ds('sc-c-trigger-short', 'dash-sc-sub-c');
+
+  // Sannsynlighetsbarer
+  ['a','b','c'].forEach(function(s) {
+    var pEl = document.getElementById('sc-p' + s.toUpperCase());
+    var barEl = document.getElementById('dash-fill-' + s);
+    if (pEl && barEl) barEl.style.width = pEl.textContent.replace(' %','') + '%';
+  });
+
+  // Fremhev mest sannsynlig i dashboard-kolonnene
+  var pA = parseInt((document.getElementById('sc-pA')||{}).textContent)||20;
+  var pB = parseInt((document.getElementById('sc-pB')||{}).textContent)||55;
+  var pC = parseInt((document.getElementById('sc-pC')||{}).textContent)||25;
+  var ml = pA>pB&&pA>pC?'a':pB>=pA&&pB>=pC?'b':'c';
+  var colColors = {a:'#14532D',b:'var(--amber)',c:'var(--red)'};
+
+  ['a','b','c'].forEach(function(s) {
+    var col = document.getElementById('dash-sc-col-' + s);
+    if (!col) return;
+    col.style.border = s === ml ? '2px solid ' + colColors[s] : '2px solid transparent';
+    col.style.transform = s === ml ? 'translateY(-2px)' : '';
+    col.style.boxShadow = s === ml ? '0 4px 16px rgba(0,0,0,.15)' : '';
+  });
+
+  // Oppdater scenario-navn og sannsynlighet i systemstatus-banner
+  var scNames = {a:'A — Rask oppløsning', b:'B — Kronisk forstyrrelse', c:'C — Systemkollaps'};
+  var scProbs = {a:pA, b:pB, c:pC};
+  var nameEl = document.getElementById('dash-scenario-name');
+  var probEl = document.getElementById('dash-scenario-prob');
+  if (nameEl) nameEl.textContent = scNames[ml];
+  if (probEl) probEl.textContent = scProbs[ml] + ' % sannsynlighet · Perera (2026)';
+  var scColors = {a:'#14532D', b:'var(--amber)', c:'var(--red)'};
+  if (nameEl) nameEl.style.color = scColors[ml];
+
+  // Oppdater ★-label i dashboard-kolonner
+  ['a','b','c'].forEach(function(s) {
+    var col = document.getElementById('dash-sc-col-' + s);
+    if (!col) return;
+    var lbl = col.querySelector('[style*="opacity:.6"]');
+    if (lbl && lbl.textContent.startsWith('Scenario')) {
+      var base = s==='a'?'Scenario A':s==='b'?'Scenario B':'Scenario C';
+      lbl.textContent = base + (s===ml?' ★':'');
+    }
+  });
 }
 
 // Kjør sync etter calcHormuz og etter markedsdata er lastet
