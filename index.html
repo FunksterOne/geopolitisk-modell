@@ -3640,7 +3640,8 @@ function calcHormuz() {
   document.getElementById('out-gdp').textContent = '−' + gdpBase.toFixed(1) + ' pp';
 
   const cm       = conflictMult[conflict];
-  const baseOil  = window._brentLive || 108; // Brent live — hentes ved oppstart
+  const baseOil  = window._brentLive || null;
+  if (!baseOil) return; // Vent til live-pris er hentet
   const peakOil  = Math.round(baseOil + oilShock * cm);
 
   // Derived outputs used in multiple places
@@ -4255,11 +4256,10 @@ function fetchBrent() {
     var statEl = document.getElementById('live-brent-stat');
     var srcEl  = document.getElementById('live-brent-src');
     if (!price) {
-      // Alle kilder feilet — vis statisk siste kjente verdi
-      window._brentLive = 108;
-      if (lbl)    lbl.textContent  = '~108 $ (sist kjent)';
-      if (statEl) statEl.textContent = '~108 $/fat';
-      if (srcEl)  srcEl.textContent  = 'Live-henting utilgjengelig';
+      window._brentLive = null;
+      if (lbl)    lbl.textContent  = '';
+      if (statEl) statEl.textContent = '';
+      if (srcEl)  srcEl.textContent  = '';
       return;
     }
     window._brentLive = price;
