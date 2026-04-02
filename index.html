@@ -791,7 +791,7 @@ input[type=range]::-webkit-slider-thumb {
       <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--amber)">🇨🇳 Kinas posisjon</span>
     </button>
     <button onclick="openKapitalModal()" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--green-lt);border:1px solid rgba(20,83,45,.25);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
-      <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--green)">★ Investeringsråd</span>
+      <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--green)">★ Investeringstips</span>
     </button>
     <div style="width:1px;height:18px;background:var(--border);flex-shrink:0"></div>
     <button onclick="nav('panel-makro')" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.2);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
@@ -2227,7 +2227,7 @@ input[type=range]::-webkit-slider-thumb {
     </div>
 
     <div class="relevance-box">
-      <div class="relevance-label">Analytisk nøkkelpunkt — Goodspeed · Taleb · investeringsråd</div>
+      <div class="relevance-label">Analytisk nøkkelpunkt — Goodspeed · Taleb · investeringstips</div>
       Goodspeed dokumenterer at energisjokk er involvert i 10 av 12 resesjoner i USA siden 1945. Hormuz-stengningen er nøyaktig den typen brå og diskontinuerlig energisjokk han beskriver — ikke en gradvis prisstigning, men en strukturell forstyrrelse av forsyningskjeden. Dallas Feds estimat på −2,9 prosentpoeng annualisert BNP-effekt ved ett kvartal stengning er en Goodspeed-type-1-hendelse. Talebs poeng: ingen av de eksisterende modellene er kalibrert for dette. March 2026 CPI-dataene (2,4 %) reflekterer ennå ikke Hormuz-effekten — det vil komme i april og mai-rapportene.
     </div>
   </div>
@@ -4237,7 +4237,7 @@ window.nav = function(el) {
 
 <div class="tt-box" id="tt-lag2">
   <h4>Lag 2 — Spesifikke implikasjoner</h4>
-  Detaljerte investeringsråd per tema, forankret i Perera-data og de seks analytiske rammeverkene. Hvert tema identifiserer strukturelle vinnere, tapere og asymmetriske posisjoner basert på empiriske data — ikke generelle råd.
+  Detaljerte investeringstips per tema, forankret i Perera-data og de seks analytiske rammeverkene. Hvert tema identifiserer strukturelle vinnere, tapere og asymmetriske posisjoner basert på empiriske data — ikke generelle råd.
 </div>
 
 <div class="tt-box" id="tt-strategi-diag">
@@ -6049,7 +6049,7 @@ window.nav = function(el) {
     <!-- Footer -->
     <div id="sc-modal-footer" class="popup-footer">
       <span class="popup-footer-note">Perera (2026) · Dallas Fed (mars 2026) · Goodspeed (2025)</span>
-      <button class="popup-footer-btn" onclick="openKapitalModal();closeScenarioModal()">Se Investeringsråd →</button>
+      <button class="popup-footer-btn" onclick="openKapitalModal();closeScenarioModal()">Se Investeringstips →</button>
     </div>
 
   </div><!-- /sc-modal -->
@@ -6618,7 +6618,7 @@ function syncScenarioModalParams() {
     <!-- Footer -->
     <div id="hz-modal-footer" class="popup-footer">
       <span class="popup-footer-note">Dallas Fed (mars 2026) · Goodspeed (2025) · Kilian (2009) · ECB (mars 2026)</span>
-      <button class="popup-footer-btn" onclick="openKapitalModal();closeHormuzModal()">Se Investeringsråd →</button>
+      <button class="popup-footer-btn" onclick="openKapitalModal();closeHormuzModal()">Se Investeringstips →</button>
     </div>
 
   </div><!-- /hz-modal -->
@@ -7238,7 +7238,7 @@ function drawHzmGraf() {
     <!-- Footer -->
     <div class="popup-footer">
       <span class="popup-footer-note">USGS · BloombergNEF · IEA Critical Minerals Report 2024 · SMM · LME · Benchmark MI · NDS (2026) · NSS (2026)</span>
-      <button class="popup-footer-btn" onclick="openKapitalModal();closeKinaModal()">Se Investeringsråd →</button>
+      <button class="popup-footer-btn" onclick="openKapitalModal();closeKinaModal()">Se Investeringstips →</button>
     </div>
 
   </div><!-- /kina-modal -->
@@ -7284,13 +7284,13 @@ function kinaTab(tab) {
     <!-- Header -->
     <div class="popup-head">
       <div class="popup-head-left">
-        <div class="popup-head-title">Investeringsråd</div>
+        <div class="popup-head-title">Investeringstips</div>
         <div class="popup-head-params">
           <div class="popup-head-pill">Taleb barbell: <strong style="color:#FCA5A5">80/20</strong></div>
           <div class="popup-head-pill">Diagnose: <strong style="color:#FCA5A5">Alle tre triggere aktive</strong></div>
           <div class="popup-head-pill">Markedsregime: <strong style="color:#FCA5A5">Extremistan</strong></div>
         </div>
-        <div class="popup-head-sub">To analytiske lag · Perera-data og seks rammeverk · Konfidensielt · Ikke investeringsrådgivning</div>
+        <div class="popup-head-sub">To analytiske lag · Perera-data og seks rammeverk · Konfidensielt · Ikke investeringstipsgivning</div>
       </div>
       <button class="popup-close-btn" onclick="closeKapitalModal()">✕</button>
     </div>
@@ -7496,7 +7496,7 @@ function kinaTab(tab) {
 
     <!-- Footer -->
     <div class="popup-footer">
-      <span class="popup-footer-note">Perera (2026) · Taleb (2007) · Goodspeed (2025) · Halvard Nordang — Affectum AS · Ikke investeringsrådgivning <span class="tt-trigger" data-tt="tt-lag2" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></span>
+      <span class="popup-footer-note">Perera (2026) · Taleb (2007) · Goodspeed (2025) · Halvard Nordang — Affectum AS · Ikke investeringstipsgivning <span class="tt-trigger" data-tt="tt-lag2" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></span>
       <button class="popup-footer-btn" onclick="closeKapitalModal()">Lukk</button>
     </div>
 
@@ -7754,7 +7754,7 @@ function kapitalTab(tab) {
           <div class="g-intro-card">
             <div class="g-intro-card-icon">⚠️</div>
             <div class="g-intro-card-title">Formål</div>
-            <div class="g-intro-card-body">Ikke en prediksjon — en strukturert tilnærming til dyp usikkerhet. Konfidensielt · Ikke investeringsrådgivning · Halvard Nordang, Affectum AS.</div>
+            <div class="g-intro-card-body">Ikke en prediksjon — en strukturert tilnærming til dyp usikkerhet. Konfidensielt · Ikke investeringstipsgivning · Halvard Nordang, Affectum AS.</div>
           </div>
         </div>
 
@@ -7962,7 +7962,7 @@ function kapitalTab(tab) {
             <div style="background:rgba(20,83,45,.08);border:1px solid rgba(20,83,45,.25);border-radius:10px;padding:14px 16px">
               <div style="font-size:20px;margin-bottom:6px">🎯</div>
               <div style="font-size:11px;font-weight:700;color:#6EE7B7;margin-bottom:4px">Scenario-sannsynligheter</div>
-              <div style="font-size:11px;color:rgba(255,255,255,.6);line-height:1.6">A/B/C beregnes automatisk. Brukes videre av Investeringsråd-popup til å beregne vektet porteføljeanbefaling.</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.6);line-height:1.6">A/B/C beregnes automatisk. Brukes videre av Investeringstips-popup til å beregne vektet porteføljeanbefaling.</div>
             </div>
           </div>
 
@@ -8004,8 +8004,8 @@ function kapitalTab(tab) {
           <div class="g-use-card">
             <div class="g-use-step">4</div>
             <div>
-              <div class="g-use-title">Se Investeringsråd</div>
-              <div class="g-use-body">★ Investeringsråd viser porteføljefordelingen basert på scenario-sannsynlighetene. Endre kalkulatoren → sannsynlighetene endres → vektet anbefaling oppdateres automatisk.</div>
+              <div class="g-use-title">Se Investeringstips</div>
+              <div class="g-use-body">★ Investeringstips viser porteføljefordelingen basert på scenario-sannsynlighetene. Endre kalkulatoren → sannsynlighetene endres → vektet anbefaling oppdateres automatisk.</div>
             </div>
           </div>
           <div class="g-use-card">
@@ -8029,7 +8029,7 @@ function kapitalTab(tab) {
           <div style="font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,100,100,.7);margin-bottom:8px">⚠ Viktig om modellen</div>
           <div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.75">
             Dette er en <strong style="color:#fff">analytisk syntese</strong>, ikke en prediksjon. Modellen er kalibrert mot peer-reviewed forskning (Dallas Fed 2026, Kilian 2008, Hamilton 2009, Perera 2026), men det finnes ingen fasit for hva som skjer videre. Taleb har rett: vi lever i Extremistan, og modeller som overbestemmer fremtiden er farligere enn modeller som anerkjenner usikkerheten.<br><br>
-            <span style="color:rgba(255,255,255,.45)">Halvard Nordang · Affectum AS · Konfidensielt · Ikke investeringsrådgivning</span>
+            <span style="color:rgba(255,255,255,.45)">Halvard Nordang · Affectum AS · Konfidensielt · Ikke investeringstipsgivning</span>
           </div>
         </div>
       </div>
