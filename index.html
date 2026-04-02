@@ -680,6 +680,42 @@ input[type=range]::-webkit-slider-thumb {
   .sidebar-footer { display: none; }
 }
 </style>
+<style>
+/* ── TOOLTIP ── */
+.tt-box {
+  position: fixed;
+  z-index: 9999;
+  max-width: 340px;
+  background: var(--navy);
+  color: white;
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  font-size: 11.5px;
+  line-height: 1.65;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .15s ease;
+}
+.tt-box.visible { opacity: 1; }
+.tt-box h4 {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+  margin-bottom: 6px;
+}
+.tt-box table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 10.5px;
+}
+.tt-box td { padding: 3px 6px 3px 0; vertical-align: top; }
+.tt-box td:last-child { color: rgba(255,255,255,.75); }
+.tt-box .tt-sep { border-top: 1px solid rgba(255,255,255,.15); margin: 7px 0; }
+</style>
 </head>
 <body>
 
@@ -813,7 +849,7 @@ input[type=range]::-webkit-slider-thumb {
 
     <!-- Nøkkeltall -->
     <div class="card" style="margin-bottom:0;padding:14px 16px">
-      <div class="section-label" style="margin-top:0">Nøkkeltall</div>
+      <div class="section-label" style="margin-top:0">Nøkkeltall <span class="tt-trigger" data-tt="tt-nokkeltall" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
       <div style="display:flex;flex-direction:column;gap:6px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--border)">
           <span style="font-size:11px;color:var(--muted)">Fed-rente</span>
@@ -844,7 +880,7 @@ input[type=range]::-webkit-slider-thumb {
 
     <!-- Siste hendelser -->
     <div class="card" style="margin-bottom:0;padding:14px 16px">
-      <div class="section-label" style="margin-top:0">Siste hendelser</div>
+      <div class="section-label" style="margin-top:0">Siste hendelser <span class="tt-trigger" data-tt="tt-hendelser" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
       <div style="display:flex;flex-direction:column;gap:0">
         <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
           <span style="font-size:10px;font-weight:600;color:var(--amber);white-space:nowrap;padding-top:1px">31. mars</span>
@@ -876,7 +912,7 @@ input[type=range]::-webkit-slider-thumb {
     <!-- Goodspeed-meter + Miran -->
     <div style="display:flex;flex-direction:column;gap:12px">
       <div class="card" style="margin-bottom:0;padding:14px 16px;flex:1">
-        <div class="section-label" style="margin-top:0">Goodspeed resesjonsmeter</div>
+        <div class="section-label" style="margin-top:0">Goodspeed resesjonsmeter <span class="tt-trigger" data-tt="tt-gs-meter" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div style="display:flex;flex-direction:column;gap:7px">
           <div>
             <div style="display:flex;justify-content:space-between;margin-bottom:3px">
@@ -910,7 +946,7 @@ input[type=range]::-webkit-slider-thumb {
       </div>
 
       <div class="card" style="margin-bottom:0;padding:14px 16px">
-        <div class="section-label" style="margin-top:0">Mirans smale sti</div>
+        <div class="section-label" style="margin-top:0">Mirans smale sti <span class="tt-trigger" data-tt="tt-miran-sti" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div style="display:flex;flex-direction:column;gap:3px">
           <div style="display:flex;justify-content:space-between"><span style="font-size:10.5px;color:var(--muted)">Valutakurskompensasjon</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
           <div style="display:flex;justify-content:space-between"><span style="font-size:10.5px;color:var(--muted)">Billig energi</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
@@ -925,7 +961,7 @@ input[type=range]::-webkit-slider-thumb {
 
   <!-- 4. SYSTEMDIAGNOSE -->
   <div class="diag-box" style="margin-bottom:0">
-    <div class="diag-label">Kjernediagnose</div>
+    <div class="diag-label">Kjernediagnose <span class="tt-trigger" data-tt="tt-kjernediagnose" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
     Rasjonelle beslutninger på enkeltaktørnivå produserer irrasjonelle resultater på systemnivå. Mirans plan forutsetter billig energi. National Defense Strategy (2026) autoriserer operasjoner som utløser et energisjokk. National Security Strategy (2026) søker energidominans, men undergraver den gjennom Hormuz-stengningen. Liberation Day-tariffene (2. april 2026) legger et nytt simultant sjokk på toppen av Hormuz-krisen. Vi befinner oss i et strukturelt skifte av den globale ordenen som vil ta fem til ti år å konsolidere.
   </div>
 
@@ -1049,7 +1085,7 @@ input[type=range]::-webkit-slider-thumb {
       <div>
         <div class="slider-group">
           <div class="slider-meta">
-            <span class="slider-label">Stengningens varighet</span>
+            <span class="slider-label">Stengningens varighet <span class="tt-trigger" data-tt="tt-varighet" style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:9px;font-weight:700;cursor:help;flex-shrink:0;border:1px solid var(--border-md);margin-left:4px">?</span></span>
             <span class="slider-val" id="out-duration" style="font-size:15px">4 uker</span>
           </div>
           <input type="range" min="1" max="26" value="4" step="1" id="sl-duration" oninput="updateSliderLabel(this); debouncedCalc()">
@@ -1059,7 +1095,7 @@ input[type=range]::-webkit-slider-thumb {
         </div>
         <div class="slider-group" style="margin-bottom:0">
           <div class="slider-meta">
-            <span class="slider-label">Oljeprissjokk (utover Brent <span id="brent-base-lbl">~108 $</span>)</span>
+            <span class="slider-label">Oljeprissjokk (utover Brent <span id="brent-base-lbl">~108 $</span>) <span class="tt-trigger" data-tt="tt-oljepris" style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:9px;font-weight:700;cursor:help;flex-shrink:0;border:1px solid var(--border-md);margin-left:4px">?</span></span>
             <span class="slider-val" id="out-oil" style="font-size:15px">+13 $/fat</span>
           </div>
           <input type="range" min="0" max="115" value="13" step="1" id="sl-oil" oninput="updateSliderLabel(this); debouncedCalc()">
@@ -1071,7 +1107,11 @@ input[type=range]::-webkit-slider-thumb {
       <div>
         <div style="margin-bottom:18px">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
-            <span style="font-size:12.5px;color:var(--text)">BNP-effekt per kvartal <span style="font-size:10px;color:var(--faint)">(beregnet · Dallas Fed / Kilian)</span></span>
+            <span style="font-size:12.5px;color:var(--text);display:flex;align-items:center;gap:6px">
+              BNP-effekt per kvartal
+              <span style="font-size:10px;color:var(--faint)">(beregnet · Dallas Fed / Kilian)</span>
+              <span class="tt-trigger" data-tt="bnp-tooltip" style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:9px;font-weight:700;cursor:help;flex-shrink:0;border:1px solid var(--border-md)">?</span>
+            </span>
             <span style="font-size:15px;font-weight:600;color:var(--navy)" id="out-gdp">−2,9 pp</span>
           </div>
           <div style="height:5px;background:var(--border-md);border-radius:3px;overflow:hidden">
@@ -1083,7 +1123,7 @@ input[type=range]::-webkit-slider-thumb {
         </div>
         <div class="slider-group" style="margin-bottom:0">
           <div class="slider-meta">
-            <span class="slider-label">Konfliktnivå</span>
+            <span class="slider-label">Konfliktnivå <span class="tt-trigger" data-tt="tt-konflikt" style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:9px;font-weight:700;cursor:help;flex-shrink:0;border:1px solid var(--border-md);margin-left:4px">?</span></span>
             <span class="slider-val" id="out-conflict" style="font-size:15px">Begrenset</span>
           </div>
           <input type="range" min="1" max="3" value="1" step="1" id="sl-conflict" oninput="updateSliderLabel(this); debouncedCalc()">
@@ -1116,7 +1156,7 @@ input[type=range]::-webkit-slider-thumb {
       <div class="stat-value" id="cr-gdp" style="font-size:20px;color:var(--red)">−2,9 pp</div>
     </div>
     <div id="rb-cpi" class="stat-card" style="text-align:center">
-      <div class="stat-label">KPI-effekt</div>
+      <div class="stat-label">KPI-effekt <span class="tt-trigger" data-tt="tt-kpi" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:3px;vertical-align:middle">?</span></div>
       <div class="stat-value" id="cr-cpi" style="font-size:20px;color:var(--amber)">+0,4 pp</div>
     </div>
     <div id="rb-duration" class="stat-card" style="text-align:center">
@@ -1124,7 +1164,7 @@ input[type=range]::-webkit-slider-thumb {
       <div class="stat-value" id="cr-duration-out" style="font-size:20px">4 uker</div>
     </div>
     <div id="rb-risk" class="stat-card" style="text-align:center">
-      <div class="stat-label">Resesjonsrisiko</div>
+      <div class="stat-label">Resesjonsrisiko <span class="tt-trigger" data-tt="tt-resesjon" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:3px;vertical-align:middle">?</span></div>
       <div class="stat-value" id="cr-risk" style="font-size:20px;color:var(--red)">Høy</div>
     </div>
   </div>
@@ -1161,7 +1201,7 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 
   <!-- REGIONALE EFFEKTER -->
-  <div class="section-label">Regionale konsekvenser — differensiert eksponering</div>
+  <div class="section-label">Regionale konsekvenser — differensiert eksponering <span class="tt-trigger" data-tt="tt-regioner" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
     <div class="data-card" id="region-usa">
       <div class="dc-label">🇺🇸 USA</div>
@@ -1193,7 +1233,7 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 
   <!-- GOODSPEED TRIGGER-MÅLER -->
-  <div class="section-label">Goodspeeds resesjonstriggers — akkumulert intensitet</div>
+  <div class="section-label">Goodspeeds resesjonstriggers — akkumulert intensitet <span class="tt-trigger" data-tt="tt-goodspeed" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
   <div class="card" style="margin-bottom:14px">
     <div class="risk-row">
       <div class="risk-meta">
@@ -1229,7 +1269,7 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 
   <!-- TALEB-KASKADE -->
-  <div class="section-label">Taleb-kaskade — sjokk-forplantning</div>
+  <div class="section-label">Taleb-kaskade — sjokk-forplantning <span class="tt-trigger" data-tt="tt-taleb" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
   <div class="card" style="margin-bottom:14px">
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;position:relative">
       <div style="padding:12px 14px;border-right:1px solid var(--border)">
@@ -1308,7 +1348,7 @@ input[type=range]::-webkit-slider-thumb {
     </div>
 
     <!-- Sektorvis tidsakse -->
-    <div class="section-label">Sektorvis konsekvensforløp — 36 måneder</div>
+    <div class="section-label">Sektorvis konsekvensforløp — 36 måneder <span class="tt-trigger" data-tt="tt-sektor36" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
 
       <!-- LNG -->
@@ -1424,7 +1464,7 @@ input[type=range]::-webkit-slider-thumb {
     </div>
 
     <!-- Sektordiagram B — horisontal tidslinje -->
-    <div class="section-label">Kaskadestruktur — 8 sektorer over 36 måneder</div>
+    <div class="section-label">Kaskadestruktur — 8 sektorer over 36 måneder <span class="tt-trigger" data-tt="tt-kaskade8" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
 
     <!-- Tidsskala-header -->
     <div style="display:grid;grid-template-columns:180px 1fr 1fr 1fr;gap:0;margin-bottom:4px;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)">
@@ -1537,7 +1577,7 @@ input[type=range]::-webkit-slider-thumb {
     </div>
 
     <!-- Kaskademodell -->
-    <div class="section-label">Talebs kaskademodell — empirisk kvantifisert med Perera-data</div>
+    <div class="section-label">Talebs kaskademodell — empirisk kvantifisert med Perera-data <span class="tt-trigger" data-tt="tt-perera" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
 
     <div style="position:relative;margin-bottom:20px">
 
@@ -1591,7 +1631,7 @@ input[type=range]::-webkit-slider-thumb {
     </div>
 
     <!-- Ikke-reversible skader -->
-    <div class="section-label">Perera: ikke-reversible skader — «molekylær udelbarhet»</div>
+    <div class="section-label">Perera: ikke-reversible skader — «molekylær udelbarhet» <span class="tt-trigger" data-tt="tt-irreversibel" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
     <div class="card" style="margin-bottom:16px">
       <div style="font-size:12.5px;line-height:1.8;color:var(--text);margin-bottom:12px">
         Perera identifiserer et sett skader som er fundamentalt ikke-reversible innen 5–10 år, uansett diplomatisk utfall. Dette er Talebs sortsvane-dimensjon: ikke bare at det er vondt nå, men at systemet ikke returnerer til pre-krise-equilibrium.
@@ -1664,7 +1704,7 @@ input[type=range]::-webkit-slider-thumb {
     </div>
   </div>
 
-  <div class="section-label">Fortellingsfeilen — i praksis</div>
+  <div class="section-label">Fortellingsfeilen — i praksis <span class="tt-trigger" data-tt="tt-fortelling" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
   <div class="card card-accent">
     <div style="font-size:13px;line-height:1.75;color:var(--text);margin-bottom:10px">
       For Iran var drapet på Khamenei under Operation Epic Fury utenkelig — en sort svane. For planleggerne var det et mål. For begge parter er Hormuz-stengningens makroøkonomiske konsekvenser en sort svane. I ettertid vil alle forklare det som åpenbart og forutsigbart — det er fortellingsfeilen.
@@ -1674,7 +1714,7 @@ input[type=range]::-webkit-slider-thumb {
     </div>
   </div>
 
-  <div class="section-label">De fem andre analytikerne — Talebs kritikk</div>
+  <div class="section-label">De fem andre analytikerne — Talebs kritikk <span class="tt-trigger" data-tt="tt-taleb-kritikk" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
   <div class="card">
     <div class="imp-row">
       <div class="imp-icon" style="background:#EEEDFE;color:#3C3489;font-size:10px;font-weight:700">GS</div>
@@ -1714,7 +1754,7 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 
   <!-- Talebs barbell — overordnet -->
-  <div class="section-label">Taleb barbell — overordnet porteføljestruktur</div>
+  <div class="section-label">Taleb barbell — overordnet porteføljestruktur <span class="tt-trigger" data-tt="tt-barbell" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
   <div class="barbell" style="margin-bottom:16px">
     <div class="barbell-side barbell-left">
       <div class="barbell-pct" style="color:var(--green)">80 %</div>
@@ -1742,12 +1782,12 @@ input[type=range]::-webkit-slider-thumb {
 
   <!-- Strategisk diagnose -->
   <div class="diag-box" style="margin-bottom:16px">
-    <div class="diag-label">Strategisk diagnose — 1. april 2026</div>
+    <div class="diag-label">Strategisk diagnose — 1. april 2026 <span class="tt-trigger" data-tt="tt-strategi-diag" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
     Vi befinner oss i Goodspeeds verste kategori: alle tre resesjonstriggers aktive simultant. Gull korreksjon fra $5 594 (jan-topp) til mars-bunn ~$4 200, nå tilbake ~$4 654 (+2,8 % 1. april) — rebounds teknisk — det er posisjonsjustering i et volatilt marked. J.P. Morgan fastholder $5 055 som snitt for Q4 2026 — $4 654 er fortsatt langt under det målet. Kobber på $12 200/t og aluminium +52 % siden Hormuz signaliserer at råvaremarkedene er i et strukturelt nytt regime. US 10Y ned fra 4,44 % til 4,32 % reflekterer at vekstfrykten nå overstiger inflasjonsfrykten — Powells «vi ser gjennom forsyningssjokk». Markedet er ikke priset for Scenario C. Unngå middels risiko.
   </div>
 
   <!-- Fordeling per scenario -->
-  <div class="section-label">Anbefalt fordeling per scenario-vekting</div>
+  <div class="section-label">Anbefalt fordeling per scenario-vekting <span class="tt-trigger" data-tt="tt-fordeling" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);margin-bottom:20px">
     <div style="display:grid;grid-template-columns:200px 1fr 1fr 1fr;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:white;background:var(--navy)">
       <div style="padding:8px 12px">Aktivaklasse</div>
@@ -1808,7 +1848,7 @@ input[type=range]::-webkit-slider-thumb {
   <!-- ═══════════════════════════════════════════════════════
        LAG 2 — SPESIFIKKE IMPLIKASJONER
        ═══════════════════════════════════════════════════════ -->
-  <div class="section-label">Lag 2 — Spesifikke implikasjoner per tema</div>
+  <div class="section-label">Lag 2 — Spesifikke implikasjoner per tema <span class="tt-trigger" data-tt="tt-lag2" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
 
   <!-- Tema 1: Energi -->
   <div class="card" style="margin-bottom:12px">
@@ -2068,28 +2108,28 @@ input[type=range]::-webkit-slider-thumb {
 
     <div class="data-grid">
       <div class="data-card warn">
-        <div class="dc-label">Fed Funds Rate</div>
+        <div class="dc-label">Fed Funds Rate <span class="tt-trigger" data-tt="tt-fed" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="dc-value">3,50–3,75 %</div>
         <div class="dc-sub">Holdt uendret 18. mars 2026</div>
         <div class="dc-trend" style="color:var(--amber)">→ 1 kutt forventet i 2026</div>
         <div class="dc-src">Kilde: Federal Reserve</div>
       </div>
       <div class="data-card warn">
-        <div class="dc-label">KPI-inflasjon (CPI-U)</div>
+        <div class="dc-label">KPI-inflasjon (CPI-U) <span class="tt-trigger" data-tt="tt-cpi-u" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="dc-value">2,4 %</div>
         <div class="dc-sub">Februar 2026 · 12 mnd. · uendret fra januar</div>
         <div class="dc-trend" style="color:var(--amber)">Kjerne CPI: 2,5 %</div>
         <div class="dc-src">Kilde: BLS, 11. mars 2026</div>
       </div>
       <div class="data-card warn">
-        <div class="dc-label">Kjerne PCE (prognose)</div>
+        <div class="dc-label">Kjerne PCE (prognose) <span class="tt-trigger" data-tt="tt-pce" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="dc-value">2,7 %</div>
         <div class="dc-sub">FOMC median for Q4 2026</div>
         <div class="dc-trend" style="color:var(--amber)">Revidert opp fra 2,5 %</div>
         <div class="dc-src">Kilde: FOMC SEP mars 2026</div>
       </div>
       <div class="data-card warn">
-        <div class="dc-label">Arbeidsledighet</div>
+        <div class="dc-label">Arbeidsledighet <span class="tt-trigger" data-tt="tt-arb" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="dc-value">4,4 %</div>
         <div class="dc-sub">Februar 2026 · langsomt stigende</div>
         <div class="dc-trend" style="color:var(--amber)">FOMC prognose Q4 2026: 4,4 %</div>
@@ -2099,14 +2139,14 @@ input[type=range]::-webkit-slider-thumb {
 
     <div class="data-grid">
       <div class="data-card ok">
-        <div class="dc-label">BNP-vekst prognose 2026</div>
+        <div class="dc-label">BNP-vekst prognose 2026 <span class="tt-trigger" data-tt="tt-bnp-prognose" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="dc-value">2,4 %</div>
         <div class="dc-sub">FOMC median Q4/Q4 · revidert opp</div>
         <div class="dc-trend" style="color:var(--green)">Fra 2,3 % i desember 2025</div>
         <div class="dc-src">Kilde: FOMC SEP mars 2026</div>
       </div>
       <div class="data-card ok">
-        <div class="dc-label">10-årig Treasury</div>
+        <div class="dc-label">10-årig Treasury <span class="tt-trigger" data-tt="tt-treasury" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="dc-value">4,27 %</div>
         <div class="dc-sub">18. mars 2026 · stengetid</div>
         <div class="dc-trend" style="color:var(--green)">30-årig: 4,88 %</div>
@@ -2261,7 +2301,7 @@ input[type=range]::-webkit-slider-thumb {
     </div>
 
     <div class="card" style="border-left:3px solid var(--amber);margin-bottom:14px">
-      <div class="section-label" style="margin-top:0">Statistikk-advarsel — Fishmans analyse i praksis</div>
+      <div class="section-label" style="margin-top:0">Statistikk-advarsel — Fishmans analyse i praksis <span class="tt-trigger" data-tt="tt-statistikk" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
       <div style="font-size:12px;line-height:1.7;color:var(--text)">
         NBS rapporterer 5,0 % vekst for 2025. Rhodium Group og Rosen/Wright estimerer 2,5–3,0 % basert på elektrisitetsforbruk, godstrafikk og priskorrigert detaljhandel. Divergensen er konsistent: NBS har historisk hatt tendens til å overvurdere investering. IMF tar nå opp imbalansene som strategisk bekymring, i tråd med G7-konsensus. Dette er Fishmans analyse i tallform: den kinesiske statistikken er primærkilden for IMF og World Bank — men stammen fra nasjonale myndigheter med politisk eierandel i tallene.
       </div>
@@ -2446,7 +2486,7 @@ input[type=range]::-webkit-slider-thumb {
     <!-- Analytisk kobling -->
     <div class="section-label">Analytisk kobling til modellen</div>
     <div class="diag-box">
-      <div class="diag-label">Norge i Hormuz-konteksten</div>
+      <div class="diag-label">Norge i Hormuz-konteksten <span class="tt-trigger" data-tt="tt-norge-hormuz" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
       SSB-prognosen for råoljepris i 2026 er 78 $/fat — utarbeidet i mars 2026 og reflekterer ikke Hormuz-stengningen. Gjeldende Brent ~101 $/fat er 30 % over SSBs prognose. Driftsbalansen på 946 mrd kr (prognose) er en undervurdering: høyere oljepris øker norske eksportinntekter direkte. <strong>Norge er en strukturell vinner i Scenario B og C</strong> — energieksportør med sunn statsbalanse, lav gjeldsgrad og stor petroleumsfond-buffer. Motvekt: kronestyrkelse (NOK/EUR 11,20 prognose) komprimerer eksportkonkurranseevne for fastlandsøkonomien. KPI 3,2 % (2026P) gir Norges Bank begrenset rom for rentekutt — renten holdes høy lengre enn andre sentralbanker.
     </div>
     <div class="footnote">Kilde: SSB tabell 12880 — Makroøkonomiske hovedstørrelser. Regnskap og prognoser 1991–2029 · Oppdatert 17. mars 2026</div>
@@ -2675,7 +2715,7 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 
   <!-- NØKKELTALL PROSESSERING -->
-  <div class="section-label">Kinas kontroll — produksjon vs. prosessering</div>
+  <div class="section-label">Kinas kontroll — produksjon vs. prosessering <span class="tt-trigger" data-tt="tt-kina-kontroll" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
 
     <!-- Produksjon -->
@@ -2784,7 +2824,7 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 
   <!-- FLASKEHALSEN -->
-  <div class="section-label">Prosessering som strategisk flaskehals</div>
+  <div class="section-label">Prosessering som strategisk flaskehals <span class="tt-trigger" data-tt="tt-flaskehals" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
 
     <div class="card">
@@ -2827,7 +2867,7 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 
   <!-- EKSPORTKONTROLLER 2025-2026 -->
-  <div class="section-label">Eksportkontroller og «moratorium» — 2025–2026</div>
+  <div class="section-label">Eksportkontroller og «moratorium» — 2025–2026 <span class="tt-trigger" data-tt="tt-eksport" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
   <div class="card" style="margin-bottom:14px">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
       <div style="padding:14px 18px 14px 0;border-right:1px solid var(--border)">
@@ -2858,7 +2898,7 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 
   <!-- TIDSHORISONTER -->
-  <div class="section-label">Konsekvenser — tre tidshorisonter</div>
+  <div class="section-label">Konsekvenser — tre tidshorisonter <span class="tt-trigger" data-tt="tt-konsekvenser" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
 
     <div class="card" style="border-top:3px solid var(--red)">
@@ -2956,7 +2996,7 @@ input[type=range]::-webkit-slider-thumb {
 
   <!-- BUNNLINJE -->
   <div class="diag-box" style="margin-top:14px">
-    <div class="diag-label">Bunnlinje — «structural leverage»</div>
+    <div class="diag-label">Bunnlinje — «structural leverage» <span class="tt-trigger" data-tt="tt-bunnlinje" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
     Kinas makt ligger ikke i gruvene — den ligger i kjemien og industrien. Med ~70 % av produksjon, ~90 % av prosessering og nær monopol på tunge REE-komponenter har Kina i praksis en opsjon på å strupe verdens tilgang til kritiske innsatsfaktorer for forsvar, energiomstilling og høyteknologi — når som helst. Eksportkontrollene fra 2025–2026 er ikke et tilfeldig sanksjonsregime. De er en demonstrasjon av at makten finnes, at den kan brukes, og at motvekten ikke eksisterer.
   </div>
 
@@ -3117,7 +3157,7 @@ input[type=range]::-webkit-slider-thumb {
     <div class="panel-sub">Sjekkliste: holder de analytiske forutsetningene fortsatt? · Oppdateres manuelt i daglig brief</div>
   </div>
 
-  <div class="section-label" style="margin-top:0">Goodspeeds tre resesjonstriggers</div>
+  <div class="section-label" style="margin-top:0">Goodspeeds tre resesjonstriggers <span class="tt-trigger" data-tt="tt-gs-tre" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px">
     <div class="stat-card" style="border-left:3px solid var(--red)">
       <div class="stat-label">Trigger 1 — Energisjokk</div>
@@ -3150,7 +3190,7 @@ input[type=range]::-webkit-slider-thumb {
     </div>
   </div>
 
-  <div class="section-label">Mirans forutsetninger</div>
+  <div class="section-label">Mirans forutsetninger <span class="tt-trigger" data-tt="tt-miran-foruts" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
   <div style="display:grid;grid-template-columns:repeat(1,1fr);gap:4px;margin-bottom:20px">
     <div class="card" style="padding:10px 14px">
       <div style="display:grid;grid-template-columns:1fr auto;gap:4px 20px">
@@ -3163,7 +3203,7 @@ input[type=range]::-webkit-slider-thumb {
     </div>
   </div>
 
-  <div class="section-label">Fishmans asymmetri-status</div>
+  <div class="section-label">Fishmans asymmetri-status <span class="tt-trigger" data-tt="tt-fishman-status" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
   <div class="diag-box">
     <div class="diag-label">Strukturell skade — irreversibel uavhengig av krigsutgang</div>
     Yuan-toll-regime ved Hormuz er etablert. De-dollarisering akselererer. Perera Train 4 og 6 fysisk ødelagt. Bangladesh-avling 2026 tapt. 200 ISO-heliumcontainere fordampet. Fishmans kjernepåstand: skaden er strukturell uavhengig av når krigen slutter. <strong>Status: bekreftet aktiv per 1. april 2026.</strong>
@@ -4495,6 +4535,379 @@ window.nav = function(el) {
   }
 };
 
+</script>
+
+<!-- TOOLTIPS — ALLE PANELER -->
+
+<!-- DASHBOARD -->
+<div class="tt-box" id="tt-nokkeltall">
+  <h4>Nøkkeltall</h4>
+  Sanntidsdata for de viktigste makroøkonomiske indikatorer relevante for modellen. Fed og ECB-rentene viser sentralbankenes handlingsrom — begge er handlingslammet av simultant inflasjon og resesjonsrisiko. Hormuz-varighet og forstyrret volum er direkte innsatsfaktorer i Hormuz-kalkulatoren.
+</div>
+
+<div class="tt-box" id="tt-hendelser">
+  <h4>Siste hendelser</h4>
+  Kronologisk oversikt over nøkkelhendelsene som har utløst og forsterket den nåværende krisen. Rekkefølgen er analytisk viktig — Midnight Hammer → Epic Fury → Hormuz er en kausal kjede, ikke tilfeldige hendelser.
+  <div class="tt-sep"></div>
+  Kilde: Geopolitisk faktagrunnlag · Al Jazeera · NPR · USNI News
+</div>
+
+<div class="tt-box" id="tt-gs-meter">
+  <h4>Goodspeed resesjonsmeter</h4>
+  Tyler Goodspeed (2025) dokumenterte at 10 av 12 resesjoner i USA siden 1945 ble utløst av diskrete sjokk — ikke gradvise avmattinger. Meteret viser akkumulert intensitet på hans tre klassiske triggere.
+  <div class="tt-sep"></div>
+  Alle tre er aktive simultant per april 2026 — Goodspeeds verste kategori.
+</div>
+
+<div class="tt-box" id="tt-miran-sti">
+  <h4>Mirans smale sti</h4>
+  Stephen Miran (CEA-leder) publiserte i november 2024 en plan for å restrukturere det globale handelssystemet via tariffer og en ny Plaza-lignende valutaavtale. Han erkjente selv at «there is a path, but it is narrow» og listet fem forutsetninger som alle måtte holde.
+  <div class="tt-sep"></div>
+  Alle fem er brutt per april 2026.
+</div>
+
+<div class="tt-box" id="tt-kjernediagnose">
+  <h4>Kjernediagnose</h4>
+  Modellens overordnede analytiske konklusjon: de seks rammeverkene peker samstemt på et strukturelt systemskifte, ikke en syklisk krise som løses av én politisk korreksjon.
+</div>
+
+<!-- SCENARIER -->
+<div class="tt-box" id="tt-sektor36">
+  <h4>Sektorvis konsekvensforløp — 36 måneder</h4>
+  Basert på Perera (2026) empiriske bortfallsdata. Ulike sektorer opererer på ulike tidsskalaer: finansmarkeder reagerer i måneder, industrikapasitet tar år å gjenoppbygge, og geologiske ressurser (LNG Train 4/6) tar tiår.
+  <div class="tt-sep"></div>
+  Dette er Talebs temporale asymmetri i praksis: skaden akkumuleres raskt, gjenoppbyggingen er langsom.
+</div>
+
+<div class="tt-box" id="tt-kaskade8">
+  <h4>Kaskadestruktur — 8 sektorer</h4>
+  Scenario B er det mest sannsynlige (55 %) fordi det representerer et institusjonalisert kompromiss — Hormuz delvis gjenåpnet men effektivt kontrollert av Kina via yuan-denominert tollsystem. Tabellen viser konsekvensene for åtte nøkkelsektorer over tre tidshorisonter.
+</div>
+
+<div class="tt-box" id="tt-perera">
+  <h4>Talebs kaskademodell — Perera</h4>
+  Reza Perera (2026) kvantifiserte de empiriske bortfallsratene for hver sektor ved Hormuz-stengning: helium (33 % av global kapasitet), LNG Qatar (26 % av global produksjon), urea (55 % prisøkning), DRAM (+298 %). Disse tallene er ikke modellanslag — de er observerte data fra de første ukene etter 4. mars 2026.
+</div>
+
+<div class="tt-box" id="tt-irreversibel">
+  <h4>Ikke-reversible skader</h4>
+  «Molekylær udelbarhet» er Pereras begrep for skader som ikke kan reverseres innen 5–10 år uansett diplomatisk utfall. 200 ISO-heliumcontainere har fordampet. Bangladeshs avling for 2026 er allerede tapt. Train 4 og 6 krever 18–24 måneder å gjenoppbygge.
+  <div class="tt-sep"></div>
+  Disse er fakta, ikke prognoser — de inntreffer uavhengig av scenario.
+</div>
+
+<!-- TALEB -->
+<div class="tt-box" id="tt-fortelling">
+  <h4>Fortellingsfeilen (Narrative Fallacy)</h4>
+  Nassim Taleb: vi konstruerer retrospektive forklaringer som gjør hendelser fremstå som planlagte og forutsigbare — selv om de ikke var det. Etter at Hormuz ble stengt vil alle «forklare» hvorfor det var åpenbart. Ingen modell predikerte det.
+  <div class="tt-sep"></div>
+  Kilde: Taleb (2007) The Black Swan · kap. 6
+</div>
+
+<div class="tt-box" id="tt-taleb-kritikk">
+  <h4>Talebs kritikk av de fem analytikerne</h4>
+  Taleb er den eneste av de seks kildene som stiller spørsmål ved om svarene de andre gir er mulige å gi i det hele tatt. Han kritiserer epistemisk arroganse: å bruke historiske data til å predikere diskontinuerlige hendelser er å forveksle Mediocristan med Extremistan.
+</div>
+
+<!-- KAPITAL -->
+<div class="tt-box" id="tt-barbell">
+  <h4>Taleb barbell — porteføljestrategi</h4>
+  Talebs barbell-strategi: unngå middels risiko fullstendig. Plasser 80 % i svært robuste, lavrisiko aktiva og 20 % i aktiva med asymmetrisk oppsidepotensial (begrenset nedsiderisiko, ubegrenset oppside).
+  <div class="tt-sep"></div>
+  I Extremistan gir standard diversifisering lineær nedsideeksponering uten tilstrekkelig oppsidepotensial.
+</div>
+
+<div class="tt-box" id="tt-fordeling">
+  <h4>Scenariovektet fordeling</h4>
+  Anbefalt porteføljefordeling basert på scenariosannsynligheter: A (20 %) × vekting + B (55 %) × vekting + C (25 %) × vekting. Resultatet er en vektet anbefaling som balanserer de tre scenariene.
+  <div class="tt-sep"></div>
+  Merk at «middels risiko» er 0 % i scenario B og C — Talebs kjernepunkt.
+</div>
+
+<div class="tt-box" id="tt-lag2">
+  <h4>Lag 2 — Spesifikke implikasjoner</h4>
+  Detaljerte kapitalimplikasjoner per tema, forankret i Perera-data og de seks analytiske rammeverkene. Hvert tema identifiserer strukturelle vinnere, tapere og asymmetriske posisjoner basert på empiriske data — ikke generelle råd.
+</div>
+
+<div class="tt-box" id="tt-strategi-diag">
+  <h4>Strategisk diagnose</h4>
+  Oppdatert per 1. april 2026. Gull-korreksjonen fra $5 594 til ~$4 654 er teknisk posisjonsjustering, ikke fundamental reversal. J.P. Morgan fastholder $5 055 som Q4-mål. Kobber $12 200/t og aluminium +52 % signaliserer at råvaremarkedene er i et nytt strukturelt regime.
+</div>
+
+<!-- MAKRO -->
+<div class="tt-box" id="tt-fed">
+  <h4>Fed Funds Rate</h4>
+  Federal Reserves styringsrente — holdt uendret 18. mars 2026 på 3,50–3,75 %. Fed er i stagflasjonsfellen: kjerne PCE 2,7 % hindrer rentekutt, men resesjonsrisiko hindrer heving. Dette er Mirans «smale sti stengt» i numerisk form.
+  <div class="tt-sep"></div>
+  Kilde: Federal Reserve FOMC-beslutning 18. mars 2026
+</div>
+
+<div class="tt-box" id="tt-cpi-u">
+  <h4>KPI-inflasjon (CPI-U)</h4>
+  Consumer Price Index for All Urban Consumers — USAs bredeste inflasjonsmål. 2,4 % per februar 2026 reflekterer ennå ikke Hormuz-effekten (stengning 4. mars). Neste rapport (10. april) vil vise de første prisgjennomslasene.
+  <div class="tt-sep"></div>
+  Kilde: Bureau of Labor Statistics · 11. mars 2026
+</div>
+
+<div class="tt-box" id="tt-pce">
+  <h4>Kjerne PCE (prognose)</h4>
+  Personal Consumption Expenditures — Feds foretrukne inflasjonsmål (ekskl. mat og energi). FOMC-prognose for Q4 2026: 2,7 % — 70 basispunkter over 2 %-målet. Dette er grunnen til at Fed ikke kan kutte rentene selv om resesjonsrisikoen stiger.
+  <div class="tt-sep"></div>
+  Kilde: FOMC Summary of Economic Projections (SEP) · mars 2026
+</div>
+
+<div class="tt-box" id="tt-arb">
+  <h4>Arbeidsledighet</h4>
+  Goodspeed (2025): resesjoner kjennetegnes av diskontinuerlige hopp i arbeidsledigheten — ikke gradvise stigninger. USA på 4,4 % er allerede over det Goodspeed anser som «normal» friksjonsarbeidsledighet (~3,5–4,0 %). FOMC anslår 4,4 % ved utgangen av 2026.
+</div>
+
+<div class="tt-box" id="tt-bnp-prognose">
+  <h4>BNP-vekst prognose 2026</h4>
+  FOMC-medianprognose for USA: 2,4 % (Q4/Q4). Dette er en pre-Hormuz prognose — stengningen skjedde 4. mars, etter at prognosene ble utarbeidet. Dallas Feds estimat tilsier −2,9 pp ved ett kvartal stengning, noe som ville redusere prognosen til ~−0,5 %.
+</div>
+
+<div class="tt-box" id="tt-treasury">
+  <h4>10-årig US Treasury</h4>
+  Referanserenten for global kapital. 4,27 % per 18. mars reflekterer at vekstfrykten nå overstiger inflasjonsfrykten — renten har falt fra 4,44 %. Miran: USA eksporterer statsobligasjoner som reservevalutaens «pris». Mar-a-Lago Accord krever at partnere bytter korte til lange obligasjoner.
+</div>
+
+<div class="tt-box" id="tt-statistikk">
+  <h4>Statistikk-advarsel — Fishman</h4>
+  Edward Fishman (2025) påpeker at kinesisk statistikk er primærkilden for IMF og Verdensbanken — men produseres av myndigheter med politisk eierandel i tallene. Rhodium Group estimerer faktisk vekst 2025 til 2,5–3,0 % vs. NBS offisielle 5,0 %.
+  <div class="tt-sep"></div>
+  Divergensen er konsistent med elektrisitetsforbruk, godstrafikk og priskorrigert detaljhandel.
+</div>
+
+<div class="tt-box" id="tt-norge-hormuz">
+  <h4>Norge i Hormuz-konteksten</h4>
+  Norge er en strukturell vinner: energieksportør med sunn statsbalanse. SSBs oljeprognose for 2026 (78 $/fat) er utarbeidet før Hormuz-stengningen — gjeldende Brent (~108 $) er 38 % over prognosen, noe som gir vesentlig høyere driftsbalanse enn SSB har anslått.
+</div>
+
+<!-- KINA -->
+<div class="tt-box" id="tt-kina-kontroll">
+  <h4>Kinas kontroll — produksjon vs. prosessering</h4>
+  Den kritiske asymmetrien: Kina produserer ~60 % av verdens sjeldne jordarter, men kontrollerer ~90 % av prosesseringen. Selv metaller utvinnet i Australia eller USA sendes til Kina for prosessering. Kontroll over prosessering er strategisk mer verdifullt enn kontroll over gruvedrift.
+</div>
+
+<div class="tt-box" id="tt-flaskehals">
+  <h4>Prosessering som strategisk flaskehals</h4>
+  Det tar 10–15 år å bygge opp prosesseringskapasitet utenfor Kina — gruvedrift alene er ikke nok. NDS (2026) anerkjenner dette eksplisitt under Line of Effort 4 (forsvarsindustriell base). Fishmans asymmetri: USA kan ikke sanksjonere seg ut av denne avhengigheten på kort sikt.
+</div>
+
+<div class="tt-box" id="tt-eksport">
+  <h4>Eksportkontroller 2025–2026</h4>
+  Kina innførte lisenspliktig eksport av 12 sjeldne jordarter, wolfram og antimon i 2025. Januar 2026: nye restriksjoner rettet spesifikt mot Japan. Dette er Fishman-logikken speilvendt: Kina bruker eksportkontroller som strategisk virkemiddel på samme måte USA bruker sanksjoner.
+</div>
+
+<div class="tt-box" id="tt-konsekvenser">
+  <h4>Konsekvenser — tre tidshorisonter</h4>
+  Perera (2026) opererer med tre tidsskalaer: måneder (finansmarkeder og halvledere), år (LNG-kapasitet og heliuminfrastruktur) og tiår (geologiske ressurser og prosesseringskapasitet). Hvert tiltak har en annen tidshorisont for effekt.
+</div>
+
+<div class="tt-box" id="tt-bunnlinje">
+  <h4>Structural Leverage</h4>
+  Kinas kontroll over kritiske råvarer gir «structural leverage» — makt som ikke utøves ved militær trussel, men via stille kontroll over forsyningskjeder som alle avanserte økonomier er avhengige av. Fishman kaller dette den nye formen for økonomisk krigføring.
+</div>
+
+<!-- STATUS -->
+<div class="tt-box" id="tt-gs-tre">
+  <h4>Goodspeeds tre resesjonstriggers</h4>
+  Goodspeed (2025) identifiserte tre historiske resesjonskatalysatorer basert på analyse av samtlige resesjoner i USA siden 1945. Alle tre er nå aktive simultant — noe som ikke har forekommet siden stagflasjonsperioden 1973–1975.
+  <div class="tt-sep"></div>
+  <table>
+    <tr><td style="color:rgba(255,255,255,.5)">Trigger 1</td><td>Energisjokk — direkte priseffekt</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">Trigger 2</td><td>Krig/geopolitikk — ressursavbrudd</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">Trigger 3</td><td>Kredittkontraksjon — finansiell innstramming</td></tr>
+  </table>
+</div>
+
+<div class="tt-box" id="tt-miran-foruts">
+  <h4>Mirans forutsetninger</h4>
+  Stephen Miran (2024) listet fem forutsetninger som alle måtte holde for at hans handelspolitiske plan («Mar-a-Lago Accord») skulle fungere. Alle fem er brutt per april 2026. Miran er «kalkunen som fikk mat 999 dager» — dag 1000 var 28. februar 2026.
+</div>
+
+<div class="tt-box" id="tt-fishman-status">
+  <h4>Fishmans asymmetri</h4>
+  Edward Fishman (2025): det er lettere å rive ned enn å bygge opp. Sanksjonspolitikken har undergravet dollarsystemet gradvis, og skaden er strukturell uavhengig av om Hormuz-krigen avsluttes. «The damage is done» — tilbakeføring krever tiår.
+  <div class="tt-sep"></div>
+  Nøkkelparadoks: aggressiv sanksjonspolitikk fremskynder den de-dollariseringen USA ønsker å forhindre.
+</div>
+
+<!-- TOOLTIPS -->
+<div class="tt-box" id="bnp-tooltip">
+  <h4>BNP-effekt per kvartal</h4>
+  Prosentpoeng BNP faller per kvartal som direkte følge av oljeprissjokkет. Beregnes automatisk fra oljeprissjokk × konfliktnivå.
+  <div class="tt-sep"></div>
+  <strong style="font-size:10px;color:rgba(255,255,255,.6);display:block;margin-bottom:4px">Empirisk grunnlag:</strong>
+  <table>
+    <tr><td style="white-space:nowrap;color:rgba(255,255,255,.5)">&lt;+20 $/fat</td><td>Hamilton (2009): −0,18 pp per $/fat</td></tr>
+    <tr><td style="white-space:nowrap;color:rgba(255,255,255,.5)">+20–50 $/fat</td><td>Dallas Fed Hormuz (2026): −0,22 pp per $/fat</td></tr>
+    <tr><td style="white-space:nowrap;color:rgba(255,255,255,.5)">&gt;+50 $/fat</td><td>Kilian (2008): −0,27 pp per $/fat</td></tr>
+  </table>
+  <div class="tt-sep"></div>
+  <table>
+    <tr><td style="color:rgba(255,255,255,.5)">Begrenset konflikt</td><td>×1,0</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">Eskalert</td><td>×1,5</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">Full krig</td><td>×2,2</td></tr>
+  </table>
+</div>
+
+<div class="tt-box" id="tt-varighet">
+  <h4>Stengningens varighet</h4>
+  Antall uker Hormuz-stredet forblir stengt eller alvorlig forstyrret. Varigheten er avgjørende fordi sjokket akkumuleres over tid — ett kvartal (13 uker) er Goodspeeds klassiske resesjonstrigger-terskel.
+  <div class="tt-sep"></div>
+  <table>
+    <tr><td style="color:rgba(255,255,255,.5)">1–4 uker</td><td>Midlertidig sjokk, begrenset kumulativ effekt</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">4–13 uker</td><td>Kvartalssjokk — Goodspeed type-1 trigger</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">13–26 uker</td><td>Strukturell skade — Perera ikke-reversibel terskel</td></tr>
+  </table>
+  <div class="tt-sep"></div>
+  Kilde: Perera (2026) · Goodspeed (2025) · Dallas Fed (mars 2026)
+</div>
+
+<div class="tt-box" id="tt-oljepris">
+  <h4>Oljeprissjokk</h4>
+  Ekstra stigning i Brent råolje utover dagens live-pris, som direkte følge av Hormuz-stengningen. Viser topp-prisen Brent ville nå under de angitte parameterne.
+  <div class="tt-sep"></div>
+  <table>
+    <tr><td style="color:rgba(255,255,255,.5)">+13 $/fat</td><td>Dallas Fed base-scenario (mars 2026)</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">+40–60 $/fat</td><td>Historisk Hormuz-eskalering 1987–1988</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">+90–115 $/fat</td><td>Full blokkade — Goldman Sachs 2008-analog</td></tr>
+  </table>
+  <div class="tt-sep"></div>
+  Prisen modifiseres av konfliktnivå-multiplikatoren
+</div>
+
+<div class="tt-box" id="tt-konflikt">
+  <h4>Konfliktnivå</h4>
+  Skalerer BNP-effekten og oljepristoppen basert på omfanget av konflikten. Høyere konfliktnivå utløser sekundære mekanismer utover selve energisjokket.
+  <div class="tt-sep"></div>
+  <table>
+    <tr><td style="color:rgba(255,255,255,.5)">Begrenset ×1,0</td><td>Kun Hormuz stengt, begrenset eskalering</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">Eskalert ×1,5</td><td>+ forsikringskollaps, allianseusikkerhet, handelsforstyrrelser</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">Full krig ×2,2</td><td>+ kapitalflukt, kredittinnstramming, systemisk finanskrise</td></tr>
+  </table>
+  <div class="tt-sep"></div>
+  Kilde: NDS (2026) · Taleb (2007) · Kilian (2008)
+</div>
+
+<div class="tt-box" id="tt-resesjon">
+  <h4>Resesjonsrisiko</h4>
+  Sammensatt vurdering basert på Goodspeeds tre resesjonstriggers: energisjokk, krig/geopolitisk forstyrrelse og kredittkontraksjon. Vektet score: energi 45 %, krig 35 %, kreditt 20 %.
+  <div class="tt-sep"></div>
+  <table>
+    <tr><td style="color:rgba(255,255,255,.5)">Lav</td><td>&lt;25 — kortvarig, begrenset sjokk</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">Moderat</td><td>25–45 — økt aktsomhet</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">Høy</td><td>45–80 — to triggere aktive</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">Ekstrem</td><td>&gt;80 — alle tre aktive simultant</td></tr>
+  </table>
+  <div class="tt-sep"></div>
+  Kilde: Goodspeed (2025) — 10 av 12 resesjoner siden 1945 hadde energikomponent
+</div>
+
+<div class="tt-box" id="tt-kpi">
+  <h4>KPI-effekt — beregning</h4>
+  <strong style="font-size:10px;color:rgba(255,255,255,.7);display:block;margin-bottom:4px">Formel:</strong>
+  KPI-effekt = oljeprissjokk × 0,028 × konfliktnivå
+  <div class="tt-sep"></div>
+  <strong style="font-size:10px;color:rgba(255,255,255,.7);display:block;margin-bottom:4px">Koeffisienten 0,028:</strong>
+  Moody's (mars 2026): +10% oljepris → +0,3 pp KPI. Ved Brent 108$: 10% = 10,8$/fat → 0,3/10,8 = 0,0278 ≈ 0,028 pp per $/fat.
+  <div class="tt-sep"></div>
+  <table>
+    <tr><td style="color:rgba(255,255,255,.5)">Moody's (2026)</td><td>0,028 pp/$ — konservativt</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">IMF WEO</td><td>0,037 pp/$ — middels</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">ECB Hormuz</td><td>0,054 pp/$ — høyt anslag</td></tr>
+  </table>
+  <div class="tt-sep"></div>
+  Gjennomslag: 8–16 uker forsinkelse. Når KPI stiger kan Fed ikke kutte, men vekstfall hindrer heving — Mirans smale sti stenges.
+</div>
+
+<div class="tt-box" id="tt-regioner">
+  <h4>Regionale konsekvenser</h4>
+  Ulik eksponering mot Hormuz-sjokket basert på energiimportprofil og avstand til konflikten.
+  <div class="tt-sep"></div>
+  <table>
+    <tr><td style="color:rgba(255,255,255,.5)">USA</td><td>Energiprodusent — delvis bufferet. Fed-dilemma: stagflasjon</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">Europa</td><td>Høyest eksponert. LNG-avhengig. ECB kuttet prognose −0,3 pp</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">Kina</td><td>Energiimportør men forhandler egne priser. Kortsikte gevinst</td></tr>
+  </table>
+  <div class="tt-sep"></div>
+  BNP-skaleringsfaktorer: USA 0,48 · Europa 0,72 · Kina 0,28 (relativt til global effekt)
+</div>
+
+<div class="tt-box" id="tt-goodspeed">
+  <h4>Goodspeeds resesjonstriggers</h4>
+  Tyler Goodspeed (2025) dokumenterer at resesjoner ikke oppstår gradvis — de utløses av diskrete sjokk. 10 av 12 resesjoner i USA siden 1945 hadde en energikomponent.
+  <div class="tt-sep"></div>
+  <table>
+    <tr><td style="color:rgba(255,255,255,.5)">Trigger 1</td><td>Energisjokk — direkte via prisstigning</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">Trigger 2</td><td>Krig/geopolitikk — via ressursavbrudd</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">Trigger 3</td><td>Kredittkontraksjon — via innstramming</td></tr>
+  </table>
+  <div class="tt-sep"></div>
+  Alle tre er aktive simultant per april 2026 — Goodspeeds verste kategori
+</div>
+
+<div class="tt-box" id="tt-taleb">
+  <h4>Taleb-kaskade</h4>
+  Nassim Nicholas Talebs modell for ikke-lineær sjokk-forplantning. Et primærsjokk utløser sekundære og tertiære effekter som er uforholdsmessig store og vanskelige å forutse.
+  <div class="tt-sep"></div>
+  <table>
+    <tr><td style="color:rgba(255,255,255,.5)">Primær</td><td>Hormuz stengt — direkte energiforsyning</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">Sekundær</td><td>Japan, Sør-Korea, India — eksportfall, valutasvekking</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">Tertiær</td><td>Finansielle markeder — mislighold, kapitalflukt</td></tr>
+  </table>
+  <div class="tt-sep"></div>
+  Kilde: Taleb (2007) The Black Swan · Perera (2026) kaskadeanalyse
+</div>
+
+<script>(function() {
+  var activeTooltip = null;
+  var ttEl = null;
+
+  function positionTooltip(trigger, box) {
+    var r = trigger.getBoundingClientRect();
+    var bw = box.offsetWidth || 340;
+    var bh = box.offsetHeight || 200;
+    var left = r.right + 10;
+    var top  = r.top - 10;
+    // Flip left if too close to right edge
+    if (left + bw > window.innerWidth - 16) left = r.left - bw - 10;
+    // Flip up if too close to bottom
+    if (top + bh > window.innerHeight - 16) top = window.innerHeight - bh - 16;
+    box.style.left = Math.max(8, left) + 'px';
+    box.style.top  = Math.max(8, top)  + 'px';
+  }
+
+  document.addEventListener('mouseover', function(e) {
+    var trigger = e.target.closest ? e.target.closest('.tt-trigger') : null;
+    if (!trigger) return;
+    var ttId = trigger.dataset.tt;
+    var box  = document.getElementById(ttId);
+    if (!box) return;
+    ttEl = box;
+    activeTooltip = ttId;
+    box.classList.add('visible');
+    positionTooltip(trigger, box);
+  });
+
+  document.addEventListener('mouseout', function(e) {
+    var trigger = e.target.closest ? e.target.closest('.tt-trigger') : null;
+    if (!trigger) return;
+    var ttId = trigger.dataset.tt;
+    var box  = document.getElementById(ttId);
+    if (box) box.classList.remove('visible');
+    activeTooltip = null;
+  });
+
+  document.addEventListener('mousemove', function(e) {
+    if (!activeTooltip || !ttEl) return;
+    var trigger = e.target.closest ? e.target.closest('.tt-trigger') : null;
+    if (trigger && trigger.dataset.tt === activeTooltip) {
+      positionTooltip(trigger, ttEl);
+    }
+  });
+})();
 </script>
 </body>
 </html>
