@@ -883,9 +883,40 @@ input[type=range]::-webkit-slider-thumb {
           <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:3px">Hormuz-kalkulator</div>
           <div style="font-size:13px;font-weight:600;color:var(--text)">Juster parametere — live konsekvenser</div>
         </div>
-        <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;background:var(--red-lt);border-radius:20px;border:1px solid rgba(197,48,48,.15)">
-          <div style="width:5px;height:5px;border-radius:50%;background:var(--red);animation:pulse 2s infinite"></div>
-          <span style="font-size:10px;font-weight:600;color:var(--red)">Brent <span id="live-brent-stat">—</span></span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <!-- TSHM-knapp -->
+          <button id="tshm-btn" onclick="applyTSHM()" title="Synkroniser parametere fra Trumpometer-signaler (TSHM-modellen)" style="display:flex;align-items:center;gap:5px;padding:5px 10px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.2);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
+            <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid)">⟳ Synk fra Trumpometer</span>
+          </button>
+          <span class="tt-trigger" data-tt="tt-tshm" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:9px;font-weight:700;cursor:help;border:1px solid var(--border-md)" title="Forklaring av TSHM-modellen">?</span>
+          <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;background:var(--red-lt);border-radius:20px;border:1px solid rgba(197,48,48,.15)">
+            <div style="width:5px;height:5px;border-radius:50%;background:var(--red);animation:pulse 2s infinite"></div>
+            <span style="font-size:10px;font-weight:600;color:var(--red)">Brent <span id="live-brent-stat">—</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TSHM-statusboks (skjult inntil synk kjøres) -->
+      <div id="tshm-status" style="display:none;margin-bottom:12px;padding:9px 12px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.18);border-radius:8px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+          <div style="flex:1">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:5px">TSHM-analyse — sist synkronisert <span id="tshm-tid">—</span></div>
+            <div id="tshm-begrunnelse" style="font-size:11px;color:var(--navy);line-height:1.55"></div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0">
+            <div style="text-align:center;padding:5px 8px;background:white;border-radius:6px;border:1px solid var(--border)">
+              <div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--faint);margin-bottom:2px">Konfliktnivå</div>
+              <div id="tshm-k" style="font-size:13px;font-weight:700;color:var(--navy)">—</div>
+            </div>
+            <div style="text-align:center;padding:5px 8px;background:white;border-radius:6px;border:1px solid var(--border)">
+              <div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--faint);margin-bottom:2px">Sjokk $/fat</div>
+              <div id="tshm-o" style="font-size:13px;font-weight:700;color:var(--red)">—</div>
+            </div>
+            <div style="text-align:center;padding:5px 8px;background:white;border-radius:6px;border:1px solid var(--border)">
+              <div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--faint);margin-bottom:2px">Varighet</div>
+              <div id="tshm-v" style="font-size:13px;font-weight:700;color:var(--navy)">—</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -4530,7 +4561,107 @@ function selectAuthor(key, card) {
   currentAuthor = key;
 }
 
-// ── OM MODELLEN: fane-navigasjon ───────────────────
+// ── TSHM: Trumpometer → Hormuz Signal Mapping ──────
+// Glidehukommelse for å dempe brå hopp
+var _tshmPrev = { conflict: 1, oil: 13, duration: 4 };
+
+function applyTSHM() {
+  // Hent Trumpometer-data
+  var scored = window._trumpScored || [];
+  if (scored.length === 0) {
+    var btn = document.getElementById('tshm-btn');
+    if (btn) { var s = btn.querySelector('span'); if(s) { s.textContent = '⚠ Ingen Trumpometer-data'; setTimeout(function(){ s.textContent = '⟳ Synk fra Trumpometer'; }, 2500); } }
+    return;
+  }
+
+  var now = Date.now(), h24 = 86400000;
+  var recent = scored.filter(function(s){ return (now - s.item.date.getTime()) < h24; });
+  var count = recent.length;
+  if (count === 0) return;
+
+  // ── SIGNALVEI 1: Konfliktnivå via s5-militærtermer ─────────────
+  var s5words = ['nuclear','war','attack','strike','missile','threat','ultimatum',
+                 'bomb','military','troops','invasion','deploy','hormuz','iran'];
+  var s5total = 0;
+  recent.forEach(function(s) {
+    var txt = (s.item.title + ' ' + (s.item.desc || '')).toLowerCase();
+    s5words.forEach(function(w){ if(txt.indexOf(w) !== -1) s5total++; });
+  });
+  // Normaliser: maks ~2 treff per nyhet = count*2 = maks, skaler til 0–100
+  var s5norm = Math.min(100, Math.round(s5total / Math.max(1, count * 1.5) * 100));
+  var rawConflict = s5norm < 33 ? 1 : s5norm < 67 ? 2 : 3;
+
+  // ── SIGNALVEI 2: Oljeprissjokk via hormuz+energi temaboost ─────
+  var hormuzPts = 0, energiPts = 0;
+  recent.forEach(function(s) {
+    var cats = s.item.cats || [];
+    if (cats.indexOf('hormuz')  !== -1) hormuzPts += 25;
+    if (cats.indexOf('energi')  !== -1) energiPts += 10;
+    if (cats.indexOf('kapital') !== -1) energiPts += 4;
+  });
+  var oilSignal = Math.min(1, (hormuzPts + energiPts) / Math.max(1, count * 30));
+  var rawOil = Math.round(oilSignal * 115);
+
+  // ── SIGNALVEI 3: Varighet via volum-faktor ─────────────────────
+  var volFactor = Math.min(1, Math.log(count + 1) / Math.log(20));
+  // Score-vektet vedvarenhet: høy score + høyt volum = lengre
+  var avgScore = recent.reduce(function(a, s){ return a + s.score; }, 0) / count;
+  var intensitet = (avgScore / 100) * 0.6 + volFactor * 0.4;
+  var rawDuration = Math.round(1 + intensitet * 25); // 1–26 uker
+
+  // ── GLIDEGJENNOMSNITTET (70% ny, 30% forrige) ──────────────────
+  var conflict = Math.round(0.7 * rawConflict  + 0.3 * _tshmPrev.conflict);
+  var oil      = Math.round(0.7 * rawOil       + 0.3 * _tshmPrev.oil);
+  var duration = Math.round(0.7 * rawDuration  + 0.3 * _tshmPrev.duration);
+  conflict = Math.max(1, Math.min(3, conflict));
+  oil      = Math.max(0, Math.min(115, oil));
+  duration = Math.max(1, Math.min(26, duration));
+  _tshmPrev = { conflict: conflict, oil: oil, duration: duration };
+
+  // ── SETT SLIDERENE ─────────────────────────────────────────────
+  var slDur = document.getElementById('sl-duration');
+  var slOil = document.getElementById('sl-oil');
+  var slCon = document.getElementById('sl-conflict');
+  if (slDur) { slDur.value = duration; updateSliderLabel(slDur); }
+  if (slOil) { slOil.value = oil;      updateSliderLabel(slOil); }
+  if (slCon) { slCon.value = conflict; updateSliderLabel(slCon); }
+  if (typeof debouncedCalc === 'function') debouncedCalc();
+
+  // ── STATUSBOKS ─────────────────────────────────────────────────
+  var konlNavn = ['','Begrenset','Eskalert','Full krig'];
+  var begrunnelse = 'Trumpometer ' + (document.getElementById('dash-trump-score') ? document.getElementById('dash-trump-score').textContent : '?') + '/100 · '
+    + count + ' nyheter siste 24t · s5-militærtermer: ' + s5total
+    + ' treff · Hormuz-tema: ' + Math.round(hormuzPts/Math.max(1,count)) + ' pts/nyhet · volFaktor: ' + volFactor.toFixed(2)
+    + ' · Glidesnitt (70/30) fra forrige kjøring.';
+
+  var statusEl = document.getElementById('tshm-status');
+  if (statusEl) statusEl.style.display = 'block';
+  var tidEl = document.getElementById('tshm-tid');
+  if (tidEl) tidEl.textContent = new Date().toLocaleTimeString('no-NO', {hour:'2-digit', minute:'2-digit'});
+  var begrEl = document.getElementById('tshm-begrunnelse');
+  if (begrEl) begrEl.textContent = begrunnelse;
+  var kEl = document.getElementById('tshm-k');
+  if (kEl) { kEl.textContent = konlNavn[conflict]; kEl.style.color = conflict === 3 ? 'var(--red)' : conflict === 2 ? 'var(--amber)' : 'var(--navy)'; }
+  var oEl = document.getElementById('tshm-o');
+  if (oEl) { oEl.textContent = '+' + oil + ' $'; oEl.style.color = oil > 60 ? 'var(--red)' : oil > 30 ? 'var(--amber)' : 'var(--navy)'; }
+  var vEl = document.getElementById('tshm-v');
+  if (vEl) vEl.textContent = duration + ' uker';
+
+  // ── KNAPP-FEEDBACK ─────────────────────────────────────────────
+  var btn = document.getElementById('tshm-btn');
+  if (btn) {
+    btn.style.background = 'var(--navy)';
+    var sp = btn.querySelector('span');
+    if (sp) sp.style.color = 'white';
+    if (sp) sp.textContent = '✓ Synkronisert';
+    setTimeout(function() {
+      btn.style.background = 'var(--navy-lt)';
+      if (sp) sp.style.color = 'var(--navy-mid)';
+      if (sp) sp.textContent = '⟳ Synk fra Trumpometer';
+    }, 2200);
+  }
+}
+
 function omTab(tabId, btn) {
   document.querySelectorAll('.om-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.om-panel').forEach(p => p.classList.remove('active'));
@@ -5904,6 +6035,31 @@ window.nav = function(el) {
   Speedometer-score = gjennomsnitt × 0,7 + gjennomsnitt × volumfaktor × 0,3. Volumfaktoren øker ved mange nyheter.
   <div class="tt-sep"></div>
   Klikk «Vis alle Trump-nyheter» for full visning med filtrering på tema og rammeverk.
+</div>
+
+<!-- TSHM TOOLTIP -->
+<div class="tt-box" id="tt-tshm" style="max-width:340px">
+  <h4>TSHM — Trumpometer Signal-to-Hormuz Mapping</h4>
+  Oversetter automatisk Trumpometer-signaler til Hormuz-kalkulatorens tre parametere via tre uavhengige signalveier:
+  <div class="tt-sep"></div>
+  <table>
+    <tr>
+      <td style="color:rgba(255,255,255,.5);white-space:nowrap">Konfliktnivå</td>
+      <td>Teller s5-militærtermer (nuclear, strike, troops, missile, deploy…) på tvers av alle nyheter siste 24t. Normalisert mot volum → 0–33 = Begrenset · 34–66 = Eskalert · 67+ = Full krig</td>
+    </tr>
+    <tr>
+      <td style="color:rgba(255,255,255,.5);white-space:nowrap">Oljeprissjokk</td>
+      <td>Summerer Hormuz-temaboost (+25 pts/nyhet) og Energi-boost (+10 pts/nyhet). Skaleres lineært til 0–115 $/fat.</td>
+    </tr>
+    <tr>
+      <td style="color:rgba(255,255,255,.5);white-space:nowrap">Varighet</td>
+      <td>Bruker volum-faktoren log(antall+1)/log(20) kombinert med gjennomsnittlig score-intensitet (60/40-vekting). Mapper til 1–26 uker.</td>
+    </tr>
+  </table>
+  <div class="tt-sep"></div>
+  <span style="color:rgba(255,255,255,.6);font-size:11px">Glideformel:</span> Alle verdier glattes med 70 % ny signal + 30 % forrige kjøring for å dempe enkeltutslag fra én ekstremnyhet.
+  <div class="tt-sep"></div>
+  <span style="color:rgba(255,255,255,.6);font-size:11px">Begrensning:</span> TSHM er en heuristisk modell — ikke en kausal prediktor. Bruk som utgangspunkt og juster manuelt basert på kontekst Trumpometeret ikke fanger (forhandlingsklima, tredjepartsmekling, markedsposisjonering).
 </div>
 
 <!-- SCENARIO-TOOLTIPS -->
