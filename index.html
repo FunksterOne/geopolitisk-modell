@@ -984,6 +984,30 @@ input[type=range]::-webkit-slider-thumb {
           <div style="font-size:14px;font-weight:700;line-height:1;margin-top:1px" id="cr-risk">—</div>
         </div>
       </div>
+
+      <!-- Kompakt WTI/Brent spread-indikator -->
+      <div id="dash-spread-banner" style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding:7px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;gap:8px">
+        <div style="display:flex;align-items:center;gap:10px;flex:1;flex-wrap:wrap">
+          <div style="display:flex;align-items:baseline;gap:4px">
+            <span style="font-size:8px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)">Brent</span>
+            <span style="font-size:12px;font-weight:700;color:var(--navy)" id="dash-spread-brent">—</span>
+          </div>
+          <span style="font-size:10px;color:var(--faint)">vs</span>
+          <div style="display:flex;align-items:baseline;gap:4px">
+            <span style="font-size:8px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)">WTI</span>
+            <span style="font-size:12px;font-weight:700;color:var(--navy)" id="dash-spread-wti">—</span>
+          </div>
+          <div style="width:1px;height:16px;background:var(--border)"></div>
+          <div style="display:flex;align-items:center;gap:4px">
+            <span style="font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)">Spread</span>
+            <span style="font-size:12px;font-weight:700" id="dash-spread-val">—</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+          <span id="dash-spread-signal" style="font-size:9px;font-weight:700;padding:3px 8px;border-radius:10px;letter-spacing:.03em">—</span>
+          <span class="tt-trigger" data-tt="tt-spread" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md)">?</span>
+        </div>
+      </div>
     </div>
 
     <!-- ── TRUMPOMETER ────────────────────────────────────────── -->
@@ -4601,29 +4625,41 @@ function updateSpreadBanner() {
   if (!b || !w) return;
   var raw = b - w;
   var inv = raw < 0;
-  var spreadBrent = document.getElementById('spread-brent');
-  var spreadWti   = document.getElementById('spread-wti');
-  var spreadVal   = document.getElementById('spread-val');
-  var spreadSig   = document.getElementById('spread-signal');
-  if (spreadBrent) spreadBrent.textContent = b.toFixed(2) + ' $';
-  if (spreadWti)   spreadWti.textContent   = w.toFixed(2) + ' $';
-  if (spreadVal) {
-    spreadVal.textContent = (raw >= 0 ? 'Brent +' : 'WTI +') + Math.abs(raw).toFixed(2) + ' $';
-    spreadVal.style.color = inv ? 'var(--red)' : 'var(--green)';
-  }
-  if (spreadSig) {
-    if (inv) {
-      spreadSig.textContent = '⚠ Invertert spread';
-      spreadSig.style.cssText = 'flex-shrink:0;padding:4px 11px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.04em;background:var(--red-lt);color:var(--red);border:1px solid rgba(197,48,48,.2)';
-    } else if (Math.abs(raw - 3) < 1) {
-      spreadSig.textContent = '✓ Normal spread';
-      spreadSig.style.cssText = 'flex-shrink:0;padding:4px 11px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.04em;background:var(--green-lt);color:var(--green);border:1px solid rgba(20,83,45,.2)';
-    } else {
-      spreadSig.textContent = '↑ Utvidet spread';
-      spreadSig.style.cssText = 'flex-shrink:0;padding:4px 11px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.04em;background:var(--amber-lt);color:var(--amber);border:1px solid rgba(146,64,14,.2)';
+  var spreadTxt = (raw >= 0 ? 'Brent +' : 'WTI +') + Math.abs(raw).toFixed(2) + ' $';
+  var spreadCol = inv ? 'var(--red)' : 'var(--green)';
+
+  // Felles oppdateringsfunksjon for begge bannere
+  function applyToBanner(prefix) {
+    var bEl  = document.getElementById(prefix + 'brent');
+    var wEl  = document.getElementById(prefix + 'wti');
+    var vEl  = document.getElementById(prefix + 'val');
+    var sEl  = document.getElementById(prefix + 'signal');
+    if (bEl) bEl.textContent = b.toFixed(2) + ' $';
+    if (wEl) wEl.textContent = w.toFixed(2) + ' $';
+    if (vEl) { vEl.textContent = spreadTxt; vEl.style.color = spreadCol; }
+    if (sEl) {
+      if (inv) {
+        sEl.textContent = '⚠ Invertert';
+        sEl.style.background = 'var(--red-lt)';
+        sEl.style.color = 'var(--red)';
+        sEl.style.border = '1px solid rgba(197,48,48,.2)';
+      } else if (Math.abs(raw - 3) < 1) {
+        sEl.textContent = '✓ Normal';
+        sEl.style.background = 'var(--green-lt)';
+        sEl.style.color = 'var(--green)';
+        sEl.style.border = '1px solid rgba(20,83,45,.2)';
+      } else {
+        sEl.textContent = '↑ Utvidet';
+        sEl.style.background = 'var(--amber-lt)';
+        sEl.style.color = 'var(--amber)';
+        sEl.style.border = '1px solid rgba(146,64,14,.2)';
+      }
     }
   }
-  // Trigger ny kalkulator-kjøring for å oppdatere BNP-tall
+
+  applyToBanner('spread-');       // Hormuz-panelet
+  applyToBanner('dash-spread-');  // Dashboard
+
   if (typeof debouncedCalc === 'function') debouncedCalc();
 }
 
