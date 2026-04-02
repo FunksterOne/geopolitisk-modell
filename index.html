@@ -4395,40 +4395,39 @@ var _marketSymbols = [
 
 function fetchMarkets() {
   var PROXY = 'https://corsproxy.io/?';
-  var batch = _marketSymbols.join('%2C');
-  var url = PROXY + encodeURIComponent(
-    'https://query1.finance.yahoo.com/v7/finance/quote?symbols=' +
-    _marketSymbols.join(',') +
-    '&fields=regularMarketPrice,regularMarketChange,regularMarketChangePercent'
-  );
-  fetch(url, { cache: 'no-store' })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      var results = data.quoteResponse && data.quoteResponse.result;
-      if (!results) return;
-      results.forEach(function(q) {
-        var box = document.querySelector('.mkt-box[data-sym="' + q.symbol + '"]');
-        if (!box) return;
+  // Individuelle v8-kall — batch v7 er blokkert
+  _marketSymbols.forEach(function(sym) {
+    var url = PROXY + encodeURIComponent(
+      'https://query1.finance.yahoo.com/v8/finance/chart/' + sym + '?interval=1d&range=1d'
+    );
+    fetch(url, { cache: 'no-store' })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var meta = data.chart && data.chart.result && data.chart.result[0] && data.chart.result[0].meta;
+        if (!meta) return;
+        var p   = parseFloat(meta.regularMarketPrice);
+        var prev = parseFloat(meta.previousClose || meta.chartPreviousClose || p);
+        var chg  = prev ? ((p - prev) / prev) * 100 : 0;
+        var up   = chg >= 0;
+
+        var box = document.querySelector('.mkt-box[data-sym="' + sym + '"]');
+        if (!box || !p) return;
         var dec  = parseInt(box.dataset.dec || '2');
         var unit = box.dataset.unit || '';
-        var p    = q.regularMarketPrice;
-        var chg  = q.regularMarketChangePercent;
-        var up   = chg >= 0;
 
         box.classList.remove('up','down');
         box.classList.add(up ? 'up' : 'down');
-
         box.innerHTML =
           '<div class="mkt-label">' + box.dataset.label + '</div>' +
           '<div class="mkt-val">' + p.toFixed(dec) +
-            (unit ? '<span class="mkt-unit">' + unit + '</span>' : '') +
+            (unit ? '<span class="mkt-unit"> ' + unit + '</span>' : '') +
           '</div>' +
           '<div class="mkt-chg" style="color:' + (up ? '#14532D' : '#C53030') + '">' +
             (up ? '▲' : '▼') + ' ' + Math.abs(chg).toFixed(2) + '%' +
           '</div>';
 
-        // Synk Brent med Hormuz-kalkulatoren
-        if (q.symbol === 'BZ=F') {
+        // Synk Brent med Hormuz-kalkulatoren og live-indikatoren
+        if (sym === 'BZ=F') {
           window._brentLive = p;
           var lbl = document.getElementById('brent-base-lbl');
           if (lbl) lbl.textContent = '~' + Math.round(p) + ' $';
@@ -4439,12 +4438,14 @@ function fetchMarkets() {
             var ts = new Date().toLocaleTimeString('no-NO', {hour:'2-digit', minute:'2-digit'});
             srcEl.textContent = 'Live · Yahoo Finance · ' + ts;
           }
+          if (document.getElementById('panel-hormuz') &&
+              document.getElementById('panel-hormuz').classList.contains('active')) {
+            calcHormuz();
+          }
         }
-      });
-    })
-    .catch(function() {
-      // Stille feil — behold tomme bokser
-    });
+      })
+      .catch(function() {}); // Stille feil per symbol
+  });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
