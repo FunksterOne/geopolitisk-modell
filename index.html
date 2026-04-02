@@ -720,15 +720,12 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 </header>
 
-<!-- ── SØKERAD ── -->
+<!-- ── MODELL-GUIDE KNAPP ── -->
 <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:5px 20px;display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-shrink:0">
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-  <input type="text" id="search-input" placeholder="Søk i modellen..." oninput="runSearch(this.value)"
-    style="font-size:12px;padding:3px 6px;border:1px solid var(--border);border-radius:5px;background:var(--bg);color:var(--text);width:200px;outline:none">
-  <button onclick="searchPrev()" style="font-size:11px;color:var(--muted);background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;padding:1px 6px;line-height:1.6" title="Forrige">↑</button>
-  <button onclick="searchNext()" style="font-size:11px;color:var(--muted);background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;padding:1px 6px;line-height:1.6" title="Neste">↓</button>
-  <span id="search-count" style="font-size:10px;color:var(--faint);min-width:55px"></span>
-  <button onclick="clearSearch()" style="font-size:10px;color:var(--faint);background:none;border:none;cursor:pointer;padding:0 2px" title="Tøm">✕</button>
+  <button onclick="openGuideModal()" style="display:flex;align-items:center;gap:7px;padding:5px 14px;background:linear-gradient(135deg,#1F3864,#2d4f8a);border:none;border-radius:20px;cursor:pointer;font-family:inherit;box-shadow:0 2px 8px rgba(31,56,100,.3);transition:all .2s" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 12px rgba(31,56,100,.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 2px 8px rgba(31,56,100,.3)'">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.92)">Forstå modellen</span>
+  </button>
 </div>
 
 <!-- ── SØKERESULTATVINDU ── -->
@@ -881,7 +878,7 @@ input[type=range]::-webkit-slider-thumb {
       <!-- Fem nøkkeltall — konsistent med stat-card mønster -->
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
         <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 8px;text-align:center">
-          <div class="stat-label" style="font-size:9px;margin-bottom:4px">Brent topp</div>
+          <div class="stat-label" style="font-size:9px;margin-bottom:4px">Brent topp <span class="tt-trigger" data-tt="tt-oljepris" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
           <div style="font-size:16px;font-weight:700;color:var(--red);line-height:1" id="cr-brent">—</div>
         </div>
         <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 8px;text-align:center">
@@ -898,7 +895,7 @@ input[type=range]::-webkit-slider-thumb {
           <div style="font-size:16px;font-weight:700;color:var(--amber);line-height:1" id="cr-cpi">—</div>
         </div>
         <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 8px;text-align:center">
-          <div class="stat-label" style="font-size:9px;margin-bottom:4px">BNP per kv.</div>
+          <div class="stat-label" style="font-size:9px;margin-bottom:4px">BNP per kv. <span class="tt-trigger" data-tt="bnp-tooltip" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
           <div style="font-size:16px;font-weight:700;color:var(--text);line-height:1" id="out-gdp">—</div>
         </div>
         <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 8px;text-align:center">
@@ -1217,7 +1214,7 @@ input[type=range]::-webkit-slider-thumb {
         <div style="font-size:11px;color:var(--muted)">Energi · Krig · Kreditt — simultant aktive</div>
       </div>
       <div style="background:var(--navy-lt);border:1px solid rgba(31,56,100,.15);border-radius:var(--radius);padding:14px 16px">
-        <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);margin-bottom:6px">Mirans smale sti</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);margin-bottom:6px">Mirans smale sti <span class="tt-trigger" data-tt="tt-miran-foruts" style="display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div style="font-size:18px;font-weight:700;color:var(--navy);line-height:1;margin-bottom:4px">Stengt</div>
         <div style="font-size:11px;color:var(--muted)">Alle 5 forutsetninger brutt per 31. mars</div>
       </div>
@@ -2137,14 +2134,14 @@ input[type=range]::-webkit-slider-thumb {
         <div class="dc-src">Kilde: Tradeweb via Fed</div>
       </div>
       <div class="data-card alert">
-        <div class="dc-label">Effektiv tarifffrate</div>
+        <div class="dc-label">Effektiv tarifffrate <span class="tt-trigger" data-tt="tt-tarifffrate" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="dc-value">10,5 %</div>
         <div class="dc-sub">Høyeste siden 1943</div>
         <div class="dc-trend" style="color:var(--red)">Var 14,3 % (Yale Budget Lab)</div>
         <div class="dc-src">Kilde: Yale Budget Lab, mars 2026</div>
       </div>
       <div class="data-card alert">
-        <div class="dc-label">Fed-balanse</div>
+        <div class="dc-label">Fed-balanse <span class="tt-trigger" data-tt="tt-fed-balanse" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="dc-value">6,65 bn $</div>
         <div class="dc-sub">Per 11. mars 2026</div>
         <div class="dc-trend" style="color:var(--red)">−2,4 bn $ fra topp apr. 2022</div>
@@ -2165,14 +2162,14 @@ input[type=range]::-webkit-slider-thumb {
 
     <div class="data-grid">
       <div class="data-card ok">
-        <div class="dc-label">ECB-styringsrente (innskudd)</div>
+        <div class="dc-label">ECB-styringsrente (innskudd) <span class="tt-trigger" data-tt="tt-ecb-rente" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="dc-value">2,00 %</div>
         <div class="dc-sub">Holdt 19. mars · refinansiering: 2,15 %</div>
         <div class="dc-trend" style="color:var(--green)">Marginal utlånsrente: 2,40 %</div>
         <div class="dc-src">Kilde: ECB, 19. mars 2026</div>
       </div>
       <div class="data-card warn">
-        <div class="dc-label">HICP-inflasjon (faktisk)</div>
+        <div class="dc-label">HICP-inflasjon (faktisk) <span class="tt-trigger" data-tt="tt-hicp" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="dc-value">1,9 %</div>
         <div class="dc-sub">Februar 2026 · 12 mnd. (Eurostat)</div>
         <div class="dc-trend" style="color:var(--amber)">Prognose 2026: 2,6 % (ECB mars)</div>
@@ -2210,7 +2207,7 @@ input[type=range]::-webkit-slider-thumb {
         <div class="dc-src">Kilde: Eurostat</div>
       </div>
       <div class="data-card ok">
-        <div class="dc-label">Tysk 10-årig Bund</div>
+        <div class="dc-label">Tysk 10-årig Bund <span class="tt-trigger" data-tt="tt-bund" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="dc-value">2,88 %</div>
         <div class="dc-sub">Eurosoneens referanserente</div>
         <div class="dc-trend" style="color:var(--green)">EUR/USD ~1,18</div>
@@ -2304,14 +2301,14 @@ input[type=range]::-webkit-slider-thumb {
 
     <div class="data-grid">
       <div class="data-card alert">
-        <div class="dc-label">Brent råolje</div>
+        <div class="dc-label">Brent råolje <span class="tt-trigger" data-tt="tt-brent-live" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="dc-value" style="color:var(--red)">~113 $</div>
         <div class="dc-sub">31. mars 2026 (CNBC/ICE) · +55 % i mars · Dallas Fed: 98 $ v/1 kv. stengning</div>
         <div class="dc-trend" style="color:var(--red)">200 $-scenario ved langvarig stengning</div>
         <div class="dc-src">Kilde: EIA / Dallas Fed mars 2026</div>
       </div>
       <div class="data-card alert">
-        <div class="dc-label">Hormuz — forstyrret volum</div>
+        <div class="dc-label">Hormuz — forstyrret volum <span class="tt-trigger" data-tt="tt-hormuz-vol" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="dc-value">20 %</div>
         <div class="dc-sub">Av global oljeforsyning · 21+ skip angrepet</div>
         <div class="dc-trend" style="color:var(--red)">IEA: «Historiens største energikrise»</div>
@@ -2325,7 +2322,7 @@ input[type=range]::-webkit-slider-thumb {
         <div class="dc-src">Kilde: Federal Reserve Bank of Dallas</div>
       </div>
       <div class="data-card warn">
-        <div class="dc-label">Goodspeed energisjokk-frekvens</div>
+        <div class="dc-label">Goodspeed energisjokk-frekvens <span class="tt-trigger" data-tt="tt-gs-energifrekvens" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="dc-value">10 av 12</div>
         <div class="dc-sub">Resesjoner i USA siden 1945 med energikomponent</div>
         <div class="dc-trend" style="color:var(--amber)">Hormuz er Goodspeeds type-1 sjokk</div>
@@ -2335,7 +2332,7 @@ input[type=range]::-webkit-slider-thumb {
 
     <div class="data-grid data-grid-3">
       <div class="data-card warn">
-        <div class="dc-label">Europeisk naturgass (TTF)</div>
+        <div class="dc-label">Europeisk naturgass (TTF) <span class="tt-trigger" data-tt="tt-ttf" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="dc-value">~2× nivå</div>
         <div class="dc-sub">Nær-dobling etter Hormuz-stengning</div>
         <div class="dc-trend" style="color:var(--amber)">Europa mer utsatt enn USA</div>
@@ -2349,7 +2346,7 @@ input[type=range]::-webkit-slider-thumb {
         <div class="dc-src">Kilde: Tradeweb, 18. mars 2026</div>
       </div>
       <div class="data-card warn">
-        <div class="dc-label">Brent-sjokk på KPI (Moody's)</div>
+        <div class="dc-label">Brent-sjokk på KPI (Moody's) <span class="tt-trigger" data-tt="tt-brent-sjokk-kpi" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="dc-value">+0,3–1,1 pp</div>
         <div class="dc-sub">Avhengig av konfliktes varighet</div>
         <div class="dc-trend" style="color:var(--amber)">USA KPI kan nå 3,5 % innen Q4</div>
@@ -4306,7 +4303,7 @@ window.nav = function(el) {
 </div>
 
 <div class="tt-box" id="tt-miran-sti">
-  <h4>Mirans smale sti</h4>
+  <h4>Mirans smale sti <span class="tt-trigger" data-tt="tt-miran-foruts" style="display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></h4>
   Stephen Miran (CEA-leder) publiserte i november 2024 en plan for å restrukturere det globale handelssystemet via tariffer og en ny Plaza-lignende valutaavtale. Han erkjente selv at «there is a path, but it is narrow» og listet fem forutsetninger som alle måtte holde.
   <div class="tt-sep"></div>
   Alle fem er brutt per april 2026.
@@ -4659,7 +4656,114 @@ window.nav = function(el) {
   </table>
   <div class="tt-sep"></div>
   Kilde: Goodspeed (2025) — 10 av 12 resesjoner siden 1945 hadde energikomponent
+
+<!-- MAKRODATA TOOLTIPS -->
+<div class="tt-box" id="tt-tarifffrate">
+  <h4>Effektiv tarifffrate</h4>
+  Vektet gjennomsnittlig tariff på alle amerikanske importvarer. Yale Budget Lab beregner den faktiske raten, i motsetning til nominelle tariffer som annonseres. 10,5 % er den høyeste effektive raten siden 1943 — høyere enn Smoot-Hawley-høyden i 1930.
+  <div class="tt-sep"></div>
+  Mirans plan forutsatte at tariffer kunne brukes kirurgisk. Realiteten er et bredspektret sjokk på importpriser.
 </div>
+
+<div class="tt-box" id="tt-fed-balanse">
+  <h4>Feds balanse</h4>
+  Størrelsen på Federal Reserves samlede eiendeler (primært statsobligasjoner og MBS). Kvantitativ innstramming (QT) siden 2022 har redusert balansen med 2,4 billioner dollar. Lavere balanse reduserer likviditet i finanssystemet og kan forsterke kredittinnstramning.
+  <div class="tt-sep"></div>
+  Goodspeed: kredittkontraksjon er Trigger 3 — og Fed har allerede brukt mye av sitt QE-handlingsrom.
+</div>
+
+<div class="tt-box" id="tt-ecb-rente">
+  <h4>ECB-styringsrente</h4>
+  European Central Banks innskuddsrente — gulvpris for pengemarkedet i eurosonen. ECB kuttet fra 3,00 % til 2,00 % i perioden 2024–mars 2026. Nå på pause pga. Hormuz-inflasjonstrykk. Miran: ECB-koordinering er en nødvendig forutsetning for hans plan — og den forutsetningen er brutt.
+</div>
+
+<div class="tt-box" id="tt-hicp">
+  <h4>HICP-inflasjon</h4>
+  Harmonised Index of Consumer Prices — EUs offisielle inflasjonsmål. ECB-mål: 2 % over tid. Hormuz-sjokket er ikke ennå fullt priset inn i HICP-data. ECB-stab mars 2026: +0,3 pp KPI-effekt ved vedvarende Hormuz-forstyrrelse. Europeisk energiintensiv industri rammes direkte via TTF-gasspriser.
+</div>
+
+<div class="tt-box" id="tt-bund">
+  <h4>Tysk 10-årig Bund</h4>
+  Tysklands statsobligasjonsrente — den risikofrieeuropeiske referansen. Stiger pga. tysk forsvarsutbygging og økt budsjettunderskudd. Risikofriest instrument i Europa, men ikke lenger deflasjonssikring etter Germanys Zeitenwende-vedtak (500 mrd. EUR forsvars- og infrastrukturinvesteringer).
+</div>
+
+<div class="tt-box" id="tt-ttf">
+  <h4>Europeisk naturgass (TTF)</h4>
+  Title Transfer Facility — den europeiske naturgassbenchmarken. Hormuz-stengningen rammer Qatar LNG direkte (26 % av global LNG-produksjon). Europa er Qatars viktigste LNG-destinasjon. TTF-prisen er den mest direkte indikatoren på Europas energisårbarhet.
+  <div class="tt-sep"></div>
+  Perera (2026): LNG Train 4 og 6 er ødelagt — irreversibelt på 18–24 måneder.
+</div>
+
+<div class="tt-box" id="tt-hormuz-vol">
+  <h4>Forstyrret Hormuz-volum</h4>
+  Andel av global oljeforsyning som passerer gjennom Hormuz-stredet. 20 % av global handel med råolje og 17 % av flytende naturgass passerer daglig. Selv delvis forstyrrelse har stor priseffekt pga. trange alternativruter (Cape of Good Hope +14 dager per tur).
+  <div class="tt-sep"></div>
+  Kilde: IEA World Energy Outlook 2024 · Dallas Fed Hormuz-studie mars 2026
+</div>
+
+<div class="tt-box" id="tt-brent-sjokk-kpi">
+  <h4>Brent-sjokk på KPI</h4>
+  Moody's (mars 2026) estimerer at 1 $/fat varig økning i Brent gir 0,028 pp økning i inflasjon over 8 uker. IMF bruker 0,037, ECB 0,054. Modellen bruker Moody's konservative anslag. Gjennomslaget vokser med varigheten (sqrt-skalering).
+</div>
+
+<div class="tt-box" id="tt-gs-energifrekvens">
+  <h4>Goodspeed energisjokk-frekvens</h4>
+  Tyler Goodspeed (2025): av 12 resesjoner i USA siden 1945 hadde 10 en energikomponent. Dette er den høyeste frekvensen for noen enkeltfaktor. Energisjokk alene forklarer ikke resesjoner — men de er involvert i nesten alle.
+  <div class="tt-sep"></div>
+  Goodspeeds poeng: ikke at energi alltid fører til resesjon, men at energisjokk + en av de andre triggerene nesten alltid gjør det.
+</div>
+
+</div>
+<!-- POPUP-SPESIFIKKE TOOLTIPS — lagt til systematisk gjennomgang -->
+<div class="tt-box" id="tt-kina-ree">
+  <h4>REE-prosessering — Kinas dominans</h4>
+  Kina kontrollerer 85–90 % av global prosessering av sjeldne jordarter. Selv råstoff utvinnet i Australia, USA og Myanmar sendes til Kina for raffinering. Tunge REE (dysprosium, terbium) er nær kinesisk monopol — disse er kritiske for EV-magneter, forsvarssystemer og vindturbiner.
+  <div class="tt-sep"></div>
+  Kilde: USGS Critical Minerals Report 2024 · IEA Critical Minerals 2024
+</div>
+
+<div class="tt-box" id="tt-dysprosium">
+  <h4>Dysprosium (Dy₂O₃)</h4>
+  Tung sjelden jordartsmetall brukt i høytemperaturmagneter for EV-er, vindturbiner og forsvarssystemer. Kinas andel av global prosessering: &gt;90 %. YTD-stigning &gt;100 % skyldes kombinasjon av eksportkontroller og Hormuz-stengningens forstyrrelser av Ras Laffan-logistikk.
+  <div class="tt-sep"></div>
+  Industriell SMM-pris (mars 2026): ~191 $/kg. Retailpris: ~930 $/kg.
+</div>
+
+<div class="tt-box" id="tt-ree-pris">
+  <h4>Tosporet REE-prissetting</h4>
+  Industrielle kjøpere (magnettprodusenter, OEM-er) betaler SMM-referansepris. Private investorer betaler 3–5× mer via retailkanaler. Prisforskjellen er ikke arbitrasje — den reflekterer reell tilgangsbegrensning. Kina kontrollerer innenlandske priser via kvoter, mens ex-Kina-markedet prises med strukturell knapphetspremie.
+  <div class="tt-sep"></div>
+  Kina REE-prisindeks (2010=100): topp 300+ tidlig 2026, nå 255,7.
+</div>
+
+<div class="tt-box" id="tt-kap-barbell">
+  <h4>Barbell-strategi i Extremistan</h4>
+  Nassim Taleb: i Extremistan (diskontinuerlige hendelser med svarte svaner) gir standard 60/40-diversifisering lineær nedsideeksponering uten tilstrekkelig oppsidepotensial. Riktig respons er barbell: 80 % ultra-robuste aktiva + 20 % asymmetriske posisjoner med begrenset tap men ubegrenset oppside.
+  <div class="tt-sep"></div>
+  Unngå «middels risiko» — det er det verste av begge verdener i Extremistan.
+</div>
+
+<div class="tt-box" id="tt-vektet-allok">
+  <h4>Vektet anbefaling — beregning</h4>
+  Den vektede anbefalingen beregnes dynamisk fra de tre scenarios sannsynligheter: vektet = A×pA + B×pB + C×pC, der pA/pB/pC er nåværende kalkulerte sannsynligheter (totalt 100 %).
+  <div class="tt-sep"></div>
+  Oppdateres automatisk når scenario-sannsynlighetene endres via Hormuz-kalkulatoren.
+</div>
+
+<div class="tt-box" id="tt-hormuz-dag">
+  <h4>Hormuz-stengning — dag-teller</h4>
+  Irans Revolusjonsgarde erklærte Hormuz-stredet stengt 28. februar 2026, samme dag som Operation Epic Fury (drapet på Khamenei). Dag-telleren beregnes automatisk fra stengningsdatoen.
+  <div class="tt-sep"></div>
+  Perera (2026): etter 4 uker er heliumtapet irreversibelt. Etter 2 kvartaler er Taleb-tertiærsjokket aktivert.
+</div>
+
+<div class="tt-box" id="tt-brent-live">
+  <h4>Brent Crude — live pris</h4>
+  Brent råolje (ICE London) er den globale oljebenchmarken. Prisen hentes automatisk fra Yahoo Finance og oppdateres hvert 5. minutt. Alle BNP-beregninger og scenario-analyser i modellen bruker live Brent som startpunkt.
+  <div class="tt-sep"></div>
+  Kilde: Yahoo Finance · BZ=F (Brent futures front-month)
+</div>
+
 
 <div class="tt-box" id="tt-kpi">
   <h4>KPI-effekt — beregning</h4>
@@ -5731,27 +5835,27 @@ window.nav = function(el) {
     <!-- KPI-strip — speiler Hormuz-modal -->
     <div id="sc-modal-kpi-strip" class="popup-kpi-strip">
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">Scenario A</div>
+        <div class="popup-kpi-label">Scenario A <span class="tt-trigger" data-tt="tt-sc-prob" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--green)" id="scm-strip-pA">—</div>
         <div class="popup-kpi-sub">Rask oppløsning</div>
       </div>
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">Scenario B ★</div>
+        <div class="popup-kpi-label">Scenario B ★ <span class="tt-trigger" data-tt="tt-sc-prob" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--amber)" id="scm-strip-pB">—</div>
         <div class="popup-kpi-sub">Kronisk forstyrrelse</div>
       </div>
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">Scenario C</div>
+        <div class="popup-kpi-label">Scenario C <span class="tt-trigger" data-tt="tt-sc-prob" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--red)" id="scm-strip-pC">—</div>
         <div class="popup-kpi-sub">Systemkollaps</div>
       </div>
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">Brent 12 mnd (A)</div>
+        <div class="popup-kpi-label">Brent 12 mnd (A) <span class="tt-trigger" data-tt="tt-sc-brent-a" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--amber);font-size:15px" id="scm-strip-brentA">—</div>
         <div class="popup-kpi-sub">EIA normalisering</div>
       </div>
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">Perera-skader</div>
+        <div class="popup-kpi-label">Perera-skader <span class="tt-trigger" data-tt="tt-irreversibel" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--red);font-size:15px">Irreversible</div>
         <div class="popup-kpi-sub">Uavh. av scenario-utgang</div>
       </div>
@@ -6152,8 +6256,17 @@ function syncScenarioModalParams() {
   var bBar = function(id, w) { var el = document.getElementById(id); if (el) el.style.width = Math.max(4, w) + '%'; };
   bBar('scm-bar-a', pA); bBar('scm-bar-b', pB); bBar('scm-bar-c', pC);
 
+  // ── KILIAN IKKE-LINEÆR — identisk med calcHormuz ──────────────
+  function kilianGDPsc(shock) {
+    if (shock <= 0)  return 0;
+    if (shock < 20)  return shock * 0.18;
+    if (shock < 50)  return shock * 0.223;
+    return 20 * 0.18 + 30 * 0.223 + (shock - 50) * 0.27;
+  }
+  var durQtrSc = dur / 13;
+
   // ── SCENARIO A ────────────────────────────────────────────────
-  var bnpA = Math.max(0.3, (oilShock * 0.023 * (dur/4) * 0.48 * 1)).toFixed(1);
+  var bnpA = Math.max(0.3, (kilianGDPsc(oilShock) * Math.min(durQtrSc, 4) * 0.72 * 0.48)).toFixed(1);
   s('scm-a-prob',       pAstr);
   s('scm-a-norm',       dur <= 4 ? '2–4 uker' : dur <= 10 ? '6–8 uker' : '8–12 uker');
   s('scm-a-brent',      brentA_lo + '–' + brentA_hi + ' $');
@@ -6161,11 +6274,12 @@ function syncScenarioModalParams() {
   s('scm-a-dur-detail', dur <= 4 ? '4–6 uker' : '6–10 uker');
 
   // ── SCENARIO B ────────────────────────────────────────────────
-  var cpiB    = (oilShock * 0.025 * cm).toFixed(1);
+  var cpiSc   = Math.min(1, Math.sqrt(durQtrSc / 2));
+  var cpiB    = (oilShock * cm * 0.028 * (0.3 + 0.7 * cpiSc)).toFixed(1);
   var brentB_lo = Math.round(brentLive * (0.9 + conflict * 0.08));
   var brentB_hi = Math.round(brentLive * (1.1 + conflict * 0.12));
-  var bnpB_lo = (oilShock * 0.023 * cm * 0.6).toFixed(1);
-  var bnpB_hi = (oilShock * 0.023 * cm * 0.85).toFixed(1);
+  var bnpB_lo = (kilianGDPsc(oilShock) * cm * Math.min(durQtrSc,4) * 0.72 * 0.6).toFixed(1);
+  var bnpB_hi = (kilianGDPsc(oilShock) * cm * Math.min(durQtrSc,4) * 0.72 * 0.85).toFixed(1);
   s('scm-b-prob',  pBstr);
   s('scm-b-reg',   conflict >= 3 ? 'Stengt · yuan-kontroll' : conflict >= 2 ? 'Delvis åpen · eskalert' : 'Delvis åpen · yuan-toll');
   s('scm-b-brent', brentB_lo + '–' + brentB_hi + ' $');
@@ -6175,8 +6289,8 @@ function syncScenarioModalParams() {
   // ── SCENARIO C ────────────────────────────────────────────────
   var brentC_lo = Math.round(brentLive * (1.3 + conflict * 0.12));
   var brentC_hi = Math.round(brentLive * (1.7 + conflict * 0.18));
-  var bnpC_lo   = Math.round(oilShock * 0.04 * cm + dur * 0.12);
-  var bnpC_hi   = Math.round(oilShock * 0.065 * cm + dur * 0.18);
+  var bnpC_lo   = Math.round(kilianGDPsc(oilShock) * cm * Math.min(durQtrSc,4) * 0.72 * 1.1 + dur * 0.08);
+  var bnpC_hi   = Math.round(kilianGDPsc(oilShock) * cm * Math.min(durQtrSc,4) * 0.72 * 1.6 + dur * 0.14);
   s('scm-c-prob',   pCstr);
   s('scm-c-status', dur > 16 ? 'Stengt 12+ mnd.' : 'Stengt ' + dur + '+ uker · blokkade');
   s('scm-c-brent',  brentC_lo + '–' + brentC_hi + ' $');
@@ -6243,7 +6357,7 @@ function syncScenarioModalParams() {
             <div class="popup-head-pill-dot pulse"></div>
             <span>Brent: <strong id="hzm-brent-live">—</strong></span>
           </div>
-          <div class="popup-head-pill">Dag <strong id="hzm-stengt">33</strong> · stengt 28. feb.</div>
+          <div class="popup-head-pill">Dag <span class="tt-trigger" data-tt="tt-hormuz-dag" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span> <strong id="hzm-stengt">33</strong> · stengt 28. feb.</div>
           <span class="popup-head-param">Sjokk: <strong id="hzm-params">—</strong></span>
         </div>
         <div class="popup-head-sub">Dallas Fed-estimat (mars 2026) · Goodspeeds resesjonsteori · dynamisk fra kalkulatoren</div>
@@ -6254,7 +6368,7 @@ function syncScenarioModalParams() {
     <!-- KPI-strip -->
     <div id="hz-modal-kpi-strip" class="popup-kpi-strip">
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">Brent topp</div>
+        <div class="popup-kpi-label">Brent topp <span class="tt-trigger" data-tt="tt-oljepris" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--red)" id="hzm-brent-topp">—</div>
         <div class="popup-kpi-sub">Beregnet peak</div>
       </div>
@@ -6264,17 +6378,17 @@ function syncScenarioModalParams() {
         <div class="popup-kpi-sub">Kilian / Dallas Fed</div>
       </div>
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">KPI-effekt</div>
+        <div class="popup-kpi-label">KPI-effekt <span class="tt-trigger" data-tt="tt-kpi" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--amber)" id="hzm-kpi">—</div>
         <div class="popup-kpi-sub">Inflasjonspress</div>
       </div>
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">BNP per kvartal</div>
+        <div class="popup-kpi-label">BNP per kvartal <span class="tt-trigger" data-tt="bnp-tooltip" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--navy)" id="hzm-bnp-kv">—</div>
         <div class="popup-kpi-sub">Kilian-estimat</div>
       </div>
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">Resesjonsrisiko</div>
+        <div class="popup-kpi-label">Resesjonsrisiko <span class="tt-trigger" data-tt="tt-resesjon" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" id="hzm-risiko" style="font-size:16px">—</div>
         <div class="popup-kpi-sub">Goodspeed-indeks</div>
       </div>
@@ -6283,7 +6397,7 @@ function syncScenarioModalParams() {
     <!-- Tabs -->
     <div id="hz-modal-tabs" class="popup-tabs">
       <div class="popup-tab active" id="hzm-tab-overblikk" onclick="hzmTab('overblikk')">Overblikk</div>
-      <div class="popup-tab" id="hzm-tab-regioner"  onclick="hzmTab('regioner')">Regioner</div>
+      <div class="popup-tab" id="hzm-tab-regioner"  onclick="hzmTab('regioner')">Regioner <span class="tt-trigger" data-tt="tt-regioner" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
       <div class="popup-tab" id="hzm-tab-goodspeed" onclick="hzmTab('goodspeed')">Goodspeed-triggere</div>
       <div class="popup-tab" id="hzm-tab-kaskade"   onclick="hzmTab('kaskade')">Taleb-kaskade</div>
       <div class="popup-tab" id="hzm-tab-graf" onclick="hzmTab('graf')" style="margin-left:auto">📈 Oljeprisforløp</div>
@@ -6441,7 +6555,7 @@ function syncScenarioModalParams() {
       <!-- ══ GOODSPEED-TRIGGERE ══ -->
       <div class="hz-panel popup-panel" id="hzp-goodspeed">
         <div class="popup-info-box accent-red" style="margin-bottom:14px">
-          <div class="popup-info-box-label" style="color:var(--red)">Goodspeed (2025): Resesjoner myrdes — de dør ikke <span class="tt-trigger" data-tt="tt-goodspeed" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
+          <div class="popup-info-box-label" style="color:var(--red)">Goodspeed (2025): Resesjoner myrdes — de dør ikke <span class="tt-trigger" data-tt="tt-gs-tre" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span> <span class="tt-trigger" data-tt="tt-goodspeed" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
           <div class="popup-info-box-text">Energisjokk er involvert i 10 av 12 resesjoner siden 1945. Alle tre primærtriggers simultant aktive for første gang siden 1979/80.</div>
         </div>
 
@@ -6587,15 +6701,15 @@ function syncScenarioModalParams() {
         <!-- Tre nøkkeltall under grafen -->
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px">
           <div class="popup-kpi-card" style="text-align:center">
-            <div class="popup-kpi-card-label">Brent nå</div>
+            <div class="popup-kpi-card-label">Brent nå <span class="tt-trigger" data-tt="tt-oljepris" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
             <div class="popup-kpi-card-val" style="color:var(--red)" id="hzm-grf-brent-live">—</div>
           </div>
           <div class="popup-kpi-card" style="text-align:center">
-            <div class="popup-kpi-card-label">Beregnet peak</div>
+            <div class="popup-kpi-card-label">Beregnet peak <span class="tt-trigger" data-tt="tt-oljepris" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
             <div class="popup-kpi-card-val" style="color:var(--red)" id="hzm-grf-peak2">—</div>
           </div>
           <div class="popup-kpi-card" style="text-align:center">
-            <div class="popup-kpi-card-label">BNP kumulativt</div>
+            <div class="popup-kpi-card-label">BNP kumulativt <span class="tt-trigger" data-tt="bnp-tooltip" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
             <div class="popup-kpi-card-val" style="color:var(--red)" id="hzm-grf-bnp">—</div>
           </div>
         </div>
@@ -6669,25 +6783,51 @@ function syncHormuzModalData() {
   var durTxt   = dur === 1 ? '1 uke' : dur + ' uker';
   var cm       = conflict === 1 ? 1 : conflict === 2 ? 1.5 : 2.2;
 
-  // Beregn nøkkeltall
+  // ── KILIAN IKKE-LINEÆR BNP — identisk med calcHormuz ──────────
+  function kilianGDPsync(shock) {
+    if (shock <= 0)  return 0;
+    if (shock < 20)  return shock * 0.18;
+    if (shock < 50)  return shock * 0.223;
+    return 20 * 0.18 + 30 * 0.223 + (shock - 50) * 0.27;
+  }
+  var durQtr    = dur / 13;
+  var rawSpread = brent - wti;
+  var inv       = rawSpread < 0;
+  var spreadDev = rawSpread - 3.0;
+  var wtiSpreadFactor = wti / Math.max(brent, 1);
+  var wtiShock  = oilShock * (wti > brent ? brent / Math.max(wti, 1) : 1);
+
+  // BNP per kvartal (Kilian ikke-lineær + konfliktskalert)
+  var gdpBase   = kilianGDPsync(oilShock);
+  var bnpKv     = (gdpBase * cm).toFixed(1);
+
+  // Kumulativ BNP (Hamilton 2009: 0.72-avtak, maks 4 kvartaler)
+  var bnpKum    = (gdpBase * cm * Math.min(durQtr, 4) * 0.72).toFixed(1);
+
+  // KPI (0.028 × varighet-skalert — identisk calcHormuz)
+  var cpiScale  = Math.min(1, Math.sqrt(durQtr / 2));
+  var kpiEff    = (oilShock * cm * 0.028 * (0.3 + 0.7 * cpiScale)).toFixed(2);
+
   var brentPeak = Math.round(brent + oilShock * cm);
-  var bnpKum    = (oilShock * 0.022 * cm * Math.min(dur / 4, 3)).toFixed(1);
-  var kpiEff    = (oilShock * 0.025 * cm).toFixed(2);
-  var bnpKv     = (oilShock * 0.022 * cm).toFixed(1);
-  var risikoLbl = brentPeak > 160 ? 'Kritisk' : brentPeak > 130 ? 'Høy' : brentPeak > 115 ? 'Moderat' : 'Lav';
-  var risikoCol = brentPeak > 160 ? 'var(--red)' : brentPeak > 130 ? 'var(--red)' : brentPeak > 115 ? 'var(--amber)' : 'var(--green)';
 
-  // BNP regional
-  var wtiSpread  = brent / Math.max(wti, 1);
-  var usaBnp     = (oilShock * 0.022 * cm * 0.48 * wtiSpread).toFixed(1);
-  var euBnp      = (oilShock * 0.022 * cm * 0.72 * 0.6 + oilShock * 0.023 * cm * 0.4).toFixed(1);
-  var cnBnp      = (oilShock * 0.022 * cm * 0.28).toFixed(1);
+  // Risikovurdering — identisk composite score som calcHormuz
+  var score = Math.min(100, Math.round(oilShock * cm * 0.4 + dur * 6 + conflict * 10));
+  var risikoLbl = score < 25 ? 'Lav' : score < 45 ? 'Moderat' : score < 80 ? 'Høy' : 'Kritisk';
+  var risikoCol = score < 25 ? 'var(--green)' : score < 45 ? 'var(--amber)' : 'var(--red)';
 
-  // Goodspeed-triggere
+  // BNP regional — Kilian-kalibrert identisk med calcHormuz
+  var BNP_PER_SPREAD = 0.03;
+  var usaSpreadAdj = inv ? Math.abs(spreadDev) * BNP_PER_SPREAD : -Math.abs(spreadDev) * BNP_PER_SPREAD;
+  var euSpreadAdj  = inv ? -Math.abs(spreadDev) * BNP_PER_SPREAD * 0.5 : Math.abs(spreadDev) * BNP_PER_SPREAD * 0.3;
+  var usaBnp = Math.max(0, kilianGDPsync(oilShock * (wti > brent ? brent/Math.max(wti,1) : 1)) * cm * 0.48 + usaSpreadAdj).toFixed(1);
+  var euBnp  = Math.max(0, kilianGDPsync(oilShock) * cm * 0.72 * 0.6 + oilShock * cm * 0.023 * 0.4 + euSpreadAdj).toFixed(1);
+  var cnBnp  = (kilianGDPsync(oilShock) * cm * 0.28).toFixed(1);
+
+  // Goodspeed — identiske vekter som calcHormuz (0.45/0.35/0.20)
   var energyW  = Math.min(98, 55 + oilShock * cm * 0.33 + dur * 2.5);
   var warW     = Math.min(96, 65 + conflict * 8 + dur * 1.8);
   var creditW  = Math.min(92, 18 + oilShock * cm * 0.4 + dur * 7);
-  var gsTotal  = Math.round((energyW * 0.4 + warW * 0.35 + creditW * 0.25));
+  var gsTotal  = Math.round(energyW * 0.45 + warW * 0.35 + creditW * 0.20);
 
   // Spread
   var rawSpread = brent - wti;
@@ -6963,27 +7103,27 @@ function drawHzmGraf() {
     <!-- KPI-strip -->
     <div class="popup-kpi-strip">
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">REE-prosessering</div>
+        <div class="popup-kpi-label">REE-prosessering <span class="tt-trigger" data-tt="tt-kina-kontroll" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--red)">85–90 %</div>
         <div class="popup-kpi-sub">Kinas globale andel</div>
       </div>
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">Tunge REE</div>
+        <div class="popup-kpi-label">Tunge REE <span class="tt-trigger" data-tt="tt-kina-kontroll" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--red);font-size:15px">Monopol</div>
         <div class="popup-kpi-sub">Dysprosium · Terbium</div>
       </div>
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">Batterikapasitet</div>
+        <div class="popup-kpi-label">Batterikapasitet <span class="tt-trigger" data-tt="tt-kina-ree" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span> <span class="tt-trigger" data-tt="tt-kina-kontroll" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--red)">~78 %</div>
         <div class="popup-kpi-sub">Global produksjon</div>
       </div>
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">Dysprosium YTD</div>
+        <div class="popup-kpi-label">Dysprosium YTD <span class="tt-trigger" data-tt="tt-dysprosium" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--red)">+100 %</div>
         <div class="popup-kpi-sub">~191 $/kg (SMM mars 2026)</div>
       </div>
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">Reversibelt?</div>
+        <div class="popup-kpi-label">Reversibelt? <span class="tt-trigger" data-tt="tt-flaskehals" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--amber);font-size:14px">10–15 år</div>
         <div class="popup-kpi-sub">Prosesseringskapasitet ex-Kina</div>
       </div>
@@ -7099,7 +7239,7 @@ function drawHzmGraf() {
         </table>
 
         <div class="popup-info-box accent-amber">
-          <div class="popup-info-box-label" style="color:var(--amber)">Tosporet prissetting</div>
+          <div class="popup-info-box-label" style="color:var(--amber)">Tosporet prissetting <span class="tt-trigger" data-tt="tt-ree-pris" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
           <div class="popup-info-box-text">Industrielle kjøpere betaler SMM-referansepris (Dy₂O₃ ~191 $/kg, mars 2026), mens privatinvestorer betaler retailpris (~930 $/kg). Differansen på 3–5× reflekterer forhandlermargin og likviditetspremie. Kinas REE-prisindeks (2010=100): topp over 300 tidlig 2026, nå 255,7. De mest strategiske materialene stiger <em>utenfor</em> Kina — innenlandsk pris kontrolleres.</div>
         </div>
       </div>
@@ -7260,27 +7400,27 @@ function kinaTab(tab) {
     <!-- KPI-strip -->
     <div class="popup-kpi-strip">
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">Robuste kjerneposisjoner</div>
+        <div class="popup-kpi-label">Robuste kjerneposisjoner <span class="tt-trigger" data-tt="tt-barbell" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--green)">80 %</div>
         <div class="popup-kpi-sub">Energi · Forsvar · Gull · Råvarer</div>
       </div>
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">Asymmetriske posisjoner</div>
+        <div class="popup-kpi-label">Asymmetriske posisjoner <span class="tt-trigger" data-tt="tt-barbell" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--amber)">20 %</div>
         <div class="popup-kpi-sub">Konveks oppsideeksponering</div>
       </div>
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">Middels risiko</div>
+        <div class="popup-kpi-label">Middels risiko <span class="tt-trigger" data-tt="tt-barbell" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--red)">0 %</div>
         <div class="popup-kpi-sub">Unngå · Extremistan-logikk</div>
       </div>
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">Vektet energiinfrastruktur</div>
+        <div class="popup-kpi-label">Vektet energiinfrastruktur <span class="tt-trigger" data-tt="tt-fordeling" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--green)">27 %</div>
         <div class="popup-kpi-sub">A:20%·B:55%·C:25% vektet</div>
       </div>
       <div class="popup-kpi-cell">
-        <div class="popup-kpi-label">Vektet forsvar</div>
+        <div class="popup-kpi-label">Vektet forsvar <span class="tt-trigger" data-tt="tt-fordeling" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
         <div class="popup-kpi-val" style="color:var(--green)">21 %</div>
         <div class="popup-kpi-sub">Positiv i alle tre scenarioer</div>
       </div>
@@ -7302,7 +7442,7 @@ function kinaTab(tab) {
         <!-- Taleb barbell -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
           <div class="popup-info-box accent-green">
-            <div class="popup-info-box-label" style="color:var(--green)">80 % — Robuste kjerneposisjoner</div>
+            <div class="popup-info-box-label" style="color:var(--green)">80 % — Robuste kjerneposisjoner <span class="tt-trigger" data-tt="tt-kap-barbell" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
             <div style="font-size:12px;line-height:1.72;color:var(--text)">
               Fysiske realaktiva med produksjonsverdi<br>
               Energiinfrastruktur med inntektsstrøm<br>
@@ -7312,7 +7452,7 @@ function kinaTab(tab) {
             </div>
           </div>
           <div class="popup-info-box accent-amber">
-            <div class="popup-info-box-label" style="color:var(--amber)">20 % — Asymmetriske posisjoner</div>
+            <div class="popup-info-box-label" style="color:var(--amber)">20 % — Asymmetriske posisjoner <span class="tt-trigger" data-tt="tt-kap-barbell" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
             <div style="font-size:12px;line-height:1.72;color:var(--text)">
               Begrenset tapsrisiko · stor konveks oppsideeksponering<br>
               Lang volatilitet energi og metaller<br>
@@ -7325,7 +7465,7 @@ function kinaTab(tab) {
 
         <!-- Strategisk diagnose -->
         <div class="popup-conclusion" style="margin-top:0;margin-bottom:14px">
-          <div class="popup-conclusion-label">Strategisk diagnose — 1. april 2026 <span class="tt-trigger" data-tt="tt-strategi-diag" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
+          <div class="popup-conclusion-label">Strategisk diagnose — <span id="kap-diag-dato">2. april 2026</span> <span class="tt-trigger" data-tt="tt-strategi-diag" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
           <div class="popup-conclusion-text">Vi befinner oss i Goodspeeds verste kategori: alle tre resesjonstriggers aktive simultant. Gull korreksjon fra $5 594 (jan-topp) til mars-bunn ~$4 200, nå tilbake ~$4 654 — teknisk, ikke fundamental. J.P. Morgan fastholder $5 055 som snitt for Q4 2026. Kobber $12 200/t og aluminium +52 % siden Hormuz signaliserer strukturelt nytt råvareregime. US 10Y ned fra 4,44 % til 4,32 %: vekstfrykt overstiger nå inflasjonsfrykten. Markedet er ikke priset for Scenario C. Unngå middels risiko.</div>
         </div>
 
@@ -7349,8 +7489,8 @@ function kinaTab(tab) {
 
         <!-- Vektet anbefaling -->
         <div class="popup-info-box accent-navy">
-          <div class="popup-info-box-label" style="color:var(--navy-mid)">Vektet anbefaling — A:20% · B:55% · C:25%</div>
-          <div class="popup-info-box-text">Energiinfrastruktur <strong>27 %</strong> · Forsvarsindustri <strong>21 %</strong> · Gull/reelle verdier <strong>16 %</strong> · Kritiske råvarer <strong>14 %</strong> · Asymmetriske posisjoner <strong>14 %</strong> · Statsobligasjoner kortsiktig <strong>9 %</strong> · Middels risiko/eksponering <strong>0 %</strong></div>
+          <div class="popup-info-box-label" style="color:var(--navy-mid)">Vektet anbefaling <span class="tt-trigger" data-tt="tt-vektet-allok" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span> — oppdateres fra kalkulatoren</div>
+          <div class="popup-info-box-text" id="kap-vektet-txt">Energiinfrastruktur <strong id="kap-w-energi">27 %</strong> · Forsvarsindustri <strong id="kap-w-forsvar">21 %</strong> · Gull/reelle verdier <strong id="kap-w-gull">16 %</strong> · Kritiske råvarer <strong id="kap-w-raa">14 %</strong> · Asymmetriske posisjoner <strong id="kap-w-asym">14 %</strong> · Statsobligasjoner kortsiktig <strong id="kap-w-stat">9 %</strong> · Middels risiko <strong style="color:var(--red)">0 %</strong></div>
         </div>
       </div>
 
@@ -7458,7 +7598,7 @@ function kinaTab(tab) {
 
     <!-- Footer -->
     <div class="popup-footer">
-      <span class="popup-footer-note">Perera (2026) · Taleb (2007) · Goodspeed (2025) · Halvard Nordang — Affectum AS · Ikke investeringsrådgivning</span>
+      <span class="popup-footer-note">Perera (2026) · Taleb (2007) · Goodspeed (2025) · Halvard Nordang — Affectum AS · Ikke investeringsrådgivning <span class="tt-trigger" data-tt="tt-lag2" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></span>
       <button class="popup-footer-btn" onclick="closeKapitalModal()">Lukk</button>
     </div>
 
@@ -7474,6 +7614,37 @@ function openKapitalModal() {
   _kapitalModalOpen = true;
   document.body.style.overflow = 'hidden';
   kapitalTab('strategi');
+  syncKapitalModal();
+}
+
+function syncKapitalModal() {
+  var s = function(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; };
+  // Hent live scenario-sannsynligheter fra kalkulatoren
+  var pA = parseFloat((document.getElementById('sc-pA') || {}).textContent) || 20;
+  var pB = parseFloat((document.getElementById('sc-pB') || {}).textContent) || 55;
+  var pC = parseFloat((document.getElementById('sc-pC') || {}).textContent) || 25;
+  var tot = pA + pB + pC; if (tot > 0) { pA = pA/tot*100; pB = pB/tot*100; pC = pC/tot*100; }
+  var pAf = pA/100, pBf = pB/100, pCf = pC/100;
+  // Vektet allokering (matrise: A/B/C × aktivaklasse)
+  var wEnergi  = Math.round(pAf*20 + pBf*30 + pCf*25);
+  var wForsvar = Math.round(pAf*15 + pBf*20 + pCf*25);
+  var wGull    = Math.round(pAf*10 + pBf*15 + pCf*20);
+  var wRaa     = Math.round(pAf*10 + pBf*15 + pCf*15);
+  var wAsym    = Math.round(pAf*15 + pBf*15 + pCf*10);
+  var wStat    = Math.round(pAf*20 + pBf*5  + pCf*15);
+  s('kap-w-energi',  wEnergi  + ' %');
+  s('kap-w-forsvar', wForsvar + ' %');
+  s('kap-w-gull',    wGull    + ' %');
+  s('kap-w-raa',     wRaa     + ' %');
+  s('kap-w-asym',    wAsym    + ' %');
+  s('kap-w-stat',    wStat    + ' %');
+  // Oppdater KPI-strip vektede verdier
+  s('kap-diag-dato', new Date().toLocaleDateString('nb-NO', {day:'numeric', month:'long', year:'numeric'}));
+  // Oppdater vektet KPI-strip
+  var kapEnEl = document.getElementById('kap-strip-energi');
+  var kapForEl = document.getElementById('kap-strip-forsvar');
+  if (kapEnEl) kapEnEl.textContent = wEnergi + ' %';
+  if (kapForEl) kapForEl.textContent = wForsvar + ' %';
 }
 function closeKapitalModal() {
   var el = document.getElementById('kapital-modal-overlay');
@@ -7492,6 +7663,510 @@ function kapitalTab(tab) {
     if (pEl) pEl.classList.toggle('active', t === tab);
   });
   var body = document.getElementById('kapital-modal-body');
+  if (body) body.scrollTop = 0;
+}
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MODELLGUIDE MODAL — «Forstå modellen»
+═══════════════════════════════════════════════════════════════ -->
+<style>
+/* ── GUIDE MODAL ─────────────────────────────── */
+#guide-overlay {
+  position:fixed;inset:0;background:rgba(8,12,24,.82);backdrop-filter:blur(6px);
+  z-index:900;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
+}
+#guide-overlay.visible { opacity:1;pointer-events:all; }
+#guide-modal {
+  width:min(96vw,1060px);max-height:92vh;background:#0B1120;
+  border:1px solid rgba(255,255,255,.1);border-radius:16px;
+  box-shadow:0 40px 120px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.05);
+  display:flex;flex-direction:column;overflow:hidden;
+  transform:translateY(20px) scale(.97);transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+#guide-overlay.visible #guide-modal { transform:translateY(0) scale(1); }
+
+/* Top banner */
+#guide-banner {
+  background:linear-gradient(135deg,#0f1f42 0%,#1a2f5a 40%,#0f1f42 100%);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  padding:28px 36px 24px;position:relative;overflow:hidden;flex-shrink:0;
+}
+#guide-banner::before {
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 100% at 50% -20%,rgba(100,140,255,.12),transparent);
+}
+#guide-banner::after {
+  content:'';position:absolute;bottom:0;left:36px;right:36px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(100,150,255,.3),transparent);
+}
+.guide-title {
+  font-family:'DM Serif Display',serif;font-size:26px;color:#fff;
+  letter-spacing:-.01em;line-height:1.2;margin-bottom:6px;position:relative;
+}
+.guide-sub {
+  font-size:12px;color:rgba(255,255,255,.5);letter-spacing:.06em;
+  text-transform:uppercase;position:relative;
+}
+#guide-close {
+  position:absolute;top:20px;right:20px;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);
+  width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .15s;
+  font-family:inherit;
+}
+#guide-close:hover { background:rgba(255,255,255,.15);color:#fff; }
+
+/* Tabs */
+#guide-tabs {
+  display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.07);
+  background:#0d1628;flex-shrink:0;padding:0 36px;
+}
+.gtab {
+  font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  color:rgba(255,255,255,.38);padding:12px 18px;cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;
+}
+.gtab:hover { color:rgba(255,255,255,.65); }
+.gtab.active { color:#fff;border-bottom-color:#4A7FD4; }
+
+/* Body */
+#guide-body { overflow-y:auto;flex:1;padding:32px 36px; }
+.gpanel { display:none; }
+.gpanel.active { display:block; }
+
+/* Intro cards */
+.g-intro-grid { display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:28px; }
+.g-intro-card {
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:16px 18px;
+}
+.g-intro-card-icon { font-size:22px;margin-bottom:8px; }
+.g-intro-card-title { font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:6px; }
+.g-intro-card-body { font-size:12.5px;line-height:1.7;color:rgba(255,255,255,.75); }
+
+/* Flyt-diagram */
+.g-flow { display:flex;flex-direction:column;gap:0;margin-bottom:28px; }
+.g-flow-row { display:flex;align-items:stretch;gap:0; }
+.g-flow-node {
+  flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:14px 16px;position:relative;
+}
+.g-flow-node.accent-red { border-color:rgba(197,48,48,.4);background:rgba(197,48,48,.07); }
+.g-flow-node.accent-amber { border-color:rgba(146,64,14,.4);background:rgba(146,64,14,.06); }
+.g-flow-node.accent-green { border-color:rgba(20,83,45,.4);background:rgba(20,83,45,.06); }
+.g-flow-node.accent-navy { border-color:rgba(74,127,212,.35);background:rgba(74,127,212,.06); }
+.g-flow-node.accent-purple { border-color:rgba(124,58,237,.35);background:rgba(124,58,237,.06); }
+.g-flow-arrow {
+  width:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.25);font-size:18px;
+}
+.g-flow-down {
+  display:flex;justify-content:center;align-items:center;height:24px;
+  color:rgba(255,255,255,.2);font-size:16px;
+}
+.g-node-label { font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:5px; }
+.g-node-title { font-size:13px;font-weight:600;color:#fff;margin-bottom:4px;line-height:1.3; }
+.g-node-body { font-size:11px;color:rgba(255,255,255,.6);line-height:1.6; }
+
+/* Analytiker-grid */
+.g-analyst-grid { display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:28px; }
+.g-analyst {
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:16px 18px;border-top:3px solid transparent;
+  transition:transform .15s,box-shadow .15s;cursor:default;
+}
+.g-analyst:hover { transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4); }
+.g-analyst-name { font-size:13px;font-weight:700;color:#fff;margin-bottom:2px; }
+.g-analyst-role { font-size:10px;color:rgba(255,255,255,.4);margin-bottom:10px;letter-spacing:.04em; }
+.g-analyst-desc { font-size:11.5px;color:rgba(255,255,255,.68);line-height:1.65; }
+.g-analyst-tag {
+  display:inline-block;margin-top:10px;font-size:9px;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;padding:2px 8px;border-radius:10px;
+}
+
+/* Syntese-rad */
+.g-syntese {
+  background:linear-gradient(135deg,rgba(74,127,212,.12),rgba(74,127,212,.05));
+  border:1px solid rgba(74,127,212,.25);border-radius:12px;
+  padding:20px 24px;margin-bottom:20px;
+}
+.g-syntese-label { font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(74,127,212,.8);margin-bottom:8px; }
+.g-syntese-text { font-size:13px;line-height:1.78;color:rgba(255,255,255,.8); }
+
+/* Hvordan bruke */
+.g-use-grid { display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px; }
+.g-use-card {
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start;
+}
+.g-use-step {
+  width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;
+  background:rgba(74,127,212,.2);color:#7BA8E8;border:1px solid rgba(74,127,212,.3);
+}
+.g-use-title { font-size:12px;font-weight:700;color:#fff;margin-bottom:4px; }
+.g-use-body { font-size:11.5px;color:rgba(255,255,255,.6);line-height:1.6; }
+
+/* SVG Network */
+#guide-network { width:100%;height:320px;margin-bottom:20px; }
+
+/* Scroll */
+#guide-body::-webkit-scrollbar { width:5px; }
+#guide-body::-webkit-scrollbar-track { background:transparent; }
+#guide-body::-webkit-scrollbar-thumb { background:rgba(255,255,255,.1);border-radius:3px; }
+</style>
+
+<div id="guide-overlay" onclick="if(event.target===this)closeGuideModal()">
+  <div id="guide-modal">
+
+    <!-- Banner -->
+    <div id="guide-banner">
+      <div class="guide-title">Geopolitisk Systemanalyse 2026</div>
+      <div class="guide-sub">Seks analytiske rammeverk · Én syntese · Hvordan lese modellen</div>
+      <button id="guide-close" onclick="closeGuideModal()">✕</button>
+    </div>
+
+    <!-- Tabs -->
+    <div id="guide-tabs">
+      <div class="gtab active" id="gt-krisen"     onclick="gTab('krisen')">Krisen</div>
+      <div class="gtab"        id="gt-rammeverk"  onclick="gTab('rammeverk')">Seks rammeverk</div>
+      <div class="gtab"        id="gt-kalkulator" onclick="gTab('kalkulator')">Kalkulatoren</div>
+      <div class="gtab"        id="gt-bruk"       onclick="gTab('bruk')">Slik bruker du den</div>
+    </div>
+
+    <!-- Body -->
+    <div id="guide-body">
+
+      <!-- ══ KRISEN ══ -->
+      <div class="gpanel active" id="gp-krisen">
+
+        <div class="g-intro-grid">
+          <div class="g-intro-card">
+            <div class="g-intro-card-icon">🌊</div>
+            <div class="g-intro-card-title">Hva er dette?</div>
+            <div class="g-intro-card-body">En analytisk modell som simulerer de makroøkonomiske konsekvensene av Hormuz-stengningen — og koblingene til geopolitikk, kapital og strategi.</div>
+          </div>
+          <div class="g-intro-card">
+            <div class="g-intro-card-icon">📅</div>
+            <div class="g-intro-card-title">Kontekst</div>
+            <div class="g-intro-card-body">28. februar 2026 stengte Irans Revolusjonsgarde Hormuz-stredet etter Operation Epic Fury. 20 % av verdens oljeforsyning er forstyrret. Modellen oppdateres med live data.</div>
+          </div>
+          <div class="g-intro-card">
+            <div class="g-intro-card-icon">⚠️</div>
+            <div class="g-intro-card-title">Formål</div>
+            <div class="g-intro-card-body">Ikke en prediksjon — en strukturert tilnærming til dyp usikkerhet. Konfidensielt · Ikke investeringsrådgivning · Halvard Nordang, Affectum AS.</div>
+          </div>
+        </div>
+
+        <!-- Kaskade-flyt -->
+        <div style="font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:14px">Årsaks-kaskaden — fra utløser til konsekvens</div>
+        <div class="g-flow">
+          <div class="g-flow-row">
+            <div class="g-flow-node accent-red">
+              <div class="g-node-label" style="color:rgba(255,100,100,.7)">Utløser — 28. feb. 2026</div>
+              <div class="g-node-title">Operation Epic Fury → Hormuz stengt</div>
+              <div class="g-node-body">USA/Israel dreper Khamenei. Revolusjonsgarden stenger stredet. 21 mill. fat/dag forstyrret. IEA: historisk krise.</div>
+            </div>
+          </div>
+          <div class="g-flow-down">↓</div>
+          <div class="g-flow-row" style="gap:8px">
+            <div class="g-flow-node accent-amber">
+              <div class="g-node-label" style="color:rgba(200,150,50,.8)">Primærsjokk</div>
+              <div class="g-node-title">Energimarkedet</div>
+              <div class="g-node-body">Brent +55 % i mars. LNG-Qatar (26 % global prod.) borte. Energiinflasjonssjokk globalt.</div>
+            </div>
+            <div class="g-flow-arrow">→</div>
+            <div class="g-flow-node accent-amber">
+              <div class="g-node-label" style="color:rgba(200,150,50,.8)">Sekundærsjokk</div>
+              <div class="g-node-title">BNP og inflasjon</div>
+              <div class="g-node-body">Dallas Fed: −2,9 pp BNP/kvartal. KPI +0,4 pp. Fed handlingslam: kan ikke kutte (inflasjon) og ikke heve (resesjon).</div>
+            </div>
+            <div class="g-flow-arrow">→</div>
+            <div class="g-flow-node accent-red">
+              <div class="g-node-label" style="color:rgba(255,100,100,.7)">Tertiærsjokk</div>
+              <div class="g-node-title">Finansielle kaskader</div>
+              <div class="g-node-body">EM-gjeld under press. Valutakriser. Kapitalflukt til dollar og gull. Kredittinnstramming.</div>
+            </div>
+          </div>
+          <div class="g-flow-down">↓</div>
+          <div class="g-flow-row" style="gap:8px">
+            <div class="g-flow-node accent-navy" style="flex:2">
+              <div class="g-node-label" style="color:rgba(100,150,255,.7)">Strukturell dimensjon</div>
+              <div class="g-node-title">Kinas REE-monopol aktiveres simultant</div>
+              <div class="g-node-body">Eksportkontroller på tunge sjeldne jordarter. Dysprosium +100 % YTD. Kina kontrollerer 85–90 % av prosessering — dette er Fishmans asymmetri i praksis.</div>
+            </div>
+            <div class="g-flow-arrow">+</div>
+            <div class="g-flow-node accent-purple" style="flex:2">
+              <div class="g-node-label" style="color:rgba(180,130,255,.7)">Strategisk dimensjon</div>
+              <div class="g-node-title">The Simultaneity Problem — NDS (2026)</div>
+              <div class="g-node-body">USA designet for én stor konflikt, ikke tre simultane. Iran + Kina REE + Russland = NDS sin verste frykt materialisert.</div>
+            </div>
+          </div>
+          <div class="g-flow-down">↓</div>
+          <div class="g-flow-row">
+            <div class="g-flow-node accent-green">
+              <div class="g-node-label" style="color:rgba(80,200,120,.7)">Modellens svar</div>
+              <div class="g-node-title">Tre scenarier · Live kalkulator · Investeringsposisjonering</div>
+              <div class="g-node-body">Scenario A (20 %): rask løsning · B (55 %): kronisk forstyrrelse · C (25 %): systemkollaps. Kalkulatoren beregner konsekvenser dynamisk fra dine parametere.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ══ RAMMEVERK ══ -->
+      <div class="gpanel" id="gp-rammeverk">
+        <div style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:24px;padding:14px 18px;background:rgba(255,255,255,.04);border-radius:10px;border-left:3px solid rgba(74,127,212,.5)">
+          Modellen syntetiserer <strong style="color:#fff">seks uavhengige analytikere</strong> fra forskjellige fagtradisjoner — økonomi, geopolitikk, militærstrategi og epistemologi. Ingen av dem har alle svarene alene. Styrken er at de <strong style="color:#fff">peker i samme retning</strong> uten å ha koordinert seg.
+        </div>
+
+        <div class="g-analyst-grid">
+          <div class="g-analyst" style="border-top-color:#E5A02A">
+            <div class="g-analyst-name">Tyler Goodspeed</div>
+            <div class="g-analyst-role">Makroøkonom · ExxonMobil · ex-CEA</div>
+            <div class="g-analyst-desc">Dokumenterer at resesjoner utløses av diskrete sjokk — ikke gradvise avmattinger. 10 av 12 resesjoner siden 1945 hadde energikomponent. Tre triggere: energisjokk, krig og kredittkontraksjon. Alle tre aktive simultant nå.</div>
+            <div class="g-analyst-tag" style="background:rgba(229,160,42,.15);color:#E5A02A">Resesjonsmeter · BNP-beregning</div>
+          </div>
+          <div class="g-analyst" style="border-top-color:#E55A3C">
+            <div class="g-analyst-name">Edward Fishman</div>
+            <div class="g-analyst-role">Geopolitisk økonom · Columbia</div>
+            <div class="g-analyst-desc">Det er lettere å rive ned enn å bygge opp. Sanksjonspolitikken fremskynder de-dollarisering. Umulig trevalg: dyp integrasjon, øk. sikkerhet, og geopolitisk konkurranse — kan ikke ha alle tre. REE-krigen er Fishman speilvendt.</div>
+            <div class="g-analyst-tag" style="background:rgba(229,90,60,.15);color:#E55A3C">Kina-analyse · Strukturell asymmetri</div>
+          </div>
+          <div class="g-analyst" style="border-top-color:#9B6FE8">
+            <div class="g-analyst-name">Stephen Miran</div>
+            <div class="g-analyst-role">CEA-leder · Harvard-økonom</div>
+            <div class="g-analyst-desc">Plan for å restrukturere det globale handelssystemet via tariffer og ny Plaza-avtale. Erkjente selv at stien er smal — fem forutsetninger som alle måtte holde. Per april 2026: alle fem brutt. Han er kalkunen.</div>
+            <div class="g-analyst-tag" style="background:rgba(155,111,232,.15);color:#9B6FE8">Mirans smale sti · Tariff-analyse</div>
+          </div>
+          <div class="g-analyst" style="border-top-color:#4A7FD4">
+            <div class="g-analyst-name">NDS (2026)</div>
+            <div class="g-analyst-role">National Defense Strategy · Pete Hegseth</div>
+            <div class="g-analyst-desc">Signert januar 2026, Department of War. Identifiserer Kina/Russland/Iran/Nord-Korea som koordinert trussel. «Line of Effort 4»: forsvarsindustriell base — krever nettopp de REE Kina nå stenger for. The Simultaneity Problem.</div>
+            <div class="g-analyst-tag" style="background:rgba(74,127,212,.15);color:#4A7FD4">Forsvarsinvestering · Geopolitikk</div>
+          </div>
+          <div class="g-analyst" style="border-top-color:#C26B2A">
+            <div class="g-analyst-name">NSS (2026)</div>
+            <div class="g-analyst-role">National Security Strategy</div>
+            <div class="g-analyst-desc">Lister «eight peace deals» inkl. Israel–Iran. Per april 2026 er dette fortellingsfeilen i offisiell utgave. «Energy Dominance»-strategien underbygd av samme Iran-politikk som utløste Hormuz-stengningen. Ironien er total.</div>
+            <div class="g-analyst-tag" style="background:rgba(194,107,42,.15);color:#C26B2A">Narrativ-analyse · NSS-kobling</div>
+          </div>
+          <div class="g-analyst" style="border-top-color:#60A878">
+            <div class="g-analyst-name">Nassim Taleb</div>
+            <div class="g-analyst-role">Epistemolog · Black Swan-forfatter</div>
+            <div class="g-analyst-desc">Vi kan ikke predikere sorte svaner, men vi kan designe porteføljer som overlever dem. Barbellen: 80 % ultra-robust + 20 % asymmetrisk oppside. Unngå middels risiko. Kaskadelogikken er hans. Kritiserer de fem andre for epistemisk arroganse.</div>
+            <div class="g-analyst-tag" style="background:rgba(96,168,120,.15);color:#60A878">Barbell · Kaskade · Epistemologi</div>
+          </div>
+        </div>
+
+        <!-- SVG Syntese-nett -->
+        <div style="font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:12px">Slik henger de sammen</div>
+        <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;margin-bottom:20px">
+          <defs>
+            <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L6,3 z" fill="rgba(100,140,255,.4)"/>
+            </marker>
+          </defs>
+          <!-- Linjer -->
+          <line x1="400" y1="40" x2="130" y2="120" stroke="rgba(229,160,42,.3)" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+          <line x1="400" y1="40" x2="270" y2="120" stroke="rgba(229,90,60,.3)" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+          <line x1="400" y1="40" x2="400" y2="120" stroke="rgba(74,127,212,.35)" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+          <line x1="400" y1="40" x2="530" y2="120" stroke="rgba(74,127,212,.3)" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+          <line x1="400" y1="40" x2="670" y2="120" stroke="rgba(96,168,120,.3)" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+          <line x1="130" y1="150" x2="270" y2="150" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+          <line x1="270" y1="150" x2="400" y2="150" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+          <line x1="400" y1="150" x2="530" y2="150" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+          <line x1="530" y1="150" x2="670" y2="150" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+          <!-- Senter -->
+          <circle cx="400" cy="40" r="26" fill="rgba(197,48,48,.15)" stroke="rgba(197,48,48,.5)" stroke-width="1.5"/>
+          <text x="400" y="36" text-anchor="middle" fill="rgba(255,255,255,.9)" font-size="9" font-family="DM Sans,sans-serif" font-weight="700">HORMUZ</text>
+          <text x="400" y="48" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="7.5" font-family="DM Sans,sans-serif">KRISEN</text>
+          <!-- Noder -->
+          <g>
+            <circle cx="130" cy="140" r="22" fill="rgba(229,160,42,.12)" stroke="rgba(229,160,42,.45)" stroke-width="1.3"/>
+            <text x="130" y="137" text-anchor="middle" fill="#E5A02A" font-size="8.5" font-family="DM Sans,sans-serif" font-weight="700">Good-</text>
+            <text x="130" y="147" text-anchor="middle" fill="#E5A02A" font-size="8.5" font-family="DM Sans,sans-serif" font-weight="700">speed</text>
+            <text x="130" y="170" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="7.5" font-family="DM Sans,sans-serif">Resesjon</text>
+          </g>
+          <g>
+            <circle cx="270" cy="140" r="22" fill="rgba(229,90,60,.12)" stroke="rgba(229,90,60,.45)" stroke-width="1.3"/>
+            <text x="270" y="143" text-anchor="middle" fill="#E55A3C" font-size="8.5" font-family="DM Sans,sans-serif" font-weight="700">Fishman</text>
+            <text x="270" y="170" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="7.5" font-family="DM Sans,sans-serif">Asymmetri</text>
+          </g>
+          <g>
+            <circle cx="400" cy="140" r="22" fill="rgba(74,127,212,.12)" stroke="rgba(74,127,212,.45)" stroke-width="1.3"/>
+            <text x="400" y="137" text-anchor="middle" fill="#4A7FD4" font-size="8.5" font-family="DM Sans,sans-serif" font-weight="700">NDS /</text>
+            <text x="400" y="147" text-anchor="middle" fill="#4A7FD4" font-size="8.5" font-family="DM Sans,sans-serif" font-weight="700">NSS</text>
+            <text x="400" y="170" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="7.5" font-family="DM Sans,sans-serif">Strategi</text>
+          </g>
+          <g>
+            <circle cx="530" cy="140" r="22" fill="rgba(155,111,232,.12)" stroke="rgba(155,111,232,.45)" stroke-width="1.3"/>
+            <text x="530" y="143" text-anchor="middle" fill="#9B6FE8" font-size="8.5" font-family="DM Sans,sans-serif" font-weight="700">Miran</text>
+            <text x="530" y="170" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="7.5" font-family="DM Sans,sans-serif">Tariffer</text>
+          </g>
+          <g>
+            <circle cx="670" cy="140" r="22" fill="rgba(96,168,120,.12)" stroke="rgba(96,168,120,.45)" stroke-width="1.3"/>
+            <text x="670" y="143" text-anchor="middle" fill="#60A878" font-size="8.5" font-family="DM Sans,sans-serif" font-weight="700">Taleb</text>
+            <text x="670" y="170" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="7.5" font-family="DM Sans,sans-serif">Barbell</text>
+          </g>
+        </svg>
+
+        <div class="g-syntese">
+          <div class="g-syntese-label">Syntesen — hva alle seks sier samtidig</div>
+          <div class="g-syntese-text">Vi er ikke i en syklisk krise som løses av én politisk korreksjon. Vi er i et <strong style="color:#fff">strukturelt systemskifte</strong> der alle rammeverk peker mot det samme: energisjokket (Goodspeed) forsterkes av geopolitisk asymmetri (Fishman/NDS), den politiske responsen er feil kalibrert (Miran/NSS), og ingen vet nøyaktig hva som kommer (Taleb). Riktig svar er ikke å predikere utfallet — det er å <strong style="color:#fff">designe for alle utfall.</strong></div>
+        </div>
+      </div>
+
+      <!-- ══ KALKULATOREN ══ -->
+      <div class="gpanel" id="gp-kalkulator">
+        <div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:24px;padding:14px 18px;background:rgba(255,255,255,.04);border-radius:10px;border-left:3px solid rgba(197,48,48,.45)">
+          Hormuz-kalkulatoren er modellens kjerne. Den tar tre parametere og beregner reelle makroøkonomiske konsekvenser basert på peer-reviewed forskning — ikke generelle anslag.
+        </div>
+
+        <div class="g-flow">
+          <!-- Inputs -->
+          <div style="font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:10px">Tre parametere du kontrollerer</div>
+          <div class="g-flow-row" style="gap:8px;margin-bottom:8px">
+            <div class="g-flow-node accent-navy">
+              <div class="g-node-label" style="color:#7BA8E8">Parameter 1</div>
+              <div class="g-node-title">⏱ Stengningens varighet</div>
+              <div class="g-node-body">1–26 uker. Avgjør kumulativ effekt. Under 4 uker: begrenset. Over 13 uker (1 kvartal): Goodspeeds resesjonstrigger. Over 26 uker: irreversibel Perera-terskel.</div>
+            </div>
+            <div class="g-flow-node accent-red">
+              <div class="g-node-label" style="color:rgba(255,120,120,.8)">Parameter 2</div>
+              <div class="g-node-title">📈 Oljeprissjokk ($/fat)</div>
+              <div class="g-node-body">0–115 $ utover live Brent. +13 $ = Dallas Fed base-scenario (mars 2026). Brukes i Kilian (2008) ikke-lineær BNP-funksjon: større sjokk gir overproporsjonal effekt.</div>
+            </div>
+            <div class="g-flow-node accent-amber">
+              <div class="g-node-label" style="color:rgba(220,160,60,.8)">Parameter 3</div>
+              <div class="g-node-title">⚔️ Konfliktnivå</div>
+              <div class="g-node-body">Begrenset ×1,0 · Eskalert ×1,5 · Full krig ×2,2. Skalerer alle effekter inkl. Taleb-kaskaden, sekundærsjokk og kredittkontraksjon.</div>
+            </div>
+          </div>
+
+          <div class="g-flow-down">↓ Kilian (2008) ikke-lineær BNP-funksjon + Hamilton (2009) varighetsavtak</div>
+
+          <!-- Outputs -->
+          <div style="font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-top:10px;margin-bottom:10px">Hva modellen beregner</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px">
+            <div style="background:rgba(197,48,48,.08);border:1px solid rgba(197,48,48,.25);border-radius:10px;padding:14px 16px">
+              <div style="font-size:20px;margin-bottom:6px">🛢️</div>
+              <div style="font-size:11px;font-weight:700;color:#F87171;margin-bottom:4px">Brent-topp</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.6);line-height:1.6">Peak-pris for råolje under stengningen. Starter alltid på live Brent-pris fra Yahoo Finance.</div>
+            </div>
+            <div style="background:rgba(146,64,14,.08);border:1px solid rgba(146,64,14,.25);border-radius:10px;padding:14px 16px">
+              <div style="font-size:20px;margin-bottom:6px">📉</div>
+              <div style="font-size:11px;font-weight:700;color:#FCD34D;margin-bottom:4px">BNP-effekt</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.6);line-height:1.6">Per kvartal og kumulativ. Kilian-kalibrert. Regionale effekter for USA (WTI), EU (Brent) og Kina skilles ut.</div>
+            </div>
+            <div style="background:rgba(20,83,45,.08);border:1px solid rgba(20,83,45,.25);border-radius:10px;padding:14px 16px">
+              <div style="font-size:20px;margin-bottom:6px">🎯</div>
+              <div style="font-size:11px;font-weight:700;color:#6EE7B7;margin-bottom:4px">Scenario-sannsynligheter</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.6);line-height:1.6">A/B/C beregnes automatisk. Brukes videre av Investeringsråd-popup til å beregne vektet porteføljeanbefaling.</div>
+            </div>
+          </div>
+
+          <!-- Synk-knapp forklaring -->
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:16px 20px;display:flex;gap:16px;align-items:flex-start">
+            <div style="font-size:24px;flex-shrink:0">🔄</div>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:4px">Synk fra Trumpometer (TSHM)</div>
+              <div style="font-size:11.5px;color:rgba(255,255,255,.6);line-height:1.65">Trumpometer analyserer automatisk alle Trump-nyheter og scorer dem 0–100. TSHM-modellen (Trump Signal-to-Hormuz Mapping) oversetter scoren til kalkulator-parametere: konfliktnivå ← militærord, oljeprissjokk ← Hormuz-tema, varighet ← nyhetsmengde. Trykk «⟳ Synk» for å la nyhetene sette parameterne automatisk.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SLIK BRUKER DU DEN ══ -->
+      <div class="gpanel" id="gp-bruk">
+        <div class="g-use-grid">
+          <div class="g-use-card">
+            <div class="g-use-step">1</div>
+            <div>
+              <div class="g-use-title">Start med Dashboard</div>
+              <div class="g-use-body">Se de live markedsprisene øverst — Brent, WTI, gull, kobber. Disse oppdateres hvert 5. minutt fra Yahoo Finance. Sjekk Trumpometer-nålen — er den høy, anbefales det å synke kalkulatoren.</div>
+            </div>
+          </div>
+          <div class="g-use-card">
+            <div class="g-use-step">2</div>
+            <div>
+              <div class="g-use-title">Juster kalkulatoren</div>
+              <div class="g-use-body">Flytt sliderne for varighet, oljeprissjokk og konfliktnivå. Se BNP-effekt, KPI og resesjonsrisiko oppdateres umiddelbart. Bruk «⟳ Synk» for å la Trumpometer sette parameterne automatisk.</div>
+            </div>
+          </div>
+          <div class="g-use-card">
+            <div class="g-use-step">3</div>
+            <div>
+              <div class="g-use-title">Åpne popup-ene</div>
+              <div class="g-use-body">Knapperaden gir tilgang til dybdeanalyse: ▲ Mer om Hormuz viser alle beregninger, regioner og kaskade. ⬡ Vis scenarier viser A/B/C-sannsynlighetene. Alle er koblet til kalkulatoren live.</div>
+            </div>
+          </div>
+          <div class="g-use-card">
+            <div class="g-use-step">4</div>
+            <div>
+              <div class="g-use-title">Se Investeringsråd</div>
+              <div class="g-use-body">★ Investeringsråd viser porteføljefordelingen basert på scenario-sannsynlighetene. Endre kalkulatoren → sannsynlighetene endres → vektet anbefaling oppdateres automatisk.</div>
+            </div>
+          </div>
+          <div class="g-use-card">
+            <div class="g-use-step">5</div>
+            <div>
+              <div class="g-use-title">Makrodata og Nyheter</div>
+              <div class="g-use-body">📊 Makrodata gir kontekst: Fed-rente, ECB, HICP, TTF, norsk økonomi. 📰 Nyheter henter live RSS fra primærkilder og kategoriserer dem etter modellens rammeverk.</div>
+            </div>
+          </div>
+          <div class="g-use-card">
+            <div class="g-use-step">6</div>
+            <div>
+              <div class="g-use-title">Tooltips overalt</div>
+              <div class="g-use-body">Hvert ❓-ikon gir metodologisk forklaring: hvilken forsker, hvilken formel, hvilken kilde. 100 tooltip-elementer i modellen — bruk dem for å forstå beregningene bak tallene.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Advarsel-boks -->
+        <div style="background:rgba(197,48,48,.07);border:1px solid rgba(197,48,48,.25);border-radius:10px;padding:18px 22px;margin-top:4px">
+          <div style="font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,100,100,.7);margin-bottom:8px">⚠ Viktig om modellen</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.75">
+            Dette er en <strong style="color:#fff">analytisk syntese</strong>, ikke en prediksjon. Modellen er kalibrert mot peer-reviewed forskning (Dallas Fed 2026, Kilian 2008, Hamilton 2009, Perera 2026), men det finnes ingen fasit for hva som skjer videre. Taleb har rett: vi lever i Extremistan, og modeller som overbestemmer fremtiden er farligere enn modeller som anerkjenner usikkerheten.<br><br>
+            <span style="color:rgba(255,255,255,.45)">Halvard Nordang · Affectum AS · Konfidensielt · Ikke investeringsrådgivning</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /guide-body -->
+  </div><!-- /guide-modal -->
+</div><!-- /guide-overlay -->
+
+<script>
+var _guideOpen = false;
+function openGuideModal() {
+  var el = document.getElementById('guide-overlay');
+  if (!el) return;
+  el.classList.add('visible');
+  _guideOpen = true;
+  document.body.style.overflow = 'hidden';
+  gTab('krisen');
+}
+function closeGuideModal() {
+  var el = document.getElementById('guide-overlay');
+  if (el) el.classList.remove('visible');
+  _guideOpen = false;
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && _guideOpen) closeGuideModal();
+});
+function gTab(tab) {
+  ['krisen','rammeverk','kalkulator','bruk'].forEach(function(t) {
+    var tEl = document.getElementById('gt-' + t);
+    var pEl = document.getElementById('gp-' + t);
+    if (tEl) tEl.classList.toggle('active', t === tab);
+    if (pEl) pEl.classList.toggle('active', t === tab);
+  });
+  var body = document.getElementById('guide-body');
   if (body) body.scrollTop = 0;
 }
 </script>
