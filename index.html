@@ -936,80 +936,90 @@ input[type=range]::-webkit-slider-thumb {
     </div>
 
     <!-- ── TRUMPOMETER ────────────────────────────────────────── -->
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 18px;box-shadow:var(--shadow);display:flex;flex-direction:column">
-      <!-- Header -->
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
-        <div>
-          <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:3px">Trumpometer</div>
-          <div style="font-size:13px;font-weight:600;color:var(--text)">Signalstyrke siste 24 timer</div>
-        </div>
-        <span class="tt-trigger" data-tt="tt-trumpometer" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:10px;font-weight:700;cursor:help;border:1px solid var(--border-md)">?</span>
-      </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden">
 
-      <!-- Speedometer + tall side om side -->
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:8px">
-        <div style="flex-shrink:0">
-          <svg id="dash-trump-gauge" viewBox="0 0 240 138" xmlns="http://www.w3.org/2000/svg" style="width:220px;height:127px">
-            <defs>
-              <linearGradient id="dtGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%"   stop-color="#27500A"/>
-                <stop offset="30%"  stop-color="#BA7517"/>
-                <stop offset="65%"  stop-color="#C53030"/>
-                <stop offset="100%" stop-color="#7F1D1D"/>
-              </linearGradient>
-            </defs>
-            <!-- Track -->
-            <path d="M22,120 A98,98 0 0,1 218,120" fill="none" stroke="#E8E7E0" stroke-width="16" stroke-linecap="round"/>
-            <!-- Colored arc -->
-            <path id="dash-trump-arc" d="M22,120 A98,98 0 0,1 218,120" fill="none" stroke="url(#dtGrad)" stroke-width="16" stroke-linecap="round" stroke-dasharray="308" stroke-dashoffset="308"/>
-            <!-- Tick marks -->
-            <g stroke="#C8C7C0" stroke-width="1.2">
-              <line x1="22" y1="120" x2="30" y2="120" transform="rotate(0 120 120)"/>
-              <line x1="22" y1="120" x2="29" y2="120" transform="rotate(36 120 120)"/>
-              <line x1="22" y1="120" x2="29" y2="120" transform="rotate(72 120 120)"/>
-              <line x1="22" y1="120" x2="29" y2="120" transform="rotate(108 120 120)"/>
-              <line x1="22" y1="120" x2="29" y2="120" transform="rotate(144 120 120)"/>
-              <line x1="22" y1="120" x2="30" y2="120" transform="rotate(180 120 120)"/>
-            </g>
-            <!-- Labels -->
-            <text x="18"  y="134" font-size="10" fill="#5F5E5A" text-anchor="middle" font-family="DM Sans, sans-serif">0</text>
-            <text x="120" y="22"  font-size="10" fill="#5F5E5A" text-anchor="middle" font-family="DM Sans, sans-serif">50</text>
-            <text x="222" y="134" font-size="10" fill="#5F5E5A" text-anchor="middle" font-family="DM Sans, sans-serif">100</text>
-            <!-- Needle -->
-            <g id="dash-trump-needle" transform="rotate(-90 120 120)" style="transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
-              <line x1="120" y1="120" x2="120" y2="34" stroke="rgba(0,0,0,.08)" stroke-width="5" stroke-linecap="round"/>
-              <line x1="120" y1="120" x2="120" y2="34" stroke="#1F3864" stroke-width="3" stroke-linecap="round"/>
-              <line x1="120" y1="120" x2="120" y2="135" stroke="#1F3864" stroke-width="3" stroke-linecap="round"/>
-            </g>
-            <circle cx="120" cy="120" r="9" fill="#1F3864"/>
-            <circle cx="120" cy="120" r="4" fill="white"/>
-          </svg>
-        </div>
-        <div style="flex:1">
-          <div style="font-size:38px;font-weight:700;line-height:1;color:var(--navy)" id="dash-trump-score">—</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px;margin-bottom:4px" id="dash-trump-label">Beregner...</div>
-          <div style="font-size:10px;color:var(--faint);margin-bottom:10px" id="dash-trump-direction">—</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-radius:6px;overflow:hidden;border:1px solid var(--border)">
-            <div style="background:var(--surface);padding:7px 10px">
-              <div style="font-size:9px;color:var(--faint);margin-bottom:1px">Nyheter 24t</div>
-              <div style="font-size:18px;font-weight:700;color:var(--navy)" id="dash-trump-count">—</div>
-            </div>
-            <div style="background:var(--surface);padding:7px 10px">
-              <div style="font-size:9px;color:var(--faint);margin-bottom:1px">Topp tema</div>
-              <div style="font-size:13px;font-weight:700;color:var(--navy);line-height:1.2" id="dash-trump-topp">—</div>
-            </div>
+      <!-- Header-stripe -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 2s infinite;flex-shrink:0"></div>
+          <div>
+            <span style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)">Trumpometer</span>
+            <span style="font-size:9px;color:var(--faint);margin-left:6px;letter-spacing:.04em">· Signalstyrke siste 24t</span>
           </div>
         </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="font-size:8.5px;color:var(--faint)" id="dash-trump-ts">—</div>
+          <span class="tt-trigger" data-tt="tt-trumpometer" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:9px;font-weight:700;cursor:help;border:1px solid var(--border-md)">?</span>
+        </div>
       </div>
 
-      <!-- To-kolonne nyhets-feed med kategorier -->
-      <div style="border-top:1px solid var(--border);padding-top:8px;flex:1">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <div style="font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)">Topp Trump-signaler</div>
-          <a href="#" onclick="nav('panel-nyheter');return false" style="font-size:9px;color:var(--navy-mid);text-decoration:none;font-weight:600;padding:2px 8px;background:var(--navy-lt);border-radius:10px">Alle →</a>
+      <!-- Speedometer sentrert + score overlappende -->
+      <div style="display:flex;flex-direction:column;align-items:center;padding:16px 18px 0;position:relative">
+        <svg id="dash-trump-gauge" viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px;height:auto">
+          <defs>
+            <linearGradient id="dtGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   stop-color="#166534"/>
+              <stop offset="25%"  stop-color="#BA7517"/>
+              <stop offset="60%"  stop-color="#C53030"/>
+              <stop offset="100%" stop-color="#7F1D1D"/>
+            </linearGradient>
+          </defs>
+          <!-- Track -->
+          <path d="M26,140 A114,114 0 0,1 254,140" fill="none" stroke="#ECEAE4" stroke-width="14" stroke-linecap="round"/>
+          <!-- Colored arc -->
+          <path id="dash-trump-arc" d="M26,140 A114,114 0 0,1 254,140" fill="none" stroke="url(#dtGrad)" stroke-width="14" stroke-linecap="round" stroke-dasharray="358" stroke-dashoffset="358"/>
+          <!-- Sone-etiketter langs buen -->
+          <text x="18" y="148" font-size="7.5" fill="#166534" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="600">LITEN</text>
+          <text x="75" y="60"  font-size="7.5" fill="#BA7517" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="600" transform="rotate(-45 75 60)">MODERAT</text>
+          <text x="205" y="60" font-size="7.5" fill="#C53030" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="600" transform="rotate(45 205 60)">HØY</text>
+          <text x="262" y="148" font-size="7.5" fill="#7F1D1D" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="600">KRITISK</text>
+          <!-- Ticks -->
+          <g stroke="#D4D2CB" stroke-width="1.2">
+            <line x1="26" y1="140" x2="35" y2="140" transform="rotate(0 140 140)"/>
+            <line x1="26" y1="140" x2="33" y2="140" transform="rotate(45 140 140)"/>
+            <line x1="26" y1="140" x2="33" y2="140" transform="rotate(90 140 140)"/>
+            <line x1="26" y1="140" x2="33" y2="140" transform="rotate(135 140 140)"/>
+            <line x1="26" y1="140" x2="35" y2="140" transform="rotate(180 140 140)"/>
+          </g>
+          <!-- Needle -->
+          <g id="dash-trump-needle" transform="rotate(-90 140 140)" style="transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
+            <line x1="140" y1="140" x2="140" y2="38" stroke="rgba(0,0,0,.06)" stroke-width="5" stroke-linecap="round"/>
+            <line x1="140" y1="140" x2="140" y2="38" stroke="var(--navy)" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="140" y1="140" x2="140" y2="155" stroke="var(--navy)" stroke-width="2.5" stroke-linecap="round"/>
+          </g>
+          <circle cx="140" cy="140" r="10" fill="var(--navy)"/>
+          <circle cx="140" cy="140" r="4.5" fill="white"/>
+          <!-- Score inni sirkelen under buen -->
+          <text id="dash-trump-score" x="140" y="128" font-size="36" font-weight="700" fill="var(--navy)" text-anchor="middle" font-family="DM Sans, sans-serif" dominant-baseline="auto">—</text>
+        </svg>
+        <!-- Label og retning rett under SVG-en -->
+        <div style="text-align:center;margin-top:-8px;margin-bottom:10px">
+          <div style="font-size:11px;font-weight:600;color:var(--muted)" id="dash-trump-label">Beregner...</div>
+          <div style="font-size:10px;margin-top:2px" id="dash-trump-direction">—</div>
         </div>
-        <div id="dash-trump-feed" style="display:grid;grid-template-columns:1fr 1fr;gap:0 12px">
-          <div style="font-size:11px;color:var(--faint);padding:10px 0;grid-column:span 2">Henter nyheter...</div>
+      </div>
+
+      <!-- Statistikk-rad -->
+      <div style="display:grid;grid-template-columns:1fr 1px 1fr;margin:0 16px;padding:8px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:10px">
+        <div style="text-align:center;padding:4px 0">
+          <div style="font-size:8.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:2px">Nyheter 24t</div>
+          <div style="font-size:22px;font-weight:700;color:var(--navy);line-height:1" id="dash-trump-count">—</div>
+        </div>
+        <div style="background:var(--border)"></div>
+        <div style="text-align:center;padding:4px 0">
+          <div style="font-size:8.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:2px">Topp tema</div>
+          <div style="font-size:13px;font-weight:700;color:var(--navy);line-height:1.2;margin-top:4px" id="dash-trump-topp">—</div>
+        </div>
+      </div>
+
+      <!-- To-kolonne nyhets-feed -->
+      <div style="padding:0 16px 14px;flex:1">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">
+          <div style="font-size:8.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)">Topp signaler</div>
+          <a href="#" onclick="nav('panel-nyheter');return false" style="font-size:8.5px;color:var(--navy-mid);text-decoration:none;font-weight:700;padding:2px 8px;background:var(--navy-lt);border-radius:10px;letter-spacing:.04em">Alle →</a>
+        </div>
+        <div id="dash-trump-feed" style="display:grid;grid-template-columns:1fr 1fr;gap:0 14px">
+          <div style="font-size:11px;color:var(--faint);padding:8px 0;grid-column:span 2">Henter nyheter...</div>
         </div>
       </div>
     </div>
@@ -4394,37 +4404,30 @@ function syncDashTrump() {
 
   // Mini-speedometer nål
   var needle = document.getElementById('dash-trump-needle');
-  if (needle) needle.setAttribute('transform', 'rotate(' + (-90 + meter*1.8) + ' 120 120)');
+  if (needle) needle.setAttribute('transform', 'rotate(' + (-90 + meter*1.8) + ' 140 140)');
   var arc = document.getElementById('dash-trump-arc');
-  if (arc) arc.setAttribute('stroke-dashoffset', (308 - meter/100*308).toFixed(1));
+  if (arc) arc.setAttribute('stroke-dashoffset', (358 - meter/100*358).toFixed(1));
 
   // Score og label
   var scoreEl = document.getElementById('dash-trump-score');
   var labelEl = document.getElementById('dash-trump-label');
   var cols = { 80:'#7F1D1D', 60:'#C53030', 40:'#C06000', 20:'#BA7517', 0:'#27500A' };
   var col = meter>=80?cols[80]:meter>=60?cols[60]:meter>=40?cols[40]:meter>=20?cols[20]:cols[0];
-  if (scoreEl) { scoreEl.textContent = meter; scoreEl.style.color = col; }
+  if (scoreEl) { scoreEl.textContent = meter; scoreEl.setAttribute('fill', col); }
   if (labelEl) labelEl.textContent = meter>=80?'Kritisk signalnivå':meter>=60?'Høy aktivitet':meter>=40?'Moderat aktivitet':meter>=20?'Lav aktivitet':'Ingen signaler 24t';
 
   // Count + topp tema
   var s = function(id,v){ var el=document.getElementById(id); if(el) el.textContent=v; };
   s('dash-trump-count', count);
-  s('dash-trump-score', meterScore);
-  var lblEl = document.getElementById('dash-trump-label');
-  if (lblEl) lblEl.textContent = meterScore>=80?'Kritisk signalnivå':meterScore>=60?'Høy aktivitet':meterScore>=40?'Moderat aktivitet':meterScore>=20?'Lav aktivitet':'Ingen signaler 24t';
   var catCount = {};
   recent.forEach(function(s){ (s.item.cats||[]).forEach(function(c){ catCount[c]=(catCount[c]||0)+1; }); });
   var topCat = Object.keys(catCount).sort(function(a,b){ return catCount[b]-catCount[a]; })[0]||'—';
   var catLabels = {hormuz:'Hormuz',energi:'Energi',kina:'Kina',makro:'Makro',geopolitikk:'Geopolitikk',kapital:'Kapital',goodspeed:'Goodspeed',nds:'NDS',miran:'Miran',fishman:'Fishman',taleb:'Taleb',nss:'NSS'};
   s('dash-trump-topp', catLabels[topCat]||topCat);
 
-  // Mini-feed: topp 4 Trump-nyheter
+  // To-kolonne feed
   var feed = document.getElementById('dash-trump-feed');
   if (!feed) return;
-  var top4 = window._trumpScored.slice().sort(function(a,b){
-    return b.score!==a.score ? b.score-a.score : b.item.date-a.item.date;
-  }).slice(0,4);
-
   feed.innerHTML = '';
   var TEMA_C = { hormuz:{bg:'#FCEBEB',c:'#791F1F'}, energi:{bg:'#FAEEDA',c:'#633806'}, kina:{bg:'#FCEBEB',c:'#791F1F'}, makro:{bg:'#EEEDFE',c:'#3C3489'}, geopolitikk:{bg:'#E1F5EE',c:'#085041'}, kapital:{bg:'#E6F1FB',c:'#0C447C'} };
   var top8 = window._trumpScored.slice().sort(function(a,b){
@@ -5018,6 +5021,7 @@ function updateTrumpometer() {
 
   var ts = new Date().toLocaleTimeString('no-NO',{hour:'2-digit',minute:'2-digit'});
   s('trump-updated', count + ' Trump-nyheter siste 24t · Oppdatert ' + ts);
+  s('dash-trump-ts', 'Oppdatert ' + ts);
 
   renderTrumpFeed();
 }
