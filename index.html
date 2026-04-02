@@ -713,7 +713,7 @@ input[type=range]::-webkit-slider-thumb {
 <body>
 
 <header class="topbar">
-  <div class="topbar-brand">Geopolitisk Systemanalyse 2026</div>
+  <div class="topbar-brand" onclick="nav('panel-oversikt')" style="cursor:pointer;user-select:none" title="Tilbake til Dashboard">Geopolitisk Systemanalyse 2026</div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
     <div class="topbar-meta"><span id="dyn-topbar-date"></span> &nbsp;·&nbsp; Halvard Nordang — Affectum AS</div>
     <div class="topbar-badge">KONFIDENSIELT</div>
@@ -774,6 +774,10 @@ input[type=range]::-webkit-slider-thumb {
        KNAPPERAD — skalerbar for fremtidige knapper
   ══════════════════════════════════════════════════════ -->
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+    <button onclick="nav('panel-oversikt')" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy);border:none;border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s;box-shadow:var(--shadow)">
+      <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:white">⌂ Dashboard</span>
+    </button>
+    <div style="width:1px;height:18px;background:var(--border);flex-shrink:0"></div>
     <button id="tshm-btn" onclick="applyTSHM()" title="Synkroniser parametere fra Trumpometer-signaler (TSHM-modellen)" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.2);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
       <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid)">⟳ Synk fra Trumpometer</span>
     </button>
@@ -792,13 +796,13 @@ input[type=range]::-webkit-slider-thumb {
       <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--green)">★ Investeringsråd</span>
     </button>
     <div style="width:1px;height:18px;background:var(--border);flex-shrink:0"></div>
-    <button onclick="nav(document.querySelector('[data-panel=makro]'))" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.2);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
+    <button onclick="nav('panel-makro')" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.2);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
       <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid)">📊 Makrodata</span>
     </button>
-    <button onclick="nav(document.querySelector('[data-panel=nyheter]'))" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.2);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
+    <button onclick="nav('panel-nyheter')" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.2);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
       <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid)">📰 Nyheter</span>
     </button>
-    <button onclick="nav(document.querySelector('[data-panel=analytikere]'))" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.2);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
+    <button onclick="nav('panel-analytikere')" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.2);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
       <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid)">📖 Om modellen</span>
     </button>
   </div>
@@ -2880,14 +2884,16 @@ input[type=range]::-webkit-slider-thumb {
 </div>
 
 <script>
-function nav(el) {
+function nav(elOrId) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('panel-' + el.dataset.panel).classList.add('active');
-  // Scroll main container to top on panel switch
-  const main = document.querySelector('.main');
+  // Støtter nav('panel-makro') direkte ID-streng og nav(el-med-data-panel)
+  var panelId = (typeof elOrId === 'string')
+    ? elOrId
+    : 'panel-' + elOrId.dataset.panel;
+  var panelEl = document.getElementById(panelId);
+  if (panelEl) panelEl.classList.add('active');
+  var main = document.querySelector('.main');
   if (main) main.scrollTop = 0;
-  if (el.dataset.panel === 'hormuz') { calcHormuz(); }
 }
 
 let currentAuthor = null;
