@@ -3331,15 +3331,24 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 
   <!-- KILDEOVERSIKT OG KATEGORIER -->
-  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
-    <span style="font-size:10px;font-weight:600;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;margin-right:4px">Filter:</span>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;align-items:center">
+    <span style="font-size:9px;font-weight:700;color:var(--faint);letter-spacing:.07em;text-transform:uppercase;margin-right:2px;white-space:nowrap">Tema:</span>
     <button onclick="filterNews('alle')" class="news-filter active" data-filter="alle">Alle</button>
-    <button onclick="filterNews('hormuz')" class="news-filter" data-filter="hormuz" style="background:#FCEBEB;color:#C53030;border-color:#C53030">Hormuz</button>
-    <button onclick="filterNews('energi')" class="news-filter" data-filter="energi" style="background:#FFFBEB;color:#92400E;border-color:#92400E">Energi</button>
-    <button onclick="filterNews('kina')" class="news-filter" data-filter="kina" style="background:#FCEBEB;color:#C63D2F;border-color:#C63D2F">Kina</button>
-    <button onclick="filterNews('makro')" class="news-filter" data-filter="makro" style="background:#EEEDFE;color:#3C3489;border-color:#7F77DD">Makro</button>
+    <button onclick="filterNews('hormuz')"     class="news-filter" data-filter="hormuz"     style="background:#FCEBEB;color:#C53030;border-color:#C53030">Hormuz</button>
+    <button onclick="filterNews('energi')"     class="news-filter" data-filter="energi"     style="background:#FFFBEB;color:#92400E;border-color:#92400E">Energi</button>
+    <button onclick="filterNews('kina')"       class="news-filter" data-filter="kina"       style="background:#FCEBEB;color:#C63D2F;border-color:#C63D2F">Kina</button>
+    <button onclick="filterNews('makro')"      class="news-filter" data-filter="makro"      style="background:#EEEDFE;color:#3C3489;border-color:#7F77DD">Makro</button>
     <button onclick="filterNews('geopolitikk')" class="news-filter" data-filter="geopolitikk" style="background:#E1F5EE;color:#085041;border-color:#1D9E75">Geopolitikk</button>
-    <button onclick="filterNews('kapital')" class="news-filter" data-filter="kapital" style="background:#FAF5FF;color:#3B0764;border-color:#7C3AED">Kapital</button>
+    <button onclick="filterNews('kapital')"    class="news-filter" data-filter="kapital"    style="background:#FAF5FF;color:#3B0764;border-color:#7C3AED">Kapital</button>
+  </div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
+    <span style="font-size:9px;font-weight:700;color:var(--faint);letter-spacing:.07em;text-transform:uppercase;margin-right:2px;white-space:nowrap">Rammeverk:</span>
+    <button onclick="filterNews('goodspeed')" class="news-filter" data-filter="goodspeed" style="background:#EEEDFE;color:#3C3489;border-color:#7F77DD">Goodspeed</button>
+    <button onclick="filterNews('fishman')"   class="news-filter" data-filter="fishman"   style="background:#E1F5EE;color:#085041;border-color:#1D9E75">Fishman</button>
+    <button onclick="filterNews('miran')"     class="news-filter" data-filter="miran"     style="background:#FFFBEB;color:#92400E;border-color:#92400E">Miran</button>
+    <button onclick="filterNews('nds')"       class="news-filter" data-filter="nds"       style="background:#FCEBEB;color:#791F1F;border-color:#C53030">NDS</button>
+    <button onclick="filterNews('nss')"       class="news-filter" data-filter="nss"       style="background:#FFF7ED;color:#7C2D12;border-color:#D85A30">NSS</button>
+    <button onclick="filterNews('taleb')"     class="news-filter" data-filter="taleb"     style="background:#E6F1FB;color:#0C447C;border-color:#378ADD">Taleb</button>
     <div style="margin-left:auto;font-size:10px;color:var(--faint)" id="news-status">Henter nyheter...</div>
   </div>
 
@@ -4252,6 +4261,7 @@ var _newsItems = []; // Alle hentede nyheter, akkumulert
 
 // Kategorinøkkelord
 var _newsCategories = {
+  // Tema-kategorier
   hormuz: ['hormuz','strait','iran war','persian gulf','tehran','khamenei','kharg','basra',
            'tanker','shipping lane','naval','missile','drone attack'],
   energi: ['oil','brent','wti','crude','opec','lng','natural gas','energy','petroleum',
@@ -4263,7 +4273,20 @@ var _newsCategories = {
   geopolitikk: ['nato','russia','ukraine','middle east','saudi','geopolit','alliance',
                 'pentagon','hegseth','white house','trump','defense','military'],
   kapital: ['stock','market','s&p','wall street','gold','silver','copper','vix','volatile',
-            'portfolio','invest','equity','debt','credit']
+            'portfolio','invest','equity','debt','credit'],
+  // Rammeverk-kategorier
+  goodspeed: ['recession','energy shock','gdp','unemployment','plucking model','contraction',
+              'downturn','economic slowdown','stagflation','recessionary'],
+  fishman:   ['sanction','chokepoint','economic warfare','dollar dominance','swift',
+              'de-dollarization','export control','financial weapon','reserve currency'],
+  miran:     ['tariff','trade deficit','reciprocal','mar-a-lago','plaza accord','triffin',
+              'currency manipulation','trade restructuring','import duty'],
+  nds:       ['defense strategy','pentagon','national defense','military readiness','nato',
+              'deterrence','indo-pacific','burden sharing','hegseth','simultaneity'],
+  nss:       ['national security','energy dominance','white house strategy','security strategy',
+              'trump doctrine','america first','great power competition'],
+  taleb:     ['black swan','tail risk','uncertainty','antifragile','fat tail','volatility',
+              'systemic risk','cascade','unknown unknown','fragility','extremistan']
 };
 
 function categorizeNews(title, desc) {
@@ -4279,12 +4302,20 @@ function categorizeNews(title, desc) {
 }
 
 var _catColors = {
+  // Tema
   hormuz:      { bg:'#FCEBEB', color:'#C53030', label:'Hormuz' },
   energi:      { bg:'#FFFBEB', color:'#92400E', label:'Energi' },
   kina:        { bg:'#FCEBEB', color:'#C63D2F', label:'Kina' },
   makro:       { bg:'#EEEDFE', color:'#3C3489', label:'Makro' },
   geopolitikk: { bg:'#E1F5EE', color:'#085041', label:'Geopolitikk' },
-  kapital:     { bg:'#FAF5FF', color:'#3B0764', label:'Kapital' }
+  kapital:     { bg:'#FAF5FF', color:'#3B0764', label:'Kapital' },
+  // Rammeverk
+  goodspeed:   { bg:'#EEEDFE', color:'#3C3489', label:'Goodspeed' },
+  fishman:     { bg:'#E1F5EE', color:'#085041', label:'Fishman' },
+  miran:       { bg:'#FFFBEB', color:'#92400E', label:'Miran' },
+  nds:         { bg:'#FCEBEB', color:'#791F1F', label:'NDS' },
+  nss:         { bg:'#FFF7ED', color:'#7C2D12', label:'NSS' },
+  taleb:       { bg:'#E6F1FB', color:'#0C447C', label:'Taleb' }
 };
 
 var _newsSources = [
