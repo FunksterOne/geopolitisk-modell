@@ -2121,6 +2121,30 @@ input[type=range]::-webkit-slider-thumb {
 
   <!-- REGIONALE EFFEKTER -->
   <div class="section-label">Regionale konsekvenser — differensiert eksponering <span class="tt-trigger" data-tt="tt-regioner" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
+
+  <!-- WTI/BRENT SPREAD-INDIKATOR -->
+  <div id="spread-banner" style="display:flex;align-items:center;gap:10px;padding:9px 14px;margin-bottom:12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);box-shadow:var(--shadow)">
+    <div style="flex:1;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div style="display:flex;align-items:baseline;gap:5px">
+        <span style="font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)">Brent</span>
+        <span style="font-size:15px;font-weight:700;color:var(--navy)" id="spread-brent">—</span>
+      </div>
+      <div style="font-size:11px;color:var(--faint)">vs</div>
+      <div style="display:flex;align-items:baseline;gap:5px">
+        <span style="font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)">WTI</span>
+        <span style="font-size:15px;font-weight:700;color:var(--navy)" id="spread-wti">—</span>
+      </div>
+      <div style="height:24px;width:1px;background:var(--border)"></div>
+      <div style="display:flex;align-items:center;gap:5px">
+        <span style="font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)">Spread</span>
+        <span style="font-size:14px;font-weight:700" id="spread-val">—</span>
+        <span style="font-size:10px;color:var(--faint)">(normalt Brent +2–5 $)</span>
+      </div>
+    </div>
+    <div id="spread-signal" style="flex-shrink:0;padding:4px 11px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.04em">—</div>
+    <span class="tt-trigger" data-tt="tt-spread" style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:9px;font-weight:700;cursor:help;border:1px solid var(--border-md);flex-shrink:0">?</span>
+  </div>
+
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
     <div class="data-card" id="region-usa">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
@@ -2130,6 +2154,11 @@ input[type=range]::-webkit-slider-thumb {
       <div style="font-size:13px;font-weight:600;margin-bottom:4px" id="usa-gdp-effect">−1,4 pp BNP</div>
       <div style="font-size:10px;color:var(--faint);margin-bottom:4px" id="usa-basis">Dallas Fed · WTI-kalibrert</div>
       <div style="font-size:11px;color:var(--muted);line-height:1.55" id="usa-detail">Energiprodusent — delvis bufferet. Fed-dilemma: inflasjon ↑, vekst ↓. Tariffer + energi = stagflasjon.</div>
+      <!-- Spread-effekt USA -->
+      <div id="usa-spread-row" style="display:none;margin-top:7px;padding-top:7px;border-top:1px solid var(--border)">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:3px">Spread-effekt (WTI > Brent)</div>
+        <div style="font-size:11px;color:var(--red);line-height:1.5" id="usa-spread-txt">—</div>
+      </div>
       <div style="margin-top:8px">
         <div style="font-size:10px;color:var(--faint);margin-bottom:3px">Eksponering</div>
         <div class="risk-track"><div class="risk-fill" id="bar-usa" style="width:55%;background:#C53030"></div></div>
@@ -2143,6 +2172,11 @@ input[type=range]::-webkit-slider-thumb {
       <div style="font-size:13px;font-weight:600;margin-bottom:4px" id="eu-gdp-effect">−2,1 pp BNP</div>
       <div style="font-size:10px;color:var(--faint);margin-bottom:4px" id="eu-basis">ECB (mars 2026) · Brent-kalibrert</div>
       <div style="font-size:11px;color:var(--muted);line-height:1.55" id="eu-detail">Høyest eksponert. LNG-avhengig. ECB kuttet vekstprognose 0,3 pp på 3 uker. Industri og husholdninger rammes direkte.</div>
+      <!-- Spread-effekt EU -->
+      <div id="eu-spread-row" style="display:none;margin-top:7px;padding-top:7px;border-top:1px solid var(--border)">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:3px">Spread-effekt (WTI > Brent)</div>
+        <div style="font-size:11px;color:var(--green);line-height:1.5" id="eu-spread-txt">—</div>
+      </div>
       <div style="margin-top:8px">
         <div style="font-size:10px;color:var(--faint);margin-bottom:3px">Eksponering</div>
         <div class="risk-track"><div class="risk-fill" id="bar-eu" style="width:75%;background:#C53030"></div></div>
@@ -4561,6 +4595,38 @@ function selectAuthor(key, card) {
   currentAuthor = key;
 }
 
+// ── SPREAD-BANNER: oppdateres ved live-prisinnlasting ──────────
+function updateSpreadBanner() {
+  var b = window._brentLive, w = window._wtiLive;
+  if (!b || !w) return;
+  var raw = b - w;
+  var inv = raw < 0;
+  var spreadBrent = document.getElementById('spread-brent');
+  var spreadWti   = document.getElementById('spread-wti');
+  var spreadVal   = document.getElementById('spread-val');
+  var spreadSig   = document.getElementById('spread-signal');
+  if (spreadBrent) spreadBrent.textContent = b.toFixed(2) + ' $';
+  if (spreadWti)   spreadWti.textContent   = w.toFixed(2) + ' $';
+  if (spreadVal) {
+    spreadVal.textContent = (raw >= 0 ? 'Brent +' : 'WTI +') + Math.abs(raw).toFixed(2) + ' $';
+    spreadVal.style.color = inv ? 'var(--red)' : 'var(--green)';
+  }
+  if (spreadSig) {
+    if (inv) {
+      spreadSig.textContent = '⚠ Invertert spread';
+      spreadSig.style.cssText = 'flex-shrink:0;padding:4px 11px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.04em;background:var(--red-lt);color:var(--red);border:1px solid rgba(197,48,48,.2)';
+    } else if (Math.abs(raw - 3) < 1) {
+      spreadSig.textContent = '✓ Normal spread';
+      spreadSig.style.cssText = 'flex-shrink:0;padding:4px 11px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.04em;background:var(--green-lt);color:var(--green);border:1px solid rgba(20,83,45,.2)';
+    } else {
+      spreadSig.textContent = '↑ Utvidet spread';
+      spreadSig.style.cssText = 'flex-shrink:0;padding:4px 11px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.04em;background:var(--amber-lt);color:var(--amber);border:1px solid rgba(146,64,14,.2)';
+    }
+  }
+  // Trigger ny kalkulator-kjøring for å oppdatere BNP-tall
+  if (typeof debouncedCalc === 'function') debouncedCalc();
+}
+
 // ── TSHM: Trumpometer → Hormuz Signal Mapping ──────
 // Glidehukommelse for å dempe brå hopp
 var _tshmPrev = { conflict: 1, oil: 13, duration: 4 };
@@ -4999,30 +5065,99 @@ function calcHormuz() {
   //   Spread-justering: WTI typisk 2-5$ lavere enn Brent under Hormuz-stress
   var wtiLive   = window._wtiLive  || baseOil * 0.972; // fallback: 97.2% av Brent
   var brentLive = window._brentLive || baseOil;
-  var wtiSpreadFactor = (wtiLive / brentLive);          // typisk 0.97-0.99
-  var wtiShock  = oilShock * wtiSpreadFactor;           // WTI-justert sjokk
+
+  // ── SPREAD-ANALYSE ──────────────────────────────────────────────────────
+  // Positiv spread = Brent dyrere (normalt). Negativ spread = WTI dyrere (unormalt).
+  var rawSpread   = brentLive - wtiLive;          // normalt +2 til +5
+  var NORMAL_SPREAD = 3.0;                        // historisk normalnivå
+  var spreadDev   = rawSpread - NORMAL_SPREAD;    // avvik fra norm. Neg = invertert
+  var spreadInverted = rawSpread < 0;             // true nå: WTI > Brent
+
+  // Spread-faktor for WTI-sjokk: justerer USA sin oljepriseksponering
+  // Invertert spread betyr WTI allerede dyrere → USA betaler mer
+  var wtiSpreadFactor = (wtiLive / brentLive);    // >1 når invertert
+  var wtiShock  = oilShock * wtiSpreadFactor;     // WTI-justert sjokk (høyere hvis invertert)
+
+  // ── SPREAD-KORREKSJON PÅ BNP-EFFEKTER ──────────────────────────────────
+  // Når WTI > Brent (invertert): USA importkostnader opp relativt Europa
+  //   → USA-BNP-treff ØKES med spreadKorreksjon
+  //   → EU-BNP-treff REDUSERES med relativ fordel (mindre enn normalt)
+  // Historisk: 1$/fat spread-avvik ≈ 0.03 pp BNP-effekt (Hamilton 2009, anslag)
+  var BNP_PER_SPREAD_DOLLAR = 0.03;
+  var usaSpreadBNPAdj = spreadInverted
+    ? Math.abs(spreadDev) * BNP_PER_SPREAD_DOLLAR   // positiv korreksjon (økt treff)
+    : -Math.abs(spreadDev) * BNP_PER_SPREAD_DOLLAR; // normal: liten reduksjon
+  var euSpreadBNPAdj = spreadInverted
+    ? -Math.abs(spreadDev) * BNP_PER_SPREAD_DOLLAR * 0.5  // EU: relativ lettelse
+    : Math.abs(spreadDev) * BNP_PER_SPREAD_DOLLAR * 0.3;  // normal: minimal ekstra
 
   // EU: Brent-kalibrert (ECB mars 2026)
-  //   Brent er europeisk benchmark (ICE London). ECB-estimat:
-  //   +13$ Brent => -0.3pp eurosone BNP (ECB reviderte ned 1.2%->0.9%)
-  //   Koeffisient direkte: 0.3/13 = 0.023 pp/$/fat
-  //   Men vi beholder 0.72 av global for konsistens med Kilian-rammen
-  //   og fordi ECB-kuttet reflekterer et konservativt 4-ukers estimat
+  var usaGdpKilian = kilianGDP(wtiShock);
+  var usaGdpBase   = (usaGdpKilian * cm * 0.48);
+  var usaGdp       = Math.max(0, usaGdpBase + usaSpreadBNPAdj).toFixed(1);
 
-  var usaGdpKilian = kilianGDP(wtiShock);               // per kv, WTI-justert
-  var usaGdp  = (usaGdpKilian * cm * 0.48).toFixed(1); // USA-faktor 0.48
-
-  var euGdpKilian  = kilianGDP(oilShock);               // per kv, Brent direkte
-  // ECB-anker: +13$ => -0.3pp/kv. Kilian gir 13*0.22=2.86pp*0.72=2.06pp.
-  // ECB-kalibrert alternativ: oilShock * 0.023. Vi veier 60/40 mot Kilian.
+  var euGdpKilian  = kilianGDP(oilShock);
   var euGdpECB     = oilShock * cm * 0.023;
-  var euGdp  = (euGdpKilian * cm * 0.72 * 0.6 + euGdpECB * 0.4).toFixed(1);
+  var euGdpBase    = (euGdpKilian * cm * 0.72 * 0.6 + euGdpECB * 0.4);
+  var euGdp        = Math.max(0, euGdpBase + euSpreadBNPAdj).toFixed(1);
 
   var cnGdp   = (kilianGDP(oilShock) * cm * 0.28).toFixed(1);
 
   document.getElementById('usa-gdp-effect').textContent = '−' + usaGdp + ' pp BNP';
   document.getElementById('eu-gdp-effect').textContent  = '−' + euGdp  + ' pp BNP';
   document.getElementById('cn-gdp-effect').textContent  = '−' + cnGdp  + ' pp BNP';
+
+  // ── OPPDATER SPREAD-BANNER ──────────────────────────────────────────────
+  var spreadBrent = document.getElementById('spread-brent');
+  var spreadWti   = document.getElementById('spread-wti');
+  var spreadVal   = document.getElementById('spread-val');
+  var spreadSig   = document.getElementById('spread-signal');
+  if (spreadBrent) spreadBrent.textContent = brentLive.toFixed(2) + ' $';
+  if (spreadWti)   spreadWti.textContent   = wtiLive.toFixed(2) + ' $';
+  if (spreadVal) {
+    var spreadTxt = (rawSpread >= 0 ? 'Brent +' : 'WTI +') + Math.abs(rawSpread).toFixed(2) + ' $';
+    spreadVal.textContent = spreadTxt;
+    spreadVal.style.color = spreadInverted ? 'var(--red)' : 'var(--green)';
+  }
+  if (spreadSig) {
+    if (spreadInverted) {
+      spreadSig.textContent = '⚠ Invertert spread';
+      spreadSig.style.background = 'var(--red-lt)';
+      spreadSig.style.color = 'var(--red)';
+      spreadSig.style.border = '1px solid rgba(197,48,48,.2)';
+    } else if (Math.abs(spreadDev) < 1) {
+      spreadSig.textContent = '✓ Normal spread';
+      spreadSig.style.background = 'var(--green-lt)';
+      spreadSig.style.color = 'var(--green)';
+      spreadSig.style.border = '1px solid rgba(20,83,45,.2)';
+    } else {
+      spreadSig.textContent = '↑ Utvidet spread';
+      spreadSig.style.background = 'var(--amber-lt)';
+      spreadSig.style.color = 'var(--amber)';
+      spreadSig.style.border = '1px solid rgba(146,64,14,.2)';
+    }
+  }
+
+  // ── SPREAD-EFFEKT-FORKLARINGER PÅ REGION-KORT ──────────────────────────
+  var usaRow  = document.getElementById('usa-spread-row');
+  var euRow   = document.getElementById('eu-spread-row');
+  var usaTxt  = document.getElementById('usa-spread-txt');
+  var euTxt   = document.getElementById('eu-spread-txt');
+  if (spreadInverted && Math.abs(rawSpread) > 0.5) {
+    var absSpread = Math.abs(rawSpread).toFixed(1);
+    if (usaRow) usaRow.style.display = 'block';
+    if (euRow)  euRow.style.display  = 'block';
+    if (usaTxt) usaTxt.textContent =
+      'WTI ' + absSpread + ' $ over Brent. Unormalt: USA betaler mer enn Europa på spotmarked. '
+      + 'BNP-treff justert opp +' + Math.abs(usaSpreadBNPAdj).toFixed(2) + ' pp.';
+    if (euTxt) euTxt.style.color = 'var(--green)';
+    if (euTxt) euTxt.textContent =
+      'Relativ fordel: Brent billigere enn WTI. Europa betaler mindre enn USA i dette regimet. '
+      + 'BNP-treff justert ned −' + Math.abs(euSpreadBNPAdj).toFixed(2) + ' pp.';
+  } else {
+    if (usaRow) usaRow.style.display = 'none';
+    if (euRow)  euRow.style.display  = 'none';
+  }
 
   // Oppdater kilde-labels med live priser
   var wtiLbl = document.getElementById('wti-price-lbl');
@@ -5554,11 +5689,13 @@ function fetchMarkets() {
         // Lagre WTI live-pris for USA-BNP-beregning
         if (sym === 'CL=F') {
           window._wtiLive = p;
+          updateSpreadBanner();
         }
 
         // Synk Brent med Hormuz-kalkulatoren og live-indikatoren
         if (sym === 'BZ=F') {
           window._brentLive = p;
+          updateSpreadBanner();
           var lbl = document.getElementById('brent-base-lbl');
           if (lbl) lbl.textContent = '~' + Math.round(p) + ' $';
           var statEl = document.getElementById('live-brent-stat');
@@ -6060,6 +6197,20 @@ window.nav = function(el) {
   <span style="color:rgba(255,255,255,.6);font-size:11px">Glideformel:</span> Alle verdier glattes med 70 % ny signal + 30 % forrige kjøring for å dempe enkeltutslag fra én ekstremnyhet.
   <div class="tt-sep"></div>
   <span style="color:rgba(255,255,255,.6);font-size:11px">Begrensning:</span> TSHM er en heuristisk modell — ikke en kausal prediktor. Bruk som utgangspunkt og juster manuelt basert på kontekst Trumpometeret ikke fanger (forhandlingsklima, tredjepartsmekling, markedsposisjonering).
+</div>
+
+<!-- WTI/BRENT SPREAD TOOLTIP -->
+<div class="tt-box" id="tt-spread" style="max-width:360px">
+  <h4>WTI/Brent-spread — hva det betyr</h4>
+  Brent (ICE London) og WTI (NYMEX) er to ulike oljebenchmarks. Normalt er Brent 2–5 $ dyrere enn WTI, fordi Brent er den globale eksportmarkeds-benchmarken og WTI er landlåst til Cushing, Oklahoma.
+  <div class="tt-sep"></div>
+  <table>
+    <tr><td style="color:rgba(255,255,255,.5);white-space:nowrap">Normal spread</td><td>Brent +2–5 $ over WTI. Europa importerer etter Brent. USA refiner etter WTI. Begge rammes av Hormuz, men USA noe mindre.</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5);white-space:nowrap">Invertert spread</td><td>WTI dyrere enn Brent. Skjer nå (+3,6 $). Signalerer at USA-markedet er trangere enn det globale — kan skyldes Trumps tariffer som reduserer canadisk og meksikansk import, økt etterspørsel fra USA-raffinerier, eller eksportbegrensninger.</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5);white-space:nowrap">BNP-konsekvens</td><td>Invertert spread gir USA et ekstra inflasjonstrykk (+0,03 pp BNP/$ avvik). Europa får en relativ fordel — Brent er billigere enn WTI i dette regimet, noe som delvis motvirker Hormuz-effekten.</td></tr>
+  </table>
+  <div class="tt-sep"></div>
+  Modellen oppdaterer automatisk USA og EU sine BNP-estimater basert på live Brent/WTI-spread. Kilde: Hamilton (2009), Dallas Fed Hormuz-studie (2026).
 </div>
 
 <!-- SCENARIO-TOOLTIPS -->
