@@ -1061,14 +1061,16 @@ input[type=range]::-webkit-slider-thumb {
         </div>
       </div>
       <div>
-        <div class="slider-group">
-          <div class="slider-meta">
-            <span class="slider-label">Dallas Fed: BNP-effekt per kvartal</span>
-            <span class="slider-val" id="out-gdp" style="font-size:15px">−2,9 pp</span>
+        <div style="margin-bottom:18px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+            <span style="font-size:12.5px;color:var(--text)">BNP-effekt per kvartal <span style="font-size:10px;color:var(--faint)">(beregnet · Dallas Fed / Kilian)</span></span>
+            <span style="font-size:15px;font-weight:600;color:var(--navy)" id="out-gdp">−2,9 pp</span>
           </div>
-          <input type="range" min="5" max="70" value="29" step="1" id="sl-gdp" oninput="updateSliderLabel(this); debouncedCalc()">
+          <div style="height:5px;background:var(--border-md);border-radius:3px;overflow:hidden">
+            <div id="gdp-bar" style="height:100%;border-radius:3px;background:var(--red);transition:width .4s ease;width:41%"></div>
+          </div>
           <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--faint);margin-top:3px">
-            <span>−0,5</span><span>−2 pp</span><span>−4 pp</span><span>−6 pp</span><span>−7 pp</span>
+            <span>0</span><span>−3 pp</span><span>−6 pp</span><span>−9 pp</span><span>−12+</span>
           </div>
         </div>
         <div class="slider-group" style="margin-bottom:0">
@@ -3646,8 +3648,6 @@ function updateSliderLabel(slider) {
     document.getElementById('out-duration').textContent = wk;
   } else if (id === 'sl-oil') {
     document.getElementById('out-oil').textContent = v === 0 ? 'Ingen' : '+' + v + ' $/fat';
-  } else if (id === 'sl-gdp') {
-    document.getElementById('out-gdp').textContent = '−' + (v/10).toFixed(1) + ' pp';
   } else if (id === 'sl-conflict') {
     const cl = ['','Begrenset','Eskalert','Full krig'];
     document.getElementById('out-conflict').textContent = cl[v];
@@ -3664,15 +3664,35 @@ function debouncedCalc() {
 function calcHormuz() {
   const dur      = parseInt(document.getElementById('sl-duration').value);
   const oilShock = parseInt(document.getElementById('sl-oil').value);
-  const gdpBase  = parseInt(document.getElementById('sl-gdp').value) / 10;
   const conflict = parseInt(document.getElementById('sl-conflict').value);
 
-  // qLabels removed — duration now in weeks
   const conflictLabels = ['', 'Begrenset', 'Eskalert', 'Full krig'];
   const conflictMult   = [0, 1.0, 1.5, 2.2];
 
-  // Update GDP slider label
-  document.getElementById('out-gdp').textContent = '−' + gdpBase.toFixed(1) + ' pp';
+  // ── BNP-BEREGNING — Dallas Fed / Kilian ikke-lineær ─────────────────────
+  // Ankerpunkt: Dallas Fed Hormuz-studie (mars 2026)
+  //   +13 $/fat => -2.9 pp BNP per kvartal (global, annualisert)
+  //   Implisitt koeffisient: 2.9/13 = 0.223 pp per $/fat
+  // Kilian (2008): ikke-lineær skalering ved store sjokk
+  //   <20$: 0.18 pp/$/fat  |  20-50$: 0.223 pp/$/fat  |  >50$: 0.27 pp/$/fat
+  // Hamilton (2009): varighetsavtak — effekten halveres etter 3-4 kv.
+  function kilianGDP(shock) {
+    if (shock <= 0)  return 0;
+    if (shock < 20)  return shock * 0.18;
+    if (shock < 50)  return shock * 0.223;
+    return 20 * 0.18 + 30 * 0.223 + (shock - 50) * 0.27;
+  }
+  const gdpBase = kilianGDP(oilShock);
+
+  // Oppdater BNP-visning
+  const gdpEl = document.getElementById('out-gdp');
+  if (gdpEl) gdpEl.textContent = '−' + gdpBase.toFixed(1) + ' pp';
+  const gdpBar = document.getElementById('gdp-bar');
+  if (gdpBar) {
+    const pct = Math.min(100, (gdpBase / 12) * 100);
+    gdpBar.style.width = pct + '%';
+    gdpBar.style.background = gdpBase > 6 ? 'var(--red)' : gdpBase > 3 ? '#C06000' : 'var(--amber)';
+  }
 
   const cm       = conflictMult[conflict];
   const baseOil  = window._brentLive || null;
@@ -3702,8 +3722,12 @@ function calcHormuz() {
     elBrent.textContent = '~' + peakOil + ' $';
     elBrent.style.color = peakOil > 150 ? 'var(--red)' : peakOil > 125 ? 'var(--amber)' : 'var(--text)';
   }
+  const gdpWithConflict = gdpBase * cm;
   const elGdp = document.getElementById('cr-gdp');
-  if (elGdp) elGdp.textContent = '−' + (gdpBase * cm).toFixed(1) + ' pp';
+  if (elGdp) {
+    elGdp.textContent = '−' + gdpWithConflict.toFixed(1) + ' pp';
+    elGdp.style.color = gdpWithConflict > 5 ? 'var(--red)' : gdpWithConflict > 2.5 ? 'var(--amber)' : 'var(--text)';
+  }
 
   const elCpi = document.getElementById('cr-cpi');
   if (elCpi) elCpi.textContent = '+' + cpiEffect + ' pp';
@@ -4004,10 +4028,22 @@ function calcHormuz() {
   const fedTxt = gdpBase * cm > 3.5 ? 'Fed er handlingslam: resesjonsrisiko hindrer heving, inflasjon hindrer kutt.' : 'Fed har begrenset handlingsrom.';
   const miranTxt = dur > 2 ? 'Mirans plan er ugjennomførbar — alle fem forutsetninger er brutt.' : 'Mirans smale sti er presset, men ikke helt stengt.';
 
+  // Dynamisk analytisk konklusjon
+  const gdpQtr = (gdpBase * cm).toFixed(1);
+  const gdpCum = (gdpBase * cm * Math.min(dur/4, 4) * 0.72).toFixed(1);
+  const formulaRef = oilShock < 20 ? 'Hamilton (2009) lineær' : oilShock < 50 ? 'Dallas Fed Hormuz-kalibrert' : 'Kilian (2008) ikke-lineær';
+  const gdpSrc = oilShock < 20
+    ? 'Hamilton (2009): +10$/fat => -0,4 pp BNP. '
+    : oilShock < 50
+    ? 'Dallas Fed Hormuz-studie: +13$/fat => -2,9 pp per kvartal. '
+    : 'Kilian (2008): ikke-lineær skalering — store sjokk gir overproporsjonal effekt. ';
   document.getElementById('hz-text').textContent =
-    (dur === 1 ? '1 uke' : dur + ' uker') + ' stengning, +' + oilShock + ' $/fat sjokk, konfliktnivå: ' + scenarioName + '. ' +
-    'Brent topper på ~' + peakOil + ' $. Dallas Fed-kalibrert BNP-effekt: −' + gdpCumulative + ' pp kumulativt. ' +
-    'Estimert KPI-gjennomslag på +' + cpiEffect + ' pp over 8–16 uker. ' +
+    (dur === 1 ? '1 uke' : dur + ' uker') + ' stengning med +' + oilShock + ' $/fat sjokk, konfliktnivå ' + scenarioName + '. ' +
+    'Brent topper på ~' + peakOil + ' $. ' +
+    gdpSrc +
+    'Beregnet BNP-effekt: −' + gdpQtr + ' pp per kvartal (konfliktskalert ×' + conflictMult[conflict].toFixed(1) + '). ' +
+    'Kumulativt over stengningsperioden: −' + gdpCum + ' pp. ' +
+    'KPI-gjennomslag: +' + cpiEffect + ' pp over 8–16 uker. ' +
     fedTxt + ' ' + miranTxt + ' Fishmans asymmetri: skaden er strukturell uavhengig av varighet.';
 }
 
