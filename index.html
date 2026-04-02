@@ -878,33 +878,38 @@ input[type=range]::-webkit-slider-thumb {
       </div>
     </div>
 
-    <!-- Siste hendelser -->
+    <!-- Siste hendelser — dynamisk fra RSS -->
     <div class="card" style="margin-bottom:0;padding:14px 16px">
-      <div class="section-label" style="margin-top:0">Siste hendelser <span class="tt-trigger" data-tt="tt-hendelser" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-      <div style="display:flex;flex-direction:column;gap:0">
-        <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:10px;font-weight:600;color:var(--amber);white-space:nowrap;padding-top:1px">31. mars</span>
-          <span style="font-size:11px;color:var(--text);line-height:1.4">Trump: exit-signaler · Hegseth: ikke USAs ansvar</span>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div class="section-label" style="margin-top:0;margin-bottom:0">Siste hendelser <span class="tt-trigger" data-tt="tt-hendelser" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <div style="width:6px;height:6px;border-radius:50%;background:#C53030;animation:pulse 2s infinite"></div>
+          <span style="font-size:9px;color:var(--faint)" id="dash-news-status">Henter...</span>
         </div>
-        <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:10px;font-weight:600;color:var(--navy);white-space:nowrap;padding-top:1px">18–19. mars</span>
-          <span style="font-size:11px;color:var(--text);line-height:1.4">Fed og ECB holder renten · inflasjonsprognose ↑</span>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:10px;font-weight:600;color:var(--red);white-space:nowrap;padding-top:1px">4. mars</span>
-          <span style="font-size:11px;color:var(--text);line-height:1.4">Hormuz stengt · Brent +55 % i mars</span>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:10px;font-weight:600;color:var(--red);white-space:nowrap;padding-top:1px">28. feb.</span>
-          <span style="font-size:11px;color:var(--text);line-height:1.4">Operation Epic Fury · Khamenei drept</span>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap;padding-top:1px">Feb. 2026</span>
-          <span style="font-size:11px;color:var(--text);line-height:1.4">Høyesterett kjente Liberation Day-tariffer (apr. 2025) ugyldig · $166 mrd. refunderes</span>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0">
-          <span style="font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap;padding-top:1px">Jun. 2025</span>
-          <span style="font-size:11px;color:var(--text);line-height:1.4">Operation Midnight Hammer · Irans kjerneanlegg</span>
+      </div>
+      <div id="dash-news-feed" style="display:flex;flex-direction:column;gap:0">
+        <!-- Fallback statiske hendelser mens RSS lastes -->
+        <div class="dash-news-static">
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
+            <span style="font-size:10px;font-weight:600;color:var(--amber);white-space:nowrap;padding-top:1px">31. mars</span>
+            <span style="font-size:11px;color:var(--text);line-height:1.4">Trump: exit-signaler · Hegseth: ikke USAs ansvar</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
+            <span style="font-size:10px;font-weight:600;color:var(--navy);white-space:nowrap;padding-top:1px">18–19. mars</span>
+            <span style="font-size:11px;color:var(--text);line-height:1.4">Fed og ECB holder renten · inflasjonsprognose ↑</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
+            <span style="font-size:10px;font-weight:600;color:var(--red);white-space:nowrap;padding-top:1px">4. mars</span>
+            <span style="font-size:11px;color:var(--text);line-height:1.4">Hormuz stengt · Brent +55 % i mars</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
+            <span style="font-size:10px;font-weight:600;color:var(--red);white-space:nowrap;padding-top:1px">28. feb.</span>
+            <span style="font-size:11px;color:var(--text);line-height:1.4">Operation Epic Fury · Khamenei drept</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0">
+            <span style="font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap;padding-top:1px">Jun. 2025</span>
+            <span style="font-size:11px;color:var(--text);line-height:1.4">Operation Midnight Hammer · Irans kjerneanlegg</span>
+          </div>
         </div>
       </div>
     </div>
@@ -4957,6 +4962,106 @@ window.nav = function(el) {
     }
   });
 })();
+
+// ── DASHBOARD NYHETER — scorer og viser mest relevante RSS-nyheter ───────────
+
+// Scorer en nyhet basert på antall kategori-treff og prioritet
+function scoreDashNews(item) {
+  var text  = (item.title + ' ' + (item.desc || '')).toLowerCase();
+  var score = 0;
+
+  // Høyprioritets nøkkelord (dobbelt score)
+  var high = ['hormuz','iran','strait','brent','oil price','crude','opec',
+              'fed rate','ecb rate','recession','gdp','inflation cpi',
+              'china export','rare earth','taiwan','nato','trump iran',
+              'oil surge','energy crisis'];
+  high.forEach(function(kw) { if (text.indexOf(kw) !== -1) score += 2; });
+
+  // Normalprioritets nøkkelord
+  var normal = ['oil','energy','gas','fed','ecb','interest','bank',
+                'china','russia','ukraine','middle east','saudi',
+                'defense','military','trade','tariff','dollar',
+                'market','stocks','gold','inflation'];
+  normal.forEach(function(kw) { if (text.indexOf(kw) !== -1) score += 1; });
+
+  // Vekt mot ferskere nyheter (siste 24t = bonus)
+  var ageHours = (Date.now() - item.date.getTime()) / 3600000;
+  if (ageHours < 6)  score += 4;
+  else if (ageHours < 12) score += 2;
+  else if (ageHours < 24) score += 1;
+
+  return score;
+}
+
+function updateDashboardNews() {
+  var feed   = document.getElementById('dash-news-feed');
+  var status = document.getElementById('dash-news-status');
+  if (!feed || !_newsItems || _newsItems.length === 0) return;
+
+  // Scorer alle nyheter og tar topp 6
+  var scored = _newsItems.map(function(item) {
+    return { item: item, score: scoreDashNews(item) };
+  });
+  scored.sort(function(a, b) { return b.score - a.score || b.item.date - a.item.date; });
+  var top6 = scored.slice(0, 6);
+
+  if (top6.length === 0) return;
+
+  // Fjern statisk fallback
+  var staticEl = feed.querySelector('.dash-news-static');
+  if (staticEl) staticEl.remove();
+
+  // Tøm og bygg ny liste
+  feed.innerHTML = '';
+  top6.forEach(function(s, idx) {
+    var item = s.item;
+    var cats = item.cats || [];
+    var primaryCat = cats[0] || 'geopolitikk';
+    var catStyle = _catColors[primaryCat] || { color: '#085041' };
+
+    // Dato-formatering
+    var now = new Date();
+    var diff = now - item.date;
+    var timeLabel;
+    if (diff < 3600000)       timeLabel = Math.round(diff/60000) + ' min';
+    else if (diff < 86400000) timeLabel = Math.round(diff/3600000) + 't siden';
+    else {
+      timeLabel = item.date.toLocaleDateString('no-NO', {day:'numeric', month:'short'});
+    }
+
+    var isLast = idx === top6.length - 1;
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:10px;align-items:flex-start;padding:5px 0;' +
+                        (isLast ? '' : 'border-bottom:1px solid var(--border)');
+
+    // Trunkér tittel til ca 55 tegn
+    var title = item.title.length > 58 ? item.title.substring(0, 55) + '…' : item.title;
+
+    row.innerHTML =
+      '<span style="font-size:9px;font-weight:600;color:' + catStyle.color + ';white-space:nowrap;padding-top:2px;min-width:52px;text-align:right">' +
+        timeLabel +
+      '</span>' +
+      '<a href="' + item.link + '" target="_blank" rel="noopener" ' +
+         'style="font-size:11px;color:var(--text);line-height:1.4;text-decoration:none;flex:1">' +
+        title +
+      '</a>';
+
+    feed.appendChild(row);
+  });
+
+  if (status) {
+    var ts = new Date().toLocaleTimeString('no-NO', {hour:'2-digit', minute:'2-digit'});
+    status.textContent = 'Oppdatert ' + ts;
+  }
+}
+
+// Koble til renderNews — oppdater dashboard etter at nyheter er hentet
+var _origRender = window.renderNews;
+window.renderNews = function() {
+  if (_origRender) _origRender();
+  updateDashboardNews();
+};
+
 </script>
 </body>
 </html>
