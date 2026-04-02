@@ -368,7 +368,7 @@ input[type=range]::-webkit-slider-thumb {
   margin-bottom: 12px;
   box-shadow: var(--shadow);
 }
-.quote-text { font-family: 'DM Serif Display', serif; font-size: 14px; line-height: 1.7; color: var(--text); font-style: italic; }
+.quote-text { font-family: 'DM Sans', sans-serif; font-size: 14px; line-height: 1.7; color: var(--text); font-style: italic; }
 .quote-source { font-size: 11px; color: var(--faint); margin-top: 8px; }
 
 /* ── TALEB BOXES ────────────────────────────── */
@@ -722,7 +722,7 @@ input[type=range]::-webkit-slider-thumb {
 
 <!-- ── MODELL-GUIDE KNAPP ── -->
 <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:5px 20px;display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-shrink:0">
-  <button onclick="openGuideModal()" style="display:flex;align-items:center;gap:7px;padding:5px 14px;background:linear-gradient(135deg,#1F3864,#2d4f8a);border:none;border-radius:20px;cursor:pointer;font-family:inherit;box-shadow:0 2px 8px rgba(31,56,100,.3);transition:all .2s" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 12px rgba(31,56,100,.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 2px 8px rgba(31,56,100,.3)'">
+  <button onclick="openGuideModal()" style="display:flex;align-items:center;gap:7px;padding:5px 14px;background:linear-gradient(135deg,#C53030,#9B1C1C);border:none;border-radius:20px;cursor:pointer;font-family:inherit;box-shadow:0 2px 8px rgba(197,48,48,.35);transition:all .2s" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 12px rgba(197,48,48,.5)'" onmouseout="this.style.transform='';this.style.boxShadow='0 2px 8px rgba(197,48,48,.35)'">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
     <span style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.92)">Forstå modellen</span>
   </button>
@@ -945,7 +945,7 @@ input[type=range]::-webkit-slider-thumb {
       <!-- Speedometer + tall side om side -->
       <div style="display:flex;align-items:center;gap:18px;margin-bottom:14px">
         <div style="flex-shrink:0">
-          <svg id="dash-trump-gauge" viewBox="0 0 200 114" xmlns="http://www.w3.org/2000/svg" style="width:176px;height:100px">
+          <svg id="dash-trump-gauge" viewBox="0 0 240 138" xmlns="http://www.w3.org/2000/svg" style="width:220px;height:127px">
             <defs>
               <linearGradient id="dtGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%"   stop-color="#27500A"/>
@@ -955,30 +955,30 @@ input[type=range]::-webkit-slider-thumb {
               </linearGradient>
             </defs>
             <!-- Track -->
-            <path d="M18,100 A82,82 0 0,1 182,100" fill="none" stroke="#E8E7E0" stroke-width="14" stroke-linecap="round"/>
+            <path d="M22,120 A98,98 0 0,1 218,120" fill="none" stroke="#E8E7E0" stroke-width="16" stroke-linecap="round"/>
             <!-- Colored arc -->
-            <path id="dash-trump-arc" d="M18,100 A82,82 0 0,1 182,100" fill="none" stroke="url(#dtGrad)" stroke-width="14" stroke-linecap="round" stroke-dasharray="257" stroke-dashoffset="257"/>
+            <path id="dash-trump-arc" d="M22,120 A98,98 0 0,1 218,120" fill="none" stroke="url(#dtGrad)" stroke-width="16" stroke-linecap="round" stroke-dasharray="308" stroke-dashoffset="308"/>
             <!-- Tick marks -->
-            <g stroke="#C8C7C0" stroke-width="1">
-              <line x1="18" y1="100" x2="25" y2="100" transform="rotate(0 100 100)"/>
-              <line x1="18" y1="100" x2="23" y2="100" transform="rotate(36 100 100)"/>
-              <line x1="18" y1="100" x2="23" y2="100" transform="rotate(72 100 100)"/>
-              <line x1="18" y1="100" x2="23" y2="100" transform="rotate(108 100 100)"/>
-              <line x1="18" y1="100" x2="23" y2="100" transform="rotate(144 100 100)"/>
-              <line x1="18" y1="100" x2="25" y2="100" transform="rotate(180 100 100)"/>
+            <g stroke="#C8C7C0" stroke-width="1.2">
+              <line x1="22" y1="120" x2="30" y2="120" transform="rotate(0 120 120)"/>
+              <line x1="22" y1="120" x2="29" y2="120" transform="rotate(36 120 120)"/>
+              <line x1="22" y1="120" x2="29" y2="120" transform="rotate(72 120 120)"/>
+              <line x1="22" y1="120" x2="29" y2="120" transform="rotate(108 120 120)"/>
+              <line x1="22" y1="120" x2="29" y2="120" transform="rotate(144 120 120)"/>
+              <line x1="22" y1="120" x2="30" y2="120" transform="rotate(180 120 120)"/>
             </g>
             <!-- Labels -->
-            <text x="16"  y="112" font-size="8" fill="#5F5E5A" text-anchor="middle" font-family="DM Sans, sans-serif">0</text>
-            <text x="100" y="18"  font-size="8" fill="#5F5E5A" text-anchor="middle" font-family="DM Sans, sans-serif">50</text>
-            <text x="184" y="112" font-size="8" fill="#5F5E5A" text-anchor="middle" font-family="DM Sans, sans-serif">100</text>
-            <!-- Needle shadow -->
-            <g id="dash-trump-needle" transform="rotate(-90 100 100)" style="transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
-              <line x1="100" y1="100" x2="100" y2="28" stroke="rgba(0,0,0,.07)" stroke-width="4" stroke-linecap="round"/>
-              <line x1="100" y1="100" x2="100" y2="28" stroke="#1F3864" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="100" y1="100" x2="100" y2="112" stroke="#1F3864" stroke-width="2.5" stroke-linecap="round"/>
+            <text x="18"  y="134" font-size="10" fill="#5F5E5A" text-anchor="middle" font-family="DM Sans, sans-serif">0</text>
+            <text x="120" y="22"  font-size="10" fill="#5F5E5A" text-anchor="middle" font-family="DM Sans, sans-serif">50</text>
+            <text x="222" y="134" font-size="10" fill="#5F5E5A" text-anchor="middle" font-family="DM Sans, sans-serif">100</text>
+            <!-- Needle -->
+            <g id="dash-trump-needle" transform="rotate(-90 120 120)" style="transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
+              <line x1="120" y1="120" x2="120" y2="34" stroke="rgba(0,0,0,.08)" stroke-width="5" stroke-linecap="round"/>
+              <line x1="120" y1="120" x2="120" y2="34" stroke="#1F3864" stroke-width="3" stroke-linecap="round"/>
+              <line x1="120" y1="120" x2="120" y2="135" stroke="#1F3864" stroke-width="3" stroke-linecap="round"/>
             </g>
-            <circle cx="100" cy="100" r="7" fill="#1F3864"/>
-            <circle cx="100" cy="100" r="3" fill="white"/>
+            <circle cx="120" cy="120" r="9" fill="#1F3864"/>
+            <circle cx="120" cy="120" r="4" fill="white"/>
           </svg>
         </div>
         <div style="flex:1">
@@ -997,177 +997,17 @@ input[type=range]::-webkit-slider-thumb {
         </div>
       </div>
 
-      <!-- Mini-feed: topp 4 Trump-nyheter -->
-      <div style="border-top:1px solid var(--border);padding-top:10px;flex:1">
-        <div style="font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:7px">Topp Trump-signaler</div>
-        <div id="dash-trump-feed" style="display:flex;flex-direction:column;gap:0">
-          <div style="font-size:11px;color:var(--faint);padding:10px 0">Henter nyheter...</div>
+      <!-- To-kolonne nyhets-feed med kategorier -->
+      <div style="border-top:1px solid var(--border);padding-top:12px;flex:1">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)">Topp Trump-signaler</div>
+          <a href="#" onclick="nav('panel-nyheter');return false" style="font-size:9px;color:var(--navy-mid);text-decoration:none;font-weight:600;padding:2px 8px;background:var(--navy-lt);border-radius:10px">Alle →</a>
         </div>
-        <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);text-align:right">
-          <a href="#" onclick="nav(document.querySelector('[data-panel=trumpometer]'));return false" style="font-size:10px;color:var(--navy-mid);text-decoration:none;font-weight:600">Vis alle Trump-nyheter →</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ════════════════════════════════════════════════════════════
-       RAD 2: SCENARIOKONSEKVENSPANEL
-  ═══════════════════════════════════════════════════════════════ -->
-  <div style="margin-bottom:16px">
-    <div style="font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin-bottom:8px">Scenariokonsekvenser — oppdateres fra kalkulatoren ovenfor</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-      <div id="dash-sc-col-a" style="border-radius:8px;overflow:hidden;cursor:pointer;transition:all .2s;border:2px solid transparent;box-shadow:var(--shadow)" onclick="scSelect('a');nav(document.querySelector('[data-panel=scenarier]'))">
-        <div style="background:linear-gradient(150deg,#166534,#15803D);color:white;padding:12px 14px">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
-            <div style="font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6">Scenario A</div>
-            <div style="font-size:22px;font-weight:800;line-height:1" id="dash-pA">20 %</div>
-          </div>
-          <div style="font-size:11px;font-weight:600;margin-bottom:7px">Rask oppløsning</div>
-          <div style="height:2px;background:rgba(255,255,255,.2);border-radius:1px;overflow:hidden;margin-bottom:8px"><div id="dash-fill-a" style="height:100%;background:rgba(255,255,255,.7);border-radius:1px;width:20%;transition:width .5s ease"></div></div>
-          <div style="display:flex;flex-direction:column;gap:3px">
-            <div style="display:flex;justify-content:space-between;font-size:10px"><span style="opacity:.6">Brent 12mnd</span><strong id="dash-sc-brent-a">—</strong></div>
-            <div style="display:flex;justify-content:space-between;font-size:10px"><span style="opacity:.6">BNP-tap</span><strong id="dash-sc-bnp-a">—</strong></div>
-          </div>
-          <div style="margin-top:8px;font-size:9px;opacity:.6;border-top:1px solid rgba(255,255,255,.15);padding-top:6px" id="dash-sc-sub-a">Forhandlingsutgang</div>
-        </div>
-      </div>
-      <div id="dash-sc-col-b" style="border-radius:8px;overflow:hidden;cursor:pointer;transition:all .2s;border:2px solid var(--amber);box-shadow:var(--shadow-md)" onclick="scSelect('b');nav(document.querySelector('[data-panel=scenarier]'))">
-        <div style="background:linear-gradient(150deg,#92400E,#B45309);color:white;padding:12px 14px">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
-            <div style="font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6">Scenario B ★</div>
-            <div style="font-size:22px;font-weight:800;line-height:1" id="dash-pB">55 %</div>
-          </div>
-          <div style="font-size:11px;font-weight:600;margin-bottom:7px">Kronisk forstyrrelse</div>
-          <div style="height:2px;background:rgba(255,255,255,.2);border-radius:1px;overflow:hidden;margin-bottom:8px"><div id="dash-fill-b" style="height:100%;background:rgba(255,255,255,.7);border-radius:1px;width:55%;transition:width .5s ease"></div></div>
-          <div style="display:flex;flex-direction:column;gap:3px">
-            <div style="display:flex;justify-content:space-between;font-size:10px"><span style="opacity:.6">Brent 12mnd</span><strong id="dash-sc-brent-b">—</strong></div>
-            <div style="display:flex;justify-content:space-between;font-size:10px"><span style="opacity:.6">BNP-tap</span><strong id="dash-sc-bnp-b">—</strong></div>
-          </div>
-          <div style="margin-top:8px;font-size:9px;opacity:.6;border-top:1px solid rgba(255,255,255,.15);padding-top:6px" id="dash-sc-sub-b">Yuan-tollregime</div>
-        </div>
-      </div>
-      <div id="dash-sc-col-c" style="border-radius:8px;overflow:hidden;cursor:pointer;transition:all .2s;border:2px solid transparent;box-shadow:var(--shadow)" onclick="scSelect('c');nav(document.querySelector('[data-panel=scenarier]'))">
-        <div style="background:linear-gradient(150deg,#991B1B,#B91C1C);color:white;padding:12px 14px">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
-            <div style="font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6">Scenario C</div>
-            <div style="font-size:22px;font-weight:800;line-height:1" id="dash-pC">25 %</div>
-          </div>
-          <div style="font-size:11px;font-weight:600;margin-bottom:7px">Systemkollaps</div>
-          <div style="height:2px;background:rgba(255,255,255,.2);border-radius:1px;overflow:hidden;margin-bottom:8px"><div id="dash-fill-c" style="height:100%;background:rgba(255,255,255,.7);border-radius:1px;width:25%;transition:width .5s ease"></div></div>
-          <div style="display:flex;flex-direction:column;gap:3px">
-            <div style="display:flex;justify-content:space-between;font-size:10px"><span style="opacity:.6">Brent 12mnd</span><strong id="dash-sc-brent-c">—</strong></div>
-            <div style="display:flex;justify-content:space-between;font-size:10px"><span style="opacity:.6">BNP-tap</span><strong id="dash-sc-bnp-c">—</strong></div>
-          </div>
-          <div style="margin-top:8px;font-size:9px;opacity:.6;border-top:1px solid rgba(255,255,255,.15);padding-top:6px" id="dash-sc-sub-c">NDS Simultaneity</div>
+        <div id="dash-trump-feed" style="display:grid;grid-template-columns:1fr 1fr;gap:0 12px">
+          <div style="font-size:11px;color:var(--faint);padding:10px 0;grid-column:span 2">Henter nyheter...</div>
         </div>
       </div>
     </div>
-    <div style="text-align:right;margin-top:8px">
-
-    </div>
-  </div>
-
-  <!-- ════════════════════════════════════════════════════════════
-       RAD 3: NYHETER (2/3) + NØKKELTALL (1/3)
-  ═══════════════════════════════════════════════════════════════ -->
-  <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px">
-
-    <!-- Nyheter -->
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;box-shadow:var(--shadow)">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div style="font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--faint)">Siste nyheter
-          <span class="tt-trigger" data-tt="tt-hendelser" style="display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <div style="display:flex;align-items:center;gap:4px"><div style="width:5px;height:5px;border-radius:50%;background:var(--red);animation:pulse 2s infinite"></div><span style="font-size:9px;color:var(--faint)" id="dash-news-status">Henter...</span></div>
-          <a href="#" onclick="nav(document.querySelector('[data-panel=nyheter]'));return false" style="font-size:10px;color:var(--navy-mid);text-decoration:none;font-weight:600;padding:3px 9px;background:var(--navy-lt);border-radius:20px">Alle nyheter →</a>
-        </div>
-      </div>
-      <div id="dash-news-feed" style="display:flex;flex-direction:column;gap:0">
-        <div class="dash-news-static">
-          <div style="display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--border)"><span style="font-size:9px;font-weight:600;color:var(--amber);white-space:nowrap;padding-top:1px;min-width:54px;text-align:right">31. mars</span><span style="font-size:11.5px;color:var(--text);line-height:1.4">Trump: exit-signaler · Hegseth: ikke USAs ansvar</span></div>
-          <div style="display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--border)"><span style="font-size:9px;font-weight:600;color:var(--navy-mid);white-space:nowrap;padding-top:1px;min-width:54px;text-align:right">18–19. mars</span><span style="font-size:11.5px;color:var(--text);line-height:1.4">Fed og ECB holder renten · inflasjonsprognose ↑</span></div>
-          <div style="display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--border)"><span style="font-size:9px;font-weight:600;color:var(--red);white-space:nowrap;padding-top:1px;min-width:54px;text-align:right">28. feb.</span><span style="font-size:11.5px;color:var(--text);line-height:1.4">Hormuz stengt · Revolusjonsgarden erklærer stengning · Brent +55 % i mars</span></div>
-          <div style="display:flex;gap:10px;align-items:flex-start;padding:6px 0"><span style="font-size:9px;font-weight:600;color:var(--red);white-space:nowrap;padding-top:1px;min-width:54px;text-align:right">28. feb.</span><span style="font-size:11.5px;color:var(--text);line-height:1.4">Operation Epic Fury · Khamenei drept</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Nøkkeltall -->
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;box-shadow:var(--shadow)">
-      <div style="font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin-bottom:10px">Nøkkeltall
-        <span class="tt-trigger" data-tt="tt-nokkeltall" style="display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:0">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">Fed-rente</span><span style="font-size:12px;font-weight:600;color:var(--text)">3,50–3,75 %</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">ECB-rente</span><span style="font-size:12px;font-weight:600;color:var(--text)">2,00 %</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">US KPI (feb.)</span><span style="font-size:12px;font-weight:600;color:var(--amber)">2,4 %</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">Brent (live)</span><span style="font-size:12px;font-weight:600;color:var(--red)" id="kn-brent">— $</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">WTI (live)</span><span style="font-size:12px;font-weight:600;color:var(--red)" id="kn-wti">— $</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">Hormuz stengt</span><span style="font-size:12px;font-weight:600;color:var(--red)" id="kn-hormuz-dag">33 dager</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:5px 0"><span style="font-size:11px;color:var(--muted)">VIX (live)</span><span style="font-size:12px;font-weight:600" id="kn-vix">—</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ════════════════════════════════════════════════════════════
-       RAD 4: GOODSPEED + MIRAN + STATUS
-  ═══════════════════════════════════════════════════════════════ -->
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px">
-
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;box-shadow:var(--shadow)">
-      <div style="font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin-bottom:10px">Goodspeed resesjonsmeter
-        <span class="tt-trigger" data-tt="tt-gs-meter" style="display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;color:var(--text)">Energisjokk</span><span style="font-size:10px;font-weight:600" id="gs-t1-lbl">Aktiv</span></div><div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div id="gs-t1-bar" style="height:100%;border-radius:2px;background:var(--red);width:90%;transition:width .6s ease"></div></div></div>
-        <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;color:var(--text)">Krig / geopolitisk</span><span style="font-size:10px;font-weight:600" id="gs-t2-lbl">Aktiv</span></div><div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div id="gs-t2-bar" style="height:100%;border-radius:2px;background:var(--red);width:85%;transition:width .6s ease"></div></div></div>
-        <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;color:var(--text)">Kredittkontraksjon</span><span style="font-size:10px;font-weight:600" id="gs-t3-lbl">Bygger opp</span></div><div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div id="gs-t3-bar" style="height:100%;border-radius:2px;background:var(--amber);width:55%;transition:width .6s ease"></div></div></div>
-        <div style="padding-top:8px;border-top:1px solid var(--border)"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;font-weight:600;color:var(--text)">Samlet resesjonsrisiko</span><span style="font-size:11px;font-weight:700" id="gs-total-lbl">Kritisk</span></div><div style="height:5px;background:var(--border);border-radius:3px;overflow:hidden"><div id="gs-total-bar-dash" style="height:100%;border-radius:3px;background:var(--red);width:82%;transition:width .6s ease"></div></div></div>
-      </div>
-    </div>
-
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;box-shadow:var(--shadow)">
-      <div style="font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin-bottom:10px">Mirans smale sti
-        <span class="tt-trigger" data-tt="tt-miran-sti" style="display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:0">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">Valutakurskompensasjon</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">Billig energi</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">Gradvis implementering</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--muted)">Fed-koordinering</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0"><span style="font-size:11px;color:var(--muted)">Stabile makroforhold</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
-      </div>
-      <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:9px;color:var(--faint)">5/5 forutsetninger brutt · Miran (2024)</div>
-    </div>
-
-    <div style="display:flex;flex-direction:column;gap:10px">
-      <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:0 var(--radius) var(--radius) 0;padding:12px 14px;box-shadow:var(--shadow)">
-        <div style="font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:4px">Hormuz-stredet</div>
-        <div style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:2px">● Stengt dag <span id="ms-hormuz-dag">33</span></div>
-        <div style="font-size:10px;color:var(--muted)" id="ms-exit">USA exit-signal aktiv</div>
-      </div>
-      <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:0 var(--radius) var(--radius) 0;padding:12px 14px;box-shadow:var(--shadow)">
-        <div style="font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:4px">Fishmans asymmetri
-          <span class="tt-trigger" data-tt="tt-fishman-status" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:3px;vertical-align:middle">?</span>
-        </div>
-        <div style="font-size:13px;font-weight:700;color:var(--amber);margin-bottom:2px">● Strukturell skade</div>
-        <div style="font-size:10px;color:var(--muted)">Yuan-tollregime · de-dollarisering</div>
-      </div>
-      <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:0 var(--radius) var(--radius) 0;padding:12px 14px;box-shadow:var(--shadow)">
-        <div style="font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:4px">Goodspeed trigger 3</div>
-        <div style="font-size:13px;font-weight:700;color:var(--amber);margin-bottom:2px" id="ms-gs3-val">● Bygger opp</div>
-        <div style="font-size:10px;color:var(--muted)">Fed handlingslam · PCE hindrer kutt</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Kjernediagnose -->
-  <div class="diag-box" style="margin-bottom:0">
-    <div class="diag-label">Kjernediagnose
-      <span class="tt-trigger" data-tt="tt-kjernediagnose" style="display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);font-size:7px;font-weight:700;cursor:help;border:1px solid rgba(255,255,255,.25);margin-left:4px;vertical-align:middle">?</span>
-    </div>
-    Rasjonelle beslutninger på enkeltaktørnivå produserer irrasjonelle resultater på systemnivå. Mirans plan forutsetter billig energi. National Defense Strategy (2026) autoriserer operasjoner som utløser et energisjokk. Vi befinner oss i et strukturelt skifte av den globale ordenen som vil ta fem til ti år å konsolidere.
   </div>
 
 </div>
@@ -1555,7 +1395,7 @@ input[type=range]::-webkit-slider-thumb {
           <div>
             <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0C447C;margin-bottom:8px">Analytisk begrensning</div>
             <div style="font-size:12px;line-height:1.7;color:var(--muted);margin-bottom:12px">Taleb leverer ingen svar — bare presisjonen i spørsmålene. Han er den eneste av de seks kildene som stiller spørsmål ved om svarene de andre gir, er mulige å gi.</div>
-            <div style="font-size:12px;font-style:italic;color:var(--navy);border-left:2px solid var(--navy-mid);padding-left:10px;line-height:1.7">«What may be a Black Swan surprise for a turkey is not a Black Swan surprise for its butcher.»</div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:12px;font-style:italic;color:var(--navy);border-left:2px solid var(--navy-mid);padding-left:10px;line-height:1.7">«What may be a Black Swan surprise for a turkey is not a Black Swan surprise for its butcher.»</div>
           </div>
         </div>
       </div>
@@ -1723,7 +1563,7 @@ input[type=range]::-webkit-slider-thumb {
     <!-- Konklusjon -->
     <div class="section-label">Konklusjonen — kalkunen og slakteren</div>
     <div style="background:var(--navy);border-radius:var(--radius-lg);padding:20px 24px;color:white">
-      <div style="font-size:13px;font-style:italic;opacity:.75;margin-bottom:14px;line-height:1.7">«What may be a Black Swan surprise for a turkey is not a Black Swan surprise for its butcher. The objective should be to 'avoid being the turkey'.» — Nassim Taleb</div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:13px;font-style:italic;opacity:.75;margin-bottom:14px;line-height:1.7">«What may be a Black Swan surprise for a turkey is not a Black Swan surprise for its butcher. The objective should be to 'avoid being the turkey'.» — Nassim Taleb</div>
       <div style="font-size:13px;line-height:1.75;opacity:.9">Den analytisk riktige responsen er ikke en ny modell med høyere presisjon. Det er <strong>robusthet</strong>: strukturer og posisjoner som tåler et bredt spekter av utfall, inkludert utfall vi ennå ikke har tenkt på. Det er det Taleb kaller å unngå å være kalkunen.</div>
     </div>
   </div><!-- /om-syntese -->
@@ -4984,9 +4824,9 @@ function syncDashTrump() {
 
   // Mini-speedometer nål
   var needle = document.getElementById('dash-trump-needle');
-  if (needle) needle.setAttribute('transform', 'rotate(' + (-90 + meter*1.8) + ' 100 100)');
+  if (needle) needle.setAttribute('transform', 'rotate(' + (-90 + meter*1.8) + ' 120 120)');
   var arc = document.getElementById('dash-trump-arc');
-  if (arc) arc.setAttribute('stroke-dashoffset', (257 - meter/100*257).toFixed(1));
+  if (arc) arc.setAttribute('stroke-dashoffset', (308 - meter/100*308).toFixed(1));
 
   // Score og label
   var scoreEl = document.getElementById('dash-trump-score');
@@ -5014,27 +4854,42 @@ function syncDashTrump() {
 
   feed.innerHTML = '';
   var TEMA_C = { hormuz:{bg:'#FCEBEB',c:'#791F1F'}, energi:{bg:'#FAEEDA',c:'#633806'}, kina:{bg:'#FCEBEB',c:'#791F1F'}, makro:{bg:'#EEEDFE',c:'#3C3489'}, geopolitikk:{bg:'#E1F5EE',c:'#085041'}, kapital:{bg:'#E6F1FB',c:'#0C447C'} };
-  top4.forEach(function(s, idx) {
+  var top8 = window._trumpScored.slice().sort(function(a,b){
+    return b.score!==a.score ? b.score-a.score : b.item.date-a.item.date;
+  }).slice(0,8);
+  // Bygg to kolonner
+  var col0 = document.createElement('div');
+  var col1 = document.createElement('div');
+  col0.style.cssText = 'display:flex;flex-direction:column;gap:0;min-width:0';
+  col1.style.cssText = 'display:flex;flex-direction:column;gap:0;min-width:0';
+  top8.forEach(function(s, idx) {
     var it = s.item;
     var scorCol = s.score>=80?'#7F1D1D':s.score>=60?'#C53030':s.score>=40?'#C06000':'#BA7517';
     var ageMs = Date.now()-it.date.getTime();
     var age = ageMs<3600000 ? Math.round(ageMs/60000)+'min' : ageMs<86400000 ? Math.round(ageMs/3600000)+'t' : it.date.toLocaleDateString('no-NO',{day:'numeric',month:'short'});
     var primaryCat = (it.cats||[])[0]||'';
-    var tc = TEMA_C[primaryCat]||{bg:'#F1EFE8',c:'#444441'};
-    var isLast = idx === top4.length-1;
+    var tc = TEMA_C[primaryCat]||{bg:'#F1EFE8',c:'#5A5A52'};
+    var colItems = idx % 2 === 0 ? top8.filter(function(_,i){return i%2===0;}) : top8.filter(function(_,i){return i%2===1;});
+    var isLastInCol = idx === top8.length-2 || idx === top8.length-1;
     var row = document.createElement('div');
-    row.style.cssText = 'display:flex;gap:8px;align-items:flex-start;padding:5px 0;'+(isLast?'':'border-bottom:1px solid var(--border)');
+    row.style.cssText = 'display:flex;gap:6px;align-items:flex-start;padding:5px 0;'+(isLastInCol?'':'border-bottom:1px solid var(--border)');
     row.innerHTML =
-      '<div style="display:flex;align-items:center;justify-content:center;border-radius:4px;width:28px;height:18px;flex-shrink:0;margin-top:1px;background:'+(s.score>=60?'#FEF2F2':'#F1EFE8')+';color:'+scorCol+';font-size:10px;font-weight:700">'+s.score+'</div>'+
+      '<div style="display:flex;align-items:center;justify-content:center;border-radius:4px;width:26px;height:16px;flex-shrink:0;margin-top:2px;background:'+(s.score>=60?'#FEF2F2':'#F5F4F0')+';color:'+scorCol+';font-size:9px;font-weight:700">'+s.score+'</div>'+
       '<div style="flex:1;min-width:0">'+
-        '<a href="'+it.link+'" target="_blank" rel="noopener" style="font-size:11px;font-weight:500;color:var(--text);text-decoration:none;line-height:1.35;display:block">'+it.title.substring(0,72)+(it.title.length>72?'…':'')+'</a>'+
-        '<div style="display:flex;gap:4px;align-items:center;margin-top:2px">'+
-          (primaryCat ? '<span style="font-size:8px;font-weight:600;padding:1px 5px;border-radius:10px;background:'+tc.bg+';color:'+tc.c+'">'+catLabels[primaryCat]+'</span>' : '')+
-          '<span style="font-size:9px;color:var(--faint)">'+it.source+' · '+age+'</span>'+
+        '<a href="'+it.link+'" target="_blank" rel="noopener" style="font-size:10.5px;font-weight:500;color:var(--text);text-decoration:none;line-height:1.3;display:block">'+it.title.substring(0,58)+(it.title.length>58?'…':'')+'</a>'+
+        '<div style="display:flex;gap:3px;align-items:center;margin-top:2px;flex-wrap:wrap">'+
+          (primaryCat ? '<span style="font-size:7.5px;font-weight:700;padding:1px 5px;border-radius:8px;letter-spacing:.04em;background:'+tc.bg+';color:'+tc.c+'">'+(catLabels[primaryCat]||primaryCat)+'</span>' : '')+
+          '<span style="font-size:8.5px;color:var(--faint)">'+age+'</span>'+
         '</div>'+
       '</div>';
-    feed.appendChild(row);
+    (idx % 2 === 0 ? col0 : col1).appendChild(row);
   });
+  if (top8.length === 0) {
+    feed.innerHTML = '<div style="font-size:11px;color:var(--faint);padding:10px 0;grid-column:span 2">Ingen nyheter ennå</div>';
+  } else {
+    feed.appendChild(col0);
+    feed.appendChild(col1);
+  }
 }
 
 
