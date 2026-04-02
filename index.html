@@ -889,6 +889,10 @@ input[type=range]::-webkit-slider-thumb {
             <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid)">⟳ Synk fra Trumpometer</span>
           </button>
           <span class="tt-trigger" data-tt="tt-tshm" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:9px;font-weight:700;cursor:help;border:1px solid var(--border-md)" title="Forklaring av TSHM-modellen">?</span>
+          <!-- Vis Scenarier-knapp -->
+          <button onclick="openScenarioModal()" style="display:flex;align-items:center;gap:5px;padding:5px 11px;background:var(--navy);border:none;border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s;box-shadow:var(--shadow)">
+            <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:white">⬡ Vis scenarier</span>
+          </button>
           <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;background:var(--red-lt);border-radius:20px;border:1px solid rgba(197,48,48,.15)">
             <div style="width:5px;height:5px;border-radius:50%;background:var(--red);animation:pulse 2s infinite"></div>
             <span style="font-size:10px;font-weight:600;color:var(--red)">Brent <span id="live-brent-stat">—</span></span>
@@ -1141,8 +1145,11 @@ input[type=range]::-webkit-slider-thumb {
         </div>
       </div>
     </div>
-    <div style="text-align:right;margin-top:5px;font-size:9px;color:var(--faint)">
-      Klikk scenario for full analyse → <a href="#" onclick="nav(document.querySelector('[data-panel=scenarier]'));return false" style="color:var(--navy-mid);text-decoration:none;font-weight:600">Scenarioanalyse</a>
+    <div style="text-align:right;margin-top:8px">
+      <button onclick="openScModal()" style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;background:var(--navy);color:white;border:none;border-radius:20px;font-family:inherit;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .18s;box-shadow:var(--shadow)">
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="none" style="opacity:.85"><rect x="1" y="1" width="4" height="4" rx="1" fill="white"/><rect x="7" y="1" width="4" height="4" rx="1" fill="white" opacity=".6"/><rect x="1" y="7" width="4" height="4" rx="1" fill="white" opacity=".6"/><rect x="7" y="7" width="4" height="4" rx="1" fill="white" opacity=".35"/></svg>
+        Vis scenarier
+      </button>
     </div>
   </div>
 
@@ -2344,7 +2351,327 @@ input[type=range]::-webkit-slider-thumb {
   .sc-kpi { background:var(--navy-lt);border:1px solid var(--border-md);border-radius:var(--radius);padding:10px 12px;text-align:center; }
   .sc-kpi-label { font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:4px; }
   .sc-kpi-val { font-size:17px;font-weight:800;line-height:1; }
+
+  /* ── SCENARIE-MODAL ──────────────────────────────── */
+  .scm-overlay {
+    display:none;position:fixed;inset:0;
+    background:rgba(15,22,40,.62);
+    z-index:9000;
+    backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+    align-items:center;justify-content:center;
+    padding:28px 20px;
+    animation:scm-bg-in .2s ease;
+  }
+  .scm-overlay.open { display:flex; }
+  @keyframes scm-bg-in { from{opacity:0} to{opacity:1} }
+  .scm-dialog {
+    background:var(--bg);
+    border-radius:18px;
+    box-shadow:0 28px 90px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.05);
+    width:100%;max-width:1060px;
+    max-height:calc(100vh - 56px);
+    display:flex;flex-direction:column;overflow:hidden;
+    animation:scm-rise .24s cubic-bezier(.34,1.4,.64,1);
+  }
+  @keyframes scm-rise { from{opacity:0;transform:translateY(22px) scale(.97)} to{opacity:1;transform:none} }
+  .scm-header {
+    background:var(--navy);color:white;
+    padding:0 24px;height:58px;
+    display:flex;align-items:center;justify-content:space-between;
+    flex-shrink:0;
+  }
+  .scm-title { font-family:'DM Serif Display',serif;font-size:18px;font-weight:400; }
+  .scm-sub { font-size:11px;opacity:.5;font-weight:300;margin-top:2px; }
+  .scm-close {
+    width:32px;height:32px;border-radius:50%;
+    border:1px solid rgba(255,255,255,.2);
+    background:rgba(255,255,255,.07);color:white;font-size:16px;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:all .15s;font-family:inherit;flex-shrink:0;
+  }
+  .scm-close:hover { background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.38); }
+  .scm-params {
+    background:var(--navy-lt);border-bottom:1px solid var(--border-md);
+    padding:9px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;flex-shrink:0;
+  }
+  .scm-param-item { display:flex;flex-direction:column;gap:1px; }
+  .scm-plbl { font-size:8.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--navy-mid); }
+  .scm-pval { font-size:12px;font-weight:700;color:var(--navy); }
+  .scm-psep { width:1px;height:28px;background:var(--border-md); }
+  .scm-body { overflow-y:auto;padding:20px 24px 28px;flex:1; }
+  .scm-tabs { display:flex;gap:0;margin-bottom:18px;border-radius:11px;overflow:hidden;border:1px solid var(--border-md);box-shadow:var(--shadow); }
+  .scm-tab {
+    flex:1;padding:11px 8px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    border:none;background:var(--surface);color:var(--muted);cursor:pointer;font-family:inherit;
+    transition:all .17s;border-right:1px solid var(--border);
+  }
+  .scm-tab:last-child { border-right:none; }
+  .scm-tab.act-a { background:linear-gradient(135deg,#14532D,#166534);color:white; }
+  .scm-tab.act-b { background:linear-gradient(135deg,#78350F,#92400E);color:white; }
+  .scm-tab.act-c { background:linear-gradient(135deg,#7F1D1D,#991B1B);color:white; }
+  .scm-tab-prob { font-size:20px;font-weight:800;display:block;line-height:1.1;margin-bottom:2px; }
+  .scm-tab-name { font-size:9px;opacity:.82;letter-spacing:.04em; }
+  .scm-content { display:none; animation:sc-fadein .2s ease; }
+  .scm-content.active { display:block; }
+  .scm-probbar { height:5px;border-radius:3px;overflow:hidden;margin:5px 0 10px;background:var(--border); }
+  .scm-probfill { height:100%;border-radius:3px;transition:width .5s cubic-bezier(.4,0,.2,1); }
+  .scm-kpi4 { display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px; }
+  .scm-kpi-box { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;text-align:center; }
+  .scm-kpi-box.hi-a { background:rgba(20,83,45,.06);border-color:rgba(20,83,45,.18); }
+  .scm-kpi-box.hi-b { background:rgba(146,64,14,.06);border-color:rgba(146,64,14,.18); }
+  .scm-kpi-box.hi-c { background:rgba(197,48,48,.06);border-color:rgba(197,48,48,.2); }
+  .scm-kpi-lbl { font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:4px; }
+  .scm-kpi-num { font-size:20px;font-weight:800;line-height:1;margin-top:3px; }
+  .scm-kpi-sub { font-size:9px;color:var(--muted);margin-top:5px; }
+  .scm-trig { padding:13px 17px;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:16px;font-size:12.5px;line-height:1.78;color:var(--text); }
+  .scm-trig-lbl { font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px; }
+  .scm-tl2 { display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px; }
+  .scm-cap { border-radius:var(--radius-lg);padding:14px 18px;margin-top:4px; }
+  .scm-cap-head { font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px; }
+  .scm-cap3 { display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px; }
+  .scm-cap-col { background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px; }
+  .scm-cap-col-head { font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:7px; }
+  .scm-cascade { display:grid;grid-template-columns:68px 1fr 1fr 1fr;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:16px;font-size:11px; }
+  .scm-cascade-hd { background:var(--navy);color:white;padding:7px 8px;font-size:8.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase; }
+  .scm-cascade-lbl { background:rgba(197,48,48,.08);padding:7px 8px;font-size:10px;font-weight:700;color:var(--red);border-top:1px solid var(--border); }
+  .scm-cascade-cell { padding:7px 9px;line-height:1.5;border-top:1px solid var(--border);border-left:1px solid var(--border); }
   </style>
+
+<!-- ══════════════════════════════════════════════════════════
+     SCENARIE-MODAL OVERLAY
+══════════════════════════════════════════════════════════ -->
+<div class="scm-overlay" id="scm-overlay" onclick="if(event.target===this)closeScModal()">
+<div class="scm-dialog" role="dialog" aria-modal="true">
+
+  <!-- HEADER -->
+  <div class="scm-header">
+    <div>
+      <div class="scm-title">Scenarioanalyse — Hormuz 2026</div>
+      <div class="scm-sub">Tre forløp · Perera (2026) empiriske bortfallsdata · dynamisk fra kalkulatoren</div>
+    </div>
+    <button class="scm-close" onclick="closeScModal()" aria-label="Lukk">✕</button>
+  </div>
+
+  <!-- PARAMS-STRIPE -->
+  <div class="scm-params">
+    <span class="scm-plbl" style="white-space:nowrap">Hormuz-parametere:</span>
+    <div class="scm-param-item"><span class="scm-plbl">Varighet</span><span class="scm-pval" id="scm-dur">—</span></div>
+    <div class="scm-psep"></div>
+    <div class="scm-param-item"><span class="scm-plbl">Oljeprissjokk</span><span class="scm-pval" id="scm-oil">—</span></div>
+    <div class="scm-psep"></div>
+    <div class="scm-param-item"><span class="scm-plbl">Konfliktnivå</span><span class="scm-pval" id="scm-conf">—</span></div>
+    <div class="scm-psep"></div>
+    <div class="scm-param-item"><span class="scm-plbl">Brent topp</span><span class="scm-pval" style="color:var(--red)" id="scm-peak">—</span></div>
+    <div class="scm-psep"></div>
+    <div class="scm-param-item"><span class="scm-plbl">Brent live</span><span class="scm-pval" id="scm-brent-live">—</span></div>
+    <div class="scm-psep"></div>
+    <div class="scm-param-item"><span class="scm-plbl">WTI live</span><span class="scm-pval" id="scm-wti-live">—</span></div>
+    <div class="scm-psep"></div>
+    <div class="scm-param-item"><span class="scm-plbl">WTI/Brent</span><span class="scm-pval" id="scm-spread-badge">—</span></div>
+  </div>
+
+  <!-- BODY -->
+  <div class="scm-body">
+
+    <!-- TABS -->
+    <div class="scm-tabs">
+      <button class="scm-tab" id="scm-tab-a" onclick="scmTab('a')">
+        <span class="scm-tab-prob" id="scm-tpA">—</span>
+        <span class="scm-tab-name">A · Rask oppløsning</span>
+      </button>
+      <button class="scm-tab" id="scm-tab-b" onclick="scmTab('b')">
+        <span class="scm-tab-prob" id="scm-tpB">—</span>
+        <span class="scm-tab-name">B · Kronisk forstyrrelse <span id="scm-star">★</span></span>
+      </button>
+      <button class="scm-tab" id="scm-tab-c" onclick="scmTab('c')">
+        <span class="scm-tab-prob" id="scm-tpC">—</span>
+        <span class="scm-tab-name">C · Systemkollaps</span>
+      </button>
+    </div>
+
+    <!-- ── SCENARIO A ── -->
+    <div class="scm-content" id="scm-content-a">
+      <div class="scm-kpi4">
+        <div class="scm-kpi-box hi-a">
+          <div class="scm-kpi-lbl" style="color:#14532D">Sannsynlighet <span class="tt-trigger" data-tt="tt-sc-prob" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:rgba(20,83,45,.15);color:#14532D;font-size:7px;font-weight:700;cursor:help;border:1px solid rgba(20,83,45,.2)">?</span></div>
+          <div class="scm-kpi-num" style="color:#14532D" id="scm-a-prob">—</div>
+          <div class="scm-probbar"><div class="scm-probfill" id="scm-a-pbar" style="background:#14532D"></div></div>
+          <div class="scm-kpi-sub" id="scm-a-psub">—</div>
+        </div>
+        <div class="scm-kpi-box">
+          <div class="scm-kpi-lbl">Normalisert om</div>
+          <div class="scm-kpi-num" style="color:#14532D;font-size:16px" id="scm-a-dur">—</div>
+          <div class="scm-kpi-sub">Fra nå</div>
+        </div>
+        <div class="scm-kpi-box">
+          <div class="scm-kpi-lbl">Brent 12 mnd. <span class="tt-trigger" data-tt="tt-sc-brent-a" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md)">?</span></div>
+          <div class="scm-kpi-num" style="color:var(--amber);font-size:16px" id="scm-a-brent">—</div>
+          <div class="scm-kpi-sub">EIA normalisering</div>
+        </div>
+        <div class="scm-kpi-box">
+          <div class="scm-kpi-lbl">BNP-tap <span class="tt-trigger" data-tt="bnp-tooltip" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md)">?</span></div>
+          <div class="scm-kpi-num" style="color:var(--amber);font-size:16px" id="scm-a-bnp">—</div>
+          <div class="scm-kpi-sub" id="scm-a-bsub">—</div>
+        </div>
+      </div>
+      <div class="scm-trig" style="border-left:4px solid #14532D;background:rgba(20,83,45,.04)">
+        <div class="scm-trig-lbl" style="color:#14532D">Triggervilkår <span class="tt-trigger" data-tt="tt-sc-trig-a" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:rgba(20,83,45,.15);color:#14532D;font-size:7px;font-weight:700;cursor:help;border:1px solid rgba(20,83,45,.2)">?</span></div>
+        Trump aksepterer en ansiktsbevarende avtale der Iran formelt åpner Hormuz mot suspensjon av nye sanksjoner. Kinas meglingsinitiativ med Pakistan lykkes. Hormuz åpnes gradvis innen <strong id="scm-a-dur-inline">—</strong>. Pakkedealen inkluderer ikke atomavrustning — konflikten er avblåst, ikke løst.
+      </div>
+      <div class="scm-tl2">
+        <div class="sc-sektor-card" style="border-top:3px solid var(--amber)">
+          <div class="sc-sektor-header" style="color:var(--amber)">LNG — 77 mill. tonn/år bortfall</div>
+          <div class="sc-tl">
+            <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(20,83,45,.1);color:#14532D">Mnd. 1–3</div><div class="sc-tl-content"><div class="sc-tl-title">Gjenåpning</div>Qatar resumerer 12 uskadte tog (~66 mill. t/år). Spotpriser faller fra rekordnivå.</div></div>
+            <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 3–12</div><div class="sc-tl-content"><div class="sc-tl-title">Strukturell skade vedvarer</div>Train 4/6 (11 mill. t/år) fysisk ødelagt — 18–24 mnd. gjenoppbygging. EU-LNG-lager kritisk lavt.</div></div>
+            <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(20,83,45,.1);color:#14532D">Mnd. 12–36</div><div class="sc-tl-content"><div class="sc-tl-title">Nytt gulv</div>Normalisert men strukturelt høyere priser. Underinvestering vedvarer.</div></div>
+          </div>
+        </div>
+        <div class="sc-sektor-card" style="border-top:3px solid var(--red)">
+          <div class="sc-sektor-header" style="color:var(--red)">Halvledere — helium irreversibelt tapt</div>
+          <div class="sc-tl">
+            <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(197,48,48,.1);color:var(--red)">Mnd. 1–6</div><div class="sc-tl-content"><div class="sc-tl-title">Helium stopper linjene</div>Samsung/SK Hynix −64,7 % heliumimport. DRAM-kontrakt +90–95 % kv/kv. AI-capex forsinket.</div></div>
+            <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 6–18</div><div class="sc-tl-content"><div class="sc-tl-title">Alternativ sourcing</div>Bromin fra Israel igjen. Sør-Korea kompenserer delvis. Gallium +123 %.</div></div>
+            <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 18–36</div><div class="sc-tl-content"><div class="sc-tl-title">Permanent reprising</div>AI-capex-syklus forskjøvet 12–18 mnd. Ex-Kina halvleder-produksjon styrkes.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="scm-cap" style="background:rgba(20,83,45,.06);border:1px solid rgba(20,83,45,.15)">
+        <div class="scm-cap-head" style="color:#14532D">Kapitalimplikasjoner — Scenario A</div>
+        <div class="scm-cap3">
+          <div class="scm-cap-col"><div class="scm-cap-col-head" style="color:#14532D">✓ Kjøp</div><div style="font-size:11.5px;line-height:1.7;color:var(--text)">Europeisk LNG-infrastruktur · Energiinfrastruktur Gulf · Aluminium ex-Gulfen · Norsk maritim sektor</div></div>
+          <div class="scm-cap-col"><div class="scm-cap-col-head" style="color:var(--amber)">∼ Hold</div><div style="font-size:11.5px;line-height:1.7;color:var(--text)">Halvlederselskaper (heliumknapphet vedvarer) · Matvareprodusenter (avlingstap 2026)</div></div>
+          <div class="scm-cap-col"><div class="scm-cap-col-head" style="color:var(--red)">✗ Unngå</div><div style="font-size:11.5px;line-height:1.7;color:var(--text)">Iranske eiendeler · Containerrederier til Gulfen · Kortsiktig long olje etter gjenåpning</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SCENARIO B ── -->
+    <div class="scm-content" id="scm-content-b">
+      <div class="scm-kpi4">
+        <div class="scm-kpi-box hi-b">
+          <div class="scm-kpi-lbl" style="color:var(--amber)">Sannsynlighet ★ <span class="tt-trigger" data-tt="tt-sc-prob" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:rgba(146,64,14,.15);color:var(--amber);font-size:7px;font-weight:700;cursor:help;border:1px solid rgba(146,64,14,.2)">?</span></div>
+          <div class="scm-kpi-num" style="color:var(--amber)" id="scm-b-prob">—</div>
+          <div class="scm-probbar"><div class="scm-probfill" id="scm-b-pbar" style="background:var(--amber)"></div></div>
+          <div class="scm-kpi-sub" id="scm-b-psub">—</div>
+        </div>
+        <div class="scm-kpi-box">
+          <div class="scm-kpi-lbl">Hormuz-regime</div>
+          <div class="scm-kpi-num" style="color:var(--amber);font-size:14px;line-height:1.2" id="scm-b-regime">—</div>
+          <div class="scm-kpi-sub" id="scm-b-rsub">—</div>
+        </div>
+        <div class="scm-kpi-box">
+          <div class="scm-kpi-lbl">Brent 12 mnd. <span class="tt-trigger" data-tt="tt-sc-brent-b" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md)">?</span></div>
+          <div class="scm-kpi-num" style="color:var(--red);font-size:16px" id="scm-b-brent">—</div>
+          <div class="scm-kpi-sub">Strukturelt høyere gulv</div>
+        </div>
+        <div class="scm-kpi-box">
+          <div class="scm-kpi-lbl">BNP-tap <span class="tt-trigger" data-tt="bnp-tooltip" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md)">?</span></div>
+          <div class="scm-kpi-num" style="color:var(--red);font-size:16px" id="scm-b-bnp">—</div>
+          <div class="scm-kpi-sub" id="scm-b-bsub">—</div>
+        </div>
+      </div>
+      <div class="scm-trig" style="border-left:4px solid var(--amber);background:rgba(146,64,14,.04)">
+        <div class="scm-trig-lbl" style="color:var(--amber)">Triggervilkår <span class="tt-trigger" data-tt="tt-sc-trig-b" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:rgba(146,64,14,.15);color:var(--amber);font-size:7px;font-weight:700;cursor:help;border:1px solid rgba(146,64,14,.2)">?</span></div>
+        Irans yuan-baserte «toll-booth»-system forblir operativt. Kinesiske, russiske og allierte skip transiterer mot betaling i yuan — vestlige skip blokkeres eller betaler ×40–80 premie. USA avslutter operasjoner. Hormuz er formelt åpnet men reelt tospors-system der <strong>Kina kontrollerer adgangen</strong>. Konflikten er institusjonalisert.
+      </div>
+      <!-- Spread-varsel -->
+      <div id="scm-spread-alert" style="display:none;padding:9px 14px;background:var(--red-lt);border:1px solid rgba(197,48,48,.2);border-radius:8px;margin-bottom:14px;font-size:11.5px;color:var(--red);line-height:1.6">
+        <strong>⚠ Invertert WTI/Brent-spread aktiv:</strong> <span id="scm-spread-txt">—</span>
+      </div>
+      <div class="scm-tl2">
+        <div class="sc-sektor-card" style="border-top:3px solid var(--red)">
+          <div class="sc-sektor-header" style="color:var(--red)">Energi — strukturelt ny prisorden</div>
+          <div class="sc-tl">
+            <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(197,48,48,.1);color:var(--red)">Mnd. 1–6</div><div class="sc-tl-content"><div class="sc-tl-title">Yuan-tollregime etablert</div>Vestlige skip betaler ×40–80 premie. Brent på kronisk høyt nivå.</div></div>
+            <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 6–18</div><div class="sc-tl-content"><div class="sc-tl-title">To-tiers oljemarked</div>Yuan-denominert vs. dollar. OPEC+ makter ikke fylle gapet.</div></div>
+            <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 18–36</div><div class="sc-tl-content"><div class="sc-tl-title">Permanent nytt regime</div>LNG-prissetting i yuan. Dollar mister energidominans gradvis.</div></div>
+          </div>
+        </div>
+        <div class="sc-sektor-card" style="border-top:3px solid var(--amber)">
+          <div class="sc-sektor-header" style="color:var(--amber)">Finans — KPI <span id="scm-b-cpi">+1,2</span> pp · stagflasjon</div>
+          <div class="sc-tl">
+            <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 1–6</div><div class="sc-tl-content"><div class="sc-tl-title">Fed handlingslam</div>PCE hindrer kutt · resesjonsrisiko hindrer heving. VIX >30. Miran-planen ugjennomførbar.</div></div>
+            <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(197,48,48,.1);color:var(--red)">Mnd. 6–18</div><div class="sc-tl-content"><div class="sc-tl-title">EM-gjeld under press</div>Kapitalflukt til dollar og Treasuries. IMF aktiverer nødprogram.</div></div>
+            <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(197,48,48,.1);color:var(--red)">Mnd. 18–36</div><div class="sc-tl-content"><div class="sc-tl-title">De-dollarisering</div>Yuan-invoicing øker. Fishman: strukturell skade irreversibel.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="scm-cap" style="background:rgba(146,64,14,.06);border:1px solid rgba(146,64,14,.15)">
+        <div class="scm-cap-head" style="color:var(--amber)">Kapitalimplikasjoner — Scenario B · Barbell</div>
+        <div class="scm-cap3">
+          <div class="scm-cap-col"><div class="scm-cap-col-head" style="color:#14532D">Long</div><div style="font-size:11.5px;line-height:1.7;color:var(--text)">Gull · Energiinfrastruktur · Forsvar · Norsk olje/gass · Saudi Aramco · Yuan-eksponeringer</div></div>
+          <div class="scm-cap-col"><div class="scm-cap-col-head" style="color:var(--amber)">Barbell (80/20)</div><div style="font-size:11.5px;line-height:1.7;color:var(--text)">Taleb: 80 % robuste + 20 % asymmetrisk oppside. Long dollar-volatilitet.</div></div>
+          <div class="scm-cap-col"><div class="scm-cap-col-head" style="color:var(--red)">Short/unngå</div><div style="font-size:11.5px;line-height:1.7;color:var(--text)">Europeisk energiintensiv industri · EM-obligasjoner · Importavhengige mat-eksponerte land</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SCENARIO C ── -->
+    <div class="scm-content" id="scm-content-c">
+      <div class="scm-kpi4">
+        <div class="scm-kpi-box hi-c">
+          <div class="scm-kpi-lbl" style="color:var(--red)">Sannsynlighet <span class="tt-trigger" data-tt="tt-sc-prob" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:rgba(197,48,48,.15);color:var(--red);font-size:7px;font-weight:700;cursor:help;border:1px solid rgba(197,48,48,.2)">?</span></div>
+          <div class="scm-kpi-num" style="color:var(--red)" id="scm-c-prob">—</div>
+          <div class="scm-probbar"><div class="scm-probfill" id="scm-c-pbar" style="background:var(--red)"></div></div>
+          <div class="scm-kpi-sub" id="scm-c-psub">—</div>
+        </div>
+        <div class="scm-kpi-box">
+          <div class="scm-kpi-lbl">Hormuz-status</div>
+          <div class="scm-kpi-num" style="color:var(--red);font-size:14px;line-height:1.2" id="scm-c-status">—</div>
+          <div class="scm-kpi-sub" id="scm-c-ssub">—</div>
+        </div>
+        <div class="scm-kpi-box">
+          <div class="scm-kpi-lbl">Brent 12 mnd. <span class="tt-trigger" data-tt="tt-sc-brent-c" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md)">?</span></div>
+          <div class="scm-kpi-num" style="color:var(--red);font-size:16px" id="scm-c-brent">—</div>
+          <div class="scm-kpi-sub">Goldman stress-scenario</div>
+        </div>
+        <div class="scm-kpi-box">
+          <div class="scm-kpi-lbl">BNP-tap 2026–27 <span class="tt-trigger" data-tt="bnp-tooltip" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md)">?</span></div>
+          <div class="scm-kpi-num" style="color:var(--red);font-size:16px" id="scm-c-bnp">—</div>
+          <div class="scm-kpi-sub" id="scm-c-bsub">—</div>
+        </div>
+      </div>
+      <div class="scm-trig" style="border-left:4px solid var(--red);background:rgba(197,48,48,.04)">
+        <div class="scm-trig-lbl" style="color:var(--red)">Triggervilkår — NDS «The Simultaneity Problem» <span class="tt-trigger" data-tt="tt-sc-trig-c" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:rgba(197,48,48,.15);color:var(--red);font-size:7px;font-weight:700;cursor:help;border:1px solid rgba(197,48,48,.2)">?</span></div>
+        Trump avslutter Iran-krigen uten å løse Hormuz. Iran eskalerer — Kharg Island angripes, 90 % av iransk oljeeksport stanser. Kina agerer opportunistisk mot Taiwan innen 90 dager mens USA er militært utmattet. Russland aktiverer øst-flanken. Tre fronter simultant — NDS (2026) «Simultaneity Problem» realisert i fullt omfang.
+      </div>
+      <div class="section-label" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);margin-bottom:10px">Talebs kaskademodell — Perera-data <span class="tt-trigger" data-tt="tt-perera" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px">?</span></div>
+      <div class="scm-cascade">
+        <div class="scm-cascade-hd">Sjokkledd</div>
+        <div class="scm-cascade-hd">Primær (Mnd. 1–3)</div>
+        <div class="scm-cascade-hd">Sekundær (Mnd. 3–12)</div>
+        <div class="scm-cascade-hd">Tertiær (Mnd. 12–36)</div>
+        <div class="scm-cascade-lbl">Energi</div>
+        <div class="scm-cascade-cell">Hormuz stengt · Brent >150 $ · LNG-kollaps</div>
+        <div class="scm-cascade-cell">Europeisk industri stanser · Kraftrasjonering</div>
+        <div class="scm-cascade-cell">Ny permanent energiarkitektur · IEA rekonstruert</div>
+        <div class="scm-cascade-lbl">Finans</div>
+        <div class="scm-cascade-cell">VIX >50 · S&amp;P −30–40 % · Treasuries selges</div>
+        <div class="scm-cascade-cell">EM mislighold · Valutakriser · IMF kapasitetskollaps</div>
+        <div class="scm-cascade-cell">Dollar mister reservestatus delvis · Yuan-SDR</div>
+        <div class="scm-cascade-lbl">Geo­politikk</div>
+        <div class="scm-cascade-cell">Iran/Taiwan/Russland simultant · NATO fragmentert</div>
+        <div class="scm-cascade-cell">USA militær overstrekning · Europa tvinges til selvforsvar</div>
+        <div class="scm-cascade-cell">Ny sikkerhetspolarisering · USA/Kina bipolær verden</div>
+        <div class="scm-cascade-lbl">Perera</div>
+        <div class="scm-cascade-cell">Helium irreversibelt tapt · LNG Train 4/6 ødelagt</div>
+        <div class="scm-cascade-cell">Bangladesh avling 2026 tapt · REE-krise globalt</div>
+        <div class="scm-cascade-cell">5–10 år konsolidering · Strukturell ny verdensorden</div>
+      </div>
+      <div class="scm-cap" style="background:rgba(197,48,48,.06);border:1px solid rgba(197,48,48,.2)">
+        <div class="scm-cap-head" style="color:var(--red)">Kapitalimplikasjoner — Scenario C · Taleb barbell</div>
+        <div class="scm-cap3">
+          <div class="scm-cap-col"><div class="scm-cap-col-head" style="color:#14532D">80 % Robuste</div><div style="font-size:11.5px;line-height:1.7;color:var(--text)">Gull · US Treasuries korte · Sveitserfranc · NOK · Kontanter · Forsvar · Matvareprodusenter ikke-importland</div></div>
+          <div class="scm-cap-col"><div class="scm-cap-col-head" style="color:var(--amber)">20 % Asymmetrisk</div><div style="font-size:11.5px;line-height:1.7;color:var(--text)">Langt OTM call på energi · Volatilitetsprodukter · Alternative heliumkilder · Ex-Kina halvledere</div></div>
+          <div class="scm-cap-col"><div class="scm-cap-col-head" style="color:var(--red)">Unngå absolutt</div><div style="font-size:11.5px;line-height:1.7;color:var(--text)">Europeisk industri · EM-obligasjoner · Heliumeksponering · Lang duration usikre valutaer · Luftfart · Shipping Gulfen</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /scm-body -->
+</div><!-- /scm-dialog -->
+</div><!-- /scm-overlay -->
 
   <div style="display:flex;gap:10px;margin-bottom:18px" id="sc-cols">
 
@@ -4761,6 +5088,130 @@ function applyTSHM() {
       if (sp) sp.style.color = 'var(--navy-mid)';
       if (sp) sp.textContent = '⟳ Synk fra Trumpometer';
     }, 2200);
+  }
+}
+
+// ── SCENARIE-MODAL ────────────────────────────────────────────
+var _scmActive = 'b';
+
+function openScModal() {
+  var overlay = document.getElementById('scm-overlay');
+  if (!overlay) return;
+  updateScModal();
+  var pA = parseInt((document.getElementById('sc-pA')||{}).textContent)||20;
+  var pB = parseInt((document.getElementById('sc-pB')||{}).textContent)||55;
+  var pC = parseInt((document.getElementById('sc-pC')||{}).textContent)||25;
+  var ml = pA > pB && pA > pC ? 'a' : pB >= pC ? 'b' : 'c';
+  scmTab(ml);
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeScModal() {
+  var overlay = document.getElementById('scm-overlay');
+  if (overlay) overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeScModal();
+});
+
+function scmTab(sc) {
+  _scmActive = sc;
+  ['a','b','c'].forEach(function(s) {
+    var tab = document.getElementById('scm-tab-' + s);
+    var content = document.getElementById('scm-content-' + s);
+    if (tab) tab.className = 'scm-tab' + (s === sc ? ' act-' + s : '');
+    if (content) content.className = 'scm-content' + (s === sc ? ' active' : '');
+  });
+}
+
+function updateScModal() {
+  var dur      = parseInt((document.getElementById('sl-duration')||{}).value) || 5;
+  var oilShock = parseInt((document.getElementById('sl-oil')||{}).value) || 13;
+  var conflict = parseInt((document.getElementById('sl-conflict')||{}).value) || 1;
+  var baseOil  = window._brentLive || 108;
+  var wtiLive  = window._wtiLive  || baseOil * 0.972;
+  var cm = [0, 1.0, 1.5, 2.2][conflict];
+  var conflictLabels = ['', 'Begrenset', 'Eskalert', 'Full krig'];
+  var peakOil  = Math.round(baseOil + oilShock * cm);
+
+  var sv = function(id, v) { var el=document.getElementById(id); if(el) el.textContent=v; };
+  sv('scm-dur',  dur === 1 ? '1 uke' : dur + ' uker');
+  sv('scm-oil',  oilShock === 0 ? 'Ingen' : '+' + oilShock + ' $/fat');
+  sv('scm-conf', conflictLabels[conflict]);
+  sv('scm-peak', '~' + peakOil + ' $');
+  sv('scm-brent-live', baseOil.toFixed(2) + ' $');
+  sv('scm-wti-live',   wtiLive.toFixed(2) + ' $');
+
+  var rawSpread = baseOil - wtiLive;
+  var inv = rawSpread < 0;
+  var spreadBadge = document.getElementById('scm-spread-badge');
+  if (spreadBadge) {
+    spreadBadge.textContent = (inv ? 'WTI +' : 'Brent +') + Math.abs(rawSpread).toFixed(2) + ' $';
+    spreadBadge.style.color = inv ? 'var(--red)' : 'var(--green)';
+  }
+
+  var pA = parseInt((document.getElementById('sc-pA')||{}).textContent)||20;
+  var pB = parseInt((document.getElementById('sc-pB')||{}).textContent)||55;
+  var pC = parseInt((document.getElementById('sc-pC')||{}).textContent)||25;
+  var mostLikely = pA > pB && pA > pC ? 'a' : pB >= pC ? 'b' : 'c';
+
+  sv('scm-tpA', pA + ' %');
+  sv('scm-tpB', pB + ' %');
+  sv('scm-tpC', pC + ' %');
+
+  var starEl = document.getElementById('scm-star');
+  if (starEl) starEl.style.display = mostLikely === 'b' ? '' : 'none';
+
+  var g = function(id) { return (document.getElementById(id)||{}).textContent || '—'; };
+
+  // Scenario A
+  sv('scm-a-prob', g('sc-pA'));
+  var pbarA = document.getElementById('scm-a-pbar');
+  if (pbarA) pbarA.style.width = pA + '%';
+  sv('scm-a-psub',     g('sc-a-prob-sub'));
+  sv('scm-a-dur',      g('sc-a-dur'));
+  sv('scm-a-dur-inline', g('sc-a-dur'));
+  sv('scm-a-brent',    g('sc-a-brent'));
+  sv('scm-a-bnp',      g('sc-a-bnp'));
+  sv('scm-a-bsub',     g('sc-a-bnp-sub'));
+
+  // Scenario B
+  sv('scm-b-prob',   g('sc-pB'));
+  var pbarB = document.getElementById('scm-b-pbar');
+  if (pbarB) pbarB.style.width = pB + '%';
+  sv('scm-b-psub',   g('sc-b-prob-sub'));
+  sv('scm-b-regime', g('sc-b-dur'));
+  sv('scm-b-rsub',   g('sc-b-dur-sub'));
+  sv('scm-b-brent',  g('sc-b-brent'));
+  sv('scm-b-bnp',    g('sc-b-bnp'));
+  sv('scm-b-bsub',   g('sc-b-bnp-sub'));
+  var cpiEl = document.getElementById('scm-b-cpi');
+  var cpiSrc = document.getElementById('sc-b-cpi-inline');
+  if (cpiEl && cpiSrc) cpiEl.textContent = '+' + cpiSrc.textContent + ' pp';
+
+  // Scenario C
+  sv('scm-c-prob',   g('sc-pC'));
+  var pbarC = document.getElementById('scm-c-pbar');
+  if (pbarC) pbarC.style.width = pC + '%';
+  sv('scm-c-psub',   g('sc-c-prob-sub'));
+  sv('scm-c-status', g('sc-c-dur'));
+  sv('scm-c-ssub',   g('sc-c-dur-sub'));
+  sv('scm-c-brent',  g('sc-c-brent'));
+  sv('scm-c-bnp',    g('sc-c-bnp'));
+  sv('scm-c-bsub',   g('sc-c-bnp-sub'));
+
+  // Spread-varsel B-fane
+  var alertEl = document.getElementById('scm-spread-alert');
+  var alertTxt = document.getElementById('scm-spread-txt');
+  if (alertEl && inv && Math.abs(rawSpread) > 0.5) {
+    alertEl.style.display = 'block';
+    if (alertTxt) alertTxt.textContent = 'WTI ' + Math.abs(rawSpread).toFixed(2) + ' $ over Brent. '
+      + 'USA-markedet er strammere enn globalt. BNP-treff for USA justert opp relativt til Europa.';
+  } else if (alertEl) {
+    alertEl.style.display = 'none';
   }
 }
 
@@ -7267,6 +7718,656 @@ window.nav = function(el) {
   }
 };
 
+</script>
+<!-- ═══════════════════════════════════════════════════════════════
+     SCENARIO MODAL — popup fra Dashboard Hormuz-kalkulator
+═══════════════════════════════════════════════════════════════ -->
+<style>
+/* ── MODAL OVERLAY ───────────────────────────────────────────── */
+#sc-modal-overlay {
+  display:none;position:fixed;inset:0;z-index:2000;
+  background:rgba(15,20,35,.55);backdrop-filter:blur(3px);
+  animation:sc-overlay-in .2s ease;
+}
+#sc-modal-overlay.visible { display:flex;align-items:center;justify-content:center; }
+@keyframes sc-overlay-in { from{opacity:0} to{opacity:1} }
+
+/* ── MODAL VINDU ─────────────────────────────────────────────── */
+#sc-modal {
+  background:var(--bg);
+  border-radius:var(--radius-lg);
+  box-shadow:0 24px 80px rgba(0,0,0,.28), 0 4px 16px rgba(0,0,0,.18);
+  width:min(1060px, 96vw);
+  max-height:90vh;
+  display:flex;flex-direction:column;
+  animation:sc-modal-in .22s cubic-bezier(.22,1,.36,1);
+  overflow:hidden;
+  border:1px solid var(--border-md);
+}
+@keyframes sc-modal-in {
+  from { opacity:0; transform:translateY(20px) scale(.97); }
+  to   { opacity:1; transform:none; }
+}
+
+/* ── MODAL HEADER ────────────────────────────────────────────── */
+#sc-modal-head {
+  background:var(--navy);
+  color:white;
+  padding:16px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+#sc-modal-head-left { display:flex;flex-direction:column;gap:3px; }
+#sc-modal-title { font-family:'DM Serif Display',serif;font-size:20px;font-weight:400;letter-spacing:.01em; }
+#sc-modal-sub { font-size:11px;opacity:.6;font-weight:300;letter-spacing:.02em; }
+
+#sc-modal-params {
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:2px;
+}
+.sc-modal-param {
+  display:flex;align-items:baseline;gap:5px;
+  font-size:10.5px;opacity:.8;
+}
+.sc-modal-param strong { font-weight:700;opacity:1; }
+
+#sc-modal-close {
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  color:white;font-size:18px;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:background .15s;font-family:inherit;
+}
+#sc-modal-close:hover { background:rgba(255,255,255,.22); }
+
+/* ── MODAL TABS ──────────────────────────────────────────────── */
+#sc-modal-tabs {
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:0 24px;
+  display:flex;gap:0;flex-shrink:0;
+}
+.sc-modal-tab {
+  padding:11px 18px;font-size:12px;font-weight:600;
+  cursor:pointer;border-bottom:2px solid transparent;
+  color:var(--muted);transition:all .15s;white-space:nowrap;
+  font-family:'DM Sans',sans-serif;letter-spacing:.01em;
+}
+.sc-modal-tab:hover { color:var(--text); }
+.sc-modal-tab.active { border-bottom-color:var(--navy);color:var(--navy); }
+.sc-modal-tab.tab-a.active { border-bottom-color:#14532D;color:#14532D; }
+.sc-modal-tab.tab-b.active { border-bottom-color:var(--amber);color:var(--amber); }
+.sc-modal-tab.tab-c.active { border-bottom-color:var(--red);color:var(--red); }
+
+/* ── MODAL BODY ──────────────────────────────────────────────── */
+#sc-modal-body { overflow-y:auto;flex:1;padding:24px; }
+
+/* ── MODAL SCENARIO PANELS ───────────────────────────────────── */
+.sc-modal-panel { display:none;animation:sc-fadein .2s ease; }
+.sc-modal-panel.active { display:block; }
+
+/* ── SANNSYNLIGHETSBAR ØVERST ────────────────────────────────── */
+.sc-prob-bar-row {
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;
+  margin-bottom:20px;
+}
+.sc-prob-segment {
+  border-radius:var(--radius);padding:12px 16px;color:white;
+  cursor:pointer;transition:all .2s;border:2px solid transparent;
+}
+.sc-prob-segment:hover { transform:translateY(-2px); }
+.sc-prob-segment.selected { border-color:white;box-shadow:0 4px 16px rgba(0,0,0,.2); }
+
+/* ── KPI-RAD ─────────────────────────────────────────────────── */
+.sc-modal-kpi-row {
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+  margin-bottom:20px;
+}
+.sc-modal-kpi {
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:12px 14px;
+  box-shadow:var(--shadow);
+}
+.sc-modal-kpi-label {
+  font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:6px;
+}
+.sc-modal-kpi-val {
+  font-size:22px;font-weight:800;line-height:1;margin-bottom:3px;
+}
+.sc-modal-kpi-sub { font-size:10px;color:var(--muted); }
+
+/* ── TRIGGER-BOKS ────────────────────────────────────────────── */
+.sc-modal-trigger {
+  border-radius:0 var(--radius) var(--radius) 0;
+  padding:14px 18px;margin-bottom:20px;
+  font-size:12.5px;line-height:1.75;color:var(--text);
+}
+
+/* ── SEKTOR-GRID I MODAL ─────────────────────────────────────── */
+.sc-modal-sektor-grid {
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;
+}
+
+/* ── KAPITALIMPLIKASJONER-BOKS ───────────────────────────────── */
+.sc-modal-kapital {
+  border-radius:var(--radius-lg);padding:16px 20px;
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;
+  font-size:12px;line-height:1.7;color:var(--text);margin-bottom:20px;
+}
+.sc-modal-kapital strong { display:block;margin-bottom:4px;font-size:11px;font-weight:700; }
+
+/* ── PERERA-TABELL ───────────────────────────────────────────── */
+.sc-perera-table {
+  width:100%;border-collapse:collapse;
+  border:1px solid var(--border);border-radius:var(--radius);
+  overflow:hidden;margin-bottom:20px;font-size:11px;
+}
+.sc-perera-table th {
+  background:var(--navy);color:white;
+  padding:8px 12px;text-align:left;
+  font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+}
+.sc-perera-table td {
+  padding:9px 12px;border-top:1px solid var(--border);
+  vertical-align:top;line-height:1.55;
+}
+.sc-perera-table td:first-child {
+  background:rgba(197,48,48,.06);font-weight:700;
+  font-size:10px;color:var(--red);white-space:nowrap;
+  border-right:1px solid var(--border);
+}
+
+/* ── IRREVERSIBEL-BOKS ───────────────────────────────────────── */
+.sc-irreversibel {
+  background:var(--navy-lt);border:1px solid var(--border-md);
+  border-radius:var(--radius);padding:14px 18px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;text-align:center;
+}
+
+/* ── MODAL FOOTER ────────────────────────────────────────────── */
+#sc-modal-footer {
+  background:var(--surface);border-top:1px solid var(--border);
+  padding:11px 24px;display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.sc-modal-footer-note {
+  font-size:10px;color:var(--faint);
+}
+</style>
+
+<!-- ── MODAL HTML ─────────────────────────────────────────────── -->
+<div id="sc-modal-overlay" onclick="if(event.target===this)closeScenarioModal()">
+  <div id="sc-modal">
+
+    <!-- Header -->
+    <div id="sc-modal-head">
+      <div id="sc-modal-head-left">
+        <div id="sc-modal-title">Scenarioanalyse — Perera-kausalitet</div>
+        <div id="sc-modal-params">
+          <span class="sc-modal-param">Varighet: <strong id="scm-dur">—</strong></span>
+          <span style="opacity:.3">·</span>
+          <span class="sc-modal-param">Sjokk: <strong id="scm-oil">—</strong></span>
+          <span style="opacity:.3">·</span>
+          <span class="sc-modal-param">Konflikt: <strong id="scm-conf">—</strong></span>
+          <span style="opacity:.3">·</span>
+          <span class="sc-modal-param">Brent topp: <strong id="scm-peak" style="color:#FCA5A5">—</strong></span>
+        </div>
+        <div id="sc-modal-sub">Tre forløp over 36 måneder · Perera (2026) empiriske bortfallsdata · dynamisk fra Hormuz-kalkulatoren</div>
+      </div>
+      <button id="sc-modal-close" onclick="closeScenarioModal()" aria-label="Lukk">✕</button>
+    </div>
+
+    <!-- Sannsynlighetsrad med klikkbare segmenter -->
+    <div style="background:var(--surface);padding:14px 24px;border-bottom:1px solid var(--border);flex-shrink:0">
+      <div class="sc-prob-bar-row">
+        <div class="sc-prob-segment selected" id="scm-seg-a" onclick="scModalTab('a')"
+          style="background:linear-gradient(135deg,#14532D,#166534)">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+            <div>
+              <div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.65">Scenario A</div>
+              <div style="font-size:13px;font-weight:700;margin-top:1px">Rask oppløsning</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:26px;font-weight:800;line-height:1" id="scm-pA">—</div>
+              <div style="font-size:8px;opacity:.65;margin-top:1px">sannsynlighet</div>
+            </div>
+          </div>
+          <div style="height:3px;background:rgba(255,255,255,.2);border-radius:2px;overflow:hidden">
+            <div id="scm-bar-a" style="height:100%;background:rgba(255,255,255,.7);border-radius:2px;transition:width .5s ease;width:20%"></div>
+          </div>
+          <div style="margin-top:8px;font-size:10px;opacity:.75">Forhandlingsutgang · Kinas mekling lykkes</div>
+        </div>
+        <div class="sc-prob-segment" id="scm-seg-b" onclick="scModalTab('b')"
+          style="background:linear-gradient(135deg,#78350F,#92400E)">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+            <div>
+              <div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.65">Scenario B ★</div>
+              <div style="font-size:13px;font-weight:700;margin-top:1px">Kronisk forstyrrelse</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:26px;font-weight:800;line-height:1" id="scm-pB">—</div>
+              <div style="font-size:8px;opacity:.65;margin-top:1px">sannsynlighet</div>
+            </div>
+          </div>
+          <div style="height:3px;background:rgba(255,255,255,.2);border-radius:2px;overflow:hidden">
+            <div id="scm-bar-b" style="height:100%;background:rgba(255,255,255,.7);border-radius:2px;transition:width .5s ease;width:55%"></div>
+          </div>
+          <div style="margin-top:8px;font-size:10px;opacity:.75">Institusjonalisert · Kina kontrollerer adgang</div>
+        </div>
+        <div class="sc-prob-segment" id="scm-seg-c" onclick="scModalTab('c')"
+          style="background:linear-gradient(135deg,#7F1D1D,#991B1B)">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+            <div>
+              <div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.65">Scenario C</div>
+              <div style="font-size:13px;font-weight:700;margin-top:1px">Systemkollaps</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:26px;font-weight:800;line-height:1" id="scm-pC">—</div>
+              <div style="font-size:8px;opacity:.65;margin-top:1px">sannsynlighet</div>
+            </div>
+          </div>
+          <div style="height:3px;background:rgba(255,255,255,.2);border-radius:2px;overflow:hidden">
+            <div id="scm-bar-c" style="height:100%;background:rgba(255,255,255,.7);border-radius:2px;transition:width .5s ease;width:25%"></div>
+          </div>
+          <div style="margin-top:8px;font-size:10px;opacity:.75">NDS Simultaneity Problem · Taiwan + Russland</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div id="sc-modal-tabs">
+      <div class="sc-modal-tab tab-a active" id="scm-tab-a" onclick="scModalTab('a')">Scenario A — Rask oppløsning</div>
+      <div class="sc-modal-tab tab-b" id="scm-tab-b" onclick="scModalTab('b')">Scenario B — Kronisk forstyrrelse</div>
+      <div class="sc-modal-tab tab-c" id="scm-tab-c" onclick="scModalTab('c')">Scenario C — Systemkollaps</div>
+      <div class="sc-modal-tab" id="scm-tab-irrev" onclick="scModalTab('irrev')" style="margin-left:auto;color:var(--red)">Perera: Irreversible skader</div>
+    </div>
+
+    <!-- Body -->
+    <div id="sc-modal-body">
+
+      <!-- ══ PANEL A ══ -->
+      <div class="sc-modal-panel active" id="scmp-a">
+
+        <!-- Trigger -->
+        <div class="sc-modal-trigger" style="border-left:4px solid #14532D;background:rgba(20,83,45,.05)">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#14532D;margin-bottom:6px">Triggervilkår
+            <span class="tt-trigger" data-tt="tt-sc-trig-a" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span>
+          </div>
+          Trump aksepterer en ansiktsbevarende avtale der Iran formelt åpner Hormuz mot suspensjon av nye sanksjoner. Kinas meglingsinitiativ med Pakistan lykkes. Hormuz åpnes gradvis for kommersielle skip innen <strong id="scm-a-dur-detail">6–8 uker</strong>. Pakkedealen inkluderer ikke atomavrustning — konflikten er midlertidig avblåst, ikke løst.
+        </div>
+
+        <!-- KPI-rad -->
+        <div class="sc-modal-kpi-row">
+          <div class="sc-modal-kpi">
+            <div class="sc-modal-kpi-label">Sannsynlighet <span class="tt-trigger" data-tt="tt-sc-prob" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);vertical-align:middle">?</span></div>
+            <div class="sc-modal-kpi-val" style="color:#14532D" id="scm-a-prob">20 %</div>
+            <div class="sc-modal-kpi-sub" id="scm-a-prob-sub">Forhandlingsutgang Q2</div>
+          </div>
+          <div class="sc-modal-kpi">
+            <div class="sc-modal-kpi-label">Normalisert om</div>
+            <div class="sc-modal-kpi-val" style="color:#14532D" id="scm-a-norm">6–8 uker</div>
+            <div class="sc-modal-kpi-sub">Fra nå · gradvis gjenåpning</div>
+          </div>
+          <div class="sc-modal-kpi">
+            <div class="sc-modal-kpi-label">Brent 12 mnd. <span class="tt-trigger" data-tt="tt-sc-brent-a" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);vertical-align:middle">?</span></div>
+            <div class="sc-modal-kpi-val" style="color:var(--amber)" id="scm-a-brent">75–85 $</div>
+            <div class="sc-modal-kpi-sub">EIA normalisering</div>
+          </div>
+          <div class="sc-modal-kpi">
+            <div class="sc-modal-kpi-label">BNP-tap 2026 <span class="tt-trigger" data-tt="bnp-tooltip" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);vertical-align:middle">?</span></div>
+            <div class="sc-modal-kpi-val" style="color:var(--amber)" id="scm-a-bnp">−1,2 pp</div>
+            <div class="sc-modal-kpi-sub" id="scm-a-bnp-sub">Hamilton (2009)</div>
+          </div>
+        </div>
+
+        <!-- Sektorvis -->
+        <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:12px;padding-top:16px;border-top:1px solid var(--border)">Sektorvis konsekvensforløp — 36 måneder <span class="tt-trigger" data-tt="tt-sektor36" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);vertical-align:middle">?</span></div>
+        <div class="sc-modal-sektor-grid">
+          <div class="sc-sektor-card" style="border-top:3px solid var(--amber)">
+            <div class="sc-sektor-header" style="color:var(--amber)">LNG — 77 mill. tonn/år bortfall</div>
+            <div class="sc-tl">
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(20,83,45,.1);color:#14532D">Mnd. 1–3</div><div class="sc-tl-content"><div class="sc-tl-title">Gjenåpning</div>Qatar resumerer 12 uskadte tog (~66 mill. t/år). Spotpriser faller fra rekordnivå.</div></div>
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 3–12</div><div class="sc-tl-content"><div class="sc-tl-title">Strukturell skade vedvarer</div>Train 4 og 6 (11 mill. t/år) fysisk ødelagt — 18–24 mnd. gjenoppbygging. Europeisk LNG-lager kritisk lavt.</div></div>
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(20,83,45,.1);color:#14532D">Mnd. 12–36</div><div class="sc-tl-content"><div class="sc-tl-title">Nytt gulv</div>Normalisert men strukturelt høyere priser. Underinvestering vedvarer.</div></div>
+            </div>
+          </div>
+          <div class="sc-sektor-card" style="border-top:3px solid var(--red)">
+            <div class="sc-sektor-header" style="color:var(--red)">Helium — 33 % globalt bortfalt · irreversibelt</div>
+            <div class="sc-tl">
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(197,48,48,.1);color:var(--red)">Mnd. 1–6</div><div class="sc-tl-content"><div class="sc-tl-title">200 ISO-containere tapt</div>Samsung/SK Hynix −64,7 % heliumimport → halvlederlinjer stanser.</div></div>
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 6–18</div><div class="sc-tl-content"><div class="sc-tl-title">Delvis kompensasjon</div>Ras Laffan restarter sakte. USA (Airgas −50 %) kompenserer via Wyoming.</div></div>
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 18–36</div><div class="sc-tl-content"><div class="sc-tl-title">Varig knapphet</div>DRAM-priser normaliseres delvis — ikke til 2025-nivå.</div></div>
+            </div>
+          </div>
+          <div class="sc-sektor-card" style="border-top:3px solid var(--amber)">
+            <div class="sc-sektor-header" style="color:var(--amber)">Kunstgjødsel — urea +55 % · Bangladesh 83 %</div>
+            <div class="sc-tl">
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(197,48,48,.1);color:var(--red)">Mnd. 1–4</div><div class="sc-tl-content"><div class="sc-tl-title">Kritisk: vårplanting</div>USA krever ~2 mill. tonn urea. Gjødselunderskudd gir direkte avlingstap H2 2026.</div></div>
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(20,83,45,.1);color:#14532D">Mnd. 4–12</div><div class="sc-tl-content"><div class="sc-tl-title">QAFCO resumerer</div>Ureapris normaliseres $750→$550/tonn.</div></div>
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 12–36</div><div class="sc-tl-content"><div class="sc-tl-title">Matpriseffekt vedvarer</div>+45 mill. matsikkerhetstruede (WFP) reduseres men ikke til baseline.</div></div>
+            </div>
+          </div>
+          <div class="sc-sektor-card" style="border-top:3px solid var(--red)">
+            <div class="sc-sektor-header" style="color:var(--red)">Halvledere — DRAM +298 % · NVIDIA −30–40 %</div>
+            <div class="sc-tl">
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(197,48,48,.1);color:var(--red)">Mnd. 1–6</div><div class="sc-tl-content"><div class="sc-tl-title">Helium stopper linjene</div>DRAM-kontrakt +90–95 % kv/kv. AI-capex forsinket. Gallium +123 %.</div></div>
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 6–18</div><div class="sc-tl-content"><div class="sc-tl-title">Alternativ sourcing</div>Bromin fra Israel tilgjengelig igjen. Sør-Korea kompenserer delvis.</div></div>
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 18–36</div><div class="sc-tl-content"><div class="sc-tl-title">Permanent reprising</div>AI-capex-syklus forskjøvet 12–18 mnd.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kapital A -->
+        <div class="sc-modal-kapital" style="background:rgba(20,83,45,.05);border:1px solid rgba(20,83,45,.15)">
+          <div><strong style="color:#14532D">Kjøp ved normalisering</strong>Europeisk LNG-infrastruktur · Energiinfrastruktur Gulf · Aluminium ex-Gulfen · Norsk maritim sektor</div>
+          <div><strong style="color:var(--amber)">Hold med forsiktighet</strong>Halvlederselskaper (heliumknapphet vedvarer) · Matvareprodusenter (avlingstap 2026) · Gulf-statsobligasjoner</div>
+          <div><strong style="color:var(--red)">Unngå</strong>Iranske eiendeler · Containerrederier til Gulfen · Kortsiktig long olje etter gjenåpning</div>
+        </div>
+      </div>
+
+      <!-- ══ PANEL B ══ -->
+      <div class="sc-modal-panel" id="scmp-b">
+
+        <div class="sc-modal-trigger" style="border-left:4px solid var(--amber);background:rgba(146,64,14,.04)">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--amber);margin-bottom:6px">Triggervilkår
+            <span class="tt-trigger" data-tt="tt-sc-trig-b" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span>
+          </div>
+          Irans yuan-baserte «toll-booth»-system forblir operativt. Kinesiske, russiske og allierte skip transiterer mot betaling i yuan — vestlige skip blokkeres eller betaler krigsrisikopremier på ×40–80 av normalnivå. Hormuz er formelt gjenåpnet men reelt et tospors-system der <strong>Kina kontrollerer adgangen</strong>. Konflikten er ikke løst — den er institusjonalisert.
+        </div>
+
+        <div class="sc-modal-kpi-row">
+          <div class="sc-modal-kpi">
+            <div class="sc-modal-kpi-label">Sannsynlighet <span class="tt-trigger" data-tt="tt-sc-prob" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);vertical-align:middle">?</span></div>
+            <div class="sc-modal-kpi-val" style="color:var(--amber)" id="scm-b-prob">55 %</div>
+            <div class="sc-modal-kpi-sub">Mest sannsynlig forløp</div>
+          </div>
+          <div class="sc-modal-kpi">
+            <div class="sc-modal-kpi-label">Hormuz-regime</div>
+            <div class="sc-modal-kpi-val" style="color:var(--amber)" id="scm-b-reg">Delvis åpen</div>
+            <div class="sc-modal-kpi-sub">Yuan-toll · kinesisk kontroll</div>
+          </div>
+          <div class="sc-modal-kpi">
+            <div class="sc-modal-kpi-label">Brent 12 mnd. <span class="tt-trigger" data-tt="tt-sc-brent-b" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);vertical-align:middle">?</span></div>
+            <div class="sc-modal-kpi-val" style="color:var(--red)" id="scm-b-brent">95–130 $</div>
+            <div class="sc-modal-kpi-sub">Strukturelt høyere gulv</div>
+          </div>
+          <div class="sc-modal-kpi">
+            <div class="sc-modal-kpi-label">BNP-tap 2026 <span class="tt-trigger" data-tt="bnp-tooltip" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);vertical-align:middle">?</span></div>
+            <div class="sc-modal-kpi-val" style="color:var(--red)" id="scm-b-bnp">−2,5–3,5 pp</div>
+            <div class="sc-modal-kpi-sub">Goodspeed type-1 resesjon</div>
+          </div>
+        </div>
+
+        <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:12px;padding-top:16px;border-top:1px solid var(--border)">Kaskadestruktur — 8 sektorer over 36 måneder <span class="tt-trigger" data-tt="tt-kaskade8" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);vertical-align:middle">?</span></div>
+        <div class="sc-modal-sektor-grid">
+          <div class="sc-sektor-card" style="border-top:3px solid var(--red)">
+            <div class="sc-sektor-header" style="color:var(--red)">Energi — strukturelt ny prisorden</div>
+            <div class="sc-tl">
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(197,48,48,.1);color:var(--red)">Mnd. 1–6</div><div class="sc-tl-content"><div class="sc-tl-title">Yuan-tollregime etablert</div>Vestlige skip betaler ×40–80 premie. Brent stabiliseres kronisk høyt.</div></div>
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 6–18</div><div class="sc-tl-content"><div class="sc-tl-title">Ny geopolitisk prisstruktur</div>To-tiers oljemarked: yuan-denominert vs. dollar. OPEC+ makter ikke å fylle gapet.</div></div>
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 18–36</div><div class="sc-tl-content"><div class="sc-tl-title">Permanent nytt regime</div>LNG-prissetting i yuan. Dollar mister energimarkedsdominans gradvis.</div></div>
+            </div>
+          </div>
+          <div class="sc-sektor-card" style="border-top:3px solid var(--amber)">
+            <div class="sc-sektor-header" style="color:var(--amber)">Finans — dollar og kreditt</div>
+            <div class="sc-tl">
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 1–6</div><div class="sc-tl-content"><div class="sc-tl-title">Fed handlingslam</div>KPI +<span id="scm-b-cpi">1,2</span> pp · PCE hindrer kutt · resesjonsrisiko hindrer heving. VIX &gt;30.</div></div>
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(197,48,48,.1);color:var(--red)">Mnd. 6–18</div><div class="sc-tl-content"><div class="sc-tl-title">EM-gjeld under press</div>Kapitalflukt til dollar og Treasuries. Spreader øker markant. IMF aktiverer nødprogram.</div></div>
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(197,48,48,.1);color:var(--red)">Mnd. 18–36</div><div class="sc-tl-content"><div class="sc-tl-title">De-dollarisering akselererer</div>Yuan-invoicing øker i Sørøst-Asia. Fishman: strukturell skade irreversibel.</div></div>
+            </div>
+          </div>
+          <div class="sc-sektor-card" style="border-top:3px solid var(--amber)">
+            <div class="sc-sektor-header" style="color:var(--amber)">Mat og gjødsel</div>
+            <div class="sc-tl">
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(197,48,48,.1);color:var(--red)">Mnd. 1–4</div><div class="sc-tl-content"><div class="sc-tl-title">Avlingstap 2026 låst</div>Urea +55 % · Bangladesh avling irreversibelt tapt. +45 mill. matsikkerhetstruede.</div></div>
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 4–24</div><div class="sc-tl-content"><div class="sc-tl-title">Politisk destabilisering</div>Egypt, Bangladesh, Pakistan under IMF-program. IS-risiko øker ved statlig vakuum.</div></div>
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 24–36</div><div class="sc-tl-content"><div class="sc-tl-title">Strukturell matusikkerhet</div>Priser normaliseres delvis men globale fordelingskjeder permanent endret.</div></div>
+            </div>
+          </div>
+          <div class="sc-sektor-card" style="border-top:3px solid var(--red)">
+            <div class="sc-sektor-header" style="color:var(--red)">REE og halvledere</div>
+            <div class="sc-tl">
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(197,48,48,.1);color:var(--red)">Mnd. 1–12</div><div class="sc-tl-content"><div class="sc-tl-title">Kina strammer inn</div>Eksportkontroller REE og halvledermaterialer eskalerer. Gallium, germanium, wolfram.</div></div>
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(197,48,48,.1);color:var(--red)">Mnd. 12–24</div><div class="sc-tl-content"><div class="sc-tl-title">AI-infrastruktur forsinket</div>NVIDIA forsinkelser. Kina tar markedsandeler i lavere segmenter. TSMC under press.</div></div>
+              <div class="sc-tl-row"><div class="sc-tl-phase" style="background:rgba(146,64,14,.1);color:var(--amber)">Mnd. 24–36</div><div class="sc-tl-content"><div class="sc-tl-title">Varig reprising</div>Halvledere permanent 35–50 % dyrere. Ex-Kina produksjon vokser men utilstrekkelig.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sc-modal-kapital" style="background:rgba(146,64,14,.05);border:1px solid rgba(146,64,14,.15)">
+          <div><strong style="color:#14532D">Long</strong>Gull · Energiinfrastruktur · Forsvar · Norsk olje/gass · Saudi Aramco · Alternative heliumkilder · Yuan-eksponeringer</div>
+          <div><strong style="color:var(--amber)">Barbell-posisjon</strong>Taleb: 80 % robuste aktiva + 20 % asymmetrisk oppside. Long dollar-volatilitet. Short europeisk gasskrevende industri.</div>
+          <div><strong style="color:var(--red)">Short/unngå</strong>Europeisk energiintensiv industri · EM-obligasjoner · Europeiske flytransportører · Importavhengige mat-eksponerte land</div>
+        </div>
+      </div>
+
+      <!-- ══ PANEL C ══ -->
+      <div class="sc-modal-panel" id="scmp-c">
+
+        <div class="sc-modal-trigger" style="border-left:4px solid var(--red);background:rgba(197,48,48,.04)">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--red);margin-bottom:6px">Triggervilkår — NDS «The Simultaneity Problem»
+            <span class="tt-trigger" data-tt="tt-sc-trig-c" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span>
+          </div>
+          Trump avslutter Iran-krigen uten å løse Hormuz. Iran eskalerer — Kharg Island angripes, 90 % av iransk oljeeksport stanser. Kina agerer opportunistisk mot Taiwan innen 90 dager mens USA er militært utmattet. Russland aktiverer øst-flanken. Alle tre fronter simultant — NDS (2026) «Simultaneity Problem» materialisert i fullt omfang.
+        </div>
+
+        <div class="sc-modal-kpi-row">
+          <div class="sc-modal-kpi">
+            <div class="sc-modal-kpi-label">Sannsynlighet <span class="tt-trigger" data-tt="tt-sc-prob" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);vertical-align:middle">?</span></div>
+            <div class="sc-modal-kpi-val" style="color:var(--red)" id="scm-c-prob">25 %</div>
+            <div class="sc-modal-kpi-sub">Ikke neglisjerbar — Taleb: sorte svaner</div>
+          </div>
+          <div class="sc-modal-kpi">
+            <div class="sc-modal-kpi-label">Hormuz-status</div>
+            <div class="sc-modal-kpi-val" style="color:var(--red)" id="scm-c-status">Stengt 12+ mnd.</div>
+            <div class="sc-modal-kpi-sub">Full militær blokkade</div>
+          </div>
+          <div class="sc-modal-kpi">
+            <div class="sc-modal-kpi-label">Brent 12 mnd. <span class="tt-trigger" data-tt="tt-sc-brent-c" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);vertical-align:middle">?</span></div>
+            <div class="sc-modal-kpi-val" style="color:var(--red)" id="scm-c-brent">150–200 $</div>
+            <div class="sc-modal-kpi-sub">Goldman stress-scenario</div>
+          </div>
+          <div class="sc-modal-kpi">
+            <div class="sc-modal-kpi-label">BNP-tap 2026–27 <span class="tt-trigger" data-tt="bnp-tooltip" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);vertical-align:middle">?</span></div>
+            <div class="sc-modal-kpi-val" style="color:var(--red)" id="scm-c-bnp">−5–8 pp</div>
+            <div class="sc-modal-kpi-sub">Taleb-kaskade · 1930-analog</div>
+          </div>
+        </div>
+
+        <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:12px;padding-top:16px;border-top:1px solid var(--border)">Talebs kaskademodell — empirisk kvantifisert med Perera-data <span class="tt-trigger" data-tt="tt-perera" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);vertical-align:middle">?</span></div>
+
+        <table class="sc-perera-table">
+          <thead><tr><th>Sjokkledd</th><th>Primær (Mnd. 1–3)</th><th>Sekundær (Mnd. 3–12)</th><th>Tertiær (Mnd. 12–36)</th></tr></thead>
+          <tbody>
+            <tr><td>Energi</td><td>Hormuz stengt · Brent &gt;150 $ · LNG-kollaps</td><td>Europeisk industri stanser · Kraftrasjonering · EM-inflasjon ukontrollert</td><td>Ny permanent energiarkitektur · IEA rekonstruert</td></tr>
+            <tr><td>Finans</td><td>VIX &gt;50 · S&amp;P −30–40 % · Treasuries selges</td><td>EM mislighold · Valutakriser · IMF kapasitetskollaps</td><td>Dollar mister reservestatus delvis · Yuan-SDR</td></tr>
+            <tr><td>Geopolitikk</td><td>Iran/Taiwan/Russland simultant · NATO fragmentert</td><td>USA militær overstrekning · Europa tvunget til selvforsvar</td><td>Ny sikkerhetspolarisering · USA/Kina bipolær verden</td></tr>
+            <tr><td>Perera</td><td>Helium irreversibelt tapt · LNG Train 4/6 ødelagt</td><td>Bangladesh avling 2026 tapt · REE-krise globalt</td><td>5–10 år konsolidering · Strukturell ny verdensorden</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sc-modal-kapital" style="background:rgba(197,48,48,.05);border:1px solid rgba(197,48,48,.18)">
+          <div><strong style="color:#14532D">80 % — Robuste aktiva</strong>Gull · US Treasuries (korte) · Sveitserfranc · Norsk krone · Kontanter · Matvareprodusenter i ikke-importland · Forsvar</div>
+          <div><strong style="color:var(--amber)">20 % — Asymmetrisk oppside</strong>Langt ute-of-the-money call på energi · Volatilitetsprodukter · Alternative heliumproducenter · Ex-Kina halvlederaksjer</div>
+          <div><strong style="color:var(--red)">Unngå absolutt</strong>Europeisk industri · EM-obligasjoner · Halvledereksponering via helium · Alt med lang duration i usikre valutaer · Luftfart · Shipping Gulfen</div>
+        </div>
+      </div>
+
+      <!-- ══ PANEL IRREVERSIBEL ══ -->
+      <div class="sc-modal-panel" id="scmp-irrev">
+        <div style="margin-bottom:20px;padding:14px 18px;background:rgba(197,48,48,.04);border:1px solid rgba(197,48,48,.15);border-radius:var(--radius);font-size:12.5px;line-height:1.75;color:var(--text)">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--red);margin-bottom:8px">Perera (2026): ikke-reversible skader — uavhengig av scenario <span class="tt-trigger" data-tt="tt-irreversibel" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
+          Disse skadene er bekreftet og kan ikke reverseres uavhengig av diplomatisk utgang. De representerer det strukturelle minimumstapet som allerede er låst inn.
+        </div>
+        <div class="sc-modal-kpi-row">
+          <div class="sc-modal-kpi" style="border-top:3px solid var(--red)">
+            <div class="sc-modal-kpi-label">Helium fordampet</div>
+            <div class="sc-modal-kpi-val" style="color:var(--red)">200</div>
+            <div class="sc-modal-kpi-sub">ISO-containere · irreversibelt</div>
+          </div>
+          <div class="sc-modal-kpi" style="border-top:3px solid var(--red)">
+            <div class="sc-modal-kpi-label">LNG bortfall</div>
+            <div class="sc-modal-kpi-val" style="color:var(--red)">11 Mt</div>
+            <div class="sc-modal-kpi-sub">Train 4/6 ødelagt · 18–24 mnd.</div>
+          </div>
+          <div class="sc-modal-kpi" style="border-top:3px solid var(--red)">
+            <div class="sc-modal-kpi-label">Matsikkerhetstruede</div>
+            <div class="sc-modal-kpi-val" style="color:var(--red)">+45M</div>
+            <div class="sc-modal-kpi-sub">WFP · gjødselunderskudd H2 2026</div>
+          </div>
+          <div class="sc-modal-kpi" style="border-top:3px solid var(--amber)">
+            <div class="sc-modal-kpi-label">Konsolidering</div>
+            <div class="sc-modal-kpi-val" style="color:var(--amber)">5–10 år</div>
+            <div class="sc-modal-kpi-sub">Strukturell ny verdensorden</div>
+          </div>
+        </div>
+
+        <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:12px;padding-top:16px;border-top:1px solid var(--border)">Sektor-for-sektor: låste tap</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+            <div style="background:rgba(197,48,48,.07);padding:12px 14px;font-size:10px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.05em;border-right:1px solid var(--border)">Helium — halvledere</div>
+            <div style="padding:12px 14px;font-size:12px;line-height:1.6;color:var(--text)">200 ISO-containere fordampet i varmen — ikke mulig å gjenopprette. Samsung/SK Hynix: −64,7 % heliumimport → halvlederlinjer stand-by. DRAM-priser +298 % på kontrakt. Samsung/TSMC estimerer 18–24 mnd. normalisering selv etter full gjenåpning.</div>
+          </div>
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+            <div style="background:rgba(197,48,48,.07);padding:12px 14px;font-size:10px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.05em;border-right:1px solid var(--border)">LNG-infrastruktur</div>
+            <div style="padding:12px 14px;font-size:12px;line-height:1.6;color:var(--text)">Ras Laffan Train 4 og 6 (11 mill. tonn/år kapasitet) fysisk skadet av iranske mottakssanksjoner. Gjenoppbygging: 18–24 mnd. minimum. Europeisk LNG-reservekapasitet kritisk lav gjennom vinteren 2026/27.</div>
+          </div>
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+            <div style="background:rgba(197,48,48,.07);padding:12px 14px;font-size:10px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.05em;border-right:1px solid var(--border)">Kunstgjødsel / mat</div>
+            <div style="padding:12px 14px;font-size:12px;line-height:1.6;color:var(--text)">QAFCO (Qatar) ute — 10 % av global urea-kapasitet. Bangladeshi vårplanting 83 % mislykket: avlingstap H2 2026 er irreversibelt. WFP: +45 mill. matsikkerhetstruede. Konsekvensene vedvarer 2–3 avlingssykluser selv etter normalisering.</div>
+          </div>
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+            <div style="background:rgba(146,64,14,.07);padding:12px 14px;font-size:10px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.05em;border-right:1px solid var(--border)">Containerflåte</div>
+            <div style="padding:12px 14px;font-size:12px;line-height:1.6;color:var(--text)">Omruting via Cape of Good Hope er strukturelt: +9–14 dager per tur, +$1 500–2 200/TEU. Rederier re-optimerer flåtedisponering — reversering tar 12–18 mnd. etter gjenåpning. Forsikringspremier i Gulfen varig forhøyet.</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /sc-modal-body -->
+
+    <!-- Footer -->
+    <div id="sc-modal-footer">
+      <span class="sc-modal-footer-note">Scenarioanalyse basert på Perera (2026), Dallas Fed Hormuz-studie, Goodspeed (2025) · Sannsynligheter dynamisk fra Hormuz-kalkulatoren</span>
+      <button onclick="nav(document.querySelector('[data-panel=scenarier]'));closeScenarioModal()" style="font-size:11px;font-weight:600;color:var(--navy-mid);background:var(--navy-lt);border:1px solid rgba(31,56,100,.2);border-radius:8px;padding:6px 14px;cursor:pointer;font-family:inherit">Åpne fullt scenariopanel →</button>
+    </div>
+
+  </div><!-- /sc-modal -->
+</div><!-- /sc-modal-overlay -->
+
+<script>
+// ── SCENARIO MODAL ────────────────────────────────────────────
+var _scModalOpen = false;
+var _scModalCurrentTab = 'a';
+
+function openScenarioModal() {
+  var overlay = document.getElementById('sc-modal-overlay');
+  if (!overlay) return;
+  overlay.classList.add('visible');
+  _scModalOpen = true;
+  document.body.style.overflow = 'hidden';
+
+  // Synk parametere fra kalkulator
+  syncScenarioModalParams();
+
+  // Reset til fane A
+  scModalTab('a');
+}
+
+function closeScenarioModal() {
+  var overlay = document.getElementById('sc-modal-overlay');
+  if (!overlay) return;
+  overlay.classList.remove('visible');
+  _scModalOpen = false;
+  document.body.style.overflow = '';
+}
+
+// ESC-tast lukker modal
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && _scModalOpen) closeScenarioModal();
+});
+
+function scModalTab(tab) {
+  _scModalCurrentTab = tab;
+  // Tabs
+  ['a','b','c','irrev'].forEach(function(t) {
+    var tabEl = document.getElementById('scm-tab-' + t);
+    var panEl = document.getElementById('scmp-' + t);
+    if (tabEl) tabEl.classList.toggle('active', t === tab);
+    if (panEl) panEl.classList.toggle('active', t === tab);
+  });
+  // Segment-selection
+  ['a','b','c'].forEach(function(t) {
+    var seg = document.getElementById('scm-seg-' + t);
+    if (seg) seg.classList.toggle('selected', t === tab);
+  });
+  // Scroll til topp
+  var body = document.getElementById('sc-modal-body');
+  if (body) body.scrollTop = 0;
+}
+
+function syncScenarioModalParams() {
+  // Hent verdier fra kalkulator
+  var dur      = parseInt((document.getElementById('sl-duration') || {}).value) || 4;
+  var oilShock = parseInt((document.getElementById('sl-oil')      || {}).value) || 13;
+  var conflict = parseInt((document.getElementById('sl-conflict') || {}).value) || 1;
+  var brentLive = window._brentLive || 108;
+  var brentPeak = Math.round(brentLive + oilShock * (1 + conflict * 0.3));
+
+  var confNames = ['','Begrenset','Eskalert','Full krig'];
+  var durTxt = dur === 1 ? '1 uke' : dur + ' uker';
+
+  // Header-parametre
+  var s = function(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; };
+  s('scm-dur',  durTxt);
+  s('scm-oil',  '+' + oilShock + ' $/fat');
+  s('scm-conf', confNames[conflict] || conflict);
+  s('scm-peak', '~' + brentPeak + ' $');
+
+  // Hent sannsynligheter fra eksisterende sc-pA/B/C hvis de finnes
+  var pA = (document.getElementById('sc-pA') || {}).textContent || '20 %';
+  var pB = (document.getElementById('sc-pB') || {}).textContent || '55 %';
+  var pC = (document.getElementById('sc-pC') || {}).textContent || '25 %';
+  s('scm-pA', pA); s('scm-pB', pB); s('scm-pC', pC);
+
+  // Sannsynlighetsbar bredde
+  var numA = parseFloat(pA) || 20;
+  var numB = parseFloat(pB) || 55;
+  var numC = parseFloat(pC) || 25;
+  var bBar = function(id, w) { var el = document.getElementById(id); if (el) el.style.width = w + '%'; };
+  bBar('scm-bar-a', numA); bBar('scm-bar-b', numB); bBar('scm-bar-c', numC);
+
+  // KPI Scenario A — dynamisk
+  var bnpA = Math.max(0.3, (oilShock * 0.023 * dur / 8 * 0.48)).toFixed(1);
+  var brentA_lo = Math.round(brentLive * 0.72);
+  var brentA_hi = Math.round(brentLive * 0.82);
+  s('scm-a-prob',   pA);
+  s('scm-a-norm',   dur <= 4 ? '2–4 uker' : dur <= 10 ? '6–8 uker' : '8–12 uker');
+  s('scm-a-brent',  brentA_lo + '–' + brentA_hi + ' $');
+  s('scm-a-bnp',    '−' + bnpA + ' pp');
+  s('scm-a-dur-detail', dur <= 4 ? '4–6 uker' : '6–10 uker');
+
+  // KPI Scenario B — dynamisk
+  var cpiB = (oilShock * 0.025 + conflict * 0.15).toFixed(1);
+  var brentB_lo = Math.round(brentLive * (0.9 + conflict * 0.08));
+  var brentB_hi = Math.round(brentLive * (1.1 + conflict * 0.12));
+  var bnpB_lo = (oilShock * 0.023 * 0.6 + conflict * 0.3).toFixed(1);
+  var bnpB_hi = (oilShock * 0.023 * 0.8 + conflict * 0.5).toFixed(1);
+  s('scm-b-prob',  pB);
+  s('scm-b-reg',   conflict >= 3 ? 'Stengt · yuan-kontroll' : 'Delvis åpen · yuan-toll');
+  s('scm-b-brent', brentB_lo + '–' + brentB_hi + ' $');
+  s('scm-b-bnp',   '−' + bnpB_lo + '–' + bnpB_hi + ' pp');
+  s('scm-b-cpi',   cpiB);
+
+  // KPI Scenario C — dynamisk
+  var brentC_lo = Math.round(brentLive * (1.3 + conflict * 0.1));
+  var brentC_hi = Math.round(brentLive * (1.7 + conflict * 0.15));
+  var bnpC_lo = (oilShock * 0.04 + conflict * 0.8 + dur * 0.1).toFixed(0);
+  var bnpC_hi = (oilShock * 0.06 + conflict * 1.2 + dur * 0.15).toFixed(0);
+  s('scm-c-prob',   pC);
+  s('scm-c-status', dur > 16 ? 'Stengt 12+ mnd.' : 'Stengt ' + dur + '+ uker');
+  s('scm-c-brent',  brentC_lo + '–' + brentC_hi + ' $');
+  s('scm-c-bnp',    '−' + bnpC_lo + '–' + bnpC_hi + ' pp');
+}
 </script>
 </body>
 </html>
