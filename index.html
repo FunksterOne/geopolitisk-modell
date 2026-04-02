@@ -767,163 +767,168 @@ input[type=range]::-webkit-slider-thumb {
     <div class="panel-sub">Makroøkonomi, kapital og strategi — per <span id="dyn-oversikt-date"></span></div>
   </div>
 
-  <!-- LIVE MARKEDSSTATUS -->
-  <div id="market-strip" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:20px">
-    <div class="mkt-box" data-sym="BZ=F"    data-label="Brent" data-unit="$" data-dec="2"></div>
-    <div class="mkt-box" data-sym="CL=F"    data-label="WTI" data-unit="$" data-dec="2"></div>
-    <div class="mkt-box" data-sym="NG=F"    data-label="Naturgass" data-unit="$" data-dec="3"></div>
-    <div class="mkt-box" data-sym="GC=F"    data-label="Gull" data-unit="$" data-dec="0"></div>
-    <div class="mkt-box" data-sym="SI=F"    data-label="Sølv" data-unit="$" data-dec="2"></div>
-    <div class="mkt-box" data-sym="HG=F"    data-label="Kobber" data-unit="$/lb" data-dec="3"></div>
-    <div class="mkt-box" data-sym="^GSPC"   data-label="S&amp;P 500" data-unit="" data-dec="0"></div>
-    <div class="mkt-box" data-sym="^VIX"    data-label="VIX" data-unit="" data-dec="2"></div>
-    <div class="mkt-box" data-sym="DX-Y.NYB" data-label="DXY" data-unit="" data-dec="2"></div>
-    <div class="mkt-box" data-sym="EURUSD=X" data-label="EUR/USD" data-unit="" data-dec="4"></div>
-    <div class="mkt-box" data-sym="USDNOK=X" data-label="USD/NOK" data-unit="" data-dec="4"></div>
+  <!-- 1. SYSTEMSTATUS -->
+  <div style="background:linear-gradient(135deg,#FEF2F2,#FFF1F1);border:1px solid rgba(197,48,48,.2);border-left:4px solid var(--red);border-radius:var(--radius-lg);padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;gap:16px;box-shadow:var(--shadow)">
+    <div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <div style="width:9px;height:9px;border-radius:50%;background:var(--red);animation:pulse 2s infinite;flex-shrink:0"></div>
+        <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red)">Systemstatus · Kritisk</span>
+      </div>
+      <div style="font-size:13.5px;font-weight:500;color:var(--text);line-height:1.5">Alle tre Goodspeed-triggere aktive simultant · Hormuz stengt dag 30+ · Liberation Day-tariffer (apr. 2025) delvis kjent ugyldig av Høyesterett</div>
+    </div>
+    <div style="margin-left:auto;text-align:right;flex-shrink:0">
+      <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:4px">Mest sannsynlig scenario</div>
+      <div style="font-size:15px;font-weight:700;color:var(--amber)">B — Kronisk forstyrrelse</div>
+      <div style="font-size:11px;color:var(--muted)">55 % sannsynlighet · Perera (2026)</div>
+    </div>
+  </div>
+
+  <!-- 2. LIVE MARKEDSSTATUS -->
+  <div id="market-strip" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px">
+    <div class="mkt-box" data-sym="BZ=F"     data-label="Brent"     data-unit="$"    data-dec="2"></div>
+    <div class="mkt-box" data-sym="CL=F"     data-label="WTI"       data-unit="$"    data-dec="2"></div>
+    <div class="mkt-box" data-sym="NG=F"     data-label="Naturgass" data-unit="$"    data-dec="3"></div>
+    <div class="mkt-box" data-sym="GC=F"     data-label="Gull"      data-unit="$"    data-dec="0"></div>
+    <div class="mkt-box" data-sym="SI=F"     data-label="Sølv"      data-unit="$"    data-dec="2"></div>
+    <div class="mkt-box" data-sym="HG=F"     data-label="Kobber"    data-unit="$/lb" data-dec="3"></div>
+    <div class="mkt-box" data-sym="^GSPC"    data-label="S&amp;P 500" data-unit=""  data-dec="0"></div>
+    <div class="mkt-box" data-sym="^VIX"     data-label="VIX"       data-unit=""     data-dec="2"></div>
+    <div class="mkt-box" data-sym="DX-Y.NYB" data-label="DXY"       data-unit=""     data-dec="2"></div>
+    <div class="mkt-box" data-sym="EURUSD=X" data-label="EUR/USD"   data-unit=""     data-dec="4"></div>
+    <div class="mkt-box" data-sym="USDNOK=X" data-label="USD/NOK"   data-unit=""     data-dec="4"></div>
   </div>
   <style>
-  .mkt-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 5px 8px;
-    box-shadow: var(--shadow);
-    min-width: 0;
-    white-space: nowrap;
-  }
-  .mkt-box .mkt-label { font-size: 8px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--faint); margin-bottom: 2px; }
-  .mkt-box .mkt-val   { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1; white-space: nowrap; }
-  .mkt-box .mkt-unit  { font-size: 8px; color: var(--faint); margin-left: 1px; }
-  .mkt-box .mkt-chg   { font-size: 8px; font-weight: 500; margin-top: 2px; }
-  .mkt-box.up   { border-top: 2px solid #14532D; }
-  .mkt-box.down { border-top: 2px solid #C53030; }
-  @media (max-width: 860px) {
-    #market-strip { gap: 4px; }
-  }
+  .mkt-box { background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px 8px;box-shadow:var(--shadow);min-width:0;white-space:nowrap; }
+  .mkt-box .mkt-label { font-size:8px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:2px; }
+  .mkt-box .mkt-val   { font-size:12px;font-weight:600;color:var(--text);line-height:1;white-space:nowrap; }
+  .mkt-box .mkt-unit  { font-size:8px;color:var(--faint);margin-left:1px; }
+  .mkt-box .mkt-chg   { font-size:8px;font-weight:500;margin-top:2px; }
+  .mkt-box.up   { border-top:2px solid #14532D; }
+  .mkt-box.down { border-top:2px solid #C53030; }
+  @media (max-width:860px) { #market-strip { gap:4px; } }
   </style>
 
+  <!-- 3. NØKKELTALL + HENDELSER + GOODSPEED — tre kolonner -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
 
-  <!-- TRUMP TRUTH SOCIAL — KOMPAKT LIVE FEED -->
-  <div style="margin-bottom:20px">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-      <div style="width:7px;height:7px;border-radius:50%;background:#C53030;animation:pulse 2s infinite;flex-shrink:0"></div>
-      <span style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#C53030">Live</span>
-      <span style="font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy)">Trump &middot; Truth Social</span>
-      <div style="flex:1;height:1px;background:var(--border)"></div>
-      <span style="font-size:9px;color:var(--faint)" id="truth-updated">Henter...</span>
+    <!-- Nøkkeltall -->
+    <div class="card" style="margin-bottom:0;padding:14px 16px">
+      <div class="section-label" style="margin-top:0">Nøkkeltall</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:11px;color:var(--muted)">Fed-rente</span>
+          <span style="font-size:12px;font-weight:600;color:var(--text)">3,50–3,75 %</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:11px;color:var(--muted)">ECB-rente</span>
+          <span style="font-size:12px;font-weight:600;color:var(--text)">2,00 %</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:11px;color:var(--muted)">US KPI (feb.)</span>
+          <span style="font-size:12px;font-weight:600;color:var(--amber)">2,4 %</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:11px;color:var(--muted)">Hormuz stengt</span>
+          <span style="font-size:12px;font-weight:600;color:var(--red)">30+ dager</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:11px;color:var(--muted)">Forstyrret volum</span>
+          <span style="font-size:12px;font-weight:600;color:var(--red)">17,8 mb/d</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:4px 0">
+          <span style="font-size:11px;color:var(--muted)">Kinas BNP-mål</span>
+          <span style="font-size:12px;font-weight:600;color:var(--text)">4,5–5,0 %</span>
+        </div>
+      </div>
     </div>
-    <div id="truth-feed" style="display:flex;flex-direction:row;gap:8px;flex-wrap:nowrap;width:100%">
-      <div style="font-size:11px;color:var(--faint);padding:8px">Laster...</div>
+
+    <!-- Siste hendelser -->
+    <div class="card" style="margin-bottom:0;padding:14px 16px">
+      <div class="section-label" style="margin-top:0">Siste hendelser</div>
+      <div style="display:flex;flex-direction:column;gap:0">
+        <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:10px;font-weight:600;color:var(--amber);white-space:nowrap;padding-top:1px">31. mars</span>
+          <span style="font-size:11px;color:var(--text);line-height:1.4">Trump: exit-signaler · Hegseth: ikke USAs ansvar</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:10px;font-weight:600;color:var(--navy);white-space:nowrap;padding-top:1px">18–19. mars</span>
+          <span style="font-size:11px;color:var(--text);line-height:1.4">Fed og ECB holder renten · inflasjonsprognose ↑</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:10px;font-weight:600;color:var(--red);white-space:nowrap;padding-top:1px">4. mars</span>
+          <span style="font-size:11px;color:var(--text);line-height:1.4">Hormuz stengt · Brent +55 % i mars</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:10px;font-weight:600;color:var(--red);white-space:nowrap;padding-top:1px">28. feb.</span>
+          <span style="font-size:11px;color:var(--text);line-height:1.4">Operation Epic Fury · Khamenei drept</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap;padding-top:1px">Feb. 2026</span>
+          <span style="font-size:11px;color:var(--text);line-height:1.4">Høyesterett kjente Liberation Day-tariffer (apr. 2025) ugyldig · $166 mrd. refunderes</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;padding:5px 0">
+          <span style="font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap;padding-top:1px">Jun. 2025</span>
+          <span style="font-size:11px;color:var(--text);line-height:1.4">Operation Midnight Hammer · Irans kjerneanlegg</span>
+        </div>
+      </div>
     </div>
+
+    <!-- Goodspeed-meter + Miran -->
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="card" style="margin-bottom:0;padding:14px 16px;flex:1">
+        <div class="section-label" style="margin-top:0">Goodspeed resesjonsmeter</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+              <span style="font-size:10px;color:var(--text)">Energisjokk</span>
+              <span style="font-size:10px;font-weight:600;color:var(--red)">Aktiv</span>
+            </div>
+            <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="width:90%;height:100%;background:var(--red);border-radius:2px"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+              <span style="font-size:10px;color:var(--text)">Krig / geopolitisk</span>
+              <span style="font-size:10px;font-weight:600;color:var(--red)">Aktiv</span>
+            </div>
+            <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="width:85%;height:100%;background:var(--red);border-radius:2px"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+              <span style="font-size:10px;color:var(--text)">Kredittkontraksjon</span>
+              <span style="font-size:10px;font-weight:600;color:var(--amber)">Bygger opp</span>
+            </div>
+            <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="width:55%;height:100%;background:var(--amber);border-radius:2px"></div></div>
+          </div>
+          <div style="margin-top:6px;padding-top:8px;border-top:1px solid var(--border)">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="font-size:10px;font-weight:600;color:var(--text)">Samlet resesjonsrisiko</span>
+              <span style="font-size:11px;font-weight:700;color:var(--red)">Kritisk</span>
+            </div>
+            <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:82%;height:100%;background:var(--red);border-radius:3px"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:0;padding:14px 16px">
+        <div class="section-label" style="margin-top:0">Mirans smale sti</div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div style="display:flex;justify-content:space-between"><span style="font-size:10.5px;color:var(--muted)">Valutakurskompensasjon</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:10.5px;color:var(--muted)">Billig energi</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:10.5px;color:var(--muted)">Gradvis implementering</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:10.5px;color:var(--muted)">Fed-koordinering</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:10.5px;color:var(--muted)">Stabile makroforhold</span><span style="font-size:10px;font-weight:700;color:var(--red)">Brutt</span></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- NØKKELTALL -->
-  <div class="stat-grid" style="grid-template-columns:1fr 1fr;margin-bottom:20px">
-    <div class="stat-card" style="border-left:3px solid var(--red)">
-      <div class="stat-label">Analysestatus</div>
-      <div class="stat-value" style="color:var(--red)">Kritisk</div>
-      <div class="stat-sub">Alle tre triggere aktive simultant</div>
-    </div>
-    <div class="stat-card" style="border-left:3px solid var(--red)">
-      <div class="stat-label">Hormuz stengt siden</div>
-      <div class="stat-value">31 dager</div>
-      <div class="stat-sub">4. mars 2026 · 17,8 mill. fat/dag forstyrret</div>
-    </div>
-  </div>
-
-  <!-- SEKUNDÆRE NØKKELTALL -->
-  <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px">
-    <div class="stat-card">
-      <div class="stat-label">Fed-rente</div>
-      <div class="stat-value" style="font-size:18px">3,50–3,75 %</div>
-      <div class="stat-sub">Holdt 18. mars · handlingslam</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">US KPI (feb. 2026)</div>
-      <div class="stat-value" style="font-size:18px">2,4 %</div>
-      <div class="stat-sub">Hormuz-effekt ikke priset inn ennå</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">ECB-rente</div>
-      <div class="stat-value" style="font-size:18px">2,00 %</div>
-      <div class="stat-sub">Holdt 19. mars · inflasjonsprognose ↑</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Kinas BNP-mål 2026</div>
-      <div class="stat-value" style="font-size:18px">4,5–5 %</div>
-      <div class="stat-sub">NBS · kortsikte gevinster av Hormuz</div>
-    </div>
-  </div>
-
-  <!-- MIRANS FORUTSETNINGER — KOMPAKT -->
-  <div class="section-label">Mirans smale sti — alle fem forutsetninger brutt</div>
-  <div class="card" style="padding:12px 16px">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 24px">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)">
-        <span style="font-size:11.5px;color:var(--muted)">Valutakurskompensasjon demper inflasjon</span>
-        <span style="font-size:11px;font-weight:600;color:var(--red);flex-shrink:0;margin-left:8px">Brutt</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)">
-        <span style="font-size:11.5px;color:var(--muted)">Billig energi som prisdempende faktor</span>
-        <span style="font-size:11px;font-weight:600;color:var(--red);flex-shrink:0;margin-left:8px">Brutt</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)">
-        <span style="font-size:11.5px;color:var(--muted)">Gradvis implementering minimerer volatilitet</span>
-        <span style="font-size:11px;font-weight:600;color:var(--red);flex-shrink:0;margin-left:8px">Brutt</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)">
-        <span style="font-size:11.5px;color:var(--muted)">Federal Reserve-koordinering er mulig</span>
-        <span style="font-size:11px;font-weight:600;color:var(--red);flex-shrink:0;margin-left:8px">Brutt</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0">
-        <span style="font-size:11.5px;color:var(--muted)">Stabile makrobetingelser for trinnvis gjennomføring</span>
-        <span style="font-size:11px;font-weight:600;color:var(--red);flex-shrink:0;margin-left:8px">Brutt</span>
-      </div>
-      <div style="display:flex;align-items:center;padding:5px 0;font-size:11px;color:var(--faint);font-style:italic">
-        Kilde: Miran (2024) · Se del IV for full analyse
-      </div>
-    </div>
-  </div>
-
-  <!-- SYSTEMDIAGNOSE -->
-  <div class="section-label">Systemdiagnose</div>
-  <div class="diag-box">
+  <!-- 4. SYSTEMDIAGNOSE -->
+  <div class="diag-box" style="margin-bottom:0">
     <div class="diag-label">Kjernediagnose</div>
-    Rasjonelle beslutninger på enkeltaktørnivå produserer irrasjonelle resultater på systemnivå. Mirans plan forutsetter billig energi. National Defense Strategy (2026) autoriserer operasjoner som utløser et energisjokk. National Security Strategy (2026) søker energidominans, men undergraver den gjennom Hormuz-stengningen. Vi befinner oss ikke i en krise som løser seg gjennom én politisk korreksjon. Vi befinner oss i et strukturelt skifte av den globale ordenen som vil ta fem til ti år å konsolidere.
+    Rasjonelle beslutninger på enkeltaktørnivå produserer irrasjonelle resultater på systemnivå. Mirans plan forutsetter billig energi. National Defense Strategy (2026) autoriserer operasjoner som utløser et energisjokk. National Security Strategy (2026) søker energidominans, men undergraver den gjennom Hormuz-stengningen. Liberation Day-tariffene (2. april 2026) legger et nytt simultant sjokk på toppen av Hormuz-krisen. Vi befinner oss i et strukturelt skifte av den globale ordenen som vil ta fem til ti år å konsolidere.
   </div>
 
-  <!-- NØKKELHENDELSER -->
-  <div class="section-label">Nøkkelhendelser</div>
-  <div class="card">
-    <div class="imp-row">
-      <div class="imp-icon" style="background:#FCEBEB;color:var(--red)">&#9651;</div>
-      <div><div class="imp-title">Operation Midnight Hammer — juni 2025</div><div class="imp-desc">USA ødelegger store deler av Irans kjernevåpenprogram. Brent stiger fra ~70 $ til ~80 $ i månedene etter.</div></div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:#FCEBEB;color:var(--red)">&#9651;</div>
-      <div><div class="imp-title">Operation Epic Fury — 28. februar 2026</div><div class="imp-desc">USA og Israel gjennomfører operasjon som inkluderer drapet på ayatollah Ali Khamenei. Brent lukket februar på 89 $.</div></div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:#FFFBEB;color:var(--amber)">&#9632;</div>
-      <div><div class="imp-title">Hormuz stengt — 4. mars 2026</div><div class="imp-desc">Iran erklærer Hormuz stengt. 17,8 mill. fat/dag forstyrret. Brent stiger fra 89 $ til 113 $ på 27 dager — +55 % i mars alene, historisk rekord.</div></div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:var(--navy-lt);color:var(--navy)">&#9670;</div>
-      <div><div class="imp-title">Sentralbankene reagerer — 18–19. mars 2026</div><div class="imp-desc">Fed holder renten (3,50–3,75 %). ECB holder renten (2,00 %) og reviderer inflasjonsprognose for 2026 opp fra 1,9 % til 2,6 %.</div></div>
-    </div>
-    <div class="imp-row">
-      <div class="imp-icon" style="background:#FFF7ED;color:#9A3412">&#9651;</div>
-      <div><div class="imp-title">Trump og Hegseth skyver byrden til allierte — 31. mars 2026</div><div class="imp-desc">Trump på Truth Social: «Go get your own oil» og «just TAKE IT» til land som Storbritannia. Forsvarsminister Hegseth: USA har «satt betingelsene for suksess» — Hormuz er «ikke bare et amerikansk problem». Ny tidsramme for krigen: 6–8 uker (opp fra 4–6). USA signaliserer exit-strategi selv om Hormuz forblir stengt.</div></div>
-    </div>
-    <div class="imp-row" style="border-bottom:none">
-      <div class="imp-icon" style="background:#FEF2F2;color:var(--red)">&#9670;</div>
-      <div><div class="imp-title">Alliansesprekk — NDS-scenariet materialiseres</div><div class="imp-desc">NDS (2026) identifiserte «The Simultaneity Problem» og risikoen for at allierte ikke er villige til å stå sammen. Per 31. mars er dette ikke lenger teori: Storbritannia nekter deltakelse, Trump truer med å forlate alliansene, og USA vil avslutte krigen uten å løse Hormuz-problemet. Fishmans asymmetri: skaden er strukturell uavhengig av når krigen slutter.</div></div>
-    </div>
-  </div>
-
-
-
-    <div class="footnote">Datakilde Brent: CNBC (ICE Brent juni-futures) · ~104 $/fat per 1. april 2026 kl. 06:15 ET · Ned fra 113 $ (31. mars) etter Trumps exit-signaler</div>
 </div>
 
 <!-- ─── ANALYTIKERNE ─── -->
@@ -3322,296 +3327,45 @@ input[type=range]::-webkit-slider-thumb {
 <div class="panel" id="panel-nyheter">
   <div class="panel-header">
     <div class="panel-title">Nyheter</div>
-    <div class="panel-sub">Nyheter, analyser og kilder som utvider eller justerer modellen — kronologisk, nyeste øverst</div>
+    <div class="panel-sub">Live RSS fra primærkilder · kategorisert etter modellens rammeverk · nyeste øverst · oppdateres ved hver sidelasting</div>
   </div>
 
-  <!-- INTRO -->
-  <div style="font-size:13.5px;line-height:1.82;color:var(--text);font-weight:300;margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-left:3px solid #0E7490;border-radius:0 var(--radius) var(--radius) 0;padding:14px 18px;box-shadow:var(--shadow)">
-    Nyheter, rapporter og analyser relevante for modellens analytiske rammeverk — datert, kildeattribuert og koblet til analytiske posisjoner.
+  <!-- KILDEOVERSIKT OG KATEGORIER -->
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
+    <span style="font-size:10px;font-weight:600;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;margin-right:4px">Filter:</span>
+    <button onclick="filterNews('alle')" class="news-filter active" data-filter="alle">Alle</button>
+    <button onclick="filterNews('hormuz')" class="news-filter" data-filter="hormuz" style="background:#FCEBEB;color:#C53030;border-color:#C53030">Hormuz</button>
+    <button onclick="filterNews('energi')" class="news-filter" data-filter="energi" style="background:#FFFBEB;color:#92400E;border-color:#92400E">Energi</button>
+    <button onclick="filterNews('kina')" class="news-filter" data-filter="kina" style="background:#FCEBEB;color:#C63D2F;border-color:#C63D2F">Kina</button>
+    <button onclick="filterNews('makro')" class="news-filter" data-filter="makro" style="background:#EEEDFE;color:#3C3489;border-color:#7F77DD">Makro</button>
+    <button onclick="filterNews('geopolitikk')" class="news-filter" data-filter="geopolitikk" style="background:#E1F5EE;color:#085041;border-color:#1D9E75">Geopolitikk</button>
+    <button onclick="filterNews('kapital')" class="news-filter" data-filter="kapital" style="background:#FAF5FF;color:#3B0764;border-color:#7C3AED">Kapital</button>
+    <div style="margin-left:auto;font-size:10px;color:var(--faint)" id="news-status">Henter nyheter...</div>
   </div>
 
-  <!-- ══════════════════════════════════════════════════
-       OPPDATERING 3 — 1. april 2026
-       ══════════════════════════════════════════════ -->
-  <div style="margin-bottom:20px">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#0E7490">1. april 2026</div>
-      <div style="flex:1;height:1px;background:var(--border)"></div>
-      <div style="font-size:10px;color:var(--faint)">4 kilder</div>
-    </div>
+  <style>
+  .news-filter {
+    font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;
+    cursor:pointer;border:1px solid var(--border);background:var(--surface);
+    color:var(--muted);transition:opacity .15s;
+  }
+  .news-filter.active { opacity:1; box-shadow:0 0 0 2px currentColor; }
+  .news-filter:not(.active) { opacity:.55; }
+  .news-item { display:block; }
+  .news-item.hidden { display:none; }
+  </style>
 
-    <!-- Kilde: Geopolitisk daglig brief -->
-    <div class="card" style="margin-bottom:10px">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--text)">Geopolitisk nyhetsoppdatering — 1. april 2026</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">Daglig brief · Al Jazeera · NPR · USNI News · IEA · EIA · CSIS · CNBC</div>
-        </div>
-        <span style="font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;background:#F0F9FF;color:#0E7490;white-space:nowrap;flex-shrink:0;margin-left:12px">Daglig brief</span>
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px">
-
-        <div style="border-left:3px solid #C53030;padding-left:12px">
-          <div style="font-size:11px;font-weight:700;color:#C53030;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Hormuzstredet &amp; Midtøsten</div>
-          <div style="font-size:12px;line-height:1.7;color:var(--text)">Situasjonen forblir ekstremt anspent. Iran erklærte stredet stengt 4. mars etter USA-israelske angrep og har gjennomført daglige missil- og droneangrep mot Gulf-stater. Per 31. mars har Iran åpnet stredet for enkelte skip, men de fleste olje- og gasstankere forblir blokkert. USA hevder å ha redusert den iranske trusselen; Pakistan tilbyr mekling.</div>
-          <div style="font-size:10px;color:var(--faint);margin-top:4px">Al Jazeera · NPR · USNI News</div>
-        </div>
-
-        <div style="border-left:3px solid #92400E;padding-left:12px">
-          <div style="font-size:11px;font-weight:700;color:#92400E;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Olje &amp; gass</div>
-          <div style="font-size:12px;line-height:1.7;color:var(--text)">Brent nådde nær $120/fat før det falt tilbake til ~$92/fat. IEA beskriver dette som den mest akutte forsyningsforstyrrelsen i oljemarkedets historie — strømmen gjennom Hormuz falt fra 20 mill. fat/dag til et minimum. OPEC+ vedtok 1. mars å øke produksjonen med 206 000 fat/dag fra april, men dette kompenserer minimalt for bortfallet.</div>
-          <div style="font-size:10px;color:var(--faint);margin-top:4px">IEA Oil Market Report mars 2026 · EIA STEO · CNBC</div>
-        </div>
-
-        <div style="border-left:3px solid #C63D2F;padding-left:12px">
-          <div style="font-size:11px;font-weight:700;color:#C63D2F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Kina &amp; sjeldne jordarter</div>
-          <div style="font-size:12px;line-height:1.7;color:var(--text)">Kina kontrollerer 60 % av verdens sjeldne jordarter og 90 % av prosesseringen. I 2025–2026 er eksportkontrollene strammet inn med lisenspliktig eksport av tolv sjeldne jordarter, wolfram og antimon. Januar 2026: nye restriksjoner rettet spesifikt mot Japan. Enkelte restriksjoner midlertidig suspendert under handelsavtale med USA — situasjonen forblir uforutsigbar.</div>
-          <div style="font-size:10px;color:var(--faint);margin-top:4px">CSIS · CNBC · Al Jazeera</div>
-        </div>
-
-      </div>
-
-      <div style="font-size:11.5px;line-height:1.65;color:var(--text);background:var(--navy-lt);border-radius:var(--radius);padding:10px 12px">
-        <strong style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid);display:block;margin-bottom:4px">Analytisk kobling</strong>
-        Briefingens sluttsetning er presis: de tre temaene er nå tett sammenvevd. Goodspeeds resesjonsmodell er aktivert via to simultane forsyningssjokk — energi (Hormuz) og kritiske materialer (REE). Briefingens oljeprisbane ($120 → $92) er konsistent med Hormuz-kalkulatorens normaliseringsfase. IEAs karakteristikk av dette som «den mest akutte forsyningsforstyrrelsen i oljemarkedets historie» er den sterkeste eksterne bekreftelsen av Goodspeed-modellens prediktive kraft som er fremkommet til nå.
-      </div>
-    </div>
-
-    <!-- Kilde: BBC / Kina som megler -->
-    <div class="card" style="margin-bottom:10px">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--text)">China is trying to play peacemaker in the Iran war — will it work?</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">BBC News · Laura Bicker · 1. april 2026</div>
-        </div>
-        <span style="font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;background:#FCEBEB;color:#C63D2F;white-space:nowrap;flex-shrink:0;margin-left:12px">Kinas posisjon</span>
-      </div>
-      <div style="font-size:12.5px;line-height:1.75;color:var(--text);margin-bottom:12px">
-        Kina og Pakistan har lansert en fempunktsplan for våpenhvile og gjenåpning av Hormuz. Pakistan har vunnet Trumps tillit som megler. Kinas motiv er primært stabilitets­drevet — landet er verdens største oljeimportør og har lager til «neste par måneder», men en forlenget energisjokk vil ramme kinesiske fabrikker og eksportører hardt. Kina har ingen militær kapasitet i regionen (nærmeste base: Djibouti, etablert 2017). Eksport til Midtøsten vokste dobbelt så fort som til resten av verden i 2025 — regionen er nå det raskest voksende markedet for kinesiske elbiler. Kina er Irans største handelspartner og kjøper ~80 % av iransk olje. Verken USA eller Iran har foreløpig respondert på fredplanen.
-      </div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
-        <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:#FCEBEB;color:#C63D2F">Kinas posisjon — strategisk interesse</span>
-        <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:#FAEEDA;color:#633806">Miran — handelspolitisk omstrukturering</span>
-        <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:#E1F5EE;color:#085041">Fishman — alternativ maktpol</span>
-        <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:#EEEDFE;color:#3C3489">NDS — rivaliserende stormakter</span>
-      </div>
-      <div style="font-size:11.5px;line-height:1.65;color:var(--text);background:var(--navy-lt);border-radius:var(--radius);padding:10px 12px">
-        <strong style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid);display:block;margin-bottom:4px">Analytisk kobling</strong>
-        Kinas megler­rolle er en direkte konsekvens av Fishman-dynamikken: USA har aktivt undergravet sine egne allianser, og Kina fyller vakuumet som nøytral aktør — akkurat før avgjørende handelsforhandlinger mellom Xi og Trump neste måned. Mirans handelspolitiske arkitektur forutsetter at USA kontrollerer sikkerhetsparaplyn som forhandlingskort; Kinas fremrykk som alternativ stabilisator kompliserer dette bildet fundamentalt. NDS (2026) identifiserer Kina som den primære rivaliserende stormakten — at Kina nå spiller fredsmekleren mens USA truer med å forlate Nato, er en historisk posisjonsveksling. Det viktigste signalet er ikke om fredplanen lykkes, men at den eksisterer: Kina har nå tilstrekkelig regional innflytelse og tilstrekkelig egeninteresse til å handle — og gjør det.
-      </div>
-    </div>
-
-    <!-- Kilde: Telegraph / Trump-Nato (beholdes) -->
-
-    <div class="card" style="margin-bottom:0">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--text)">Trump: strongly considering pulling out of Nato — «paper tiger»</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">The Telegraph · Connor Stringer · 1. april 2026</div>
-        </div>
-        <span style="font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;background:#FEF2F2;color:#C53030;white-space:nowrap;flex-shrink:0;margin-left:12px">Alliansekrise</span>
-      </div>
-      <div style="font-size:12.5px;line-height:1.75;color:var(--text);margin-bottom:12px">
-        Trump sier til The Telegraph at han «strongly considering» å trekke USA ut av Nato — og at dette er «beyond reconsideration». Kaller Nato en «paper tiger» og sier Putin vet det samme. Rubio: Nato er «a one-way street» — USA må «re-examine» medlemskapet etter krigen. USA nektet også baser fra allierte til Iran-krigen. Trump om UK: «You don't even have a navy.» Krigen kan være over innen «two weeks, maybe three» — eneste mål er å stoppe Irans atomprogram. Adresse til nasjonen varslet onsdag 2. april kl. 09:00 EST.
-      </div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
-        <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:#EEEDFE;color:#3C3489">NDS — The Simultaneity Problem</span>
-        <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:#E1F5EE;color:#085041">Fishman — strukturell asymmetri</span>
-        <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:#FAEEDA;color:#633806">Miran — sikkerhetsparaply som forhandlingskort</span>
-        <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:#E6F1FB;color:#0C447C">Taleb — ikke-lineær systemkollaps</span>
-      </div>
-      <div style="font-size:11.5px;line-height:1.65;color:var(--text);background:var(--navy-lt);border-radius:var(--radius);padding:10px 12px">
-        <strong style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid);display:block;margin-bottom:4px">Analytisk kobling</strong>
-        Dette er den mest alvorlige geopolitiske utviklingen siden Hormuz-stengningen. Mirans hele arkitektur — Mar-a-Lago Accord, tariffer som forhandlingsinstrument, dollarens reserve­valutastatus — er eksplisitt bygget på den amerikanske sikkerhetsparaplyn som det sentrale forhandlingskort overfor allierte. Hvis USA forlater Nato, kollapser den forutsetningen. Fishmans asymmetri forsterkes: sanksjonsregimet mot Iran er bygget på alliert koordinering som nå aktivt undergraves. NDS (2026) Lines of Effort 1 og 4 forutsetter alliert kapasitet og logistikk — det er ikke lenger gitt. Talebs poeng: Nato-uttredelse er en «Mother of All Black Swans» for europeisk sikkerhetsarkitektur. Markedene priser ikke dette inn.
-      </div>
+  <!-- NYHETSFEED — fylles dynamisk -->
+  <div id="news-feed" style="display:flex;flex-direction:column;gap:8px">
+    <div style="text-align:center;padding:40px;color:var(--faint);font-size:12px">
+      <div style="font-size:20px;margin-bottom:8px">⟳</div>
+      Henter nyheter fra primærkilder...
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════════════════
-       OPPDATERING 2 — 31. mars 2026
-       ══════════════════════════════════════════════ -->
-  <div style="margin-bottom:20px">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#0E7490">31. mars 2026</div>
-      <div style="flex:1;height:1px;background:var(--border)"></div>
-      <div style="font-size:10px;color:var(--faint)">2 kilder</div>
-    </div>
-
-    <!-- Kilde 2a: BBC / Hegseth -->
-    <div class="card" style="margin-bottom:10px">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--text)">Hegseth calls on US allies to «step up» over Strait of Hormuz</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">BBC News · Tom Bateman &amp; Sakshi Venkatraman · 31. mars 2026</div>
-        </div>
-        <span style="font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;background:#E0F2FE;color:#0E7490;white-space:nowrap;flex-shrink:0;margin-left:12px">Geopolitikk</span>
-      </div>
-      <div style="font-size:12.5px;line-height:1.75;color:var(--text);margin-bottom:12px">
-        Trump på Truth Social: «Go get your own oil» og «just TAKE IT» — direkte til land som Storbritannia. Forsvarsminister Hegseth: USA har «satt betingelsene for suksess» og Hormuz er «ikke bare et amerikansk problem». Ny tidshorisont for krigen: 6–8 uker (fra 4–6). WSJ: Trump er villig til å avslutte kampanjen selv om Hormuz forblir stengt. UK nekter deltakelse. Irans utenriksminister: «no negotiations with America in these thirty-one days».
-      </div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
-        <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:#EEEDFE;color:#3C3489">NDS — The Simultaneity Problem</span>
-        <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:#E1F5EE;color:#085041">Fishman — asymmetri</span>
-        <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:#FAEEDA;color:#633806">Miran — alliansekobling</span>
-      </div>
-      <div style="font-size:11.5px;line-height:1.65;color:var(--text);background:var(--navy-lt);border-radius:var(--radius);padding:10px 12px">
-        <strong style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid);display:block;margin-bottom:4px">Analytisk kobling</strong>
-        NDS (2026) identifiserte «The Simultaneity Problem» og risikoen for alliertes manglende vilje. Dette materialiseres nå fullt ut: USA trekker seg ut uten at Hormuz er løst. Fishmans asymmetri — skaden er strukturell uavhengig av når krigen slutter. Mirans Mar-a-Lago Accord er bygget på sikkerhetsparaply som instrument — men en sikkerhetsparaply som nå trekkes tilbake undergraver hele arkitekturen.
-      </div>
-    </div>
-
-    <!-- Kilde 2b: Perera / Last Molecule Standing -->
-    <div class="card" style="margin-bottom:0">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--text)">The Last Molecule Standing — kvantitativ sektoranalyse</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">Shanaka Anslem Perera · 30. mars 2026 · Sammenstilt av Affectum AS</div>
-        </div>
-        <span style="font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;background:#FEF2F2;color:#C53030;white-space:nowrap;flex-shrink:0;margin-left:12px">Kritisk analyse</span>
-      </div>
-      <div style="font-size:12.5px;line-height:1.75;color:var(--text);margin-bottom:12px">
-        South Pars/North Dome-feltet (19 % av verdens gassreserver) forsyner via Ras Laffan og Hormuz syv globale industrier simultant. Etter angrepene 18. mars er dette systemet i full krise. Perera identifiserer tre strukturelle rotsårsaker: (1) termodynamisk optimalisering eliminerer redundans → maksimal kaskadesvikt; (2) molekylær udelbarhet — helium, BAHX-kjerner og storskala gassturbiner kan ikke improviseres; (3) temporal skjevhet i finansiell modellering: markeder priser i måneder, fysikk i år, geologi i tiår.
-      </div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
-        <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:#EEEDFE;color:#3C3489">Goodspeed — energisjokk type 1</span>
-        <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:#E6F1FB;color:#0C447C">Taleb — Extremistan kaskade</span>
-        <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;background:#FAF5FF;color:#3B0764">Kinas posisjon — helium</span>
-      </div>
-
-      <!-- Nøkkeltall-tabell -->
-      <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-bottom:8px">Fullstendig sektoroversikt — Perera (2026)</div>
-      <div style="overflow-x:auto">
-        <table class="compare-table" style="margin-bottom:12px;font-size:11px">
-          <thead>
-            <tr>
-              <th style="width:40%">Sektor / Enhet</th>
-              <th>Volum (før krise)</th>
-              <th>Påvirket volum</th>
-              <th>Andel påvirket</th>
-              <th>Alvorlighet</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td colspan="5" style="background:var(--navy);color:white;font-weight:700;letter-spacing:.05em;font-size:10px;text-transform:uppercase;padding:6px 12px">LNG-produksjon og eksport</td></tr>
-            <tr><td>Qatar – Ras Laffan, total kapasitet</td><td>77 mill. tonn/år</td><td>77 mill. tonn/år</td><td class="alert-cell">100 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Qatar – Train 4 og 6 (fysisk ødelagt)</td><td>~11 mill. tonn/år</td><td>~11 mill. tonn/år</td><td class="alert-cell">100 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Qatar – 12 uskadet tog (stengt pga. stredet)</td><td>~66 mill. tonn/år</td><td>~66 mill. tonn/år</td><td class="alert-cell">100 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Australia – Wheatstone (Chevron)</td><td>8,9 mill. tonn/år</td><td>8,9 mill. tonn/år</td><td class="warn-cell">~100 % (midl.)</td><td class="warn-cell">ALVORLIG</td></tr>
-            <tr><td>Australia – North West Shelf (Woodside)</td><td>14,3 mill. tonn/år</td><td>14,3 mill. tonn/år</td><td class="warn-cell">~100 % (midl.)</td><td class="warn-cell">ALVORLIG</td></tr>
-            <tr><td>Australia – Gorgon (Chevron)</td><td>15,6 mill. tonn/år</td><td>5,2 mill. tonn/år</td><td class="warn-cell">~33 % (1 tog)</td><td class="warn-cell">ALVORLIG</td></tr>
-            <tr><td><strong>Samlet global LNG-bortfall</strong></td><td>~385 mill. tonn/år (globalt)</td><td>&gt;100 mill. tonn/år</td><td class="alert-cell"><strong>&gt;26 % av global prod.</strong></td><td class="alert-cell">KRITISK</td></tr>
-
-            <tr><td colspan="5" style="background:var(--navy);color:white;font-weight:700;letter-spacing:.05em;font-size:10px;text-transform:uppercase;padding:6px 12px">Helium</td></tr>
-            <tr><td>Qatar – Ras Laffan heliumplanter</td><td>63 mill. m³/år (33 % av globalt)</td><td>63 mill. m³/år</td><td class="alert-cell">100 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Stranded ISO-containere i Gulfen</td><td>~200 containere (~1/3 av global flåte)</td><td>200 containere</td><td class="alert-cell">100 % (fordamper)</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Airgas (Air Liquide) – USA</td><td>22 % av US-markedet</td><td>50 % kuttet i leveranse</td><td class="warn-cell">50 %</td><td class="warn-cell">ALVORLIG</td></tr>
-            <tr><td>Samsung + SK Hynix heliumimport fra Qatar</td><td>64,7 % av import, $226,9 mill.</td><td>64,7 % bortfalt</td><td class="alert-cell">64,7 %</td><td class="alert-cell">KRITISK</td></tr>
-
-            <tr><td colspan="5" style="background:var(--navy);color:white;font-weight:700;letter-spacing:.05em;font-size:10px;text-transform:uppercase;padding:6px 12px">Halvledere og elektronikk</td></tr>
-            <tr><td>DDR5-spotpris (DRAM)</td><td>$6,84/modul (sep. 2025)</td><td>$27,20/modul (feb. 2026)</td><td class="alert-cell">+298 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>DRAM-kontraktspris Q1 2026</td><td>Basisnivå Q4 2025</td><td>Proj. +90–95 % kvt/kvt</td><td class="alert-cell">Rekord</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>NVIDIA RTX 50-series produksjon H1 2026</td><td>Planlagt volum</td><td>Kuttes 30–40 %</td><td class="warn-cell">30–40 %</td><td class="warn-cell">ALVORLIG</td></tr>
-            <tr><td>Gallium (Kina) – pris</td><td>~$940/kg (jan. 2025)</td><td>~$2 100/kg (mar. 2026)</td><td class="warn-cell">+123 %</td><td class="warn-cell">ALVORLIG</td></tr>
-            <tr><td>Sør-Korea – bromin fra Israel</td><td>97,5 % av import</td><td>Sterkt begrenset</td><td class="alert-cell">Opp til 97,5 %</td><td class="alert-cell">KRITISK</td></tr>
-
-            <tr><td colspan="5" style="background:var(--navy);color:white;font-weight:700;letter-spacing:.05em;font-size:10px;text-transform:uppercase;padding:6px 12px">Kunstgjødsel og matproduksjon</td></tr>
-            <tr><td>QAFCO – urea eksport</td><td>5,6 mill. tonn/år (14 % av global handel)</td><td>5,6 mill. tonn/år</td><td class="alert-cell">100 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Midtøsten – sjøbåren ureaeksport totalt</td><td>43–49 % av global sjøhandel</td><td>Hele volumet</td><td class="alert-cell">43–49 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Urea FOB Midtøsten – pris</td><td>$484/tonn (før krise)</td><td>$750/tonn (mars 2026)</td><td class="alert-cell">+55 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>USA – NOLA barge urea</td><td>$516/tonn (27. feb.)</td><td>$683/tonn (5. mars)</td><td class="warn-cell">+32 % på 1 uke</td><td class="warn-cell">ALVORLIG</td></tr>
-            <tr><td>Bangladesh – gjødselfabrikker</td><td>6 store fabrikker</td><td>5 av 6 stengt</td><td class="alert-cell">83 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>India – urea produksjonsbortfall</td><td>~8 mill. tonn/mnd</td><td>~800 000 tonn/mnd</td><td class="warn-cell">~10–15 % (proj.)</td><td class="warn-cell">ALVORLIG</td></tr>
-            <tr><td>Pakistan – gass til gjødselsektoren</td><td>100 %</td><td>Kuttet 78 %</td><td class="alert-cell">78 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Svovel – Sentralafrika (kobber/kobolt)</td><td>~2 mill. tonn/år fra Midtøsten</td><td>Sterkt begrenset</td><td class="alert-cell">~90 %</td><td class="alert-cell">KRITISK</td></tr>
-
-            <tr><td colspan="5" style="background:var(--navy);color:white;font-weight:700;letter-spacing:.05em;font-size:10px;text-transform:uppercase;padding:6px 12px">Aluminium</td></tr>
-            <tr><td>Alba (Bahrain) – kapasitet</td><td>1,6 mill. tonn/år</td><td>~304 000 tonn/år</td><td class="warn-cell">~19 % (3 linjer)</td><td class="warn-cell">ALVORLIG</td></tr>
-            <tr><td>EGA Al Taweelah (Abu Dhabi)</td><td>~4 % av global prod.</td><td>Betydelig skade</td><td class="warn-cell">Ukjent andel</td><td class="warn-cell">ALVORLIG</td></tr>
-            <tr><td>Qatalum (Qatar/Hydro/QAMCO)</td><td>687 000 tonn/år</td><td>Kontrollert nedstengning</td><td class="warn-cell">100 % (midl.)</td><td class="warn-cell">ALVORLIG</td></tr>
-            <tr><td>LME aluminiumspris</td><td>~$2 300/tonn (før)</td><td>~$3 500/tonn</td><td class="warn-cell">+52 %</td><td class="warn-cell">ALVORLIG</td></tr>
-
-            <tr><td colspan="5" style="background:var(--navy);color:white;font-weight:700;letter-spacing:.05em;font-size:10px;text-transform:uppercase;padding:6px 12px">Olje, gass og energi</td></tr>
-            <tr><td>Iran – gasseksport til Irak</td><td>50 mill. m³/dag</td><td>50 mill. m³/dag</td><td class="alert-cell">100 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Irak – kraftproduksjon (fra iransk gass)</td><td>3 100–4 500 MW</td><td>3 100–4 500 MW bortfalt</td><td class="alert-cell">100 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Basra Oil Company – oljeproduksjon</td><td>3,3 mill. fat/dag</td><td>2,5 mill. fat/dag bortfalt</td><td class="alert-cell">~76 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Brent råolje – pris</td><td>~$70–75/fat (før)</td><td>&gt;$100/fat</td><td class="alert-cell">+30–40 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Irak – statsinntekter (4 uker)</td><td>Normal drift</td><td>$8–10 mrd. tapt</td><td class="alert-cell">Kritisk</td><td class="alert-cell">KRITISK</td></tr>
-
-            <tr><td colspan="5" style="background:var(--navy);color:white;font-weight:700;letter-spacing:.05em;font-size:10px;text-transform:uppercase;padding:6px 12px">Maritim transport og forsikring</td></tr>
-            <tr><td>Hormuz-transitter (mars 2026 vs. 2025)</td><td>~2 652 fartøy (mar. 2025)</td><td>~142 fartøy</td><td class="alert-cell">−94,6 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Krigsrisikopremier – supertanker</td><td>0,125–0,25 % av skrogverdi</td><td>5–10 % per tur</td><td class="alert-cell">×40–80</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Kostnad per seilingstur VLCC ($138 mill.)</td><td>~$175 000–345 000</td><td>$10–14 mill.</td><td class="alert-cell">×40–80</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Dagrate supertanker</td><td>~$200 000/dag</td><td>~$800 000/dag</td><td class="warn-cell">×4</td><td class="warn-cell">ALVORLIG</td></tr>
-            <tr><td>Fartøy strandet (begge sider av stredet)</td><td>Normal flyt</td><td>~2 000 fartøy</td><td class="alert-cell">-</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Sjøfolk idlesatt</td><td>Normal drift</td><td>~20 000 sjøfolk</td><td class="warn-cell">-</td><td class="warn-cell">ALVORLIG</td></tr>
-
-            <tr><td colspan="5" style="background:var(--navy);color:white;font-weight:700;letter-spacing:.05em;font-size:10px;text-transform:uppercase;padding:6px 12px">Avsaltet drikkevann og humanitær forsyning</td></tr>
-            <tr><td>Gulfen – avhengighet av avsalting</td><td>400+ anlegg</td><td>Truet ved gassutfall</td><td class="alert-cell">Inntil 100 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Kuwait – avhengighet av avsalting</td><td>~90 % av ferskvann</td><td>Strategisk reserve: uker</td><td class="alert-cell">90 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Qatar – avhengighet av avsalting</td><td>61 % av ferskvann</td><td>Strategisk reserve: uker</td><td class="warn-cell">61 %</td><td class="warn-cell">ALVORLIG</td></tr>
-            <tr><td>Befolkning avhengig av avsaltet vann</td><td>100 mill. mennesker</td><td>Alle eksponert</td><td class="alert-cell">100 mill. mennesker</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Allerede matsikkerhetstruede (FN)</td><td>318 mill. personer</td><td>+45 mill. (WFP-proj.)</td><td class="alert-cell">+14 %</td><td class="alert-cell">KRITISK</td></tr>
-            <tr><td>Amerikansk gjødselunderskudd – vårplanting mais</td><td>Normal forsyning</td><td>~2 mill. tonn urea</td><td class="alert-cell">Kritisk for maisprod.</td><td class="alert-cell">KRITISK</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div style="font-size:11.5px;line-height:1.65;color:var(--text);background:var(--navy-lt);border-radius:var(--radius);padding:10px 12px">
-        <strong style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid);display:block;margin-bottom:4px">Analytisk kobling</strong>
-        Perera bekrefter Goodspeeds resesjonsmodell fra en fysisk-industriell vinkel: energisjokket er ikke bare et oljeprissjokk — det er et multi-sektor forsyningssjokk på tvers av LNG, helium, halvledere, kunstgjødsel, aluminium og drikkevann simultant. Talebs kaskademodell er empirisk dokumentert: primærsjokk (Hormuz) → sekundærsjokk (Bangladesh 83 % gjødselfabrikker stengt, Irak 100 % kraftbortfall) → tertiærsjokk (+45 mill. matsikkerhetstruede globalt). Den temporale skjevheten Perera beskriver er Mirans kalkunproblem i ny drakt: finansmarkeder priset i måneder, men South Pars/North Dome-geologien priser i tiår.
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════════════
-       OPPDATERING 1 — 30. mars 2026
-       ══════════════════════════════════════════════ -->
-  <div style="margin-bottom:20px">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#0E7490">30. mars 2026</div>
-      <div style="flex:1;height:1px;background:var(--border)"></div>
-      <div style="font-size:10px;color:var(--faint)">1 kilde</div>
-    </div>
-
-    <div class="card" style="margin-bottom:0">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:600;color:var(--text)">
-            <a href="https://substack.com/home/post/p-192518871" target="_blank" rel="noopener"
-               style="color:var(--navy);text-decoration:none;border-bottom:1px solid rgba(31,56,100,.25);padding-bottom:1px">
-              The Last Molecule Standing Substack-analyse — lenke til artikkel &#8599;#8599;
-            </a>
-          </div>
-          <div style="font-size:11px;color:var(--muted);margin-top:3px">Substack · 30. mars 2026</div>
-        </div>
-        <span style="font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;background:#F0FDF4;color:#14532D;white-space:nowrap;flex-shrink:0;margin-left:12px">Lenke</span>
-      </div>
-      <div style="font-size:11.5px;color:var(--muted);font-style:italic">
-        Tittel ikke tilgjengelig uten innlogging — klikk lenken for å lese. Oppdater tittelen ovenfor ved behov.
-      </div>
-    </div>
-  </div>
-
-
-
-  <!-- ══════════════════════════════════════════════════
-       MAL FOR NYE OPPDATERINGER
-       ══════════════════════════════════════════════ -->
-  <div style="margin-bottom:20px">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#888780">Legg til oppdatering</div>
-      <div style="flex:1;height:1px;background:var(--border)"></div>
-    </div>
-
-    <div class="card" style="background:var(--bg);border-style:dashed;text-align:center;padding:24px 20px">
-      <div style="font-size:12px;color:var(--faint);margin-bottom:8px">Nye oppdateringer legges til øverst</div>
-      <div style="font-size:11px;color:var(--faint);line-height:1.6">Lim inn artikkel, lenke eller tekstutdrag og be om å legge det til som en oppdatering med dato og analytisk kobling.</div>
-    </div>
-  </div>
-
-  <div class="footnote" style="margin-top:8px">
-    Oppdateres løpende · Kildene attributteres alltid · Kobling til analytisk rammeverk vises for hver oppdatering
+  <div class="footnote" style="margin-top:16px">
+    Kilder: NYT · BBC · CNBC · Geopolitical Futures · Foreign Policy · The Economist · MarketWatch · Al Jazeera · Axios<br>
+    Kategorisering: automatisk basert på nøkkelord · Klikk på overskrift for å åpne originalartikkel
   </div>
 </div>
 
@@ -4492,6 +4246,223 @@ document.addEventListener('DOMContentLoaded', function() {
   fetchMarkets();
   setInterval(fetchMarkets, 5 * 60 * 1000);
 });
+
+// ── LIVE NYHETSMODUL ─────────────────────────────────────────────────────────
+var _newsItems = []; // Alle hentede nyheter, akkumulert
+
+// Kategorinøkkelord
+var _newsCategories = {
+  hormuz: ['hormuz','strait','iran war','persian gulf','tehran','khamenei','kharg','basra',
+           'tanker','shipping lane','naval','missile','drone attack'],
+  energi: ['oil','brent','wti','crude','opec','lng','natural gas','energy','petroleum',
+           'refinery','barrel','pipeline','eia','iea'],
+  kina:   ['china','chinese','xi jinping','beijing','rare earth','semiconductor','taiwan',
+           'pla','yuan','renminbi','byd','huawei','tsmc'],
+  makro:  ['fed','federal reserve','ecb','interest rate','inflation','gdp','recession',
+           'cpi','pce','treasury','bond yield','dollar','tariff','trade war'],
+  geopolitikk: ['nato','russia','ukraine','middle east','saudi','geopolit','alliance',
+                'pentagon','hegseth','white house','trump','defense','military'],
+  kapital: ['stock','market','s&p','wall street','gold','silver','copper','vix','volatile',
+            'portfolio','invest','equity','debt','credit']
+};
+
+function categorizeNews(title, desc) {
+  var text = (title + ' ' + (desc || '')).toLowerCase();
+  var cats = [];
+  for (var cat in _newsCategories) {
+    var keywords = _newsCategories[cat];
+    for (var i = 0; i < keywords.length; i++) {
+      if (text.indexOf(keywords[i]) !== -1) { cats.push(cat); break; }
+    }
+  }
+  return cats.length > 0 ? cats : ['geopolitikk'];
+}
+
+var _catColors = {
+  hormuz:      { bg:'#FCEBEB', color:'#C53030', label:'Hormuz' },
+  energi:      { bg:'#FFFBEB', color:'#92400E', label:'Energi' },
+  kina:        { bg:'#FCEBEB', color:'#C63D2F', label:'Kina' },
+  makro:       { bg:'#EEEDFE', color:'#3C3489', label:'Makro' },
+  geopolitikk: { bg:'#E1F5EE', color:'#085041', label:'Geopolitikk' },
+  kapital:     { bg:'#FAF5FF', color:'#3B0764', label:'Kapital' }
+};
+
+var _newsSources = [
+  { name:'NYT World',         url:'https://rss.nytimes.com/services/xml/rss/nyt/World.xml' },
+  { name:'NYT Business',      url:'https://rss.nytimes.com/services/xml/rss/nyt/Business.xml' },
+  { name:'BBC Business',      url:'https://feeds.bbci.co.uk/news/business/rss.xml' },
+  { name:'BBC World',         url:'https://feeds.bbci.co.uk/news/world/rss.xml' },
+  { name:'CNBC Energy',       url:'https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=19836768' },
+  { name:'CNBC Economy',      url:'https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=20910258' },
+  { name:'Foreign Policy',    url:'https://foreignpolicy.com/feed/' },
+  { name:'Geopolitical Futures', url:'https://geopoliticalfutures.com/feed/' },
+  { name:'The Economist',     url:'https://www.economist.com/finance-and-economics/rss.xml' },
+  { name:'Al Jazeera',        url:'https://www.aljazeera.com/xml/rss/all.xml' },
+  { name:'MarketWatch',       url:'https://feeds.content.dowjones.io/public/rss/mw_realtimeheadlines' },
+  { name:'Politico',          url:'https://rss.politico.com/politics-news.xml' }
+];
+
+var _activeFilter = 'alle';
+var _seenGuids = {};
+
+function filterNews(cat) {
+  _activeFilter = cat;
+  document.querySelectorAll('.news-filter').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.filter === cat);
+  });
+  document.querySelectorAll('.news-item').forEach(function(el) {
+    if (cat === 'alle') { el.classList.remove('hidden'); }
+    else {
+      var cats = (el.dataset.cats || '').split(',');
+      el.classList.toggle('hidden', cats.indexOf(cat) === -1);
+    }
+  });
+}
+
+function fetchAllNews() {
+  var PROXY = 'https://corsproxy.io/?';
+  var loaded = 0;
+  var newCount = 0;
+
+  _newsSources.forEach(function(src) {
+    fetch(PROXY + encodeURIComponent(src.url), { cache: 'no-store' })
+      .then(function(r) { return r.text(); })
+      .then(function(text) {
+        var parser = new DOMParser();
+        var xml = parser.parseFromString(text, 'text/xml');
+        var items = xml.querySelectorAll('item');
+
+        items.forEach(function(item) {
+          var title = item.querySelector('title')?.textContent?.trim() || '';
+          var link  = item.querySelector('link')?.textContent?.trim() || '#';
+          var desc  = item.querySelector('description')?.textContent?.trim() || '';
+          var pubDate = item.querySelector('pubDate')?.textContent?.trim() || '';
+          var guid = (item.querySelector('guid')?.textContent?.trim() || link);
+
+          if (!title || _seenGuids[guid]) return;
+          _seenGuids[guid] = true;
+          newCount++;
+
+          // Parse dato
+          var date = pubDate ? new Date(pubDate) : new Date();
+          var dateStr = date.toLocaleDateString('no-NO', { day:'numeric', month:'short', year:'numeric' });
+          var timeStr = date.toLocaleTimeString('no-NO', { hour:'2-digit', minute:'2-digit' });
+
+          // Kategoriser
+          var cats = categorizeNews(title, desc);
+
+          _newsItems.push({
+            title: title,
+            link: link,
+            desc: desc,
+            source: src.name,
+            date: date,
+            dateStr: dateStr,
+            timeStr: timeStr,
+            cats: cats,
+            guid: guid
+          });
+        });
+
+        loaded++;
+        if (loaded === _newsSources.length) {
+          // Sorter alle etter dato — nyeste øverst
+          _newsItems.sort(function(a, b) { return b.date - a.date; });
+          renderNews();
+          var statusEl = document.getElementById('news-status');
+          if (statusEl) statusEl.textContent = _newsItems.length + ' artikler · Oppdatert ' + new Date().toLocaleTimeString('no-NO', {hour:'2-digit',minute:'2-digit'});
+        }
+      })
+      .catch(function() {
+        loaded++;
+        if (loaded === _newsSources.length) renderNews();
+      });
+  });
+}
+
+function renderNews() {
+  var feed = document.getElementById('news-feed');
+  if (!feed) return;
+
+  // Behold eksisterende items, legg til nye øverst
+  var existingGuids = {};
+  feed.querySelectorAll('.news-item').forEach(function(el) {
+    existingGuids[el.dataset.guid] = true;
+  });
+
+  var fragment = document.createDocumentFragment();
+  var addedAny = false;
+
+  _newsItems.forEach(function(item) {
+    if (existingGuids[item.guid]) return;
+    addedAny = true;
+
+    var cats = item.cats;
+    var primaryCat = cats[0];
+    var catStyle = _catColors[primaryCat] || _catColors.geopolitikk;
+
+    var el = document.createElement('div');
+    el.className = 'news-item' + (_activeFilter !== 'alle' && cats.indexOf(_activeFilter) === -1 ? ' hidden' : '');
+    el.dataset.cats = cats.join(',');
+    el.dataset.guid = item.guid;
+
+    // Beskrivelse — strip HTML og trunkér
+    var tmp = document.createElement('div');
+    tmp.innerHTML = item.desc;
+    var descText = (tmp.textContent || '').trim().replace(/\s+/g,' ').substring(0, 160);
+    if (descText.length === 160) descText += '…';
+
+    // Badge-er for alle kategorier
+    var badges = cats.map(function(cat) {
+      var c = _catColors[cat] || _catColors.geopolitikk;
+      return '<span style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:20px;background:'+c.bg+';color:'+c.color+'">'+c.label+'</span>';
+    }).join('');
+
+    el.innerHTML =
+      '<div style="display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:var(--surface);border:1px solid var(--border);border-left:3px solid '+catStyle.color+';border-radius:var(--radius);box-shadow:var(--shadow);transition:box-shadow .15s" '+
+
+        '>' +
+        '<div style="flex:1;min-width:0">' +
+          '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap">' +
+            badges +
+            '<span style="font-size:9px;color:var(--faint);margin-left:auto;white-space:nowrap">'+item.source+'</span>' +
+          '</div>' +
+          '<a href="'+item.link+'" target="_blank" rel="noopener" style="font-size:12.5px;font-weight:600;color:var(--text);text-decoration:none;line-height:1.4;display:block;margin-bottom:3px" '+
+            '>'+
+            item.title +
+          '</a>' +
+          (descText ? '<div style="font-size:11px;color:var(--muted);line-height:1.5">'+descText+'</div>' : '') +
+        '</div>' +
+        '<div style="flex-shrink:0;text-align:right;min-width:60px">' +
+          '<div style="font-size:10px;font-weight:600;color:var(--navy)">'+item.timeStr+'</div>' +
+          '<div style="font-size:9px;color:var(--faint)">'+item.dateStr+'</div>' +
+        '</div>' +
+      '</div>';
+
+    fragment.appendChild(el);
+  });
+
+  if (addedAny) {
+    if (feed.firstChild && feed.firstChild.textContent && feed.firstChild.textContent.trim().includes('Henter')) {
+      feed.innerHTML = '';
+    }
+    feed.insertBefore(fragment, feed.firstChild);
+  }
+}
+
+// Hent nyheter ved sidelasting og ved aktivering av nyheter-panelet
+document.addEventListener('DOMContentLoaded', function() {
+  fetchAllNews();
+});
+
+// Også hent ved navigasjon til nyhetspanelet
+var _origNav = window.nav;
+window.nav = function(el) {
+  if (_origNav) _origNav(el);
+  if (el && el.dataset && el.dataset.panel === 'nyheter') {
+    if (_newsItems.length === 0) fetchAllNews();
+  }
+};
 
 </script>
 </body>
