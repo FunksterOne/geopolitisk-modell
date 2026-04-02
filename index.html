@@ -689,7 +689,7 @@ input[type=range]::-webkit-slider-thumb {
 </header>
 
 <!-- ── SØKERAD ── -->
-<div style="background:var(--surface);border-bottom:1px solid var(--border);padding:5px 20px;display:flex;align-items:center;gap:6px;flex-shrink:0">
+<div style="background:var(--surface);border-bottom:1px solid var(--border);padding:5px 20px;display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-shrink:0">
   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
   <input type="text" id="search-input" placeholder="Søk i modellen..." oninput="runSearch(this.value)"
     style="font-size:12px;padding:3px 6px;border:1px solid var(--border);border-radius:5px;background:var(--bg);color:var(--text);width:200px;outline:none">
@@ -697,6 +697,15 @@ input[type=range]::-webkit-slider-thumb {
   <button onclick="searchNext()" style="font-size:11px;color:var(--muted);background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;padding:1px 6px;line-height:1.6" title="Neste">↓</button>
   <span id="search-count" style="font-size:10px;color:var(--faint);min-width:55px"></span>
   <button onclick="clearSearch()" style="font-size:10px;color:var(--faint);background:none;border:none;cursor:pointer;padding:0 2px" title="Tøm">✕</button>
+</div>
+
+<!-- ── SØKERESULTATVINDU ── -->
+<div id="search-modal" style="display:none;position:fixed;top:88px;right:20px;width:380px;max-height:70vh;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);z-index:200;display:none;flex-direction:column;overflow:hidden">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--navy);border-radius:var(--radius-lg) var(--radius-lg) 0 0">
+    <span id="search-modal-title" style="font-size:12px;font-weight:600;color:white;letter-spacing:0.04em"></span>
+    <button onclick="closeSearchModal()" style="background:none;border:none;color:rgba(255,255,255,0.7);cursor:pointer;font-size:16px;line-height:1;padding:0 2px">&#x2715;</button>
+  </div>
+  <div id="search-modal-body" style="overflow-y:auto;flex:1;padding:8px 0"></div>
 </div>
 
 <div class="layout">
@@ -4016,48 +4025,124 @@ var _searchMarks = [];
 var _searchIdx   = -1;
 
 function runSearch(q) {
-  _searchMarks.forEach(function(el) {
-    var p = el.parentNode;
-    if (p) p.replaceChild(document.createTextNode(el.textContent), el);
+  // Rydd opp alle mark-elementer
+  document.querySelectorAll('mark').forEach(function(m) {
+    var p = m.parentNode;
+    if (!p) return;
+    p.replaceChild(document.createTextNode(m.textContent), m);
+    p.normalize();
   });
   _searchMarks = [];
   _searchIdx   = -1;
   var cnt = document.getElementById('search-count');
+  closeSearchModal();
   if (!q || q.length < 2) { if (cnt) cnt.textContent = ''; return; }
 
-  var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
-  var nodes = [];
-  while (walker.nextNode()) nodes.push(walker.currentNode);
-
-  var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+  var escaped = q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  var re = new RegExp('(' + escaped + ')', 'gi');
   var hits = 0;
-  nodes.forEach(function(node) {
-    if (!node.nodeValue.match(re)) return;
-    var frag = document.createDocumentFragment();
-    node.nodeValue.split(re).forEach(function(part, i) {
-      if (i % 2 === 1) {
-        var mark = document.createElement('mark');
-        mark.style.cssText = 'background:#FEF08A;color:#000;border-radius:2px;padding:0 1px';
-        mark.textContent = part;
-        frag.appendChild(mark);
-        _searchMarks.push(mark);
-        hits++;
-      } else {
-        frag.appendChild(document.createTextNode(part));
-      }
+  var results = []; // {panelId, panelTitle, excerpt, markIdx}
+
+  var panelNames = {
+    'panel-oversikt':'Oversikt','panel-analytikere':'Analytikerne',
+    'panel-hormuz':'Hormuz-krisen','panel-kina':'Kinas posisjon',
+    'panel-scenarier':'Scenarier','panel-taleb':'Taleb-rammeverk',
+    'panel-kapital':'Kapitalimplikasjoner','panel-makro':'Makrodata',
+    'panel-analyse':'Analysedokument','panel-nyheter':'Nyheter',
+    'panel-status':'Modellstatus','panel-logg':'Modellens tilblivelse'
+  };
+
+  document.querySelectorAll('.panel').forEach(function(panel) {
+    var walker = document.createTreeWalker(panel, NodeFilter.SHOW_TEXT, null, false);
+    var nodes = [];
+    var node;
+    while ((node = walker.nextNode())) {
+      var tag = node.parentNode && node.parentNode.tagName;
+      if (tag !== 'SCRIPT' && tag !== 'STYLE') nodes.push(node);
+    }
+    nodes.forEach(function(node) {
+      re.lastIndex = 0;
+      if (!re.test(node.nodeValue)) return;
+      re.lastIndex = 0;
+      var parts = node.nodeValue.split(re);
+      if (parts.length <= 1) return;
+      var frag = document.createDocumentFragment();
+      parts.forEach(function(part, i) {
+        if (i % 2 === 1) {
+          var mark = document.createElement('mark');
+          mark.style.cssText = 'background:#FEF08A;color:#000;border-radius:2px;padding:0 1px';
+          mark.textContent = part;
+          frag.appendChild(mark);
+          // Lag excerpt: tekst rundt treffet
+          var before = parts[i-1] ? parts[i-1].slice(-40) : '';
+          var after  = parts[i+1] ? parts[i+1].slice(0,40) : '';
+          results.push({
+            panelId: panel.id,
+            panelTitle: panelNames[panel.id] || panel.id,
+            before: before,
+            match: part,
+            after: after,
+            markRef: mark
+          });
+          _searchMarks.push(mark);
+          hits++;
+        } else if (part) {
+          frag.appendChild(document.createTextNode(part));
+        }
+      });
+      if (node.parentNode) node.parentNode.replaceChild(frag, node);
     });
-    node.parentNode.replaceChild(frag, node);
   });
+
   if (cnt) cnt.textContent = hits ? hits + ' treff' : 'Ingen treff';
-  if (_searchMarks.length > 0) { _searchIdx = 0; searchGoTo(0); }
+  if (hits > 0) {
+    _searchIdx = 0;
+    showSearchModal(q, results);
+  }
 }
 
-function searchGoTo(idx) {
-  if (_searchMarks.length === 0) return;
-  idx = (idx + _searchMarks.length) % _searchMarks.length;
+function showSearchModal(q, results) {
+  var modal = document.getElementById('search-modal');
+  var title = document.getElementById('search-modal-title');
+  var body  = document.getElementById('search-modal-body');
+  if (!modal) return;
+
+  title.textContent = results.length + ' treff på «' + q + '»';
+
+  // Grupper per panel
+  var byPanel = {};
+  var panelOrder = [];
+  results.forEach(function(r, i) {
+    if (!byPanel[r.panelId]) { byPanel[r.panelId] = []; panelOrder.push(r.panelId); }
+    byPanel[r.panelId].push({r: r, i: i});
+  });
+
+  var html = '';
+  panelOrder.forEach(function(pid) {
+    var items = byPanel[pid];
+    html += '<div style="padding:6px 14px 2px;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy-mid)">' + items[0].r.panelTitle + ' (' + items.length + ')</div>';
+    items.forEach(function(item) {
+      var esc = function(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+      html += '<div onclick="searchGoToIdx(' + item.i + ')" style="padding:5px 14px;cursor:pointer;font-size:12px;line-height:1.5;border-bottom:1px solid var(--border);color:var(--muted)" onmouseover="this.style.background=&quot;var(--navy-lt)&quot;" onmouseout="this.style.background=&quot;&quot;">'+
+        '...' + esc(item.r.before) + '<mark style="background:#FEF08A;color:#000;border-radius:2px;padding:0 1px">' + esc(item.r.match) + '</mark>' + esc(item.r.after) + '...' +
+      '</div>';
+    });
+  });
+
+  body.innerHTML = html;
+  modal.style.display = 'flex';
+}
+
+function closeSearchModal() {
+  var modal = document.getElementById('search-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function searchGoToIdx(idx) {
   _searchIdx = idx;
-  _searchMarks.forEach(function(m) { m.style.background = '#FEF08A'; m.style.outline = ''; });
   var target = _searchMarks[idx];
+  if (!target) return;
+  _searchMarks.forEach(function(m) { m.style.background = '#FEF08A'; m.style.outline = ''; });
   target.style.background = '#F59E0B';
   target.style.outline = '2px solid #D97706';
   var panel = target.closest ? target.closest('.panel') : null;
@@ -4066,9 +4151,15 @@ function searchGoTo(idx) {
     var ni  = document.querySelector('[data-panel="' + pid + '"]');
     if (ni && !ni.classList.contains('active')) nav(ni);
   }
-  target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(function() { target.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 80);
   var cnt = document.getElementById('search-count');
   if (cnt) cnt.textContent = (idx + 1) + ' / ' + _searchMarks.length + ' treff';
+}
+
+function searchGoTo(idx) {
+  if (_searchMarks.length === 0) return;
+  idx = (idx + _searchMarks.length) % _searchMarks.length;
+  searchGoToIdx(idx);
 }
 
 function searchNext() { searchGoTo(_searchIdx + 1); }
@@ -4077,6 +4168,7 @@ function searchPrev() { searchGoTo(_searchIdx - 1); }
 function clearSearch() {
   var inp = document.getElementById('search-input');
   if (inp) { inp.value = ''; runSearch(''); }
+  closeSearchModal();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -4097,28 +4189,42 @@ document.addEventListener('DOMContentLoaded', initTruthFeed);
 
 // ── BRENT LIVE PRICE ────────────────────────────────────────────────────────
 // Forsøker tre kilder i rekkefølge: Stooq → Yahoo Finance proxy → statisk fallback
-window._brentLive = null; // settes av fetchBrent()
+window._brentLive = null;
 
 function fetchBrent() {
+  // Kildekjede: Yahoo Finance (v7 — mer CORS-tolerant) → Stooq CSV → statisk
   var sources = [
-    // Kilde 1: Stooq — Brent Crude Continuous (CORS-åpen fra nettleser)
     {
-      url: 'https://stooq.com/q/l/?s=cb.f&f=sd2t2ohlcv&h&e=json',
-      parse: function(data) {
-        var s = data && data.symbols && data.symbols[0];
-        var p = s && parseFloat(s.close || s.open);
-        return (p && p > 50 && p < 500) ? p : null;
-      },
-      rawText: true  // bruk text() + cleanup pga. Stooq mangler volume-verdi i JSON
-    },
-    // Kilde 2: Yahoo Finance via allorigins CORS-proxy
-    {
-      url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/BZ=F?interval=1d&range=1d'),
+      label: 'Yahoo Finance',
+      url: 'https://query1.finance.yahoo.com/v7/finance/quote?symbols=BZ%3DF&fields=regularMarketPrice',
       parse: function(data) {
         try {
-          var r = data && data.chart && data.chart.result && data.chart.result[0];
-          var p = r && r.meta && parseFloat(r.meta.regularMarketPrice);
-          return (p && p > 50 && p < 500) ? p : null;
+          var r = data.quoteResponse && data.quoteResponse.result && data.quoteResponse.result[0];
+          var p = r && parseFloat(r.regularMarketPrice);
+          return (p && p > 40 && p < 500) ? p : null;
+        } catch(e) { return null; }
+      }
+    },
+    {
+      label: 'Yahoo v8',
+      url: 'https://query2.finance.yahoo.com/v8/finance/chart/BZ%3DF?interval=1d&range=1d',
+      parse: function(data) {
+        try {
+          var p = parseFloat(data.chart.result[0].meta.regularMarketPrice);
+          return (p && p > 40 && p < 500) ? p : null;
+        } catch(e) { return null; }
+      }
+    },
+    {
+      label: 'Stooq CSV',
+      url: 'https://stooq.com/q/d/l/?s=cb.f&i=d',
+      rawText: true,
+      parse: function(text) {
+        try {
+          var lines = text.trim().split('\n');
+          var last = lines[lines.length - 1].split(',');
+          var p = parseFloat(last[4]); // Close price
+          return (p && p > 40 && p < 500) ? p : null;
         } catch(e) { return null; }
       }
     }
@@ -4127,13 +4233,7 @@ function fetchBrent() {
   var tried = 0;
   function tryNext() {
     if (tried >= sources.length) {
-      // Alle kilder feilet — vis feilmelding
-      var lbl = document.getElementById('brent-base-lbl');
-      if (lbl) lbl.textContent = 'ikke tilgjengelig';
-      var statEl = document.getElementById('live-brent-stat');
-      if (statEl) statEl.textContent = '— $/fat';
-      var srcEl = document.getElementById('live-brent-src');
-      if (srcEl) srcEl.textContent = 'Kunne ikke hente pris';
+      setBrent(null);
       return;
     }
     var src = sources[tried++];
@@ -4143,34 +4243,34 @@ function fetchBrent() {
         return src.rawText ? r.text() : r.json();
       })
       .then(function(raw) {
-        var data;
-        if (src.rawText) {
-          // Stooq returnerer "volume":} — fiks ved å rense tom verdi
-          var cleaned = raw.replace(/"volume"\s*:\s*}/g, '"volume":0}')
-                           .replace(/"volume"\s*:\s*,/g, '"volume":0,');
-          try { data = JSON.parse(cleaned); } catch(e) { tryNext(); return; }
-        } else {
-          data = raw;
-        }
-        var price = src.parse(data);
-        if (price) { setBrent(price); }
+        var price = src.parse(raw);
+        if (price) { setBrent(price, src.label); }
         else        { tryNext(); }
       })
       .catch(function() { tryNext(); });
   }
 
-  function setBrent(price) {
-    window._brentLive = price;
-    var lbl = document.getElementById('brent-base-lbl');
-    if (lbl) lbl.textContent = '~' + Math.round(price) + ' $';
+  function setBrent(price, label) {
+    var lbl    = document.getElementById('brent-base-lbl');
     var statEl = document.getElementById('live-brent-stat');
+    var srcEl  = document.getElementById('live-brent-src');
+    if (!price) {
+      // Alle kilder feilet — vis statisk siste kjente verdi
+      window._brentLive = 108;
+      if (lbl)    lbl.textContent  = '~108 $ (sist kjent)';
+      if (statEl) statEl.textContent = '~108 $/fat';
+      if (srcEl)  srcEl.textContent  = 'Live-henting utilgjengelig';
+      return;
+    }
+    window._brentLive = price;
+    if (lbl)    lbl.textContent  = '~' + Math.round(price) + ' $';
     if (statEl) statEl.textContent = Math.round(price) + ' $/fat';
-    var srcEl = document.getElementById('live-brent-src');
     if (srcEl) {
       var ts = new Date().toLocaleTimeString('no-NO', {hour:'2-digit', minute:'2-digit'});
-      srcEl.textContent = 'Live · Stooq · ' + ts;
+      srcEl.textContent = 'Live · ' + (label || 'API') + ' · ' + ts;
     }
-    if (document.getElementById('panel-hormuz').classList.contains('active')) {
+    if (document.getElementById('panel-hormuz') &&
+        document.getElementById('panel-hormuz').classList.contains('active')) {
       calcHormuz();
     }
   }
@@ -4180,7 +4280,6 @@ function fetchBrent() {
 
 document.addEventListener('DOMContentLoaded', function() {
   fetchBrent();
-  // Oppdater hvert 5. minutt
   setInterval(fetchBrent, 5 * 60 * 1000);
 });
 
