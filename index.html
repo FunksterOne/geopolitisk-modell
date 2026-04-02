@@ -688,6 +688,8 @@ input[type=range]::-webkit-slider-thumb {
   <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
     <input type="text" id="search-input" placeholder="Søk i modellen..." oninput="runSearch(this.value)"
       style="font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text);width:180px;outline:none">
+    <button onclick="searchPrev()" style="font-size:11px;color:var(--faint);background:none;border:none;cursor:pointer;padding:0 4px;line-height:1" title="Forrige treff">&#8593;</button>
+    <button onclick="searchNext()" style="font-size:11px;color:var(--faint);background:none;border:none;cursor:pointer;padding:0 4px;line-height:1" title="Neste treff">&#8595;</button>
     <div id="search-count" style="font-size:10px;color:var(--faint);white-space:nowrap"></div>
     <button onclick="clearSearch()" style="font-size:10px;color:var(--faint);background:none;border:none;cursor:pointer;padding:0 4px">✕</button>
   </div>
@@ -993,16 +995,16 @@ input[type=range]::-webkit-slider-thumb {
         <div class="slider-group">
           <div class="slider-meta">
             <span class="slider-label">Stengningens varighet</span>
-            <span class="slider-val" id="out-duration" style="font-size:15px">1 kvartal</span>
+            <span class="slider-val" id="out-duration" style="font-size:15px">4 uker</span>
           </div>
-          <input type="range" min="1" max="8" value="1" step="1" id="sl-duration" oninput="updateSliderLabel(this); debouncedCalc()">
+          <input type="range" min="1" max="26" value="4" step="1" id="sl-duration" oninput="updateSliderLabel(this); debouncedCalc()">
           <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--faint);margin-top:3px">
-            <span>1 kv.</span><span>2 kv.</span><span>4 kv.</span><span>6 kv.</span><span>8 kv.</span>
+            <span>1 uke</span><span>4 uker</span><span>8 uker</span><span>16 uker</span><span>26 uker</span>
           </div>
         </div>
         <div class="slider-group" style="margin-bottom:0">
           <div class="slider-meta">
-            <span class="slider-label">Oljeprissjokk (utover dagens ~101 $)</span>
+            <span class="slider-label">Oljeprissjokk (utover Brent <span id="brent-base-lbl">~108 $</span>)</span>
             <span class="slider-val" id="out-oil" style="font-size:15px">+13 $/fat</span>
           </div>
           <input type="range" min="0" max="115" value="13" step="1" id="sl-oil" oninput="updateSliderLabel(this); debouncedCalc()">
@@ -1036,94 +1038,68 @@ input[type=range]::-webkit-slider-thumb {
     </div>
   </div>
 
-  <!-- OLJEPRISVEI OVER TID (SVG linjegraf) -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;align-items:stretch">
-    <div class="card" style="padding-bottom:10px;display:flex;flex-direction:column">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-        <div style="font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)">Oljeprisforløp — Brent ($/fat)</div>
-        <div style="display:flex;gap:10px;align-items:center">
-          <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted)"><svg width="20" height="4"><line x1="0" y1="2" x2="20" y2="2" stroke="#C53030" stroke-width="2"/></svg>Brent</div>
-          <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted)"><svg width="20" height="4"><line x1="0" y1="2" x2="20" y2="2" stroke="#B8B7B0" stroke-width="1.5" stroke-dasharray="4,3"/></svg>Uten konflikt</div>
+  <!-- LIVE BRENT INDIKATOR -->
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+    <div style="width:7px;height:7px;border-radius:50%;background:#C53030;animation:pulse 2s infinite;flex-shrink:0"></div>
+    <span style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#C53030">Live</span>
+    <span style="font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy)">Brent Crude</span>
+    <span style="font-size:13px;font-weight:700;color:var(--text)" id="live-brent-stat">107,78 $/fat</span>
+    <div style="flex:1;height:1px;background:var(--border)"></div>
+    <span style="font-size:9px;color:var(--faint)" id="live-brent-src">Henter...</span>
+  </div>
+
+  <!-- 5 READOUT BOKSER -->
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px">
+    <div id="rb-brent" class="stat-card" style="text-align:center">
+      <div class="stat-label">Brent topp</div>
+      <div class="stat-value" id="cr-brent" style="font-size:20px">~126 $</div>
+    </div>
+    <div id="rb-gdp" class="stat-card" style="text-align:center">
+      <div class="stat-label">BNP-effekt</div>
+      <div class="stat-value" id="cr-gdp" style="font-size:20px;color:var(--red)">−2,9 pp</div>
+    </div>
+    <div id="rb-cpi" class="stat-card" style="text-align:center">
+      <div class="stat-label">KPI-effekt</div>
+      <div class="stat-value" id="cr-cpi" style="font-size:20px;color:var(--amber)">+0,4 pp</div>
+    </div>
+    <div id="rb-duration" class="stat-card" style="text-align:center">
+      <div class="stat-label">Varighet</div>
+      <div class="stat-value" id="cr-duration-out" style="font-size:20px">4 uker</div>
+    </div>
+    <div id="rb-risk" class="stat-card" style="text-align:center">
+      <div class="stat-label">Resesjonsrisiko</div>
+      <div class="stat-value" id="cr-risk" style="font-size:20px;color:var(--red)">Høy</div>
+    </div>
+  </div>
+
+  <!-- OLJEPRISFORLØP — full bredde -->
+  <div class="card" style="padding-bottom:10px;margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div style="font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)">Oljeprisforløp — Brent ($/fat)</div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)">
+          <div style="width:18px;height:2.5px;background:#C53030;border-radius:2px"></div>Brent
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)">
+          <div style="width:18px;height:2px;background:#B8B7B0;border-radius:2px;opacity:.7"></div>Kontrafaktisk
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)">
+          <div style="width:12px;height:8px;background:#BA7517;border-radius:2px;opacity:.2"></div>GS-band
         </div>
       </div>
-      <svg id="hz-linechart" viewBox="0 0 320 180" preserveAspectRatio="none" style="width:100%;flex:1;display:block;overflow:visible;min-height:120px">
-        <defs>
-          <linearGradient id="linefill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#C53030" stop-opacity="0.12"/>
-            <stop offset="100%" stop-color="#C53030" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-        <!-- Gridlines -->
-        <line x1="32" y1="8"   x2="318" y2="8"   stroke="rgba(0,0,0,.05)" stroke-width="1"/>
-        <line x1="32" y1="44"  x2="318" y2="44"  stroke="rgba(0,0,0,.05)" stroke-width="1"/>
-        <line x1="32" y1="80"  x2="318" y2="80"  stroke="rgba(0,0,0,.05)" stroke-width="1"/>
-        <line x1="32" y1="116" x2="318" y2="116" stroke="rgba(0,0,0,.05)" stroke-width="1"/>
-        <line x1="32" y1="152" x2="318" y2="152" stroke="rgba(0,0,0,.1)"  stroke-width="0.5"/>
-        <!-- Y labels -->
-        <text id="yl-top" x="28" y="11"  font-size="8" fill="rgba(0,0,0,.3)" font-family="DM Sans,sans-serif" text-anchor="end">200</text>
-        <text id="yl-2"   x="28" y="47"  font-size="8" fill="rgba(0,0,0,.3)" font-family="DM Sans,sans-serif" text-anchor="end">160</text>
-        <text id="yl-3"   x="28" y="83"  font-size="8" fill="rgba(0,0,0,.3)" font-family="DM Sans,sans-serif" text-anchor="end">120</text>
-        <text id="yl-4"   x="28" y="119"  font-size="8" fill="rgba(0,0,0,.3)" font-family="DM Sans,sans-serif" text-anchor="end">80</text>
-        <!-- GS band -->
-        <rect id="gs-rect" x="32" y="0" width="286" height="0" fill="#BA7517" opacity=".13"/>
-        <!-- Anchor lines -->
-        <line id="anc-prewar" x1="32" y1="0" x2="318" y2="0" stroke="#14532D" stroke-width="1" stroke-dasharray="4,3" opacity=".5"/>
-        <line id="anc-hormuz" x1="32" y1="0" x2="318" y2="0" stroke="#92400E" stroke-width="1" stroke-dasharray="4,3" opacity=".5"/>
-        <line id="anc-2022"   x1="32" y1="0" x2="318" y2="0" stroke="#888780" stroke-width="1" stroke-dasharray="3,5" opacity=".38"/>
-        <text id="anc-prewar-lbl" x="318" y="0" font-size="7.5" fill="#14532D" font-family="DM Sans,sans-serif" text-anchor="end" opacity=".8"></text>
-        <text id="anc-hormuz-lbl" x="318" y="0" font-size="7.5" fill="#92400E" font-family="DM Sans,sans-serif" text-anchor="end" opacity=".8"></text>
-        <text id="anc-2022-lbl"   x="318" y="0" font-size="7.5" fill="#888780" font-family="DM Sans,sans-serif" text-anchor="end" opacity=".7"></text>
-        <!-- Fill area under Brent line -->
-        <path id="hz-fill" fill="url(#linefill)"/>
-        <!-- Counterfactual line -->
-        <polyline id="hz-baseline" fill="none" stroke="#B8B7B0" stroke-width="1.5" stroke-dasharray="4,3"/>
-        <!-- Brent line -->
-        <polyline id="hz-line" fill="none" stroke="#C53030" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-        <!-- Hover dot -->
-        <circle id="hz-dot" cx="-99" cy="-99" r="3.5" fill="#C53030" stroke="white" stroke-width="1.5" opacity="0" pointer-events="none"/>
-        <!-- X labels -->
-        <text id="xl1" x="0" y="168" font-size="8" fill="rgba(0,0,0,.3)" font-family="DM Sans,sans-serif" text-anchor="middle"></text>
-        <text id="xl2" x="0" y="168" font-size="8" fill="rgba(0,0,0,.3)" font-family="DM Sans,sans-serif" text-anchor="middle"></text>
-        <text id="xl3" x="0" y="168" font-size="8" fill="rgba(0,0,0,.3)" font-family="DM Sans,sans-serif" text-anchor="middle"></text>
-        <text id="xl4" x="0" y="168" font-size="8" fill="rgba(0,0,0,.3)" font-family="DM Sans,sans-serif" text-anchor="middle"></text>
-        <text id="xl5" x="0" y="168" font-size="8" fill="rgba(0,0,0,.3)" font-family="DM Sans,sans-serif" text-anchor="middle"></text>
-        <text id="xl6" x="0" y="168" font-size="8" fill="rgba(0,0,0,.3)" font-family="DM Sans,sans-serif" text-anchor="middle"></text>
-        <text id="xl7" x="0" y="168" font-size="8" fill="rgba(0,0,0,.3)" font-family="DM Sans,sans-serif" text-anchor="middle"></text>
-        <text id="xl8" x="0" y="168" font-size="8" fill="rgba(0,0,0,.3)" font-family="DM Sans,sans-serif" text-anchor="middle"></text>
-        <!-- Transparent hover overlay -->
-        <rect id="hz-hover-area" x="32" y="0" width="286" height="152" fill="transparent" style="cursor:crosshair"/>
-        <!-- Tooltip -->
-        <rect id="tt-bg"    x="0" y="0" width="80" height="38" rx="3" fill="white" stroke="rgba(0,0,0,.12)" stroke-width="0.5" opacity="0" pointer-events="none"/>
-        <text id="tt-label" x="0" y="0" font-size="8"  font-weight="600" fill="#6B6B62" font-family="DM Sans,sans-serif" opacity="0" pointer-events="none"/>
-        <text id="tt-value" x="0" y="0" font-size="10" font-weight="600" fill="#C53030" font-family="DM Sans,sans-serif" opacity="0" pointer-events="none"/>
-        <text id="tt-note"  x="0" y="0" font-size="7.5" fill="#A8A89E"  font-family="DM Sans,sans-serif" opacity="0" pointer-events="none"/>
-      </svg>
-      <div style="font-size:9.5px;color:var(--faint);margin-top:4px;line-height:1.5">
-        Stiplet grønn ≈72 $ · brun ≈89 $ (Hormuz) · grå 127 $ (2022-topp) · GS-band: ±14–18 $/fat risikopremi
+    </div>
+    <div style="position:relative">
+      <canvas id="hz-canvas" width="1000" height="220" style="width:100%;height:220px;display:block;border-radius:6px;cursor:crosshair"></canvas>
+      <div id="hz-tooltip" style="position:absolute;display:none;background:white;border:1px solid rgba(0,0,0,.1);border-radius:6px;padding:7px 10px;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.1);min-width:90px">
+        <div id="hz-tt-period" style="font-size:9px;font-weight:600;color:#6B6B62;letter-spacing:.05em;text-transform:uppercase"></div>
+        <div id="hz-tt-price"  style="font-size:15px;font-weight:700;color:#C53030;line-height:1.2"></div>
+        <div id="hz-tt-phase"  style="font-size:9px;color:#A8A89E;margin-top:2px"></div>
       </div>
     </div>
-    <!-- Right column: readout boxes stacked -->
-    <div style="display:flex;flex-direction:column;gap:10px">
-      <div class="readout-box" id="rb-brent">
-        <div class="readout-val" id="cr-brent">~126 $</div>
-        <div class="readout-lbl">Brent topp (beregnet)</div>
-      </div>
-      <div class="readout-box" id="rb-gdp">
-        <div class="readout-val" id="cr-gdp">−2,9 pp</div>
-        <div class="readout-lbl">Global BNP-effekt</div>
-      </div>
-      <div class="readout-box" id="rb-cpi">
-        <div class="readout-val" id="cr-cpi">+0,4 pp</div>
-        <div class="readout-lbl">US KPI-effekt (est.)</div>
-      </div>
-      <div class="readout-box" id="rb-duration">
-        <div class="readout-val" id="cr-duration-out">3–6 mnd.</div>
-        <div class="readout-lbl">Forventet varighet</div>
-      </div>
-      <div class="readout-box" id="rb-risk">
-        <div class="readout-val" id="cr-risk" style="color:var(--red)">Høy</div>
-        <div class="readout-lbl">Resesjonsrisiko</div>
-      </div>
+    <div style="display:flex;gap:16px;margin-top:8px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:4px;font-size:9.5px;color:var(--faint)"><div style="width:14px;height:1px;border-top:1.5px dashed #14532D;opacity:.6"></div>~72 $ (pre-krig)</div>
+      <div style="display:flex;align-items:center;gap:4px;font-size:9.5px;color:var(--faint)"><div style="width:14px;height:1px;border-top:1.5px dashed #92400E;opacity:.6"></div>~89 $ (Hormuz-dag)</div>
+      <div style="display:flex;align-items:center;gap:4px;font-size:9.5px;color:var(--faint)"><div style="width:14px;height:1px;border-top:1.5px dashed #888780;opacity:.5"></div>127 $ (2022-topp)</div>
     </div>
   </div>
 
@@ -3225,14 +3201,6 @@ input[type=range]::-webkit-slider-thumb {
     </div>
   </div>
 
-  <div class="section-label">Tekniske detaljer</div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
-    <div class="stat-card"><div class="stat-label">Filstørrelse</div><div class="stat-value" style="font-size:20px">~188 KB</div><div class="stat-sub">Selvforsynt HTML · ingen rammeverk</div></div>
-    <div class="stat-card"><div class="stat-label">Menyvalg</div><div class="stat-value" style="font-size:20px">10</div><div class="stat-sub">Inkl. denne loggen</div></div>
-    <div class="stat-card"><div class="stat-label">Datakilder</div><div class="stat-value" style="font-size:20px">12+</div><div class="stat-sub">BLS · Fed · ECB · NBS · SMM · LME · m.fl.</div></div>
-    <div class="stat-card"><div class="stat-label">Analysedato</div><div class="stat-value" style="font-size:20px">31/3-26</div><div class="stat-sub">Halvard Nordang — Affectum AS</div></div>
-  </div>
-
   <div class="section-label">Iterative forbedringer underveis</div>
   <div class="card">
     <div class="imp-row">
@@ -3285,12 +3253,12 @@ input[type=range]::-webkit-slider-thumb {
     </div>
   </div>
 
-  <div class="section-label">Tekniske detaljer — oppdatert 1. april 2026</div>
+  <div class="section-label">Tekniske detaljer</div>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
-    <div class="stat-card"><div class="stat-label">Filstørrelse</div><div class="stat-value" style="font-size:20px">~275 KB</div><div class="stat-sub">Selvforsynt HTML · ingen rammeverk</div></div>
-    <div class="stat-card"><div class="stat-label">Menyvalg</div><div class="stat-value" style="font-size:20px">11</div><div class="stat-sub">Inkl. denne loggen</div></div>
-    <div class="stat-card"><div class="stat-label">Prisinstrumenter</div><div class="stat-value" style="font-size:20px">12</div><div class="stat-sub">Stooq.com · daglig oppdatering</div></div>
-    <div class="stat-card"><div class="stat-label">Live URL</div><div class="stat-value" style="font-size:14px;margin-top:4px">GitHub Pages</div><div class="stat-sub">funksterone.github.io/geopolitisk-modell</div></div>
+    <div class="stat-card"><div class="stat-label">Filstørrelse</div><div class="stat-value" style="font-size:20px">~295 KB</div><div class="stat-sub">Selvforsynt HTML · ingen rammeverk</div></div>
+    <div class="stat-card"><div class="stat-label">Menyvalg</div><div class="stat-value" style="font-size:20px">12</div><div class="stat-sub">Inkl. Nyheter og Modellstatus</div></div>
+    <div class="stat-card"><div class="stat-label">Datakilder</div><div class="stat-value" style="font-size:20px">12+</div><div class="stat-sub">BLS · Fed · ECB · NBS · SMM · LME · m.fl.</div></div>
+    <div class="stat-card"><div class="stat-label">Analysedato</div><div class="stat-value" style="font-size:20px">31/3–2/4</div><div class="stat-sub">Halvard Nordang — Affectum AS</div></div>
   </div>
 
   <div class="footnote" style="margin-top:16px">
@@ -3627,8 +3595,8 @@ function updateSliderLabel(slider) {
   const id = slider.id;
   const v = parseInt(slider.value);
   if (id === 'sl-duration') {
-    const q = ['','1 kvartal','2 kvartaler','3 kvartaler','4 kvartaler','5 kvartaler','6 kvartaler','7 kvartaler','8 kvartaler'];
-    document.getElementById('out-duration').textContent = q[v];
+    const wk = v === 1 ? '1 uke' : v + ' uker';
+    document.getElementById('out-duration').textContent = wk;
   } else if (id === 'sl-oil') {
     document.getElementById('out-oil').textContent = v === 0 ? 'Ingen' : '+' + v + ' $/fat';
   } else if (id === 'sl-gdp') {
@@ -3652,181 +3620,247 @@ function calcHormuz() {
   const gdpBase  = parseInt(document.getElementById('sl-gdp').value) / 10;
   const conflict = parseInt(document.getElementById('sl-conflict').value);
 
-  const qLabels = ['','1 kvartal','2 kvartaler','3 kvartaler','4 kvartaler','5 kvartaler','6 kvartaler','7 kvartaler','8 kvartaler'];
+  // qLabels removed — duration now in weeks
   const conflictLabels = ['', 'Begrenset', 'Eskalert', 'Full krig'];
   const conflictMult   = [0, 1.0, 1.5, 2.2];
 
-  // slider labels already updated by updateSliderLabel()
-  // (slider label set by updateSliderLabel)
-  document.getElementById('out-gdp').textContent     = '−' + gdpBase.toFixed(1) + ' pp';
-  // (slider label set by updateSliderLabel)
+  // Update GDP slider label
+  document.getElementById('out-gdp').textContent = '−' + gdpBase.toFixed(1) + ' pp';
 
-  const cm = conflictMult[conflict];
-  const baseOil = 101; // Brent ~101 $/fat per 1. april 2026
+  const cm       = conflictMult[conflict];
+  const baseOil  = window._brentLive || 108; // Brent live — hentes ved oppstart
+  const peakOil  = Math.round(baseOil + oilShock * cm);
+
+  // Derived outputs used in multiple places
+  const gdpCumulative = (gdpBase * cm * dur * 0.72).toFixed(1);
+  const cpiEffect     = (oilShock * cm * 0.028).toFixed(1);
+
+  // Risk score (simple composite — used for cr-risk badge)
+  const score = Math.min(100, Math.round(
+    oilShock * cm * 0.4 + dur * 6 + conflict * 10
+  ));
 
   let riskLbl, riskCol;
   if      (score < 25) { riskLbl = 'Lav';     riskCol = '#14532D'; }
   else if (score < 45) { riskLbl = 'Moderat'; riskCol = '#92400E'; }
-  else if (score < 80) { riskLbl = 'Høy'; riskCol = '#C53030'; }
-  else                 { riskLbl = 'Ekstrem'; riskCol = '#7F1D1D'; }
+  else if (score < 80) { riskLbl = 'Høy';     riskCol = '#C53030'; }
+  else                 { riskLbl = 'Ekstrem';  riskCol = '#7F1D1D'; }
   const cr = document.getElementById('cr-risk');
-  cr.textContent = riskLbl; cr.style.color = riskCol;
+  if (cr) { cr.textContent = riskLbl; cr.style.color = riskCol; }
 
-  // Readout box border colors
+  // ── READOUT BOXES ────────────────────────────────────────────────────────
+  const elBrent = document.getElementById('cr-brent');
+  if (elBrent) {
+    elBrent.textContent = '~' + peakOil + ' $';
+    elBrent.style.color = peakOil > 150 ? 'var(--red)' : peakOil > 125 ? 'var(--amber)' : 'var(--text)';
+  }
+  const elGdp = document.getElementById('cr-gdp');
+  if (elGdp) elGdp.textContent = '−' + (gdpBase * cm).toFixed(1) + ' pp';
+
+  const elCpi = document.getElementById('cr-cpi');
+  if (elCpi) elCpi.textContent = '+' + cpiEffect + ' pp';
+
+  const elDur = document.getElementById('cr-duration-out');
+  if (elDur) {
+    elDur.textContent = dur === 1 ? '1 uke' : dur + ' uker';
+  }
+
   const brentBox = document.getElementById('rb-brent');
-  brentBox.style.borderLeft = peakOil > 130 ? '3px solid var(--red)' : peakOil > 100 ? '3px solid var(--amber)' : '';
+  if (brentBox) brentBox.style.borderLeft = peakOil > 150 ? '3px solid var(--red)' : peakOil > 125 ? '3px solid var(--amber)' : '';
 
-  // ── OIL PRICE CHART ──────────────────────────────────────────────────────
-  // 9 time points: Q0(today) through Q8
-  // baseOil = current Brent ~113 $/fat (31 March 2026, CNBC/ICE)
-  // oilShock = additional shock ON TOP of current 113 $
-
+  // ── OIL PRICE CHART — Canvas 2D ─────────────────────────────────────────
   const nPoints = 9;
-  const prices = [];
+  const prices  = [];
 
-  // Price path: starts at baseOil (113), rises during stengning, decays after
+  // dur is in weeks (1–26); map to array index space (nPoints=9 covers ~32 weeks)
+  const durIdx = Math.round((dur / 26) * (nPoints - 1));
+
   for (let i = 0; i < nPoints; i++) {
     let p;
     if (i === 0) {
-      // Q1-26 (today): already at baseOil (113 $) — Hormuz 27 days in
       p = baseOil;
-    } else if (i <= dur) {
-      // Active stengning: plateau with slight escalation
-      const frac = i / dur;
+    } else if (i <= durIdx) {
+      const frac = i / Math.max(durIdx, 1);
       p = baseOil + oilShock * cm * (0.92 + 0.08 * Math.sin(frac * Math.PI));
     } else {
-      // Normalisering: exponential decay back toward pre-shock level
-      const t = i - dur;
+      const t = i - durIdx;
       const decayRate = conflict === 3 ? 0.16 : conflict === 2 ? 0.21 : 0.27;
-      // Decay toward ~72 $ (pre-conflict Brent) if no further shock
-      const floorOil = 72 + oilShock * cm * 0.12;
+      const floorOil  = 72 + oilShock * cm * 0.12;
       p = floorOil + (peakOil - floorOil) * Math.exp(-decayRate * t);
     }
     prices.push(Math.round(p));
   }
 
-  // Y-axis range: always include baseOil and peakOil with headroom
-  const maxPrice = Math.max(peakOil * 1.06, baseOil + 20, 140);
-  const minPrice = Math.min(60, baseOil * 0.55);
-  const priceRange = maxPrice - minPrice;
+  const canvas = document.getElementById('hz-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const CW  = canvas.width;
+  const CH  = canvas.height;
+  const PAD = { l: 46, r: 16, t: 20, b: 36 };
+  const PW  = CW - PAD.l - PAD.r;
+  const PH  = CH - PAD.t - PAD.b;
 
-  // ── SVG LINE CHART RENDERING ─────────────────────────────────────────────
-  // Minimal SVG: only polyline points updated. No createElement, no innerHTML.
-  const SVG_W = 320, SVG_H = 180;
-  const PAD_L = 32, PAD_R = 2, PAD_T = 8, PAD_B = 28;
-  const plotW = SVG_W - PAD_L - PAD_R;
-  const plotH = SVG_H - PAD_T - PAD_B;
-  const axisY = PAD_T + plotH; // y=112
+  const maxP  = Math.max(peakOil + 18, baseOil + 30, 145);
+  const minP  = Math.min(58, baseOil * 0.52);
+  const range = maxP - minP;
 
-  function sy(price) {
-    return PAD_T + plotH - ((price - minPrice) / priceRange) * plotH;
+  function cy(price) { return PAD.t + PH - ((price - minP) / range) * PH; }
+  function cx(i)     { return PAD.l + (i / (nPoints - 1)) * PW; }
+
+  ctx.clearRect(0, 0, CW, CH);
+
+  // Background
+  ctx.fillStyle = '#FAFAF8';
+  ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(0, 0, CW, CH, 8); else ctx.rect(0, 0, CW, CH);
+  ctx.fill();
+
+  // GS risk band
+  const gsBandTop = cy(baseOil + 16);
+  const gsBandBot = cy(Math.max(minP, baseOil - 4));
+  ctx.fillStyle = 'rgba(186,117,23,0.09)';
+  ctx.fillRect(PAD.l, gsBandTop, PW, gsBandBot - gsBandTop);
+
+  // Gridlines + Y labels
+  const yTicks = 5;
+  ctx.font = '11px "DM Sans", sans-serif';
+  ctx.textAlign = 'right';
+  for (let k = 0; k <= yTicks; k++) {
+    const price = minP + (range / yTicks) * k;
+    const y = cy(price);
+    ctx.strokeStyle = k === 0 ? 'rgba(0,0,0,0.12)' : 'rgba(0,0,0,0.05)';
+    ctx.lineWidth = k === 0 ? 1 : 0.5;
+    ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(PAD.l + PW, y); ctx.stroke();
+    ctx.fillStyle = 'rgba(0,0,0,0.28)';
+    ctx.fillText(Math.round(price), PAD.l - 5, y + 3.5);
   }
-  function sx(i) {
-    return PAD_L + (i / (nPoints - 1)) * plotW;
-  }
-
-  // Update Y-axis labels
-  const yStep2 = priceRange / 3;
-  document.getElementById('yl-top').textContent = Math.round(maxPrice);
-  document.getElementById('yl-2').textContent   = Math.round(minPrice + yStep2 * 2);
-  document.getElementById('yl-3').textContent   = Math.round(minPrice + yStep2);
-  document.getElementById('yl-4').textContent   = Math.round(minPrice);
-
-  // Update X-axis labels
-  const xlabels = ['Q1-26','Q2-26','Q3-26','Q4-26','Q1-27','Q2-27','Q3-27','Q4-27'];
-  ['xl1','xl2','xl3','xl4','xl5','xl6','xl7','xl8'].forEach((id, i) => {
-    const el = document.getElementById(id);
-    if (el) { el.setAttribute('x', sx(i)); el.textContent = xlabels[i]; }
-  });
 
   // Anchor lines
-  function setAnc(lineId, lblId, price, label) {
-    const ln = document.getElementById(lineId);
-    const lb = document.getElementById(lblId);
-    const y  = sy(price);
-    if (ln) { ln.setAttribute('y1', y); ln.setAttribute('y2', y); }
-    if (lb) { lb.setAttribute('y', y - 2); lb.textContent = label; }
+  var anchors = [
+    { price: 72,  color: '#14532D', dash: [5,4], label: '72 $ pre-krig',    alpha: 0.5 },
+    { price: 89,  color: '#92400E', dash: [5,4], label: '89 $ Hormuz-dag',  alpha: 0.5 },
+    { price: 127, color: '#888780', dash: [3,5], label: '127 $ (2022-topp)',  alpha: 0.38 },
+  ];
+  ctx.font = '10px "DM Sans", sans-serif';
+  ctx.textAlign = 'left';
+  anchors.forEach(function(a) {
+    if (a.price < minP || a.price > maxP) return;
+    const y = cy(a.price);
+    ctx.globalAlpha = a.alpha;
+    ctx.strokeStyle = a.color; ctx.lineWidth = 1; ctx.setLineDash(a.dash);
+    ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(PAD.l + PW, y); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = a.color;
+    ctx.fillText(a.label, PAD.l + 4, y - 3);
+    ctx.globalAlpha = 1;
+  });
+
+  // Stengning shading
+  if (durIdx > 0) {
+    const x0 = cx(0), x1 = cx(Math.min(durIdx, nPoints - 1));
+    ctx.fillStyle = 'rgba(197,48,48,0.04)';
+    ctx.fillRect(x0, PAD.t, x1 - x0, PH);
+    if (x1 - x0 > 40) {
+      ctx.font = '10px "DM Sans", sans-serif';
+      ctx.fillStyle = 'rgba(197,48,48,0.45)';
+      ctx.textAlign = 'center';
+      ctx.fillText('Stengt', (x0 + x1) / 2, PAD.t + 13);
+    }
+    ctx.textAlign = 'left';
   }
-  setAnc('anc-prewar', 'anc-prewar-lbl', 72,  '~72 $');
-  setAnc('anc-hormuz', 'anc-hormuz-lbl', 89,  '~89 $');
-  setAnc('anc-2022',   'anc-2022-lbl',   127, '127 $');
 
-  // GS band (current price ± riskpremium)
-  const gsEl = document.getElementById('gs-rect');
-  if (gsEl) {
-    const y1 = sy(baseOil);
-    const y2 = sy(Math.max(minPrice, baseOil - 16));
-    gsEl.setAttribute('y', y1);
-    gsEl.setAttribute('height', Math.max(0, y2 - y1));
+  // Counterfactual line
+  ctx.strokeStyle = 'rgba(184,183,176,0.55)';
+  ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
+  ctx.beginPath();
+  for (var i = 0; i < nPoints; i++) { i === 0 ? ctx.moveTo(cx(i), cy(baseOil)) : ctx.lineTo(cx(i), cy(baseOil)); }
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // Fill under Brent line
+  var grad = ctx.createLinearGradient(0, PAD.t, 0, PAD.t + PH);
+  grad.addColorStop(0, 'rgba(197,48,48,0.14)');
+  grad.addColorStop(1, 'rgba(197,48,48,0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.moveTo(cx(0), cy(prices[0]));
+  for (var i = 1; i < nPoints; i++) ctx.lineTo(cx(i), cy(prices[i]));
+  ctx.lineTo(cx(nPoints - 1), PAD.t + PH);
+  ctx.lineTo(cx(0), PAD.t + PH);
+  ctx.closePath(); ctx.fill();
+
+  // Brent line
+  ctx.strokeStyle = '#C53030'; ctx.lineWidth = 2.5;
+  ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.setLineDash([]);
+  ctx.beginPath();
+  for (var i = 0; i < nPoints; i++) { i === 0 ? ctx.moveTo(cx(i), cy(prices[i])) : ctx.lineTo(cx(i), cy(prices[i])); }
+  ctx.stroke();
+
+  // Data points
+  for (var i = 0; i < nPoints; i++) {
+    var isActive = i > 0 && i <= dur;
+    ctx.beginPath();
+    ctx.arc(cx(i), cy(prices[i]), isActive ? 4 : 3, 0, Math.PI * 2);
+    ctx.fillStyle   = isActive ? '#C53030' : '#E09090';
+    ctx.strokeStyle = 'white'; ctx.lineWidth = 1.5;
+    ctx.fill(); ctx.stroke();
   }
 
-  // Build polyline points
-  const pts = prices.map((p, i) => sx(i) + ',' + sy(p)).join(' ');
-  document.getElementById('hz-line').setAttribute('points', pts);
+  // X-axis labels
+  var xlab = ['Nå','Uke 4','Uke 8','Uke 12','Uke 16','Uke 20','Uke 24','Uke 28','Uke 32'];
+  ctx.font = '10px "DM Sans", sans-serif';
+  ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.textAlign = 'center';
+  for (var i = 0; i < nPoints; i++) {
+    if (i < xlab.length) ctx.fillText(xlab[i], cx(i), PAD.t + PH + 22);
+  }
 
-  // Fill area under line
-  const fillPts = 'M' + sx(0) + ',' + sy(prices[0]) +
-    ' L' + prices.map((p, i) => sx(i) + ',' + sy(p)).join(' L') +
-    ' L' + sx(nPoints-1) + ',' + axisY +
-    ' L' + sx(0) + ',' + axisY + 'Z';
-  document.getElementById('hz-fill').setAttribute('d', fillPts);
+  // Peak callout
+  var peakIdx = prices.indexOf(Math.max.apply(null, prices));
+  if (peakIdx >= 0 && prices[peakIdx] > baseOil + 2) {
+    ctx.font = 'bold 11px "DM Sans", sans-serif';
+    ctx.fillStyle = '#C53030';
+    ctx.textAlign = peakIdx > nPoints / 2 ? 'right' : 'left';
+    ctx.fillText('~' + prices[peakIdx] + ' $', cx(peakIdx) + (peakIdx > nPoints/2 ? -9 : 9), cy(prices[peakIdx]) - 9);
+  }
 
-  // Counterfactual (flat at baseOil)
-  const basePts = prices.map((_, i) => sx(i) + ',' + sy(baseOil)).join(' ');
-  document.getElementById('hz-baseline').setAttribute('points', basePts);
-
-  // ── HOVER TOOLTIP ─────────────────────────────────────────────────────────
-  const hoverArea = document.getElementById('hz-hover-area');
-  if (hoverArea && !hoverArea._bound) {
-    hoverArea._bound = true;
-    const svg = document.getElementById('hz-linechart');
-
-    function getNearest(e) {
-      const r = svg.getBoundingClientRect();
-      const mx = (e.clientX - r.left) / r.width * SVG_W;
-      let best = 0, bestD = Infinity;
-      for (let i = 0; i < nPoints; i++) {
-        const d = Math.abs(sx(i) - mx);
+  // Hover tooltip (bind once, update via stored data)
+  canvas._prices = prices.slice();
+  canvas._dur    = dur;
+  canvas._durIdx = durIdx;
+  if (!canvas._hzBound) {
+    canvas._hzBound = true;
+    var tooltip  = document.getElementById('hz-tooltip');
+    var ttPeriod = document.getElementById('hz-tt-period');
+    var ttPrice  = document.getElementById('hz-tt-price');
+    var ttPhase  = document.getElementById('hz-tt-phase');
+    var xlab2    = ['Nå','Uke 4','Uke 8','Uke 12','Uke 16','Uke 20','Uke 24','Uke 28','Uke 32'];
+    canvas.addEventListener('mousemove', function(e) {
+      var rect = canvas.getBoundingClientRect();
+      var scX = canvas.width / rect.width;
+      var mx  = (e.clientX - rect.left) * scX;
+      var best = 0, bestD = Infinity;
+      var n = canvas._prices ? canvas._prices.length : nPoints;
+      var stepW = PW / (n - 1);
+      for (var i = 0; i < n; i++) {
+        var d = Math.abs(PAD.l + i * stepW - mx);
         if (d < bestD) { bestD = d; best = i; }
       }
-      return best;
-    }
-
-    function showTip(e) {
-      const i = getNearest(e);
-      const price = prices[i];
-      const phase = i < dur ? 'Stengning aktiv' : i < dur+3 ? 'Normalisering' : 'Kontrafaktisk';
-      const cx = sx(i), cy = sy(price);
-
-      document.getElementById('hz-dot').setAttribute('cx', cx);
-      document.getElementById('hz-dot').setAttribute('cy', cy);
-      document.getElementById('hz-dot').setAttribute('opacity', '1');
-
-      const ttW = 80, ttH = 38, ttPad = 8;
-      const ttX = cx + ttPad + ttW > SVG_W - PAD_R ? cx - ttW - ttPad : cx + ttPad;
-      const ttY = Math.max(PAD_T, cy - ttH/2);
-
-      const set = (id, attrs, text) => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k, v));
-        if (text !== undefined) el.textContent = text;
-      };
-      set('tt-bg',    {x:ttX, y:ttY, opacity:'1'});
-      set('tt-label', {x:ttX+6, y:ttY+12, opacity:'1'}, xlabels[i] || '');
-      set('tt-value', {x:ttX+6, y:ttY+26, opacity:'1'}, '~' + price + ' $/fat');
-      set('tt-note',  {x:ttX+6, y:ttY+36, opacity:'1'}, phase);
-    }
-
-    function hideTip() {
-      ['hz-dot','tt-bg','tt-label','tt-value','tt-note'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.setAttribute('opacity','0');
-      });
-    }
-
-    hoverArea.addEventListener('mousemove', showTip);
-    hoverArea.addEventListener('mouseleave', hideTip);
+      if (bestD > stepW * 0.7) { tooltip.style.display = 'none'; return; }
+      var p = canvas._prices ? canvas._prices[best] : 0;
+      var d2 = canvas._durIdx || 1;
+      var phase = best === 0 ? 'Brent i dag' : best <= d2 ? 'Stengning aktiv' : 'Normalisering';
+      if (ttPeriod) ttPeriod.textContent = xlab2[best] || '';
+      if (ttPrice)  ttPrice.textContent  = '~' + p + ' $/fat';
+      if (ttPhase)  ttPhase.textContent  = phase;
+      var relX = e.clientX - rect.left;
+      var relY = e.clientY - rect.top;
+      tooltip.style.left    = (relX > rect.width * 0.6 ? relX - 115 : relX + 14) + 'px';
+      tooltip.style.top     = Math.max(4, relY - 44) + 'px';
+      tooltip.style.display = 'block';
+    });
+    canvas.addEventListener('mouseleave', function() {
+      if (tooltip) tooltip.style.display = 'none';
+    });
   }
 
     // ── REGIONAL EFFECTS ─────────────────────────────────────────────────────
@@ -3892,18 +3926,18 @@ function calcHormuz() {
 
   // ── TALEB CASCADE ────────────────────────────────────────────────────────
   let secTitle, secDetail, terTitle, terDetail, cascadeStatus;
-  if (dur <= 1 && conflict === 1) {
+  if (dur <= 4 && conflict === 1) {
     secTitle = 'Japan og Sør-Korea';
     secDetail = 'Import-avhengige; direkte energisjokk. Produksjon og eksport faller. Yen og won svekkes.';
     terTitle = 'Finansielle markeder';
     terDetail = 'Begrenset påvirkning ved kortvarig stengning. Volatilitet øker, men systemisk risiko lav.';
     cascadeStatus = 'Primærsjokk aktivert. Sekundærsjokk delvis aktivert. Tertiærsjokk ikke aktivert.';
-  } else if (dur <= 3 && conflict < 3) {
+  } else if (dur <= 12 && conflict < 3) {
     secTitle = 'Japan, Sør-Korea, India';
     secDetail = 'Energiimport-avhengige rammes hardt. Valutasvekking, rentestigning. Eksport til Kina og EU faller.';
     terTitle = 'Finansielle kaskader';
     terDetail = 'Vekstmarkedsgjeld under press. Kapitalflukt til dollar og Treasuries. Spreader øker på EM-obligasjoner.';
-    cascadeStatus = 'Primær- og sekundærsjokk aktivert. Tertiærsjokk sannsynlig dersom varighet overstiger 2 kvartaler.';
+    cascadeStatus = 'Primær- og sekundærsjokk aktivert. Tertiærsjokk sannsynlig dersom varighet overstiger 8 uker.';
   } else {
     secTitle = 'Japan, Sør-Korea, India, SE-Asia';
     secDetail = 'Strukturell energikrise i impørkjeder. Produksjonsstans. Massiv valutadepresiering.';
@@ -3923,9 +3957,9 @@ function calcHormuz() {
   const miranTxt = dur > 2 ? 'Mirans plan er ugjennomførbar — alle fem forutsetninger er brutt.' : 'Mirans smale sti er presset, men ikke helt stengt.';
 
   document.getElementById('hz-text').textContent =
-    qLabels[dur] + ' stengning, +' + oilShock + ' $/fat sjokk, konfliktnivå: ' + scenarioName + '. ' +
+    (dur === 1 ? '1 uke' : dur + ' uker') + ' stengning, +' + oilShock + ' $/fat sjokk, konfliktnivå: ' + scenarioName + '. ' +
     'Brent topper på ~' + peakOil + ' $. Dallas Fed-kalibrert BNP-effekt: −' + gdpCumulative + ' pp kumulativt. ' +
-    'Estimert KPI-gjennomslag på +' + cpiEffect + ' pp over 2–4 kvartaler. ' +
+    'Estimert KPI-gjennomslag på +' + cpiEffect + ' pp over 8–16 uker. ' +
     fedTxt + ' ' + miranTxt + ' Fishmans asymmetri: skaden er strukturell uavhengig av varighet.';
 }
 
@@ -3972,27 +4006,23 @@ function initAnalyseProgress() {
   });
 }
 
-// ── LIVE BRENT PRICE (Yahoo Finance BZ=F) ──────────────────────────────────
-// Brent-pris vises via TradingView live widget (se Oversikt-panelet)
-
 document.addEventListener('DOMContentLoaded', initAnalyseProgress);
 
 // ── SØKEFUNKSJON ─────────────────────────────────────────────────────────────
 var _searchMarks = [];
+var _searchIdx   = -1;
+
 function runSearch(q) {
-  // Fjern gamle markeringer
   _searchMarks.forEach(function(el) {
     var p = el.parentNode;
     if (p) p.replaceChild(document.createTextNode(el.textContent), el);
   });
   _searchMarks = [];
+  _searchIdx   = -1;
   var cnt = document.getElementById('search-count');
   if (!q || q.length < 2) { if (cnt) cnt.textContent = ''; return; }
 
-  var walker = document.createTreeWalker(
-    document.getElementById('content') || document.body,
-    NodeFilter.SHOW_TEXT, null, false
-  );
+  var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
   var nodes = [];
   while (walker.nextNode()) nodes.push(walker.currentNode);
 
@@ -4016,11 +4046,36 @@ function runSearch(q) {
     node.parentNode.replaceChild(frag, node);
   });
   if (cnt) cnt.textContent = hits ? hits + ' treff' : 'Ingen treff';
+  if (_searchMarks.length > 0) { _searchIdx = 0; searchGoTo(0); }
 }
+
+function searchGoTo(idx) {
+  if (_searchMarks.length === 0) return;
+  idx = (idx + _searchMarks.length) % _searchMarks.length;
+  _searchIdx = idx;
+  _searchMarks.forEach(function(m) { m.style.background = '#FEF08A'; m.style.outline = ''; });
+  var target = _searchMarks[idx];
+  target.style.background = '#F59E0B';
+  target.style.outline = '2px solid #D97706';
+  var panel = target.closest ? target.closest('.panel') : null;
+  if (panel) {
+    var pid = panel.id.replace('panel-', '');
+    var ni  = document.querySelector('[data-panel="' + pid + '"]');
+    if (ni && !ni.classList.contains('active')) nav(ni);
+  }
+  target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  var cnt = document.getElementById('search-count');
+  if (cnt) cnt.textContent = (idx + 1) + ' / ' + _searchMarks.length + ' treff';
+}
+
+function searchNext() { searchGoTo(_searchIdx + 1); }
+function searchPrev() { searchGoTo(_searchIdx - 1); }
+
 function clearSearch() {
   var inp = document.getElementById('search-input');
   if (inp) { inp.value = ''; runSearch(''); }
 }
+
 document.addEventListener('DOMContentLoaded', function() {
   // Sett dynamisk dato overalt
   var MONTHS = ['januar','februar','mars','april','mai','juni','juli','august','september','oktober','november','desember'];
@@ -4036,6 +4091,95 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 document.addEventListener('DOMContentLoaded', initTruthFeed);
+
+// ── BRENT LIVE PRICE ────────────────────────────────────────────────────────
+// Forsøker tre kilder i rekkefølge: Stooq → Yahoo Finance proxy → statisk fallback
+window._brentLive = null; // settes av fetchBrent()
+
+function fetchBrent() {
+  var sources = [
+    // Kilde 1: Stooq — Brent Crude Continuous (CORS-åpen fra nettleser)
+    {
+      url: 'https://stooq.com/q/l/?s=cb.f&f=sd2t2ohlcv&h&e=json',
+      parse: function(data) {
+        var s = data && data.symbols && data.symbols[0];
+        var p = s && parseFloat(s.close || s.open);
+        return (p && p > 50 && p < 500) ? p : null;
+      },
+      rawText: true  // bruk text() + cleanup pga. Stooq mangler volume-verdi i JSON
+    },
+    // Kilde 2: Yahoo Finance via allorigins CORS-proxy
+    {
+      url: 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/BZ=F?interval=1d&range=1d'),
+      parse: function(data) {
+        try {
+          var r = data && data.chart && data.chart.result && data.chart.result[0];
+          var p = r && r.meta && parseFloat(r.meta.regularMarketPrice);
+          return (p && p > 50 && p < 500) ? p : null;
+        } catch(e) { return null; }
+      }
+    }
+  ];
+
+  var tried = 0;
+  function tryNext() {
+    if (tried >= sources.length) {
+      // Alle kilder feilet — vis feilmelding
+      var lbl = document.getElementById('brent-base-lbl');
+      if (lbl) lbl.textContent = 'ikke tilgjengelig';
+      var statEl = document.getElementById('live-brent-stat');
+      if (statEl) statEl.textContent = '— $/fat';
+      var srcEl = document.getElementById('live-brent-src');
+      if (srcEl) srcEl.textContent = 'Kunne ikke hente pris';
+      return;
+    }
+    var src = sources[tried++];
+    fetch(src.url, { cache: 'no-store' })
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return src.rawText ? r.text() : r.json();
+      })
+      .then(function(raw) {
+        var data;
+        if (src.rawText) {
+          // Stooq returnerer "volume":} — fiks ved å rense tom verdi
+          var cleaned = raw.replace(/"volume"\s*:\s*}/g, '"volume":0}')
+                           .replace(/"volume"\s*:\s*,/g, '"volume":0,');
+          try { data = JSON.parse(cleaned); } catch(e) { tryNext(); return; }
+        } else {
+          data = raw;
+        }
+        var price = src.parse(data);
+        if (price) { setBrent(price); }
+        else        { tryNext(); }
+      })
+      .catch(function() { tryNext(); });
+  }
+
+  function setBrent(price) {
+    window._brentLive = price;
+    var lbl = document.getElementById('brent-base-lbl');
+    if (lbl) lbl.textContent = '~' + Math.round(price) + ' $';
+    var statEl = document.getElementById('live-brent-stat');
+    if (statEl) statEl.textContent = Math.round(price) + ' $/fat';
+    var srcEl = document.getElementById('live-brent-src');
+    if (srcEl) {
+      var ts = new Date().toLocaleTimeString('no-NO', {hour:'2-digit', minute:'2-digit'});
+      srcEl.textContent = 'Live · Stooq · ' + ts;
+    }
+    if (document.getElementById('panel-hormuz').classList.contains('active')) {
+      calcHormuz();
+    }
+  }
+
+  tryNext();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  fetchBrent();
+  // Oppdater hvert 5. minutt
+  setInterval(fetchBrent, 5 * 60 * 1000);
+});
 
 // ── TRUMP TRUTH SOCIAL LIVE FEED ────────────────────────────────────────────
 // Kilde: CNN Truth Archive — oppdateres hvert 5. minutt, CORS-åpent
