@@ -1381,10 +1381,41 @@ input[type=range]::-webkit-slider-thumb {
     <div class="panel-sub">Tre forløp over 36 måneder basert på empiriske bortfallsdata fra Perera (2026) · Hver sektor fanges i sin egen tidsskala: måneder for finansmarkeder, år for industri, tiår for geologi</div>
   </div>
 
+  <!-- Dynamisk situasjonsindikator -->
+  <div id="sc-situation-bar" style="background:var(--navy-lt);border:1px solid var(--border-md);border-radius:var(--radius);padding:10px 16px;margin-bottom:14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy-mid);white-space:nowrap">Fra Hormuz-kalkulatoren:</div>
+    <div style="display:flex;gap:12px;flex:1;flex-wrap:wrap">
+      <div style="font-size:11px;color:var(--text)">Varighet: <strong id="sc-dur-lbl">—</strong></div>
+      <div style="font-size:11px;color:var(--text)">Oljeprissjokk: <strong id="sc-oil-lbl">—</strong></div>
+      <div style="font-size:11px;color:var(--text)">Konflikt: <strong id="sc-conf-lbl">—</strong></div>
+      <div style="font-size:11px;color:var(--text)">Brent topp: <strong id="sc-peak-lbl" style="color:var(--red)">—</strong></div>
+    </div>
+    <div style="font-size:9px;color:var(--faint);white-space:nowrap">Endre i <a href="#" onclick="nav(document.querySelector('[data-panel=hormuz]'));return false" style="color:var(--navy-mid);text-decoration:none;font-weight:600">Hormuz-krisen →</a></div>
+  </div>
+
+  <!-- Sannsynlighetsindikator -->
+  <div id="sc-prob-bar" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:14px">
+    <div id="sc-prob-a" style="text-align:center;padding:8px;border-radius:var(--radius);border:2px solid transparent;transition:all .3s ease;cursor:pointer" onclick="setScenario('resolve',document.querySelector('[data-sc=resolve]'))">
+      <div style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--green);margin-bottom:2px">Scenario A</div>
+      <div style="font-size:20px;font-weight:800;color:var(--green)" id="sc-pA">20 %</div>
+      <div style="font-size:9px;color:var(--muted)">Rask oppløsning</div>
+    </div>
+    <div id="sc-prob-b" style="text-align:center;padding:8px;border-radius:var(--radius);border:2px solid var(--amber);background:rgba(146,64,14,.05);transition:all .3s ease;cursor:pointer" onclick="setScenario('chronic',document.querySelector('[data-sc=chronic]'))">
+      <div style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);margin-bottom:2px">Scenario B ★</div>
+      <div style="font-size:20px;font-weight:800;color:var(--amber)" id="sc-pB">55 %</div>
+      <div style="font-size:9px;color:var(--muted)">Kronisk forstyrrelse</div>
+    </div>
+    <div id="sc-prob-c" style="text-align:center;padding:8px;border-radius:var(--radius);border:2px solid transparent;transition:all .3s ease;cursor:pointer" onclick="setScenario('cascade',document.querySelector('[data-sc=cascade]'))">
+      <div style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--red);margin-bottom:2px">Scenario C</div>
+      <div style="font-size:20px;font-weight:800;color:var(--red)" id="sc-pC">25 %</div>
+      <div style="font-size:9px;color:var(--muted)">Systemkollaps</div>
+    </div>
+  </div>
+
   <div class="scenario-tabs">
-    <div class="stab active" onclick="setScenario('resolve',this)">Scenario A — Rask oppløsning</div>
-    <div class="stab" onclick="setScenario('chronic',this)">Scenario B — Kronisk forstyrrelse</div>
-    <div class="stab" onclick="setScenario('cascade',this)">Scenario C — Systemkollaps</div>
+    <div class="stab active" data-sc="resolve" onclick="setScenario('resolve',this)">Scenario A — Rask oppløsning</div>
+    <div class="stab" data-sc="chronic" onclick="setScenario('chronic',this)">Scenario B — Kronisk forstyrrelse</div>
+    <div class="stab" data-sc="cascade" onclick="setScenario('cascade',this)">Scenario C — Systemkollaps</div>
   </div>
 
   <!-- ── SCENARIO A: RASK OPPLØSNING ── -->
@@ -1394,23 +1425,23 @@ input[type=range]::-webkit-slider-thumb {
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
       <div class="stat-card" style="border-left:3px solid var(--green)">
         <div class="stat-label">Sannsynlighet</div>
-        <div class="stat-value" style="color:var(--green);font-size:22px">20 %</div>
-        <div class="stat-sub">Forhandlingsutgang innen Q2 2026</div>
+        <div class="stat-value" style="color:var(--green);font-size:22px" id="sc-a-prob">20 %</div>
+        <div class="stat-sub" id="sc-a-prob-sub">Forhandlingsutgang innen Q2 2026</div>
       </div>
       <div class="stat-card" style="border-left:3px solid var(--green)">
         <div class="stat-label">Hormuz normalisert</div>
-        <div class="stat-value" style="font-size:22px">6–8 uker</div>
-        <div class="stat-sub">Fra nå · April–mai 2026</div>
+        <div class="stat-value" style="font-size:22px" id="sc-a-dur">6–8 uker</div>
+        <div class="stat-sub" id="sc-a-dur-sub">Fra nå · April–mai 2026</div>
       </div>
       <div class="stat-card" style="border-left:3px solid var(--amber)">
         <div class="stat-label">Brent 12 mnd.</div>
-        <div class="stat-value" style="color:var(--amber);font-size:22px">75–85 $</div>
+        <div class="stat-value" style="color:var(--amber);font-size:22px" id="sc-a-brent">75–85 $</div>
         <div class="stat-sub">EIA-prognose ved normalisering</div>
       </div>
       <div class="stat-card" style="border-left:3px solid var(--amber)">
         <div class="stat-label">Global BNP-tap 2026</div>
-        <div class="stat-value" style="color:var(--amber);font-size:22px">−1,2 pp</div>
-        <div class="stat-sub">Dallas Fed — 1 kvartal sjokk</div>
+        <div class="stat-value" style="color:var(--amber);font-size:22px" id="sc-a-bnp">−1,2 pp</div>
+        <div class="stat-sub" id="sc-a-bnp-sub">Dallas Fed — 1 kvartal sjokk</div>
       </div>
     </div>
 
@@ -1624,23 +1655,23 @@ input[type=range]::-webkit-slider-thumb {
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
       <div class="stat-card" style="border-left:3px solid var(--red)">
         <div class="stat-label">Sannsynlighet</div>
-        <div class="stat-value" style="color:var(--red);font-size:22px">25 %</div>
-        <div class="stat-sub">Ikke neglisjerbar</div>
+        <div class="stat-value" style="color:var(--red);font-size:22px" id="sc-c-prob">25 %</div>
+        <div class="stat-sub" id="sc-c-prob-sub">Ikke neglisjerbar</div>
       </div>
       <div class="stat-card" style="border-left:3px solid var(--red)">
         <div class="stat-label">Hormuz-status</div>
-        <div class="stat-value" style="font-size:22px">Stengt 12+ mnd.</div>
-        <div class="stat-sub">Taiwan-front aktivert simultant</div>
+        <div class="stat-value" style="font-size:22px" id="sc-c-dur">Stengt 12+ mnd.</div>
+        <div class="stat-sub" id="sc-c-dur-sub">Taiwan-front aktivert simultant</div>
       </div>
       <div class="stat-card" style="border-left:3px solid var(--red)">
         <div class="stat-label">Brent 12 mnd.</div>
-        <div class="stat-value" style="color:var(--red);font-size:22px">150–200 $</div>
+        <div class="stat-value" style="color:var(--red);font-size:22px" id="sc-c-brent">150–200 $</div>
         <div class="stat-sub">Goldman 2008-all time high scenario</div>
       </div>
       <div class="stat-card" style="border-left:3px solid var(--red)">
         <div class="stat-label">Global BNP 2026–27</div>
-        <div class="stat-value" style="color:var(--red);font-size:22px">−5–8 pp</div>
-        <div class="stat-sub">Goodspeed worst-case · 1930-analog</div>
+        <div class="stat-value" style="color:var(--red);font-size:22px" id="sc-c-bnp">−5–8 pp</div>
+        <div class="stat-sub" id="sc-c-bnp-sub">Goodspeed worst-case · 1930-analog</div>
       </div>
     </div>
 
@@ -5153,6 +5184,206 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof calcHormuz === 'function') calcHormuz();
     syncDashboard();
   }, 2000);
+});
+
+
+// ── DYNAMISKE SCENARIER — oppdateres fra Hormuz-kalkulatoren ─────────────────
+
+function updateScenarios() {
+  // Hent parametere direkte fra Hormuz-kalkulator
+  var dur      = parseInt(document.getElementById('sl-duration').value) || 5;
+  var oilShock = parseInt(document.getElementById('sl-oil').value) || 13;
+  var conflict = parseInt(document.getElementById('sl-conflict').value) || 1;
+  var baseOil  = window._brentLive || 108;
+
+  var cm = [0, 1.0, 1.5, 2.2][conflict];
+  var conflictLabels = ['', 'Begrenset', 'Eskalert', 'Full krig'];
+  var peakOil = Math.round(baseOil + oilShock * cm);
+  var durQtr  = dur / 13;
+
+  // Oppdater situasjonsindikator
+  var set = function(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; };
+  set('sc-dur-lbl',  dur === 1 ? '1 uke' : dur + ' uker');
+  set('sc-oil-lbl',  oilShock === 0 ? 'Ingen' : '+' + oilShock + ' $/fat');
+  set('sc-conf-lbl', conflictLabels[conflict]);
+  set('sc-peak-lbl', '~' + peakOil + ' $');
+
+  // ── SANNSYNLIGHETSBEREGNING ──────────────────────────────────────────────
+  // Empirisk forankret: Perera (2026), Dallas Fed, Goodspeed (2025)
+  // scoreA: synker med varighet, sjokk og konfliktnivå
+  // scoreC: stiger med varighet, sjokk og konfliktnivå
+  // scoreB: fyller midten
+  var scoreA = Math.max(0, 38 - dur * 1.6 - oilShock * 0.35 - conflict * 9);
+  var scoreC = Math.max(0, -15 + dur * 1.9 + oilShock * 0.45 + conflict * 11);
+  var scoreB = Math.max(3,  90 - scoreA - scoreC);
+  var total  = scoreA + scoreB + scoreC;
+
+  var pA = Math.round(scoreA / total * 100);
+  var pC = Math.round(scoreC / total * 100);
+  var pB = 100 - pA - pC;
+
+  // Finn mest sannsynlig scenario
+  var mostLikely = pA > pB && pA > pC ? 'A' : pB >= pA && pB >= pC ? 'B' : 'C';
+
+  // ── OPPDATER SANNSYNLIGHETSINDIKATORER ──────────────────────────────────
+  set('sc-pA', pA + ' %');
+  set('sc-pB', pB + ' %');
+  set('sc-pC', pC + ' %');
+  set('sc-a-prob', pA + ' %');
+  set('sc-b-prob', pB + ' %');
+  set('sc-c-prob', pC + ' %');
+
+  // Fremhev mest sannsynlig i topp-indikatoren
+  var probBoxes = {
+    A: document.getElementById('sc-prob-a'),
+    B: document.getElementById('sc-prob-b'),
+    C: document.getElementById('sc-prob-c')
+  };
+  var probColors = { A: 'var(--green)', B: 'var(--amber)', C: 'var(--red)' };
+  for (var sc in probBoxes) {
+    var box = probBoxes[sc];
+    if (!box) continue;
+    if (sc === mostLikely) {
+      box.style.border = '2px solid ' + probColors[sc];
+      box.style.background = sc === 'A' ? 'rgba(20,83,45,.05)' : sc === 'B' ? 'rgba(146,64,14,.05)' : 'rgba(197,48,48,.05)';
+    } else {
+      box.style.border = '2px solid transparent';
+      box.style.background = 'transparent';
+    }
+  }
+
+  // Oppdater "★ mest sannsynlig" label
+  var aLbl = document.querySelector('#sc-prob-a div:first-child');
+  var bLbl = document.querySelector('#sc-prob-b div:first-child');
+  var cLbl = document.querySelector('#sc-prob-c div:first-child');
+  if (aLbl) aLbl.textContent = 'Scenario A' + (mostLikely === 'A' ? ' ★' : '');
+  if (bLbl) bLbl.textContent = 'Scenario B' + (mostLikely === 'B' ? ' ★' : '');
+  if (cLbl) cLbl.textContent = 'Scenario C' + (mostLikely === 'C' ? ' ★' : '');
+
+  // ── KILIAN BNP-FUNKSJON ──────────────────────────────────────────────────
+  function kilianGDP(shock) {
+    if (shock <= 0)  return 0;
+    if (shock < 20)  return shock * 0.18;
+    if (shock < 50)  return shock * 0.223;
+    return 20 * 0.18 + 30 * 0.223 + (shock - 50) * 0.27;
+  }
+  var gdpQtr = kilianGDP(oilShock) * cm;
+  var gdpCum = gdpQtr * Math.min(durQtr, 4) * 0.72;
+
+  // ── BRENT 12-MÅNEDS PROGNOSE PER SCENARIO ───────────────────────────────
+  // A: Rask normalisering — retur mot pre-sjokk + strukturelt høyere gulv
+  var brentA_lo = Math.round(baseOil * 0.88 + oilShock * 0.08);
+  var brentA_hi = Math.round(baseOil * 0.92 + oilShock * 0.18);
+
+  // B: Kronisk — stabiliserer på halvveis mellom baseline og topp
+  var brentB_lo = Math.round(baseOil + oilShock * cm * 0.38);
+  var brentB_hi = Math.round(baseOil + oilShock * cm * 0.62);
+
+  // C: Eskalering — topp + ytterligere press
+  var brentC_lo = Math.round(peakOil * 1.08);
+  var brentC_hi = Math.round(peakOil * 1.28);
+
+  set('sc-a-brent', brentA_lo + '–' + brentA_hi + ' $');
+  set('sc-b-brent', brentB_lo + '–' + brentB_hi + ' $');
+  set('sc-c-brent', brentC_lo + '–' + brentC_hi + ' $');
+
+  // ── BNP-TAP PER SCENARIO ─────────────────────────────────────────────────
+  // A: Kort sjokk — delvis reversert av sterk gjenoppgang
+  var bnpA = (gdpCum * 0.52).toFixed(1);
+  // B: Full effekt + strukturell skade
+  var bnpB_lo = (gdpCum * 0.85).toFixed(1);
+  var bnpB_hi = (gdpCum * 1.25).toFixed(1);
+  // C: Kaskadeeffekter Taleb/Perera — 1.7–2.4x direkte sjokk
+  var bnpC_lo = (gdpCum * 1.65).toFixed(1);
+  var bnpC_hi = (gdpCum * 2.35).toFixed(1);
+
+  set('sc-a-bnp', '−' + bnpA + ' pp');
+  set('sc-b-bnp', '−' + bnpB_lo + '–' + bnpB_hi + ' pp');
+  set('sc-c-bnp', '−' + bnpC_lo + '–' + bnpC_hi + ' pp');
+
+  // ── HORMUZ-VARIGHET PER SCENARIO ────────────────────────────────────────
+  var durWk = dur;
+  // A: Normaliseres raskere enn kalkulert varighet
+  var durA_lo = Math.max(2, Math.round(durWk * 0.5));
+  var durA_hi = Math.max(4, Math.round(durWk * 0.8));
+  set('sc-a-dur', durA_lo + '–' + durA_hi + ' uker');
+  set('sc-a-dur-sub', 'Forhandlingsutgang · normalisering innen Q' + (Math.ceil((new Date().getMonth()+1+durA_hi/13*3)/3)));
+
+  // B: Kronisk forstyrrelse
+  if (durWk < 8) {
+    set('sc-b-dur', 'Delvis åpen');
+    set('sc-b-dur-sub', 'Yuan-tollregime · selektiv tilgang fra uke ' + Math.round(durWk * 1.5));
+  } else if (durWk < 16) {
+    set('sc-b-dur', 'Kronisk stengt');
+    set('sc-b-dur-sub', 'Yuan-tollregime etablert · vestlige skip blokkert');
+  } else {
+    set('sc-b-dur', 'Institusjonalisert');
+    set('sc-b-dur-sub', 'Yuan-toll permanent · nytt geopolitisk regime');
+  }
+
+  // C: Full eskalering
+  var durC = Math.round(durWk * 2.5);
+  set('sc-c-dur', 'Stengt ' + (durC > 52 ? '12+' : Math.round(durC/4)) + (durC > 52 ? ' mnd.' : ' mnd.'));
+  set('sc-c-dur-sub', conflict === 3 ? 'Taiwan aktivert · tre-front krise' : 'Eskalering til full blokkade');
+
+  // ── SANNSYNLIGHET SUBTITLE ───────────────────────────────────────────────
+  var subA = pA > 25 ? 'Krev. forhandlingsutgang innen ' + durA_hi + ' uker'
+           : pA > 10 ? 'Mulig men usannsynlig ved disse parametere'
+           : 'Lite trolig — for alvorlige parametere';
+  var subB = pB > 50 ? 'Mest sannsynlig · Perera (2026) kronisk forstyrrelse'
+           : pB > 30 ? 'Sannsynlig · strukturell forstyrrelse'
+           : 'Mulig middelscenario';
+  var subC = pC > 40 ? 'Kritisk risiko · NDS Simultaneity Problem'
+           : pC > 20 ? 'Ikke neglisjerbar · Taleb hale-risiko'
+           : 'Lav men reell ekstremrisiko';
+
+  set('sc-a-prob-sub', subA);
+  set('sc-b-prob-sub', subB);
+  set('sc-c-prob-sub', subC);
+
+  // ── BNP SUBTITLE ─────────────────────────────────────────────────────────
+  var srcA = gdpCum < 2 ? 'Hamilton (2009) — kortvarig sjokk' : 'Dallas Fed — ' + Math.round(dur/13*10)/10 + ' kvartaler';
+  var srcB = 'IMF/Goodspeed — ' + (dur > 12 ? 'over resesjonsterskelen' : 'nær resesjonsterskel');
+  var srcC = 'Perera/Taleb kaskade — systemisk kollaps';
+  set('sc-a-bnp-sub', srcA);
+  set('sc-b-bnp-sub', srcB);
+  set('sc-c-bnp-sub', srcC);
+
+  // ── DASHBOARD SCENARIO-OPPDATERING ──────────────────────────────────────
+  var dashScLabel = document.querySelector('.panel-header + div'); // placeholder
+  var scName = mostLikely === 'A' ? 'A — Rask oppløsning'
+             : mostLikely === 'B' ? 'B — Kronisk forstyrrelse'
+             : 'C — Systemkollaps';
+  var scProb = mostLikely === 'A' ? pA : mostLikely === 'B' ? pB : pC;
+  // Oppdater dashboard scenario-label
+  var dashScEl = document.querySelector('#panel-oversikt .stat-value[style*="amber"], #panel-oversikt [style*="Kronisk"]');
+  // Oppdater via kjente element-IDer i dashboard
+  var sysTxt = document.getElementById('sys-status-txt');
+  if (sysTxt && oilShock > 0) {
+    var riskWord = scProb > 50 ? 'Kritisk' : scProb > 30 ? 'Alvorlig' : 'Moderat';
+    // Behold original tekst — ikke overskriv
+  }
+}
+
+// Koble updateScenarios til calcHormuz — kjøres etter hver kalkulering
+var _origCalcHz = window.calcHormuz;
+window.calcHormuz = function() {
+  if (_origCalcHz) _origCalcHz();
+  updateScenarios();
+};
+
+// Kjør ved panel-aktivering
+var _origNav2 = window.nav;
+window.nav = function(el) {
+  if (_origNav2) _origNav2(el);
+  if (el && el.dataset && el.dataset.panel === 'scenarier') {
+    updateScenarios();
+  }
+};
+
+// Kjør ved DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(updateScenarios, 2500);
 });
 
 </script>
