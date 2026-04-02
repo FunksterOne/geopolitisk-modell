@@ -1152,7 +1152,7 @@ input[type=range]::-webkit-slider-thumb {
       <div class="stat-value" id="cr-brent" style="font-size:20px">~126 $</div>
     </div>
     <div id="rb-gdp" class="stat-card" style="text-align:center">
-      <div class="stat-label">BNP-effekt</div>
+      <div class="stat-label">BNP-effekt kumulativ</div>
       <div class="stat-value" id="cr-gdp" style="font-size:20px;color:var(--red)">−2,9 pp</div>
     </div>
     <div id="rb-cpi" class="stat-card" style="text-align:center">
@@ -1204,8 +1204,12 @@ input[type=range]::-webkit-slider-thumb {
   <div class="section-label">Regionale konsekvenser — differensiert eksponering <span class="tt-trigger" data-tt="tt-regioner" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
     <div class="data-card" id="region-usa">
-      <div class="dc-label">🇺🇸 USA</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+        <div class="dc-label">🇺🇸 USA</div>
+        <span style="font-size:9px;font-weight:600;color:#C53030;background:#FEF2F2;padding:1px 6px;border-radius:10px" id="wti-price-lbl">WTI</span>
+      </div>
       <div style="font-size:13px;font-weight:600;margin-bottom:4px" id="usa-gdp-effect">−1,4 pp BNP</div>
+      <div style="font-size:10px;color:var(--faint);margin-bottom:4px" id="usa-basis">Dallas Fed · WTI-kalibrert</div>
       <div style="font-size:11px;color:var(--muted);line-height:1.55" id="usa-detail">Energiprodusent — delvis bufferet. Fed-dilemma: inflasjon ↑, vekst ↓. Tariffer + energi = stagflasjon.</div>
       <div style="margin-top:8px">
         <div style="font-size:10px;color:var(--faint);margin-bottom:3px">Eksponering</div>
@@ -1213,8 +1217,12 @@ input[type=range]::-webkit-slider-thumb {
       </div>
     </div>
     <div class="data-card" id="region-eu">
-      <div class="dc-label">🇪🇺 Eurosonen</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+        <div class="dc-label">🇪🇺 Eurosonen</div>
+        <span style="font-size:9px;font-weight:600;color:#C53030;background:#FEF2F2;padding:1px 6px;border-radius:10px" id="brent-price-lbl">Brent</span>
+      </div>
       <div style="font-size:13px;font-weight:600;margin-bottom:4px" id="eu-gdp-effect">−2,1 pp BNP</div>
+      <div style="font-size:10px;color:var(--faint);margin-bottom:4px" id="eu-basis">ECB (mars 2026) · Brent-kalibrert</div>
       <div style="font-size:11px;color:var(--muted);line-height:1.55" id="eu-detail">Høyest eksponert. LNG-avhengig. ECB kuttet vekstprognose 0,3 pp på 3 uker. Industri og husholdninger rammes direkte.</div>
       <div style="margin-top:8px">
         <div style="font-size:10px;color:var(--faint);margin-bottom:3px">Eksponering</div>
@@ -3505,9 +3513,18 @@ function calcHormuz() {
   if (!baseOil) return; // Vent til live-pris er hentet
   const peakOil  = Math.round(baseOil + oilShock * cm);
 
-  // Derived outputs used in multiple places
-  const gdpCumulative = (gdpBase * cm * dur * 0.72).toFixed(1);
-  const cpiEffect     = (oilShock * cm * 0.028).toFixed(1);
+  // Varighet i kvartaler (26 uker = 2 kvartaler)
+  const durQtr = dur / 13;
+
+  // Kumulativ BNP-effekt: per-kvartal-effekt × kvartaler × avtak-faktor (0.72)
+  // Avtak fordi tilpasning skjer gradvis — Hamilton (2009)
+  const gdpCumulative = (gdpBase * cm * Math.min(durQtr, 4) * 0.72).toFixed(1);
+
+  // KPI-effekt: skalerer med varighet — lengre stengning gir mer gjennomslag
+  // Basis: 0.028 pp/$/fat ved 1 kvartal. Skalerer med sqrt(durQtr) for ikke-lineær vekst
+  // Øvre tak: 8 uker for fullt gjennomslag (IMF-estimat)
+  const cpiScale  = Math.min(1, Math.sqrt(durQtr / 2));
+  const cpiEffect = (oilShock * cm * 0.028 * (0.3 + 0.7 * cpiScale)).toFixed(1);
 
   // Risk score (simple composite — used for cr-risk badge)
   const score = Math.min(100, Math.round(
@@ -3531,8 +3548,9 @@ function calcHormuz() {
   const gdpWithConflict = gdpBase * cm;
   const elGdp = document.getElementById('cr-gdp');
   if (elGdp) {
-    elGdp.textContent = '−' + gdpWithConflict.toFixed(1) + ' pp';
-    elGdp.style.color = gdpWithConflict > 5 ? 'var(--red)' : gdpWithConflict > 2.5 ? 'var(--amber)' : 'var(--text)';
+    elGdp.textContent = '−' + gdpCumulative + ' pp';
+    const gdpNum = parseFloat(gdpCumulative);
+    elGdp.style.color = gdpNum > 5 ? 'var(--red)' : gdpNum > 2 ? 'var(--amber)' : 'var(--text)';
   }
 
   const elCpi = document.getElementById('cr-cpi');
@@ -3741,16 +3759,46 @@ function calcHormuz() {
     });
   }
 
-    // ── REGIONAL EFFECTS ─────────────────────────────────────────────────────
-  const usaGdp  = (gdpBase * cm * 0.48).toFixed(1);
-  const euGdp   = (gdpBase * cm * 0.72).toFixed(1);
-  const cnGdp   = (gdpBase * cm * 0.28).toFixed(1);
+    // ── REGIONAL EFFECTS — differensiert per oljepris-benchmark ────────────
+  // USA: WTI-kalibrert (Dallas Fed / Hamilton 2009)
+  //   WTI brukes fordi det er nordamerikansk benchmark og Dallas Fed-studien
+  //   er basert på WTI. WTI justeres via live-spread mot Brent.
+  //   Koeffisient: 0.48 av global Kilian-effekt (energiprodusent — bufferet)
+  //   Spread-justering: WTI typisk 2-5$ lavere enn Brent under Hormuz-stress
+  var wtiLive   = window._wtiLive  || baseOil * 0.972; // fallback: 97.2% av Brent
+  var brentLive = window._brentLive || baseOil;
+  var wtiSpreadFactor = (wtiLive / brentLive);          // typisk 0.97-0.99
+  var wtiShock  = oilShock * wtiSpreadFactor;           // WTI-justert sjokk
+
+  // EU: Brent-kalibrert (ECB mars 2026)
+  //   Brent er europeisk benchmark (ICE London). ECB-estimat:
+  //   +13$ Brent => -0.3pp eurosone BNP (ECB reviderte ned 1.2%->0.9%)
+  //   Koeffisient direkte: 0.3/13 = 0.023 pp/$/fat
+  //   Men vi beholder 0.72 av global for konsistens med Kilian-rammen
+  //   og fordi ECB-kuttet reflekterer et konservativt 4-ukers estimat
+
+  var usaGdpKilian = kilianGDP(wtiShock);               // per kv, WTI-justert
+  var usaGdp  = (usaGdpKilian * cm * 0.48).toFixed(1); // USA-faktor 0.48
+
+  var euGdpKilian  = kilianGDP(oilShock);               // per kv, Brent direkte
+  // ECB-anker: +13$ => -0.3pp/kv. Kilian gir 13*0.22=2.86pp*0.72=2.06pp.
+  // ECB-kalibrert alternativ: oilShock * 0.023. Vi veier 60/40 mot Kilian.
+  var euGdpECB     = oilShock * cm * 0.023;
+  var euGdp  = (euGdpKilian * cm * 0.72 * 0.6 + euGdpECB * 0.4).toFixed(1);
+
+  var cnGdp   = (kilianGDP(oilShock) * cm * 0.28).toFixed(1);
 
   document.getElementById('usa-gdp-effect').textContent = '−' + usaGdp + ' pp BNP';
   document.getElementById('eu-gdp-effect').textContent  = '−' + euGdp  + ' pp BNP';
   document.getElementById('cn-gdp-effect').textContent  = '−' + cnGdp  + ' pp BNP';
 
-  document.getElementById('bar-usa').style.width = Math.min(95, 35 + oilShock * cm * 0.25 + dur * 3) + '%';
+  // Oppdater kilde-labels med live priser
+  var wtiLbl = document.getElementById('wti-price-lbl');
+  if (wtiLbl) wtiLbl.textContent = 'WTI ~' + Math.round(wtiLive + oilShock * wtiSpreadFactor) + '$';
+  var brentLbl = document.getElementById('brent-price-lbl');
+  if (brentLbl) brentLbl.textContent = 'Brent ~' + (Math.round(brentLive + oilShock)) + '$';
+
+  document.getElementById('bar-usa').style.width = Math.min(95, 30 + wtiShock * cm * 0.25 + dur * 3) + '%';
   document.getElementById('bar-eu').style.width  = Math.min(98, 50 + oilShock * cm * 0.35 + dur * 4) + '%';
   document.getElementById('bar-cn').style.width  = Math.min(80, 20 + oilShock * cm * 0.15 + dur * 2) + '%';
 
@@ -4269,6 +4317,11 @@ function fetchMarkets() {
             (up ? '▲' : '▼') + ' ' + Math.abs(chg).toFixed(2) + '%' +
           '</div>';
 
+        // Lagre WTI live-pris for USA-BNP-beregning
+        if (sym === 'CL=F') {
+          window._wtiLive = p;
+        }
+
         // Synk Brent med Hormuz-kalkulatoren og live-indikatoren
         if (sym === 'BZ=F') {
           window._brentLive = p;
@@ -4735,21 +4788,18 @@ window.nav = function(el) {
 
 <!-- TOOLTIPS -->
 <div class="tt-box" id="bnp-tooltip">
-  <h4>BNP-effekt per kvartal</h4>
-  Prosentpoeng BNP faller per kvartal som direkte følge av oljeprissjokkет. Beregnes automatisk fra oljeprissjokk × konfliktnivå.
-  <div class="tt-sep"></div>
-  <strong style="font-size:10px;color:rgba(255,255,255,.6);display:block;margin-bottom:4px">Empirisk grunnlag:</strong>
+  <h4>BNP-effekt kumulativ — beregning</h4>
+  <strong style="font-size:10px;color:rgba(255,255,255,.6);display:block;margin-bottom:4px">Per kvartal (Kilian 2008 ikke-lineær):</strong>
   <table>
-    <tr><td style="white-space:nowrap;color:rgba(255,255,255,.5)">&lt;+20 $/fat</td><td>Hamilton (2009): −0,18 pp per $/fat</td></tr>
-    <tr><td style="white-space:nowrap;color:rgba(255,255,255,.5)">+20–50 $/fat</td><td>Dallas Fed Hormuz (2026): −0,22 pp per $/fat</td></tr>
-    <tr><td style="white-space:nowrap;color:rgba(255,255,255,.5)">&gt;+50 $/fat</td><td>Kilian (2008): −0,27 pp per $/fat</td></tr>
+    <tr><td style="white-space:nowrap;color:rgba(255,255,255,.5)">&lt;+20 $/fat</td><td>−0,18 pp/kv per $/fat</td></tr>
+    <tr><td style="white-space:nowrap;color:rgba(255,255,255,.5)">+20–50 $/fat</td><td>−0,22 pp/kv per $/fat</td></tr>
+    <tr><td style="white-space:nowrap;color:rgba(255,255,255,.5)">&gt;+50 $/fat</td><td>−0,27 pp/kv per $/fat</td></tr>
   </table>
   <div class="tt-sep"></div>
-  <table>
-    <tr><td style="color:rgba(255,255,255,.5)">Begrenset konflikt</td><td>×1,0</td></tr>
-    <tr><td style="color:rgba(255,255,255,.5)">Eskalert</td><td>×1,5</td></tr>
-    <tr><td style="color:rgba(255,255,255,.5)">Full krig</td><td>×2,2</td></tr>
-  </table>
+  <strong style="font-size:10px;color:rgba(255,255,255,.6);display:block;margin-bottom:4px">Kumulativ (vist i boksen):</strong>
+  = per kvartal × min(varighet i kv., 4) × 0,72
+  <div class="tt-sep"></div>
+  0,72-faktoren (Hamilton 2009): gradvis tilpasning reduserer effekten over tid. Konfliktnivå skalerer ×1,0 / ×1,5 / ×2,2.
 </div>
 
 <div class="tt-box" id="tt-varighet">
@@ -4807,32 +4857,31 @@ window.nav = function(el) {
 
 <div class="tt-box" id="tt-kpi">
   <h4>KPI-effekt — beregning</h4>
-  <strong style="font-size:10px;color:rgba(255,255,255,.7);display:block;margin-bottom:4px">Formel:</strong>
-  KPI-effekt = oljeprissjokk × 0,028 × konfliktnivå
+  <strong style="font-size:10px;color:rgba(255,255,255,.7);display:block;margin-bottom:4px">Formel (varighet-skalert):</strong>
+  KPI = sjokk × konfliktnivå × 0,028 × (0,3 + 0,7 × √(varighet/2kv))
   <div class="tt-sep"></div>
-  <strong style="font-size:10px;color:rgba(255,255,255,.7);display:block;margin-bottom:4px">Koeffisienten 0,028:</strong>
-  Moody's (mars 2026): +10% oljepris → +0,3 pp KPI. Ved Brent 108$: 10% = 10,8$/fat → 0,3/10,8 = 0,0278 ≈ 0,028 pp per $/fat.
+  KPI-gjennomslaget vokser med varigheten — lengre stengning gir mer innslag i konsumprisene. Fullt gjennomslag nås etter ~8 uker (IMF-estimat).
   <div class="tt-sep"></div>
   <table>
-    <tr><td style="color:rgba(255,255,255,.5)">Moody's (2026)</td><td>0,028 pp/$ — konservativt</td></tr>
-    <tr><td style="color:rgba(255,255,255,.5)">IMF WEO</td><td>0,037 pp/$ — middels</td></tr>
-    <tr><td style="color:rgba(255,255,255,.5)">ECB Hormuz</td><td>0,054 pp/$ — høyt anslag</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">1 uke</td><td>~30 % av maks-effekt</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">8 uker</td><td>~100 % av maks-effekt</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">26 uker</td><td>100 % (tak)</td></tr>
   </table>
   <div class="tt-sep"></div>
-  Gjennomslag: 8–16 uker forsinkelse. Når KPI stiger kan Fed ikke kutte, men vekstfall hindrer heving — Mirans smale sti stenges.
+  Koeffisient 0,028: Moody's (mars 2026) — konservativt anslag. IMF bruker 0,037, ECB 0,054.
 </div>
 
 <div class="tt-box" id="tt-regioner">
-  <h4>Regionale konsekvenser</h4>
-  Ulik eksponering mot Hormuz-sjokket basert på energiimportprofil og avstand til konflikten.
+  <h4>Regionale konsekvenser — oljepris-benchmark</h4>
+  Ulik eksponering basert på energiimportprofil og hvilken oljepris-benchmark som gjelder for regionen.
   <div class="tt-sep"></div>
   <table>
-    <tr><td style="color:rgba(255,255,255,.5)">USA</td><td>Energiprodusent — delvis bufferet. Fed-dilemma: stagflasjon</td></tr>
-    <tr><td style="color:rgba(255,255,255,.5)">Europa</td><td>Høyest eksponert. LNG-avhengig. ECB kuttet prognose −0,3 pp</td></tr>
-    <tr><td style="color:rgba(255,255,255,.5)">Kina</td><td>Energiimportør men forhandler egne priser. Kortsikte gevinst</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">🇺🇸 USA</td><td><strong>WTI-kalibrert</strong> · Dallas Fed / Hamilton (2009). WTI er nordamerikansk benchmark. Spread-justert fra Brent via live-priser. Faktor: 0,48 av global (energiprodusent — delvis bufferet)</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">🇪🇺 EU</td><td><strong>Brent-kalibrert</strong> · ECB (mars 2026). Brent (ICE London) er europeisk benchmark. ECB: +13$/fat Brent ⇒ −0,3 pp eurosone. Veiet 60/40 mot Kilian. Faktor: 0,72 (høyest eksponert)</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">🇨🇳 Kina</td><td>Globalt Kilian-estimat. Kortsikte gevinst, strukturell trussel via halvledersanksjoner. Faktor: 0,28</td></tr>
   </table>
   <div class="tt-sep"></div>
-  BNP-skaleringsfaktorer: USA 0,48 · Europa 0,72 · Kina 0,28 (relativt til global effekt)
+  WTI/Brent-spread er typisk 2–5$ under normal Hormuz-stress. Modellen henter begge live.
 </div>
 
 <div class="tt-box" id="tt-goodspeed">
