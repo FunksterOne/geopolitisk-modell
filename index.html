@@ -2612,6 +2612,8 @@ function applyTSHM() {
   if (slOil) { slOil.value = oil;      updateSliderLabel(slOil); }
   if (slCon) { slCon.value = conflict; updateSliderLabel(slCon); }
   if (typeof debouncedCalc === 'function') debouncedCalc();
+  // Vis overlay eksplisitt ved TSHM-synk
+  if (typeof ccoShow === 'function') ccoShow();
 
   // ── STATUSBOKS ─────────────────────────────────────────────────
   var konlNavn = ['','Begrenset','Eskalert','Full krig'];
@@ -5196,6 +5198,19 @@ window.nav = function(el) {
 .popup-tab.tab-green.active { color:var(--green);border-bottom-color:var(--green); }
 .popup-tab.tab-amber.active { color:var(--amber);border-bottom-color:var(--amber); }
 .popup-body { overflow-y:auto;flex:1;padding:20px 24px; }
+.calc-chart-overlay {
+  display:none;
+  position:fixed;
+  z-index:500;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  box-shadow:0 8px 32px rgba(0,0,0,.18);
+  overflow:hidden;
+  pointer-events:none;
+  animation:popup-fade-in .15s ease;
+}
+.calc-chart-overlay.visible { display:flex; flex-direction:column; }
 .popup-panel { display:none;animation:popup-fade-in .18s ease; }
 .popup-panel.active { display:block; }
 .popup-info-box {
@@ -7630,6 +7645,301 @@ function gTab(tab) {
   var body = document.getElementById('guide-body');
   if (body) body.scrollTop = 0;
 }
+
+
+// ── KALKULATOR OLJEPRISGRAF OVERLAY ─────────────────────────────────────────
+var _ccoTimer = null;
+var _ccoHideTimer = null;
+
+function ccoPosition() {
+  // Finn Trumpometer-kortets posisjon og sett overlay akkurat over
+  var trumpCard = document.getElementById('dash-trump-gauge');
+  if (!trumpCard) return null;
+  var card = trumpCard.closest('[style*="flex-direction:column"]');
+  if (!card) return null;
+  return card.getBoundingClientRect();
+}
+
+function ccoShow() {
+  var overlay = document.getElementById('calc-chart-overlay');
+  if (!overlay) return;
+  var r = ccoPosition();
+  if (!r) return;
+  overlay.style.left   = Math.round(r.left)   + 'px';
+  overlay.style.top    = Math.round(r.top)     + 'px';
+  overlay.style.width  = Math.round(r.width)   + 'px';
+  overlay.style.height = Math.round(r.height)  + 'px';
+  overlay.classList.add('visible');
+  if (_ccoHideTimer) { clearTimeout(_ccoHideTimer); _ccoHideTimer = null; }
+}
+
+function ccoHide() {
+  _ccoHideTimer = setTimeout(function() {
+    var overlay = document.getElementById('calc-chart-overlay');
+    if (overlay) overlay.classList.remove('visible');
+    _ccoHideTimer = null;
+  }, 1800);
+}
+
+function ccoDraw() {
+  var dur      = parseInt((document.getElementById('sl-duration') || {}).value) || 4;
+  var oilShock = parseInt((document.getElementById('sl-oil')      || {}).value) || 13;
+  var conflict = parseInt((document.getElementById('sl-conflict') || {}).value) || 1;
+  var baseOil  = window._brentLive || 109;
+  var cm       = [0, 1.0, 1.5, 2.2][conflict];
+  var conflictLabels = ['','Begrenset','Eskalert','Full krig'];
+
+  function kilianGDP(shock) {
+    if (shock <= 0) return 0;
+    if (shock <= 50) return shock * 0.223;
+    return 50 * 0.223 + (shock - 50) * 0.27;
+  }
+  function hamiltonAvtak(dq) {
+    if (dq <= 2) return 1.0;
+    if (dq <= 4) return 1.0 - 0.14 * (dq - 2);
+    return 0.72;
+  }
+
+  var peakOil  = Math.round(baseOil + oilShock * cm);
+  var durQtr   = dur / 13;
+  var gdpBase  = kilianGDP(oilShock) * cm;
+  var gdpKum   = (gdpBase * Math.min(durQtr, 4) * hamiltonAvtak(Math.min(durQtr, 4))).toFixed(1);
+  var cpiScale = Math.min(1, Math.sqrt(durQtr / 2));
+  var kpi      = (oilShock * cm * 0.028 * (0.3 + 0.7 * cpiScale)).toFixed(1);
+  var score    = Math.min(100, Math.round(oilShock * cm * 0.4 + dur * 6 + conflict * 10));
+  var riskLbl  = score < 25 ? 'Lav' : score < 45 ? 'Moderat' : score < 80 ? 'Høy' : 'Ekstrem';
+  var riskCol  = score < 25 ? '#14532D' : score < 45 ? '#92400E' : score < 80 ? '#C53030' : '#7F1D1D';
+
+  // Oppdater nedre KPI-rad
+  var s = function(id, v, c) {
+    var el = document.getElementById(id);
+    if (el) { el.textContent = v; if (c) el.style.color = c; }
+  };
+  s('cco-brent', '~' + peakOil + ' $');
+  s('cco-gdp',   '−' + gdpKum + ' pp');
+  s('cco-kpi',   '+' + kpi + ' pp');
+  s('cco-risk',  riskLbl, riskCol);
+  s('cco-params', dur + ' uker · +' + oilShock + '$ · ' + conflictLabels[conflict]);
+  s('cco-peak',   'Topp ~' + peakOil + ' $');
+
+  // Bygg prisdata
+  var nPoints = 9;
+  var prices  = [];
+  var durIdx  = Math.round((dur / 26) * (nPoints - 1));
+  for (var i = 0; i < nPoints; i++) {
+    var p;
+    if (i === 0) {
+      p = baseOil;
+    } else if (i <= durIdx) {
+      var frac = i / Math.max(durIdx, 1);
+      p = baseOil + oilShock * cm * (0.92 + 0.08 * Math.sin(frac * Math.PI));
+    } else {
+      var t = i - durIdx;
+      var decayRate = conflict === 3 ? 0.16 : conflict === 2 ? 0.21 : 0.27;
+      var floorOil  = 72 + oilShock * cm * 0.12;
+      p = floorOil + (peakOil - floorOil) * Math.exp(-decayRate * t);
+    }
+    prices.push(Math.round(p));
+  }
+
+  // Tegn canvas
+  var canvas = document.getElementById('cco-canvas');
+  if (!canvas) return;
+  var container = canvas.parentElement;
+  var CW = container.clientWidth;
+  var CH = container.clientHeight;
+  if (CW < 10 || CH < 10) return;
+  canvas.width  = CW;
+  canvas.height = CH;
+  var ctx = canvas.getContext('2d');
+  var PAD = { l: 44, r: 14, t: 18, b: 32 };
+  var PW  = CW - PAD.l - PAD.r;
+  var PH  = CH - PAD.t - PAD.b;
+
+  var maxP  = Math.max(peakOil + 16, baseOil + 28, 140);
+  var minP  = Math.min(58, baseOil * 0.52);
+  var range = maxP - minP;
+
+  function cy(price) { return PAD.t + PH - ((price - minP) / range) * PH; }
+  function cx(i)     { return PAD.l + (i / (nPoints - 1)) * PW; }
+
+  ctx.clearRect(0, 0, CW, CH);
+  ctx.fillStyle = '#FAFAF8';
+  ctx.fillRect(0, 0, CW, CH);
+
+  // Goodspeed-band
+  ctx.fillStyle = 'rgba(186,117,23,0.08)';
+  ctx.fillRect(PAD.l, cy(baseOil + 16), PW, cy(Math.max(minP, baseOil - 4)) - cy(baseOil + 16));
+
+  // Gridlines + Y-labels
+  ctx.font = '10px "DM Sans", sans-serif';
+  ctx.textAlign = 'right';
+  var yTicks = 4;
+  for (var k = 0; k <= yTicks; k++) {
+    var price = minP + (range / yTicks) * k;
+    var y = cy(price);
+    ctx.strokeStyle = k === 0 ? 'rgba(0,0,0,.12)' : 'rgba(0,0,0,.05)';
+    ctx.lineWidth = k === 0 ? 1 : 0.5;
+    ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(PAD.l + PW, y); ctx.stroke();
+    ctx.fillStyle = 'rgba(0,0,0,.28)';
+    ctx.fillText(Math.round(price), PAD.l - 4, y + 3.5);
+  }
+
+  // Referanselinjer
+  var anchors = [
+    { price: 72,  color: '#14532D', dash: [4,4], label: '72 $ pre-krig', alpha: .45 },
+    { price: 89,  color: '#92400E', dash: [4,4], label: '89 $ Hormuz-dag', alpha: .45 },
+  ];
+  ctx.font = '9px "DM Sans", sans-serif';
+  ctx.textAlign = 'left';
+  anchors.forEach(function(a) {
+    if (a.price < minP || a.price > maxP) return;
+    var y = cy(a.price);
+    ctx.globalAlpha = a.alpha;
+    ctx.strokeStyle = a.color; ctx.lineWidth = 1; ctx.setLineDash(a.dash);
+    ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(PAD.l + PW, y); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = a.color;
+    ctx.fillText(a.label, PAD.l + 3, y - 3);
+    ctx.globalAlpha = 1;
+  });
+
+  // Stengnings-shading
+  if (durIdx > 0) {
+    var x0 = cx(0), x1 = cx(Math.min(durIdx, nPoints - 1));
+    ctx.fillStyle = 'rgba(197,48,48,.04)';
+    ctx.fillRect(x0, PAD.t, x1 - x0, PH);
+    if (x1 - x0 > 35) {
+      ctx.font = '9px "DM Sans", sans-serif';
+      ctx.fillStyle = 'rgba(197,48,48,.4)';
+      ctx.textAlign = 'center';
+      ctx.fillText('Stengt', (x0 + x1) / 2, PAD.t + 11);
+      ctx.textAlign = 'left';
+    }
+  }
+
+  // Counterfactual
+  ctx.strokeStyle = 'rgba(180,180,174,.6)';
+  ctx.lineWidth = 1.5; ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  for (var i = 0; i < nPoints; i++) { i === 0 ? ctx.moveTo(cx(i), cy(baseOil)) : ctx.lineTo(cx(i), cy(baseOil)); }
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // Fill under Brent
+  var grad = ctx.createLinearGradient(0, PAD.t, 0, PAD.t + PH);
+  grad.addColorStop(0, 'rgba(197,48,48,.13)');
+  grad.addColorStop(1, 'rgba(197,48,48,0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.moveTo(cx(0), cy(prices[0]));
+  for (var i = 1; i < nPoints; i++) ctx.lineTo(cx(i), cy(prices[i]));
+  ctx.lineTo(cx(nPoints - 1), PAD.t + PH);
+  ctx.lineTo(cx(0), PAD.t + PH);
+  ctx.closePath(); ctx.fill();
+
+  // Brent-linje
+  ctx.strokeStyle = '#C53030'; ctx.lineWidth = 2.5;
+  ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  ctx.beginPath();
+  for (var i = 0; i < nPoints; i++) { i === 0 ? ctx.moveTo(cx(i), cy(prices[i])) : ctx.lineTo(cx(i), cy(prices[i])); }
+  ctx.stroke();
+
+  // Datapunkter
+  for (var i = 0; i < nPoints; i++) {
+    var isActive = i > 0 && i <= durIdx;
+    ctx.beginPath();
+    ctx.arc(cx(i), cy(prices[i]), isActive ? 3.5 : 2.5, 0, Math.PI * 2);
+    ctx.fillStyle   = isActive ? '#C53030' : '#E09090';
+    ctx.strokeStyle = 'white'; ctx.lineWidth = 1.5;
+    ctx.fill(); ctx.stroke();
+  }
+
+  // X-labels
+  var xlab = ['Nå','V4','V8','V12','V16','V20','V24','V28','V32'];
+  ctx.font = '9px "DM Sans", sans-serif';
+  ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.textAlign = 'center';
+  for (var i = 0; i < nPoints; i++) {
+    if (i < xlab.length) ctx.fillText(xlab[i], cx(i), PAD.t + PH + 20);
+  }
+
+  // Peak callout
+  var peakIdx = prices.indexOf(Math.max.apply(null, prices));
+  if (peakIdx >= 0 && prices[peakIdx] > baseOil + 2) {
+    ctx.font = 'bold 10px "DM Sans", sans-serif';
+    ctx.fillStyle = '#C53030';
+    ctx.textAlign = peakIdx > nPoints / 2 ? 'right' : 'left';
+    ctx.fillText('~' + prices[peakIdx] + ' $', cx(peakIdx) + (peakIdx > nPoints/2 ? -7 : 7), cy(prices[peakIdx]) - 7);
+  }
+
+  // Hover-tooltip
+  if (!canvas._ccoBound) {
+    canvas._ccoBound = true;
+    var tt = document.getElementById('cco-tooltip');
+    canvas.style.pointerEvents = 'auto';
+    canvas.addEventListener('mousemove', function(e) {
+      if (!tt) return;
+      var rect = canvas.getBoundingClientRect();
+      var mx = e.clientX - rect.left;
+      var data = canvas._prices;
+      if (!data) return;
+      var n = data.length;
+      var nearest = 0, minDist = Infinity;
+      for (var j = 0; j < n; j++) {
+        var d = Math.abs(mx - cx(j));
+        if (d < minDist) { minDist = d; nearest = j; }
+      }
+      if (minDist < 30) {
+        tt.style.display = 'block';
+        tt.style.left = (cx(nearest) + 8) + 'px';
+        tt.style.top  = (cy(data[nearest]) - 28) + 'px';
+        tt.textContent = (canvas._xlab[nearest]||'') + ' · ' + data[nearest] + ' $';
+      } else {
+        tt.style.display = 'none';
+      }
+    });
+    canvas.addEventListener('mouseleave', function() { if (tt) tt.style.display = 'none'; });
+  }
+  canvas._prices = prices.slice();
+  canvas._xlab   = xlab.slice();
+  // Reposisjoner overlay (kan ha endret størrelse)
+  var r = ccoPosition();
+  if (r) {
+    var overlay = document.getElementById('calc-chart-overlay');
+    if (overlay) {
+      overlay.style.left   = Math.round(r.left)   + 'px';
+      overlay.style.top    = Math.round(r.top)     + 'px';
+      overlay.style.width  = Math.round(r.width)   + 'px';
+      overlay.style.height = Math.round(r.height)  + 'px';
+    }
+  }
+}
+
+// Hook inn i debouncedCalc — vis overlay og tegn graf
+var _origDebouncedCalc = debouncedCalc;
+debouncedCalc = function() {
+  _origDebouncedCalc();
+  ccoShow();
+  if (_ccoTimer) clearTimeout(_ccoTimer);
+  _ccoTimer = setTimeout(function() {
+    ccoDraw();
+    ccoHide();
+  }, 90);
+};
+
+// Repositisjoner ved resize
+window.addEventListener('resize', function() {
+  var overlay = document.getElementById('calc-chart-overlay');
+  if (!overlay || !overlay.classList.contains('visible')) return;
+  var r = ccoPosition();
+  if (r) {
+    overlay.style.left   = Math.round(r.left)   + 'px';
+    overlay.style.top    = Math.round(r.top)     + 'px';
+    overlay.style.width  = Math.round(r.width)   + 'px';
+    overlay.style.height = Math.round(r.height)  + 'px';
+  }
+});
+
 </script>
 
 <span id="live-brent-stat" style="display:none">—</span>
@@ -7637,5 +7947,45 @@ function gTab(tab) {
 <span id="sc-pA" style="display:none">20 %</span>
 <span id="sc-pB" style="display:none">55 %</span>
 <span id="sc-pC" style="display:none">25 %</span>
+
+<!-- ── KALKULATOR OLJEPRISGRAF OVERLAY ──────────────────────────────────── -->
+<div id="calc-chart-overlay" class="calc-chart-overlay">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0">
+    <div style="display:flex;align-items:center;gap:7px">
+      <span style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)">Oljeprisforløp</span>
+      <span style="font-size:9px;color:var(--faint)">· live beregning</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:9px;color:var(--muted)" id="cco-params">—</span>
+      <span style="font-size:9px;color:var(--faint)" id="cco-peak"></span>
+    </div>
+  </div>
+  <div style="flex:1;position:relative;min-height:0">
+    <canvas id="cco-canvas" style="display:block;width:100%;height:100%"></canvas>
+    <div id="cco-tooltip" style="display:none;position:absolute;background:var(--navy);color:white;border-radius:5px;padding:4px 8px;font-size:10px;pointer-events:none;white-space:nowrap;z-index:10"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr 1px 1fr;border-top:1px solid var(--border);flex-shrink:0">
+    <div style="padding:5px 8px;text-align:center">
+      <div style="font-size:7.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:1px">Brent topp</div>
+      <div style="font-size:13px;font-weight:700;color:var(--red)" id="cco-brent">—</div>
+    </div>
+    <div style="background:var(--border)"></div>
+    <div style="padding:5px 8px;text-align:center">
+      <div style="font-size:7.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:1px">BNP kum.</div>
+      <div style="font-size:13px;font-weight:700;color:var(--red)" id="cco-gdp">—</div>
+    </div>
+    <div style="background:var(--border)"></div>
+    <div style="padding:5px 8px;text-align:center">
+      <div style="font-size:7.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:1px">KPI</div>
+      <div style="font-size:13px;font-weight:700;color:var(--amber)" id="cco-kpi">—</div>
+    </div>
+    <div style="background:var(--border)"></div>
+    <div style="padding:5px 8px;text-align:center">
+      <div style="font-size:7.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:1px">Resesjon</div>
+      <div style="font-size:12px;font-weight:700" id="cco-risk">—</div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
