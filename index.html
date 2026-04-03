@@ -7652,15 +7652,21 @@ var _ccoTimer = null;
 var _ccoHideTimer = null;
 
 function ccoPosition() {
-  // Dekker Trumpometer-kortet helt fra topp til bunn av kortet
+  // Overlay dekker: fra toppen av Trumpometer-kortet til bunnen av griden (RAD 1)
+  // slik at den er like høy som kalkulatoren til venstre
   var trumpCard = document.getElementById('dash-trump-gauge');
   if (!trumpCard) return null;
   var card = trumpCard.closest('[style*="flex-direction:column"]');
   if (!card) return null;
-  var r = card.getBoundingClientRect();
-  // Utvid høyden til å inkludere hele kortet inkl. nyhetsseksjonen under gauget
-  // Kortet er self-contained — returnerer dens faktiske høyde
-  return { left: r.left, top: r.top, width: r.width, height: r.height };
+  var grid = card.parentElement; // RAD 1: display:grid 1fr 1fr
+  var cardR = card.getBoundingClientRect();
+  var gridR = grid ? grid.getBoundingClientRect() : cardR;
+  return {
+    left:   cardR.left,
+    top:    cardR.top,
+    width:  cardR.width,
+    height: gridR.bottom - cardR.top   // fra kortets topp til gridens bunn
+  };
 }
 
 function ccoShow() {
