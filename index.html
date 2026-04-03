@@ -5210,7 +5210,7 @@ window.nav = function(el) {
   pointer-events:none;
   animation:popup-fade-in .15s ease;
 }
-.calc-chart-overlay.visible { display:flex; flex-direction:column; }
+.calc-chart-overlay.visible { display:flex; flex-direction:column; pointer-events:auto; }
 .popup-panel { display:none;animation:popup-fade-in .18s ease; }
 .popup-panel.active { display:block; }
 .popup-info-box {
@@ -7652,12 +7652,15 @@ var _ccoTimer = null;
 var _ccoHideTimer = null;
 
 function ccoPosition() {
-  // Finn Trumpometer-kortets posisjon og sett overlay akkurat over
+  // Dekker Trumpometer-kortet helt fra topp til bunn av kortet
   var trumpCard = document.getElementById('dash-trump-gauge');
   if (!trumpCard) return null;
   var card = trumpCard.closest('[style*="flex-direction:column"]');
   if (!card) return null;
-  return card.getBoundingClientRect();
+  var r = card.getBoundingClientRect();
+  // Utvid høyden til å inkludere hele kortet inkl. nyhetsseksjonen under gauget
+  // Kortet er self-contained — returnerer dens faktiske høyde
+  return { left: r.left, top: r.top, width: r.width, height: r.height };
 }
 
 function ccoShow() {
@@ -7674,11 +7677,12 @@ function ccoShow() {
 }
 
 function ccoHide() {
-  _ccoHideTimer = setTimeout(function() {
-    var overlay = document.getElementById('calc-chart-overlay');
-    if (overlay) overlay.classList.remove('visible');
-    _ccoHideTimer = null;
-  }, 1800);
+  // Auto-hide fjernet — lukkes nå kun med kryss
+}
+
+function ccoClose() {
+  var overlay = document.getElementById('calc-chart-overlay');
+  if (overlay) overlay.classList.remove('visible');
 }
 
 function ccoDraw() {
@@ -7746,8 +7750,8 @@ function ccoDraw() {
   var canvas = document.getElementById('cco-canvas');
   if (!canvas) return;
   var container = canvas.parentElement;
-  var CW = container.clientWidth;
-  var CH = container.clientHeight;
+  var CW = container.offsetWidth  || container.clientWidth;
+  var CH = container.offsetHeight || container.clientHeight;
   if (CW < 10 || CH < 10) return;
   canvas.width  = CW;
   canvas.height = CH;
@@ -7955,13 +7959,13 @@ window.addEventListener('resize', function() {
       <span style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)">Oljeprisforløp</span>
       <span style="font-size:9px;color:var(--faint)">· live beregning</span>
     </div>
-    <div style="display:flex;align-items:center;gap:8px">
+    <div style="display:flex;align-items:center;gap:10px">
       <span style="font-size:9px;color:var(--muted)" id="cco-params">—</span>
-      <span style="font-size:9px;color:var(--faint)" id="cco-peak"></span>
+      <button onclick="ccoClose()" style="display:flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--border);border:none;cursor:pointer;color:var(--muted);font-size:13px;line-height:1;font-family:inherit;flex-shrink:0" onmouseover="this.style.background='var(--border-md)'" onmouseout="this.style.background='var(--border)'">×</button>
     </div>
   </div>
-  <div style="flex:1;position:relative;min-height:0">
-    <canvas id="cco-canvas" style="display:block;width:100%;height:100%"></canvas>
+  <div style="flex:1;position:relative;min-height:0;overflow:hidden">
+    <canvas id="cco-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%"></canvas>
     <div id="cco-tooltip" style="display:none;position:absolute;background:var(--navy);color:white;border-radius:5px;padding:4px 8px;font-size:10px;pointer-events:none;white-space:nowrap;z-index:10"></div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr 1px 1fr;border-top:1px solid var(--border);flex-shrink:0">
