@@ -745,7 +745,7 @@ input[type=range]::-webkit-slider-thumb {
   <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px;flex-wrap:wrap">
     <div style="flex-shrink:0">
       <div class="panel-title" style="margin-bottom:3px">Den nye verdensordenen</div>
-      <div class="panel-sub">Makroøkonomi, kapital og strategi — per <span id="dyn-oversikt-date"></span></div>
+      <div class="panel-sub">Maktens triangel — per <span id="dyn-oversikt-date"></span></div>
     </div>
     <div id="market-strip" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;flex:1;max-width:740px">
       <div class="mkt-box" data-sym="BZ=F"     data-label="Brent"     data-unit="$"    data-dec="2"></div>
@@ -2613,6 +2613,7 @@ function applyTSHM() {
   if (slCon) { slCon.value = conflict; updateSliderLabel(slCon); }
   if (typeof debouncedCalc === 'function') debouncedCalc();
   // Vis overlay eksplisitt ved TSHM-synk
+  _ccoUserActive = true;
   if (typeof ccoShow === 'function') ccoShow();
 
   // ── STATUSBOKS ─────────────────────────────────────────────────
@@ -7926,16 +7927,26 @@ function ccoDraw() {
 }
 
 // Hook inn i debouncedCalc — vis overlay og tegn graf
+// _ccoUserActive: true kun etter at bruker aktivt har justert kalkulator eller klikket synk
+var _ccoUserActive = false;
 var _origDebouncedCalc = debouncedCalc;
 debouncedCalc = function() {
   _origDebouncedCalc();
+  if (!_ccoUserActive) return; // Ikke vis overlay ved init-kall
   ccoShow();
   if (_ccoTimer) clearTimeout(_ccoTimer);
   _ccoTimer = setTimeout(function() {
     ccoDraw();
-    ccoHide();
   }, 90);
 };
+
+// Sett flagget ved brukerinteraksjon på sliderne
+document.addEventListener('DOMContentLoaded', function() {
+  ['sl-duration','sl-oil','sl-conflict'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('input', function() { _ccoUserActive = true; });
+  });
+});
 
 // Repositisjoner ved resize
 window.addEventListener('resize', function() {
