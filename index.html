@@ -2707,40 +2707,47 @@ function calcHormuz() {
 
   // ── BNP-BEREGNING — Dallas Fed / Kilian ikke-lineær ─────────────────────
   // Ankerpunkt: Dallas Fed Hormuz-studie (mars 2026)
-  //   +13 $/fat => -2.9 pp BNP per kvartal (global, annualisert)
-  //   Implisitt koeffisient: 2.9/13 = 0.223 pp per $/fat
+  //   +13 $/fat => -2.9 pp BNP per kvartal annualisert (global)
+  //   Koeffisient: 2.9/13 = 0.223 pp per $/fat (alle sjokk bruker 0.223 som base)
   // Kilian (2008): ikke-lineær skalering ved store sjokk
-  //   <20$: 0.18 pp/$/fat  |  20-50$: 0.223 pp/$/fat  |  >50$: 0.27 pp/$/fat
-  // Hamilton (2009): varighetsavtak — effekten halveres etter 3-4 kv.
+  //   0-50$: 0.223 pp/$/fat  |  >50$: 0.27 pp/$/fat
+  //   NB: ikke-lineær betyr høyere koeffisient ved store sjokk — ingen øvre tak
+  // Hamilton (2009): avtak starter fra kvartal 3, ikke fra dag 1
+  //   ≤2 kv: full effekt (1.0)  |  2-4 kv: gradvis avtak  |  >4 kv: 0.72
   function kilianGDP(shock) {
-    if (shock <= 0)  return 0;
-    if (shock < 20)  return shock * 0.18;
-    if (shock < 50)  return shock * 0.223;
-    return 20 * 0.18 + 30 * 0.223 + (shock - 50) * 0.27;
+    if (shock <= 0) return 0;
+    if (shock <= 50) return shock * 0.223;
+    return 50 * 0.223 + (shock - 50) * 0.27;
   }
-  const gdpBase = kilianGDP(oilShock);
-
-  // Oppdater BNP-visning
-  const gdpEl = document.getElementById('out-gdp');
-  if (gdpEl) gdpEl.textContent = '−' + gdpBase.toFixed(1) + ' pp';
-  const gdpBar = document.getElementById('gdp-bar');
-  if (gdpBar) {
-    const pct = Math.min(100, (gdpBase / 12) * 100);
-    gdpBar.style.width = pct + '%';
-    gdpBar.style.background = gdpBase > 6 ? 'var(--red)' : gdpBase > 3 ? '#C06000' : 'var(--amber)';
+  function hamiltonAvtak(durQtr) {
+    if (durQtr <= 2) return 1.0;
+    if (durQtr <= 4) return 1.0 - 0.14 * (durQtr - 2);
+    return 0.72;
   }
-
   const cm       = conflictMult[conflict];
+  const gdpBase  = kilianGDP(oilShock);        // pp/kv, basis (uten konflikt)
+  const gdpScaled = gdpBase * cm;              // pp/kv, inkl. konfliktnivå
+
   const baseOil  = window._brentLive || null;
   if (!baseOil) return; // Vent til live-pris er hentet
   const peakOil  = Math.round(baseOil + oilShock * cm);
 
-  // Varighet i kvartaler (26 uker = 2 kvartaler)
+  // Varighet i kvartaler (13 uker = 1 kvartal)
   const durQtr = dur / 13;
+  const avtak  = hamiltonAvtak(Math.min(durQtr, 4));
 
-  // Kumulativ BNP-effekt: per-kvartal-effekt × kvartaler × avtak-faktor (0.72)
-  // Avtak fordi tilpasning skjer gradvis — Hamilton (2009)
-  const gdpCumulative = (gdpBase * cm * Math.min(durQtr, 4) * 0.72).toFixed(1);
+  // Kumulativ BNP-effekt med korrekt avtak
+  const gdpCumulative = (gdpScaled * Math.min(durQtr, 4) * avtak).toFixed(1);
+
+  // BNP per kvartal — inkluderer konflikt-multiplikator, vises med merkelapp
+  const gdpEl = document.getElementById('out-gdp');
+  if (gdpEl) gdpEl.textContent = '−' + gdpScaled.toFixed(1) + ' pp';
+  const gdpBar = document.getElementById('gdp-bar');
+  if (gdpBar) {
+    const pct = Math.min(100, (gdpScaled / 15) * 100);
+    gdpBar.style.width = pct + '%';
+    gdpBar.style.background = gdpScaled > 8 ? 'var(--red)' : gdpScaled > 4 ? '#C06000' : 'var(--amber)';
+  }
 
   // KPI-effekt: skalerer med varighet — lengre stengning gir mer gjennomslag
   // Basis: 0.028 pp/$/fat ved 1 kvartal. Skalerer med sqrt(durQtr) for ikke-lineær vekst
@@ -4000,18 +4007,17 @@ window.nav = function(el) {
 
 <!-- TOOLTIPS -->
 <div class="tt-box" id="bnp-tooltip">
-  <h4>BNP-effekt kumulativ — beregning</h4>
-  <strong style="font-size:10px;color:rgba(255,255,255,.6);display:block;margin-bottom:4px">Per kvartal (Kilian 2008 ikke-lineær):</strong>
+  <h4>BNP-effekt — beregning</h4>
+  Beregnes med Kilian (2008) ikke-lineær modell kalibrert mot Dallas Fed Hormuz-studie (mars 2026).
+  <div class="tt-sep"></div>
   <table>
-    <tr><td style="white-space:nowrap;color:rgba(255,255,255,.5)">&lt;+20 $/fat</td><td>−0,18 pp/kv per $/fat</td></tr>
-    <tr><td style="white-space:nowrap;color:rgba(255,255,255,.5)">+20–50 $/fat</td><td>−0,22 pp/kv per $/fat</td></tr>
-    <tr><td style="white-space:nowrap;color:rgba(255,255,255,.5)">&gt;+50 $/fat</td><td>−0,27 pp/kv per $/fat</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5);white-space:nowrap">Ankerpunkt</td><td>+13 $/fat sjokk → −2,9 pp BNP per kvartal (annualisert). Dallas Fed, mars 2026.</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5);white-space:nowrap">Koeffisienter</td><td>0–50 $/fat: 0,223 pp/$. Over 50 $: 0,27 pp/$ (ikke-lineær økning ved store sjokk).</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5);white-space:nowrap">Konfliktnivå</td><td>BNP per kv. inkluderer multiplikator: Begrenset ×1,0 · Eskalert ×1,5 · Full krig ×2,2</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5);white-space:nowrap">Avtak</td><td>Hamilton (2009): full effekt i kv. 1–2, gradvis avtak fra kv. 3, flater ut ved 0,72 etter kv. 4.</td></tr>
   </table>
   <div class="tt-sep"></div>
-  <strong style="font-size:10px;color:rgba(255,255,255,.6);display:block;margin-bottom:4px">Kumulativ (vist i boksen):</strong>
-  = per kvartal × min(varighet i kv., 4) × 0,72
-  <div class="tt-sep"></div>
-  0,72-faktoren (Hamilton 2009): gradvis tilpasning reduserer effekten over tid. Konfliktnivå skalerer ×1,0 / ×1,5 / ×2,2.
+  <span style="color:rgba(255,255,255,.55);font-size:10.5px">⚠ Koeffisientene er kalibrert for sjokk under 30 $/fat. Ved ekstreme sjokk (>50 $) ekstrapoleres modellen utenfor empirisk rekkevidde — tall bør tolkes som øvre grense for effekten, ikke prognose.</span>
 </div>
 
 <div class="tt-box" id="tt-varighet">
@@ -4684,13 +4690,12 @@ function updateScenarios() {
 
   // ── KILIAN BNP ──────────────────────────────────────────────────────────
   function kilianGDP(shock) {
-    if (shock <= 0)  return 0;
-    if (shock < 20)  return shock * 0.18;
-    if (shock < 50)  return shock * 0.223;
-    return 20*0.18 + 30*0.223 + (shock-50)*0.27;
+    if (shock <= 0) return 0;
+    if (shock <= 50) return shock * 0.223;
+    return 50 * 0.223 + (shock - 50) * 0.27;
   }
   var gdpQtr = kilianGDP(oilShock) * cm;
-  var gdpCum = gdpQtr * Math.min(durQtr, 4) * 0.72;
+  var gdpCum = gdpQtr * Math.min(durQtr, 4) * (durQtr <= 2 ? 1.0 : durQtr <= 4 ? (1.0 - 0.14*(Math.min(durQtr,4)-2)) : 0.72);
   var cpiEff = (oilShock * cm * 0.028 * (0.3 + 0.7 * Math.min(1, Math.sqrt(durQtr/2)))).toFixed(1);
 
   // ── BRENT 12-MND PROGNOSE ────────────────────────────────────────────────
@@ -5716,10 +5721,9 @@ function syncScenarioModalParams() {
 
   // ── KILIAN IKKE-LINEÆR — identisk med calcHormuz ──────────────
   function kilianGDPsc(shock) {
-    if (shock <= 0)  return 0;
-    if (shock < 20)  return shock * 0.18;
-    if (shock < 50)  return shock * 0.223;
-    return 20 * 0.18 + 30 * 0.223 + (shock - 50) * 0.27;
+    if (shock <= 0) return 0;
+    if (shock <= 50) return shock * 0.223;
+    return 50 * 0.223 + (shock - 50) * 0.27;
   }
   var durQtrSc = dur / 13;
 
@@ -5736,8 +5740,8 @@ function syncScenarioModalParams() {
   var cpiB    = (oilShock * cm * 0.028 * (0.3 + 0.7 * cpiSc)).toFixed(1);
   var brentB_lo = Math.round(brentLive * (0.9 + conflict * 0.08));
   var brentB_hi = Math.round(brentLive * (1.1 + conflict * 0.12));
-  var bnpB_lo = (kilianGDPsc(oilShock) * cm * Math.min(durQtrSc,4) * 0.72 * 0.6).toFixed(1);
-  var bnpB_hi = (kilianGDPsc(oilShock) * cm * Math.min(durQtrSc,4) * 0.72 * 0.85).toFixed(1);
+  var bnpB_lo = (kilianGDPsc(oilShock) * cm * Math.min(durQtrSc,4) * (durQtrSc <= 2 ? 1.0 : durQtrSc <= 4 ? (1.0 - 0.14*(Math.min(durQtrSc,4)-2)) : 0.72) * 0.6).toFixed(1);
+  var bnpB_hi = (kilianGDPsc(oilShock) * cm * Math.min(durQtrSc,4) * (durQtrSc <= 2 ? 1.0 : durQtrSc <= 4 ? (1.0 - 0.14*(Math.min(durQtrSc,4)-2)) : 0.72) * 0.85).toFixed(1);
   s('scm-b-prob',  pBstr);
   s('scm-b-reg',   conflict >= 3 ? 'Stengt · yuan-kontroll' : conflict >= 2 ? 'Delvis åpen · eskalert' : 'Delvis åpen · yuan-toll');
   s('scm-b-brent', brentB_lo + '–' + brentB_hi + ' $');
@@ -5747,8 +5751,8 @@ function syncScenarioModalParams() {
   // ── SCENARIO C ────────────────────────────────────────────────
   var brentC_lo = Math.round(brentLive * (1.3 + conflict * 0.12));
   var brentC_hi = Math.round(brentLive * (1.7 + conflict * 0.18));
-  var bnpC_lo   = Math.round(kilianGDPsc(oilShock) * cm * Math.min(durQtrSc,4) * 0.72 * 1.1 + dur * 0.08);
-  var bnpC_hi   = Math.round(kilianGDPsc(oilShock) * cm * Math.min(durQtrSc,4) * 0.72 * 1.6 + dur * 0.14);
+  var bnpC_lo   = Math.round(kilianGDPsc(oilShock) * cm * Math.min(durQtrSc,4) * (durQtrSc <= 2 ? 1.0 : durQtrSc <= 4 ? (1.0 - 0.14*(Math.min(durQtrSc,4)-2)) : 0.72) * 1.1 + dur * 0.08);
+  var bnpC_hi   = Math.round(kilianGDPsc(oilShock) * cm * Math.min(durQtrSc,4) * (durQtrSc <= 2 ? 1.0 : durQtrSc <= 4 ? (1.0 - 0.14*(Math.min(durQtrSc,4)-2)) : 0.72) * 1.6 + dur * 0.14);
   s('scm-c-prob',   pCstr);
   s('scm-c-status', dur > 16 ? 'Stengt 12+ mnd.' : 'Stengt ' + dur + '+ uker · blokkade');
   s('scm-c-brent',  brentC_lo + '–' + brentC_hi + ' $');
@@ -6243,10 +6247,9 @@ function syncHormuzModalData() {
 
   // ── KILIAN IKKE-LINEÆR BNP — identisk med calcHormuz ──────────
   function kilianGDPsync(shock) {
-    if (shock <= 0)  return 0;
-    if (shock < 20)  return shock * 0.18;
-    if (shock < 50)  return shock * 0.223;
-    return 20 * 0.18 + 30 * 0.223 + (shock - 50) * 0.27;
+    if (shock <= 0) return 0;
+    if (shock <= 50) return shock * 0.223;
+    return 50 * 0.223 + (shock - 50) * 0.27;
   }
   var durQtr    = dur / 13;
   var rawSpread = brent - wti;
@@ -6260,7 +6263,7 @@ function syncHormuzModalData() {
   var bnpKv     = (gdpBase * cm).toFixed(1);
 
   // Kumulativ BNP (Hamilton 2009: 0.72-avtak, maks 4 kvartaler)
-  var bnpKum    = (gdpBase * cm * Math.min(durQtr, 4) * 0.72).toFixed(1);
+  var bnpKum    = (gdpBase * cm * Math.min(durQtr, 4) * (durQtr <= 2 ? 1.0 : durQtr <= 4 ? (1.0 - 0.14*(Math.min(durQtr,4)-2)) : 0.72)).toFixed(1);
 
   // KPI (0.028 × varighet-skalert — identisk calcHormuz)
   var cpiScale  = Math.min(1, Math.sqrt(durQtr / 2));
