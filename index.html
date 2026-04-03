@@ -114,18 +114,18 @@ body {
 
 @keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-.panel-header { margin-bottom: 28px; }
+.panel-header { margin-bottom: 10px; }
 .panel-title {
   font-family: 'DM Serif Display', serif;
-  font-size: 26px;
+  font-size: 22px;
   color: var(--text);
   line-height: 1.2;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 .panel-sub {
-  font-size: 13px;
+  font-size: 11px;
   color: var(--muted);
-  line-height: 1.55;
+  line-height: 1.5;
   font-weight: 300;
 }
 
@@ -153,9 +153,9 @@ body {
   padding: 14px 18px;
   box-shadow: var(--shadow);
 }
-.stat-label { font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--faint); margin-bottom: 6px; }
-.stat-value { font-size: 24px; font-weight: 600; color: var(--text); line-height: 1; }
-.stat-sub { font-size: 11px; color: var(--muted); margin-top: 5px; }
+.stat-label { font-size: 9.5px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--faint); margin-bottom: 4px; }
+.stat-value { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1; }
+.stat-sub { font-size: 10px; color: var(--muted); margin-top: 3px; }
 
 .section-label {
   font-size: 11px;
@@ -425,10 +425,10 @@ input[type=range]::-webkit-slider-thumb {
   0%, 100% { opacity: 1; }
   50% { opacity: .3; }
 }
-.footnote { font-size: 11px; color: var(--faint); font-style: italic; line-height: 1.6; margin-top: 20px; }
+.footnote { font-size: 10px; color: var(--faint); font-style: italic; line-height: 1.5; margin-top: 12px; }
 
 /* ── MACRO DATA ─────────────────────────────── */
-.macro-tabs { display: flex; gap: 5px; margin-bottom: 16px; flex-wrap: wrap; }
+.macro-tabs { display: flex; gap: 5px; margin-bottom: 12px; flex-wrap: wrap; }
 .mtab {
   font-size: 11px; font-weight: 600; padding: 6px 14px;
   border: 1px solid var(--border-md); border-radius: 8px;
@@ -439,29 +439,29 @@ input[type=range]::-webkit-slider-thumb {
 .mtab.active { color: white; border-color: transparent; }
 .macro-panel { display: none; animation: fadein 0.16s ease; padding-bottom: 4px; }
 .macro-panel.active { display: block; padding-bottom: 4px; }
-.data-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+.data-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
 .data-grid-3 { grid-template-columns: repeat(3, 1fr); }
 .data-grid-5 { grid-template-columns: repeat(5, 1fr); }
-.data-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 11px 14px; box-shadow: var(--shadow); }
+.data-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 9px 12px; box-shadow: var(--shadow); }
 .data-card.alert { border-left: 3px solid var(--red); }
 .data-card.warn  { border-left: 3px solid var(--amber); }
 .data-card.ok    { border-left: 3px solid var(--green); }
-.dc-label { font-size: 9.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); margin-bottom: 5px; line-height: 1.35; }
-.dc-value { font-size: 19px; font-weight: 700; color: var(--text); line-height: 1; }
-.dc-sub   { font-size: 10.5px; color: var(--muted); margin-top: 3px; line-height: 1.35; }
-.dc-trend { font-size: 10.5px; font-weight: 600; margin-top: 4px; }
+.dc-label { font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); margin-bottom: 5px; line-height: 1.35; }
+.dc-value { font-size: 17px; font-weight: 700; color: var(--text); line-height: 1; }
+.dc-sub   { font-size: 10px; color: var(--muted); margin-top: 2px; line-height: 1.3; }
+.dc-trend { font-size: 10px; font-weight: 600; margin-top: 3px; }
 .dc-src   { font-size: 9px; color: var(--faint); margin-top: 3px; opacity: .7; }
-.compare-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin-bottom: 12px; }
-.compare-table th { background: var(--navy); color: white; padding: 7px 11px; text-align: left; font-size: 9.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
-.compare-table td { padding: 7px 11px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.compare-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 8px; }
+.compare-table th { background: var(--navy); color: white; padding: 6px 10px; text-align: left; font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.compare-table td { padding: 6px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
 .compare-table tr:last-child td { border-bottom: none; }
 .compare-table tr:nth-child(even) td { background: rgba(0,0,0,0.018); }
 .compare-table .num { font-weight: 600; color: var(--navy); }
 .compare-table .alert-cell { color: var(--red); font-weight: 600; }
 .compare-table .warn-cell  { color: var(--amber); font-weight: 600; }
 .compare-table .ok-cell    { color: var(--green); font-weight: 600; }
-.relevance-box { background: var(--navy-lt); border: 1px solid rgba(31,56,100,0.15); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 10px; font-size: 12px; line-height: 1.65; color: var(--text); }
-.relevance-label { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--navy-mid); margin-bottom: 5px; }
+.relevance-box { background: var(--navy-lt); border: 1px solid rgba(31,56,100,0.15); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 8px; font-size: 11px; line-height: 1.6; color: var(--text); }
+.relevance-label { font-size: 9px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--navy-mid); margin-bottom: 4px; }
 .timeline-row { display: flex; align-items: flex-start; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--border); }
 .timeline-row:last-child { border-bottom: none; }
 .tl-date { font-size: 11px; font-weight: 600; color: var(--navy); min-width: 90px; padding-top: 1px; }
@@ -819,28 +819,19 @@ input[type=range]::-webkit-slider-thumb {
         <span class="tt-trigger" data-tt="tt-kalkulator-guide" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:10px;font-weight:700;cursor:help;border:1px solid var(--border-md);flex-shrink:0">?</span>
       </div>
 
-      <!-- TSHM-statusboks (skjult inntil synk kjøres) -->
-      <div id="tshm-status" style="display:none;margin-bottom:12px;padding:9px 12px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.18);border-radius:8px">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
-          <div style="flex:1">
-            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:5px">TSHM-analyse — sist synkronisert <span id="tshm-tid">—</span></div>
-            <div id="tshm-begrunnelse" style="font-size:11px;color:var(--navy);line-height:1.55"></div>
-          </div>
-          <div style="display:flex;gap:6px;flex-shrink:0">
-            <div style="text-align:center;padding:5px 8px;background:white;border-radius:6px;border:1px solid var(--border)">
-              <div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--faint);margin-bottom:2px">Konfliktnivå</div>
-              <div id="tshm-k" style="font-size:13px;font-weight:700;color:var(--navy)">—</div>
-            </div>
-            <div style="text-align:center;padding:5px 8px;background:white;border-radius:6px;border:1px solid var(--border)">
-              <div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--faint);margin-bottom:2px">Sjokk $/fat</div>
-              <div id="tshm-o" style="font-size:13px;font-weight:700;color:var(--red)">—</div>
-            </div>
-            <div style="text-align:center;padding:5px 8px;background:white;border-radius:6px;border:1px solid var(--border)">
-              <div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--faint);margin-bottom:2px">Varighet</div>
-              <div id="tshm-v" style="font-size:13px;font-weight:700;color:var(--navy)">—</div>
-            </div>
+      <!-- TSHM-bekreftelsesmelding -->
+      <div id="tshm-status" style="display:none;margin-bottom:8px;padding:7px 12px;background:var(--navy);border-radius:8px;animation:fadein .2s ease">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+          <div style="font-size:10px;font-weight:600;color:white">✓ Synkronisert fra Trumpometer</div>
+          <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+            <span style="font-size:10px;color:rgba(255,255,255,.65)" id="tshm-v">—</span>
+            <div style="width:1px;height:12px;background:rgba(255,255,255,.2)"></div>
+            <span style="font-size:10px;color:rgba(255,255,255,.65)" id="tshm-o">—</span>
+            <div style="width:1px;height:12px;background:rgba(255,255,255,.2)"></div>
+            <span style="font-size:10px;font-weight:700" id="tshm-k">—</span>
           </div>
         </div>
+        <div style="font-size:9px;color:rgba(255,255,255,.45);margin-top:3px" id="tshm-tid"></div>
       </div>
 
       <!-- Tre slidere — ren design mot hvit bakgrunn -->
@@ -905,6 +896,20 @@ input[type=range]::-webkit-slider-thumb {
             <span class="tt-trigger" data-tt="tt-resesjon" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);vertical-align:middle">?</span>
           </div>
           <div style="font-size:14px;font-weight:700;line-height:1;margin-top:1px" id="cr-risk">—</div>
+        </div>
+      </div>
+
+      <!-- Scenario-indikator: Trumpometer → Scenario -->
+      <div id="dash-sc-indicator" style="display:none;margin-top:6px;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:8.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)">Trumpometer</span>
+          <span style="font-size:12px;font-weight:700;color:var(--navy)" id="dash-sc-trump-score">—</span>
+          <span style="font-size:10px;color:var(--faint)">→</span>
+          <span style="font-size:10px;font-weight:700" id="dash-sc-most-likely">—</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:5px">
+          <span style="font-size:8.5px;color:var(--faint)">dominerer med</span>
+          <span style="font-size:12px;font-weight:700;color:var(--navy)" id="dash-sc-prob">—</span>
         </div>
       </div>
 
@@ -1786,7 +1791,7 @@ input[type=range]::-webkit-slider-thumb {
 <!-- ─── TALEB ─── --><div class="panel" id="panel-makro">
   <div class="panel-header">
     <div class="panel-title">Makrodata</div>
-    <div class="panel-sub">Autoriserte kilder · Oppdatert per <span id="dyn-makro-date"></span> · Koblet til de analytiske posisjonene</div>
+    <div class="panel-sub" style="font-size:10.5px">Autoriserte kilder · Oppdatert per <span id="dyn-makro-date"></span> · Koblet til de analytiske posisjonene</div>
   </div>
 
   <div class="macro-tabs">
@@ -1800,7 +1805,7 @@ input[type=range]::-webkit-slider-thumb {
 
   <!-- ── SAMMENLIGNING ── -->
   <div class="macro-panel active" id="macro-sammenligning">
-    <div class="section-label" style="margin-top:0">Nøkkeltall per <span id="dyn-makro-sect1"></span> — tre regioner</div>
+    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Nøkkeltall per <span id="dyn-makro-sect1"></span> — tre regioner</div>
 
     <table class="compare-table">
       <thead>
@@ -1866,7 +1871,7 @@ input[type=range]::-webkit-slider-thumb {
 
   <!-- ── USA ── -->
   <div class="macro-panel" id="macro-usa">
-    <div class="section-label" style="margin-top:0">USA — nøkkeltall per <span id="dyn-makro-sect2"></span></div>
+    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">USA — nøkkeltall per <span id="dyn-makro-sect2"></span></div>
     <div style="font-size:11px;color:var(--faint);margin-bottom:14px">Kilder: BLS, BEA, Federal Reserve (FOMC SEP mars 2026), Tradeweb</div>
 
     <div class="data-grid">
@@ -1939,7 +1944,7 @@ input[type=range]::-webkit-slider-thumb {
 
   <!-- ── EUROPA ── -->
   <div class="macro-panel" id="macro-europa">
-    <div class="section-label" style="margin-top:0">Eurosonen — nøkkeltall per 31. mars 2026</div>
+    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Eurosonen — nøkkeltall per 31. mars 2026</div>
     <div style="font-size:11px;color:var(--faint);margin-bottom:14px">Kilder: ECB (pressemøte 19. mars 2026), Eurostat, ECB stab-projeksjoner mars 2026</div>
 
     <div class="data-grid">
@@ -2005,7 +2010,7 @@ input[type=range]::-webkit-slider-thumb {
 
   <!-- ── KINA ── -->
   <div class="macro-panel" id="macro-kina">
-    <div class="section-label" style="margin-top:0">Kina — nøkkeltall per 31. mars 2026</div>
+    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Kina — nøkkeltall per 31. mars 2026</div>
     <div style="font-size:11px;color:var(--faint);margin-bottom:14px">Offisielle tall: NBS (National Bureau of Statistics of China). Viktig: IMF og Rhodium Group estimerer faktisk vekst 2025 til 2,5–3,0 % vs. NBS' offisielle 5,0 %</div>
 
     <div class="data-grid">
@@ -2064,7 +2069,7 @@ input[type=range]::-webkit-slider-thumb {
     </div>
 
     <div class="card" style="border-left:3px solid var(--amber);margin-bottom:14px">
-      <div class="section-label" style="margin-top:0">Statistikk-advarsel — Fishmans analyse i praksis <span class="tt-trigger" data-tt="tt-statistikk" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
+      <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Statistikk-advarsel — Fishmans analyse i praksis <span class="tt-trigger" data-tt="tt-statistikk" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
       <div style="font-size:12px;line-height:1.7;color:var(--text)">
         NBS rapporterer 5,0 % vekst for 2025. Rhodium Group og Rosen/Wright estimerer 2,5–3,0 % basert på elektrisitetsforbruk, godstrafikk og priskorrigert detaljhandel. Divergensen er konsistent: NBS har historisk hatt tendens til å overvurdere investering. IMF tar nå opp imbalansene som strategisk bekymring, i tråd med G7-konsensus. Dette er Fishmans analyse i tallform: den kinesiske statistikken er primærkilden for IMF og World Bank — men stammen fra nasjonale myndigheter med politisk eierandel i tallene.
       </div>
@@ -2078,7 +2083,7 @@ input[type=range]::-webkit-slider-thumb {
 
   <!-- ── ENERGI ── -->
   <div class="macro-panel" id="macro-energi">
-    <div class="section-label" style="margin-top:0">Energi og finansmarkeder — per 31. mars 2026</div>
+    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Energi og finansmarkeder — per 31. mars 2026</div>
     <div style="font-size:11px;color:var(--faint);margin-bottom:14px">Kilder: IEA, Dallas Fed (mars 2026), EIA, Tradeweb, Trading Economics</div>
 
     <div class="data-grid">
@@ -2137,7 +2142,7 @@ input[type=range]::-webkit-slider-thumb {
     </div>
 
     <div class="card">
-      <div class="section-label" style="margin-top:0">Kritisk tidslinje — Hormuz-stengningen</div>
+      <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Kritisk tidslinje — Hormuz-stengningen</div>
       <div class="timeline-row">
         <div class="tl-date">Juni 2025</div>
         <div><div class="tl-text">Operation Midnight Hammer — USA ødelegger Irans kjernevåpenprogram</div><div class="tl-src">Kilde: Geopolitisk faktagrunnlag</div></div>
@@ -2172,51 +2177,51 @@ input[type=range]::-webkit-slider-thumb {
 
   <!-- ── NORGE ── -->
   <div class="macro-panel" id="macro-norge">
-    <div class="section-label" style="margin-top:0">Norges økonomi · SSB tabell 12880 · Oppdatert 17. mars 2026</div>
+    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Norges økonomi · SSB tabell 12880 · Oppdatert 17. mars 2026</div>
 
     <!-- Nøkkeltall 2025/2026 -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px">
       <div class="stat-card" style="border-left:3px solid var(--navy)">
         <div class="stat-label">BNP Fastlands-Norge</div>
-        <div class="stat-value" style="font-size:16px">1,8 %</div>
+        <div class="stat-value">1,8 %</div>
         <div class="stat-sub">2025 · prognose 2,0 % (2026)</div>
       </div>
       <div class="stat-card" style="border-left:3px solid var(--red)">
         <div class="stat-label">KPI-vekst</div>
-        <div class="stat-value" style="font-size:16px;color:var(--red)">3,0 %</div>
+        <div class="stat-value" style="color:var(--red)">3,0 %</div>
         <div class="stat-sub">2025 · KPI-JAE 3,1 % · prognose 3,2 % (2026)</div>
       </div>
       <div class="stat-card" style="border-left:3px solid var(--navy)">
         <div class="stat-label">Arbeidsledighet (AKU)</div>
-        <div class="stat-value" style="font-size:16px">4,5 %</div>
+        <div class="stat-value">4,5 %</div>
         <div class="stat-sub">2025 (nivå) · prognose 4,4 % (2026)</div>
       </div>
       <div class="stat-card" style="border-left:3px solid var(--navy)">
         <div class="stat-label">Pengemarkedsrente</div>
-        <div class="stat-value" style="font-size:16px">4,4 %</div>
+        <div class="stat-value">4,4 %</div>
         <div class="stat-sub">2025 (nivå) · prognose 4,2 % (2026)</div>
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px">
       <div class="stat-card" style="border-left:3px solid var(--green)">
         <div class="stat-label">Driftsbalanse</div>
-        <div class="stat-value" style="font-size:16px;color:var(--green)">776 mrd kr</div>
+        <div class="stat-value" style="color:var(--green)">776 mrd kr</div>
         <div class="stat-sub">2025 · prognose 946 mrd kr (2026)</div>
       </div>
       <div class="stat-card" style="border-left:3px solid var(--amber)">
         <div class="stat-label">Råoljepris SSB-prognose</div>
-        <div class="stat-value" style="font-size:16px;color:var(--amber)">68 $/fat</div>
+        <div class="stat-value" style="color:var(--amber)">68 $/fat</div>
         <div class="stat-sub">2025 · prognose 78 $/fat (2026) — før Hormuz</div>
       </div>
       <div class="stat-card" style="border-left:3px solid var(--faint)">
         <div class="stat-label">NOK per euro</div>
-        <div class="stat-value" style="font-size:16px">11,72</div>
+        <div class="stat-value">11,72</div>
         <div class="stat-sub">2025 (nivå) · prognose 11,20 (2026)</div>
       </div>
       <div class="stat-card" style="border-left:3px solid var(--green)">
         <div class="stat-label">BNP Total</div>
-        <div class="stat-value" style="font-size:16px">1,4 %</div>
+        <div class="stat-value">1,4 %</div>
         <div class="stat-sub">2025 · inkl. petroleum</div>
       </div>
     </div>
@@ -2624,15 +2629,20 @@ function applyTSHM() {
     + ' · Glidesnitt (70/30) fra forrige kjøring.';
 
   var statusEl = document.getElementById('tshm-status');
-  if (statusEl) statusEl.style.display = 'block';
+  if (statusEl) {
+    statusEl.style.display = 'block';
+    // Auto-skjul etter 5 sekunder
+    if (window._tshmHideTimer) clearTimeout(window._tshmHideTimer);
+    window._tshmHideTimer = setTimeout(function() {
+      statusEl.style.display = 'none';
+    }, 5000);
+  }
   var tidEl = document.getElementById('tshm-tid');
-  if (tidEl) tidEl.textContent = new Date().toLocaleTimeString('no-NO', {hour:'2-digit', minute:'2-digit'});
-  var begrEl = document.getElementById('tshm-begrunnelse');
-  if (begrEl) begrEl.textContent = begrunnelse;
+  if (tidEl) tidEl.textContent = 'Basert på ' + count + ' nyheter · Trumpometer-score: ' + (document.getElementById('dash-trump-score') ? document.getElementById('dash-trump-score').textContent : '?') + '/100';
   var kEl = document.getElementById('tshm-k');
-  if (kEl) { kEl.textContent = konlNavn[conflict]; kEl.style.color = conflict === 3 ? 'var(--red)' : conflict === 2 ? 'var(--amber)' : 'var(--navy)'; }
+  if (kEl) { kEl.textContent = konlNavn[conflict]; kEl.style.color = conflict === 3 ? '#FCA5A5' : conflict === 2 ? '#FCD34D' : 'rgba(255,255,255,.9)'; }
   var oEl = document.getElementById('tshm-o');
-  if (oEl) { oEl.textContent = '+' + oil + ' $'; oEl.style.color = oil > 60 ? 'var(--red)' : oil > 30 ? 'var(--amber)' : 'var(--navy)'; }
+  if (oEl) { oEl.textContent = '+' + oil + ' $/fat'; }
   var vEl = document.getElementById('tshm-v');
   if (vEl) vEl.textContent = duration + ' uker';
 
@@ -4773,13 +4783,26 @@ function updateScenarios() {
   s('sc-b-prob-sub', probSubB);
   s('sc-c-prob-sub', probSubC);
 
-  // ── DASHBOARD SCENARIO-LABEL (synk) ──────────────────────────────────────
-  var scName = mostLikely === 'a' ? 'A — Rask oppløsning'
-             : mostLikely === 'b' ? 'B — Kronisk forstyrrelse'
-             : 'C — Systemkollaps';
-  var scProb = mostLikely === 'a' ? pA : mostLikely === 'b' ? pB : pC;
-  var dashScDiv = document.querySelector('#panel-oversikt [style*="Kronisk"], #panel-oversikt [style*="oppløsning"], #panel-oversikt [style*="kollaps"]');
-  if (dashScDiv) dashScDiv.textContent = scName;
+  // ── DASHBOARD SCENARIO-INDIKATOR ─────────────────────────────────────────
+  var scName = mostLikely === 'a' ? 'Scenario A' : mostLikely === 'b' ? 'Scenario B' : 'Scenario C';
+  var scLabel = mostLikely === 'a' ? 'Rask oppløsning' : mostLikely === 'b' ? 'Kronisk forstyrrelse' : 'Systemkollaps';
+  var scProb  = mostLikely === 'a' ? pA : mostLikely === 'b' ? pB : pC;
+  var scCol   = mostLikely === 'a' ? '#166534' : mostLikely === 'b' ? '#92400E' : '#991B1B';
+
+  var indEl = document.getElementById('dash-sc-indicator');
+  if (indEl) indEl.style.display = 'flex';
+
+  var trumpScoreEl = document.getElementById('dash-trump-score');
+  var trumpScore   = trumpScoreEl ? trumpScoreEl.textContent : '—';
+  s('dash-sc-trump-score', trumpScore);
+
+  var mlEl = document.getElementById('dash-sc-most-likely');
+  if (mlEl) {
+    mlEl.textContent = scName + ' · ' + scLabel;
+    mlEl.style.color = scCol;
+  }
+  var probEl = document.getElementById('dash-sc-prob');
+  if (probEl) { probEl.textContent = scProb + ' %'; probEl.style.color = scCol; }
 }
 
 // Koble til calcHormuz
