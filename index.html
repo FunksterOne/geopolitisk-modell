@@ -721,13 +721,7 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 </header>
 
-<!-- ── MODELL-GUIDE KNAPP ── -->
-<div style="background:var(--surface);border-bottom:1px solid var(--border);padding:5px 20px;display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-shrink:0">
-  <button onclick="openGuideModal()" style="display:flex;align-items:center;gap:7px;padding:5px 14px;background:linear-gradient(135deg,#C53030,#9B1C1C);border:none;border-radius:20px;cursor:pointer;font-family:inherit;box-shadow:0 2px 8px rgba(197,48,48,.35);transition:all .2s" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 12px rgba(197,48,48,.5)'" onmouseout="this.style.transform='';this.style.boxShadow='0 2px 8px rgba(197,48,48,.35)'">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    <span style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.92)">Forstå modellen</span>
-  </button>
-</div>
+
 
 <!-- ── SØKERESULTATVINDU ── -->
 <div id="search-modal" style="display:none;position:fixed;top:88px;right:20px;width:380px;max-height:70vh;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);z-index:200;display:none;flex-direction:column;overflow:hidden">
@@ -802,6 +796,10 @@ input[type=range]::-webkit-slider-thumb {
     </button>
     <button onclick="nav('panel-analytikere')" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.2);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
       <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid)">📖 Om modellen</span>
+    </button>
+    <button onclick="openGuideModal()" style="display:flex;align-items:center;gap:6px;padding:5px 14px;background:linear-gradient(135deg,#C53030,#9B1C1C);border:none;border-radius:20px;cursor:pointer;font-family:inherit;box-shadow:0 2px 8px rgba(197,48,48,.35);transition:all .2s;margin-left:auto" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 12px rgba(197,48,48,.5)'" onmouseout="this.style.transform='';this.style.boxShadow='0 2px 8px rgba(197,48,48,.35)'">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.92)">ℹ Forstå modellen</span>
     </button>
   </div>
 
