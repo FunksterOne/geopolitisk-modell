@@ -954,48 +954,39 @@ input[type=range]::-webkit-slider-thumb {
       </div>
 
       <!-- Speedometer sentrert + score overlappende -->
-      <div style="display:flex;flex-direction:column;align-items:center;padding:16px 18px 0;position:relative">
-        <svg id="dash-trump-gauge" viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px;height:auto">
+      <div style="display:flex;flex-direction:column;align-items:center;padding:10px 14px 0;position:relative">
+        <svg id="dash-trump-gauge" viewBox="0 0 200 108" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:200px;height:auto;display:block;margin:0 auto">
           <defs>
             <linearGradient id="dtGrad" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%"   stop-color="#166534"/>
-              <stop offset="25%"  stop-color="#BA7517"/>
-              <stop offset="60%"  stop-color="#C53030"/>
+              <stop offset="28%"  stop-color="#BA7517"/>
+              <stop offset="62%"  stop-color="#C53030"/>
               <stop offset="100%" stop-color="#7F1D1D"/>
             </linearGradient>
           </defs>
           <!-- Track -->
-          <path d="M26,140 A114,114 0 0,1 254,140" fill="none" stroke="#ECEAE4" stroke-width="14" stroke-linecap="round"/>
+          <path d="M16,92 A74,74 0 0,1 184,92" fill="none" stroke="#ECEAE4" stroke-width="10" stroke-linecap="round"/>
           <!-- Colored arc -->
-          <path id="dash-trump-arc" d="M26,140 A114,114 0 0,1 254,140" fill="none" stroke="url(#dtGrad)" stroke-width="14" stroke-linecap="round" stroke-dasharray="358" stroke-dashoffset="358"/>
-          <!-- Sone-etiketter langs buen -->
-          <text x="18" y="148" font-size="7.5" fill="#166534" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="600">LITEN</text>
-          <text x="75" y="60"  font-size="7.5" fill="#BA7517" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="600" transform="rotate(-45 75 60)">MODERAT</text>
-          <text x="205" y="60" font-size="7.5" fill="#C53030" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="600" transform="rotate(45 205 60)">HØY</text>
-          <text x="262" y="148" font-size="7.5" fill="#7F1D1D" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="600">KRITISK</text>
-          <!-- Ticks -->
-          <g stroke="#D4D2CB" stroke-width="1.2">
-            <line x1="26" y1="140" x2="35" y2="140" transform="rotate(0 140 140)"/>
-            <line x1="26" y1="140" x2="33" y2="140" transform="rotate(45 140 140)"/>
-            <line x1="26" y1="140" x2="33" y2="140" transform="rotate(90 140 140)"/>
-            <line x1="26" y1="140" x2="33" y2="140" transform="rotate(135 140 140)"/>
-            <line x1="26" y1="140" x2="35" y2="140" transform="rotate(180 140 140)"/>
-          </g>
+          <path id="dash-trump-arc" d="M16,92 A74,74 0 0,1 184,92" fill="none" stroke="url(#dtGrad)" stroke-width="10" stroke-linecap="round" stroke-dasharray="232" stroke-dashoffset="232"/>
+          <!-- Soneetiketter -->
+          <text x="10"  y="100" font-size="6.5" fill="#166534" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700">LITEN</text>
+          <text x="42"  y="38"  font-size="6.5" fill="#BA7517" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" transform="rotate(-48 42 38)">MODERAT</text>
+          <text x="158" y="38"  font-size="6.5" fill="#C53030" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" transform="rotate(48 158 38)">HØY</text>
+          <text x="190" y="100" font-size="6.5" fill="#7F1D1D" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700">KRITISK</text>
           <!-- Needle -->
-          <g id="dash-trump-needle" transform="rotate(-90 140 140)" style="transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
-            <line x1="140" y1="140" x2="140" y2="38" stroke="rgba(0,0,0,.06)" stroke-width="5" stroke-linecap="round"/>
-            <line x1="140" y1="140" x2="140" y2="38" stroke="var(--navy)" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="140" y1="140" x2="140" y2="155" stroke="var(--navy)" stroke-width="2.5" stroke-linecap="round"/>
+          <g id="dash-trump-needle" transform="rotate(-90 100 92)" style="transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
+            <line x1="100" y1="92" x2="100" y2="26" stroke="rgba(0,0,0,.07)" stroke-width="4" stroke-linecap="round"/>
+            <line x1="100" y1="92" x2="100" y2="26" stroke="#1F3864" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="100" y1="92" x2="100" y2="103" stroke="#1F3864" stroke-width="2.5" stroke-linecap="round"/>
           </g>
-          <circle cx="140" cy="140" r="10" fill="var(--navy)"/>
-          <circle cx="140" cy="140" r="4.5" fill="white"/>
-          <!-- Score inni sirkelen under buen -->
-          <text id="dash-trump-score" x="140" y="128" font-size="36" font-weight="700" fill="var(--navy)" text-anchor="middle" font-family="DM Sans, sans-serif" dominant-baseline="auto">—</text>
+          <circle cx="100" cy="92" r="7" fill="#1F3864"/>
+          <circle cx="100" cy="92" r="3" fill="white"/>
         </svg>
-        <!-- Label og retning rett under SVG-en -->
-        <div style="text-align:center;margin-top:-8px;margin-bottom:10px">
-          <div style="font-size:11px;font-weight:600;color:var(--muted)" id="dash-trump-label">Beregner...</div>
-          <div style="font-size:10px;margin-top:2px" id="dash-trump-direction">—</div>
+        <!-- Score + label under SVG -->
+        <div style="text-align:center;margin-top:4px;margin-bottom:8px">
+          <div style="font-size:34px;font-weight:700;line-height:1;color:var(--navy)" id="dash-trump-score">—</div>
+          <div style="font-size:10.5px;font-weight:600;color:var(--muted);margin-top:2px" id="dash-trump-label">Beregner...</div>
+          <div style="font-size:9.5px;margin-top:2px" id="dash-trump-direction">—</div>
         </div>
       </div>
 
@@ -1003,7 +994,7 @@ input[type=range]::-webkit-slider-thumb {
       <div style="display:grid;grid-template-columns:1fr 1px 1fr;margin:0 16px;padding:8px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:10px">
         <div style="text-align:center;padding:4px 0">
           <div style="font-size:8.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:2px">Nyheter 24t</div>
-          <div style="font-size:22px;font-weight:700;color:var(--navy);line-height:1" id="dash-trump-count">—</div>
+          <div style="font-size:18px;font-weight:700;color:var(--navy);line-height:1" id="dash-trump-count">—</div>
         </div>
         <div style="background:var(--border)"></div>
         <div style="text-align:center;padding:4px 0">
@@ -4404,16 +4395,16 @@ function syncDashTrump() {
 
   // Mini-speedometer nål
   var needle = document.getElementById('dash-trump-needle');
-  if (needle) needle.setAttribute('transform', 'rotate(' + (-90 + meter*1.8) + ' 140 140)');
+  if (needle) needle.setAttribute('transform', 'rotate(' + (-90 + meter*1.8) + ' 100 92)');
   var arc = document.getElementById('dash-trump-arc');
-  if (arc) arc.setAttribute('stroke-dashoffset', (358 - meter/100*358).toFixed(1));
+  if (arc) arc.setAttribute('stroke-dashoffset', (232 - meter/100*232).toFixed(1));
 
   // Score og label
   var scoreEl = document.getElementById('dash-trump-score');
   var labelEl = document.getElementById('dash-trump-label');
   var cols = { 80:'#7F1D1D', 60:'#C53030', 40:'#C06000', 20:'#BA7517', 0:'#27500A' };
   var col = meter>=80?cols[80]:meter>=60?cols[60]:meter>=40?cols[40]:meter>=20?cols[20]:cols[0];
-  if (scoreEl) { scoreEl.textContent = meter; scoreEl.setAttribute('fill', col); }
+  if (scoreEl) { scoreEl.textContent = meter; scoreEl.style.color = col; }
   if (labelEl) labelEl.textContent = meter>=80?'Kritisk signalnivå':meter>=60?'Høy aktivitet':meter>=40?'Moderat aktivitet':meter>=20?'Lav aktivitet':'Ingen signaler 24t';
 
   // Count + topp tema
