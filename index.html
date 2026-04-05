@@ -3225,8 +3225,8 @@ document.addEventListener('DOMContentLoaded', initTruthFeed);
 window._brentLive = null;
 
 function fetchBrent() {
-  // Kildekjede: corsproxy.io + Yahoo Finance (BZ=F) -> Stooq JSON via corsproxy
-  var PROXY = 'https://corsproxy.io/?';
+  // Kildekjede: Vercel /api/proxy + Yahoo Finance (BZ=F) -> Stooq JSON
+  var PROXY = '/api/proxy?url=';
 
   var sources = [
     {
@@ -3389,7 +3389,7 @@ var _marketSymbols = [
 ];
 
 function fetchMarkets() {
-  var PROXY = 'https://corsproxy.io/?';
+  var PROXY = '/api/proxy?url=';
   // Individuelle v8-kall — batch v7 er blokkert
   _marketSymbols.forEach(function(sym) {
     var url = PROXY + encodeURIComponent(
@@ -3547,7 +3547,7 @@ function filterNews(cat) {
 }
 
 function fetchAllNews() {
-  var PROXY = 'https://corsproxy.io/?';
+  var PROXY = '/api/proxy?url=';
   var loaded = 0;
   var newCount = 0;
 
