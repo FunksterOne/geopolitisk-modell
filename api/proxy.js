@@ -15,7 +15,8 @@ const ALLOWED = [
   'www.aljazeera.com',
   'feeds.content.dowjones.io',
   'rss.politico.com',
-  'ix.cnn.io',
+  'ix.cnn.io'
+  'truthsocial.com',
 ];
 
 module.exports = async function handler(req, res) {
