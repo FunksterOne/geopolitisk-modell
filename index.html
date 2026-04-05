@@ -3323,12 +3323,43 @@ function initTruthFeed() {
 }
 
 function fetchTruth() {
-  fetch('https://ix.cnn.io/data/truth-social/truth_archive.json')
-    .then(function(r) { return r.json(); })
-    .then(function(data) { renderTruth(data.slice(0, 5)); })
-    .catch(function(e) {
-      var feed = document.getElementById('truth-feed');
-      if (feed) feed.innerHTML = '<div style="font-size:11px;color:var(--muted);padding:8px">Kunne ikke hente Truth Social-feed.</div>';
+  // Prøv Mastodon-API (Truth Social) direkte → fallback til CNN-arkiv
+  var TS_API = '/api/proxy?url=' + encodeURIComponent(
+    'https://truthsocial.com/api/v1/accounts/107780257626128497/statuses?limit=8&exclude_replies=true&exclude_reblogs=true'
+  );
+
+  fetch(TS_API, { cache: 'no-store' })
+    .then(function(r) {
+      if (!r.ok) throw new Error('TS API: ' + r.status);
+      return r.json();
+    })
+    .then(function(posts) {
+      if (!Array.isArray(posts) || posts.length === 0) throw new Error('Tom TS-respons');
+      // Konverter Mastodon-format til internt format
+      var mapped = posts.map(function(p) {
+        return {
+          content:          p.content || '',
+          created_at:       p.created_at,
+          url:              p.url || ('https://truthsocial.com/@realDonaldTrump/' + p.id),
+          reblogs_count:    p.reblogs_count || 0,
+          favourites_count: p.favourites_count || 0
+        };
+      });
+      renderTruth(mapped.slice(0, 6));
+      window._truthSource = 'mastodon';
+    })
+    .catch(function() {
+      // Fallback: CNN-arkiv
+      fetch('https://ix.cnn.io/data/truth-social/truth_archive.json')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          renderTruth(data.slice(0, 5));
+          window._truthSource = 'cnn-arkiv';
+        })
+        .catch(function() {
+          var feed = document.getElementById('truth-feed');
+          if (feed) feed.innerHTML = '<div style="font-size:11px;color:var(--muted);padding:8px">Kunne ikke hente Truth Social-feed.</div>';
+        });
     });
 }
 
