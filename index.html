@@ -6079,7 +6079,8 @@ function syncHormuzModalData() {
   s('hzm-big-gs', gsTotal + '%');
   s('hzm-brent-naa', fmtBrent(brent));
   // Dynamisk dag-teller fra stengningsdato 28. februar 2026
-  var dagNr = Math.round((new Date() - new Date('2026-02-28')) / 86400000);
+  var _n = new Date();
+  var dagNr = Math.floor((Date.UTC(_n.getFullYear(), _n.getMonth(), _n.getDate()) - Date.UTC(2026, 1, 28)) / 86400000); // hele døgn, samme regnemåte som Da og nå
   s('hzm-dag-nr', dagNr);
   s('hzm-stengt', dagNr + ' dager');
   s('hzm-konklusjon', konkl);
