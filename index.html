@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html lang="no">
+<html lang="nb">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Interaktiv investormodell for Hormuz-krisen 2026: kalkulator, scenarier, Trumpometer, makrodata og nyheter — syntese av Goodspeed, Fishman, Miran, NDS, NSS og Taleb.">
+<meta name="theme-color" content="#1F3864">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231F3864'/%3E%3Cpath d='M6 22 A10 10 0 0 1 26 22' fill='none' stroke='%23fff' stroke-width='3.5' stroke-linecap='round'/%3E%3Cline x1='16' y1='22' x2='22' y2='12' stroke='%23C53030' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='22' r='2.5' fill='%23fff'/%3E%3C/svg%3E">
 <title>Geopolitisk Systemanalyse 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -94,7 +98,7 @@ body {
   display: flex;
   flex: 1;
   overflow: hidden;
-  height: calc(100vh - 88px);
+  height: calc(100vh - 54px);
 }
 
 /* ── MAIN ───────────────────────────────────── */
@@ -652,19 +656,6 @@ input[type=range]::-webkit-slider-thumb {
   margin-right: 6px; margin-bottom: 6px;
 }
 
-/* ── RESPONSIVE ── RESPONSIVE ── RESPONSIVE ─────────────────────────────── */
-@media (max-width: 860px) {
-  .layout { flex-direction: column; height: auto; overflow: visible; }
-
-  .nav-item.active { border-left: none; border-bottom-color: var(--navy); background: transparent; }
-  .main { padding: 20px 18px 40px; }
-  .stat-grid-3 { grid-template-columns: 1fr 1fr; }
-  .author-grid { grid-template-columns: 1fr; }
-  .taleb-grid { grid-template-columns: 1fr; }
-  .matrix { grid-template-columns: 1fr; }
-  .barbell { flex-direction: column; }
-  .barbell-left { border-right: none; border-bottom: 1px solid var(--border); }
-}
 </style>
 <style>
 /* ── TOOLTIP ── */
@@ -716,7 +707,7 @@ input[type=range]::-webkit-slider-thumb {
 <header class="topbar">
   <div class="topbar-brand" onclick="nav('panel-oversikt')" style="cursor:pointer;user-select:none" title="Tilbake til Dashboard">Geopolitisk Systemanalyse 2026</div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
-    <div class="topbar-meta"><span id="dyn-topbar-date"></span> &nbsp;·&nbsp; Halvard Nordang — Affectum AS</div>
+    <div class="topbar-meta"><span id="dyn-topbar-date"></span><span class="topbar-author"> &nbsp;·&nbsp; Halvard Nordang — Affectum AS</span></div>
     <div class="topbar-badge">KONFIDENSIELT</div>
   </div>
 </header>
@@ -724,7 +715,7 @@ input[type=range]::-webkit-slider-thumb {
 
 
 <!-- ── SØKERESULTATVINDU ── -->
-<div id="search-modal" style="display:none;position:fixed;top:88px;right:20px;width:380px;max-height:70vh;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);z-index:200;display:none;flex-direction:column;overflow:hidden">
+<div id="search-modal" style="position:fixed;top:64px;right:20px;width:380px;max-height:70vh;background:var(--surface);border:1px solid var(--border-md);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);z-index:200;display:none;flex-direction:column;overflow:hidden">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--navy);border-radius:var(--radius-lg) var(--radius-lg) 0 0">
     <span id="search-modal-title" style="font-size:12px;font-weight:600;color:white;letter-spacing:0.04em"></span>
     <button onclick="closeSearchModal()" style="background:none;border:none;color:rgba(255,255,255,0.7);cursor:pointer;font-size:16px;line-height:1;padding:0 2px">&#x2715;</button>
@@ -806,7 +797,7 @@ input[type=range]::-webkit-slider-thumb {
   <!-- ════════════════════════════════════════════════════════════
        RAD 1: HORMUZ (venstre) + TRUMPOMETER (høyre)
   ═══════════════════════════════════════════════════════════════ -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:6px">
+  <div class="dash-row1" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:6px;position:relative">
 
     <!-- ── HORMUZ-KALKULATOR ─────────────────────────────────── -->
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px 16px;box-shadow:var(--shadow)">
@@ -841,7 +832,7 @@ input[type=range]::-webkit-slider-thumb {
             <span style="font-size:11px;font-weight:500;color:var(--muted)">Stengningens varighet
               <span class="tt-trigger" data-tt="tt-varighet" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span>
             </span>
-            <span style="font-size:15px;font-weight:700;color:var(--navy)" id="out-duration" style="font-size:13px">4 uker</span>
+            <span style="font-size:15px;font-weight:700;color:var(--navy)" id="out-duration">4 uker</span>
           </div>
           <input type="range" min="1" max="26" value="4" step="1" id="sl-duration" oninput="updateSliderLabel(this);debouncedCalc()" style="width:100%;accent-color:var(--navy);cursor:pointer;height:3px">
           <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--faint);margin-top:3px"><span>1 uke</span><span>8 uker</span><span>16 uker</span><span>26 uker</span></div>
@@ -851,7 +842,7 @@ input[type=range]::-webkit-slider-thumb {
             <span style="font-size:11px;font-weight:500;color:var(--muted)">Oljeprissjokk (utover Brent <span id="brent-base-lbl" style="color:var(--faint)">~108 $</span>)
               <span class="tt-trigger" data-tt="tt-oljepris" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span>
             </span>
-            <span style="font-size:15px;font-weight:700;color:var(--red)" id="out-oil" style="font-size:13px">+13 $/fat</span>
+            <span style="font-size:15px;font-weight:700;color:var(--red)" id="out-oil">+13 $/fat</span>
           </div>
           <input type="range" min="0" max="115" value="13" step="1" id="sl-oil" oninput="updateSliderLabel(this);debouncedCalc()" style="width:100%;accent-color:var(--red);cursor:pointer;height:3px">
           <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--faint);margin-top:3px"><span>0</span><span>+30 $</span><span>+60 $</span><span>+90 $</span><span>+115 $</span></div>
@@ -861,7 +852,7 @@ input[type=range]::-webkit-slider-thumb {
             <span style="font-size:11px;font-weight:500;color:var(--muted)">Konfliktnivå
               <span class="tt-trigger" data-tt="tt-konflikt" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span>
             </span>
-            <span style="font-size:15px;font-weight:700;color:var(--amber)" id="out-conflict" style="font-size:13px">Begrenset</span>
+            <span style="font-size:15px;font-weight:700;color:var(--amber)" id="out-conflict">Begrenset</span>
           </div>
           <input type="range" min="1" max="3" value="1" step="1" id="sl-conflict" oninput="updateSliderLabel(this);debouncedCalc()" style="width:100%;accent-color:var(--amber);cursor:pointer;height:3px">
           <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--faint);margin-top:3px"><span>Begrenset</span><span style="text-align:center">Eskalert</span><span style="text-align:right">Full krig</span></div>
@@ -869,7 +860,7 @@ input[type=range]::-webkit-slider-thumb {
       </div>
 
       <!-- Fem nøkkeltall — konsistent med stat-card mønster -->
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px">
+      <div class="dash-kpi5" style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px">
         <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:5px 5px;text-align:center">
           <div class="stat-label" style="font-size:8px;margin-bottom:2px">Brent topp <span class="tt-trigger" data-tt="tt-oljepris" style="display:inline-flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
           <div style="font-size:14px;font-weight:700;color:var(--red);line-height:1" id="cr-brent">—</div>
@@ -900,7 +891,7 @@ input[type=range]::-webkit-slider-thumb {
       </div>
 
       <!-- Scenario-indikator: Trumpometer → Scenario -->
-      <div id="dash-sc-indicator" style="display:none;margin-top:6px;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:8px">
+      <div id="dash-sc-indicator" style="display:none;margin-top:6px;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;align-items:center;justify-content:space-between;gap:8px">
         <div style="display:flex;align-items:center;gap:6px">
           <span style="font-size:8.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)">Trumpometer</span>
           <span style="font-size:12px;font-weight:700;color:var(--navy)" id="dash-sc-trump-score">—</span>
@@ -958,32 +949,31 @@ input[type=range]::-webkit-slider-thumb {
 
       <!-- Speedometer sentrert + score overlappende -->
       <div style="display:flex;flex-direction:column;align-items:center;padding:6px 12px 0;position:relative">
-        <svg id="dash-trump-gauge" viewBox="0 0 200 108" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:200px;height:auto;display:block;margin:0 auto">
+        <svg id="dash-trump-gauge" class="gauge-svg" viewBox="0 0 200 118" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="dash-trump-gauge-title" style="width:100%;max-width:210px;height:auto;display:block;margin:0 auto">
+          <title id="dash-trump-gauge-title">Trumpometer: signalstyrke siste 24 timer, skala 0–100</title>
           <defs>
             <linearGradient id="dtGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%"   stop-color="#166534"/>
-              <stop offset="28%"  stop-color="#BA7517"/>
-              <stop offset="62%"  stop-color="#C53030"/>
+              <stop offset="0%"   stop-color="#27500A"/>
+              <stop offset="25%"  stop-color="#639922"/>
+              <stop offset="50%"  stop-color="#BA7517"/>
+              <stop offset="75%"  stop-color="#C53030"/>
               <stop offset="100%" stop-color="#7F1D1D"/>
             </linearGradient>
           </defs>
-          <!-- Track -->
-          <path d="M16,92 A74,74 0 0,1 184,92" fill="none" stroke="#ECEAE4" stroke-width="10" stroke-linecap="round"/>
-          <!-- Colored arc -->
-          <path id="dash-trump-arc" d="M16,92 A74,74 0 0,1 184,92" fill="none" stroke="url(#dtGrad)" stroke-width="10" stroke-linecap="round" stroke-dasharray="232" stroke-dashoffset="232"/>
-          <!-- Soneetiketter -->
-          <text x="10"  y="100" font-size="6.5" fill="#166534" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700">LITEN</text>
-          <text x="42"  y="38"  font-size="6.5" fill="#BA7517" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" transform="rotate(-48 42 38)">MODERAT</text>
-          <text x="158" y="38"  font-size="6.5" fill="#C53030" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" transform="rotate(48 158 38)">HØY</text>
-          <text x="190" y="100" font-size="6.5" fill="#7F1D1D" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700">KRITISK</text>
-          <!-- Needle -->
-          <g id="dash-trump-needle" transform="rotate(-90 100 92)" style="transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
-            <line x1="100" y1="92" x2="100" y2="26" stroke="rgba(0,0,0,.07)" stroke-width="4" stroke-linecap="round"/>
-            <line x1="100" y1="92" x2="100" y2="26" stroke="#1F3864" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="100" y1="92" x2="100" y2="103" stroke="#1F3864" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Geometri: sentrum (100,100), radius 76. pathLength=100 gjør at dashoffset = 100 − score. -->
+          <path d="M24,100 A76,76 0 0,1 176,100" fill="none" stroke="#ECEAE4" stroke-width="10" stroke-linecap="round" pathLength="100"/>
+          <path id="dash-trump-arc" d="M24,100 A76,76 0 0,1 176,100" fill="none" stroke="url(#dtGrad)" stroke-width="10" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" style="transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)"/>
+          <!-- Ticks og etiketter genereres av buildGauge() -->
+          <g id="dash-trump-ticks"></g>
+          <g id="dash-trump-labels"></g>
+          <!-- Nål -->
+          <g id="dash-trump-needle" transform="rotate(-90 100 100)" style="transition:transform 1.4s cubic-bezier(0.34,1.56,0.64,1)">
+            <line x1="100" y1="100" x2="100" y2="54" stroke="rgba(0,0,0,.07)" stroke-width="4" stroke-linecap="round"/>
+            <line x1="100" y1="100" x2="100" y2="54" stroke="#1F3864" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="100" y1="100" x2="100" y2="110" stroke="#1F3864" stroke-width="2.5" stroke-linecap="round"/>
           </g>
-          <circle cx="100" cy="92" r="7" fill="#1F3864"/>
-          <circle cx="100" cy="92" r="3" fill="white"/>
+          <circle cx="100" cy="100" r="7" fill="#1F3864"/>
+          <circle cx="100" cy="100" r="3" fill="white"/>
         </svg>
         <!-- Score + label under SVG -->
         <div style="text-align:center;margin-top:2px;margin-bottom:4px">
@@ -1014,6 +1004,45 @@ input[type=range]::-webkit-slider-thumb {
         </div>
         <div id="dash-trump-feed" style="display:grid;grid-template-columns:1fr 1fr;gap:0 14px">
           <div style="font-size:11px;color:var(--faint);padding:8px 0;grid-column:span 2">Henter nyheter...</div>
+        </div>
+      </div>
+    </div>
+
+<!-- ── KALKULATOR OLJEPRISGRAF OVERLAY ──────────────────────────────────── -->
+    <div id="calc-chart-overlay" class="calc-chart-overlay">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:7px">
+          <span style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)">Oljeprisforløp</span>
+          <span style="font-size:9px;color:var(--faint)">· live beregning</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:9px;color:var(--muted)" id="cco-params">—</span>
+          <button onclick="ccoClose()" style="display:flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--border);border:none;cursor:pointer;color:var(--muted);font-size:13px;line-height:1;font-family:inherit;flex-shrink:0" onmouseover="this.style.background='var(--border-md)'" onmouseout="this.style.background='var(--border)'">×</button>
+        </div>
+      </div>
+      <div style="flex:1;position:relative;min-height:0;overflow:hidden">
+        <canvas id="cco-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%"></canvas>
+        <div id="cco-tooltip" style="display:none;position:absolute;background:var(--navy);color:white;border-radius:5px;padding:4px 8px;font-size:10px;pointer-events:none;white-space:nowrap;z-index:10"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr 1px 1fr;border-top:1px solid var(--border);flex-shrink:0">
+        <div style="padding:5px 8px;text-align:center">
+          <div style="font-size:7.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:1px">Brent topp</div>
+          <div style="font-size:13px;font-weight:700;color:var(--red)" id="cco-brent">—</div>
+        </div>
+        <div style="background:var(--border)"></div>
+        <div style="padding:5px 8px;text-align:center">
+          <div style="font-size:7.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:1px">BNP kum.</div>
+          <div style="font-size:13px;font-weight:700;color:var(--red)" id="cco-gdp">—</div>
+        </div>
+        <div style="background:var(--border)"></div>
+        <div style="padding:5px 8px;text-align:center">
+          <div style="font-size:7.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:1px">KPI</div>
+          <div style="font-size:13px;font-weight:700;color:var(--amber)" id="cco-kpi">—</div>
+        </div>
+        <div style="background:var(--border)"></div>
+        <div style="padding:5px 8px;text-align:center">
+          <div style="font-size:7.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:1px">Resesjon</div>
+          <div style="font-size:12px;font-weight:700" id="cco-risk">—</div>
         </div>
       </div>
     </div>
@@ -1051,7 +1080,7 @@ input[type=range]::-webkit-slider-thumb {
 
     <!-- Situasjonsstatus -->
     <div class="section-label" style="margin-top:0;border-top:none;padding-top:0">Situasjonsstatus — per 2. april 2026</div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px">
+    <div class="status-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px">
       <div style="background:var(--red-lt);border:1px solid rgba(197,48,48,.2);border-radius:var(--radius);padding:14px 16px">
         <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-bottom:6px">Hormuz-status</div>
         <div style="font-size:18px;font-weight:700;color:var(--red);line-height:1;margin-bottom:4px">Stengt 29 dager</div>
@@ -1123,37 +1152,37 @@ input[type=range]::-webkit-slider-thumb {
     <!-- Kildeoversikt kompakt -->
     <div class="section-label">Seks kilder — én syntese</div>
     <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">
-      <div style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
+      <div class="src-row" style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
         <div style="width:28px;height:28px;border-radius:50%;background:#EEEDFE;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#3C3489">GS</div>
         <div><div style="font-size:12px;font-weight:600;color:var(--text)">Tyler Goodspeed</div><div style="font-size:10px;color:var(--muted)">Recession (2025)</div></div>
         <div style="font-size:11px;color:var(--muted);line-height:1.4">Energisjokk involvert i 10/12 resesjoner siden 1945. Resesjoner drepes — de dør ikke.</div>
         <div><span style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:#EEEDFE;color:#3C3489;padding:3px 8px;border-radius:10px">Makroøkonomi</span></div>
       </div>
-      <div style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
+      <div class="src-row" style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
         <div style="width:28px;height:28px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#085041">EF</div>
         <div><div style="font-size:12px;font-weight:600;color:var(--text)">Edward Fishman</div><div style="font-size:10px;color:var(--muted)">Chokepoints (2025)</div></div>
         <div style="font-size:11px;color:var(--muted);line-height:1.4">Fra atferdsendring til strategisk svekkelse. Det umulige trevalget.</div>
         <div><span style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:#E1F5EE;color:#085041;padding:3px 8px;border-radius:10px">Sanksjoner</span></div>
       </div>
-      <div style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
+      <div class="src-row" style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
         <div style="width:28px;height:28px;border-radius:50%;background:#FAEEDA;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#633806">SM</div>
         <div><div style="font-size:12px;font-weight:600;color:var(--text)">Stephen Miran</div><div style="font-size:10px;color:var(--muted)">A User's Guide (2024)</div></div>
         <div style="font-size:11px;color:var(--muted);line-height:1.4">Triffin-dilemmaet. Mar-a-Lago Accord. «There is a path, but it is narrow.»</div>
         <div><span style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:#FAEEDA;color:#633806;padding:3px 8px;border-radius:10px">Handelspolitikk</span></div>
       </div>
-      <div style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
+      <div class="src-row" style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
         <div style="width:28px;height:28px;border-radius:50%;background:#FCEBEB;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#791F1F">NDS</div>
         <div><div style="font-size:12px;font-weight:600;color:var(--text)">Nat. Defense Strategy</div><div style="font-size:10px;color:var(--muted)">Hegseth, jan. 2026</div></div>
         <div style="font-size:11px;color:var(--muted);line-height:1.4">Department of War. The Simultaneity Problem materialisert mars 2026.</div>
         <div><span style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:#FCEBEB;color:#791F1F;padding:3px 8px;border-radius:10px">Forsvar</span></div>
       </div>
-      <div style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
+      <div class="src-row" style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
         <div style="width:28px;height:28px;border-radius:50%;background:#FAECE7;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#7C2D12">NSS</div>
         <div><div style="font-size:12px;font-weight:600;color:var(--text)">Nat. Security Strategy</div><div style="font-size:10px;color:var(--muted)">Det hvite hus, 2026</div></div>
         <div style="font-size:11px;color:var(--muted);line-height:1.4">Energy Dominance undergravet av den militærpolitikken strategien applauderer.</div>
         <div><span style="font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:#FAECE7;color:#7C2D12;padding:3px 8px;border-radius:10px">Sikkerhet</span></div>
       </div>
-      <div style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
+      <div class="src-row" style="display:grid;grid-template-columns:28px 1fr 1fr 120px;gap:12px;align-items:center;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)">
         <div style="width:28px;height:28px;border-radius:50%;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#0C447C">NT</div>
         <div><div style="font-size:12px;font-weight:600;color:var(--text)">Nassim Nicholas Taleb</div><div style="font-size:10px;color:var(--muted)">The Black Swan (2007)</div></div>
         <div style="font-size:11px;color:var(--muted);line-height:1.4">Alle fem andre analytikere er kalibrert for Mediocristan. Geopolitikk 2026 er Extremistan.</div>
@@ -2279,11 +2308,12 @@ input[type=range]::-webkit-slider-thumb {
   </style>
 
   <!-- SPEEDOMETER + STATS -->
-  <div style="display:grid;grid-template-columns:300px 1fr;gap:28px;margin-bottom:20px;align-items:start">
+  <div class="trump-top-grid" style="display:grid;grid-template-columns:300px 1fr;gap:28px;margin-bottom:20px;align-items:start">
 
     <!-- Speedometer -->
     <div style="text-align:center">
-      <svg id="trump-gauge" viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:300px">
+      <svg id="trump-gauge" class="gauge-svg" viewBox="0 0 290 172" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="trump-gauge-title" style="width:100%;max-width:300px;height:auto;display:block;margin:0 auto">
+        <title id="trump-gauge-title">Trumpometer-score 0–100: signalstyrke i Trump-relaterte nyheter siste 24 timer</title>
         <defs>
           <linearGradient id="tGrad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%"   stop-color="#27500A"/>
@@ -2293,31 +2323,19 @@ input[type=range]::-webkit-slider-thumb {
             <stop offset="100%" stop-color="#7F1D1D"/>
           </linearGradient>
         </defs>
-        <!-- Track -->
-        <path d="M28,144 A112,112 0 0,1 252,144" fill="none" stroke="#D3D1C7" stroke-width="20" stroke-linecap="round"/>
-        <!-- Colored arc -->
-        <path id="trump-arc" d="M28,144 A112,112 0 0,1 252,144" fill="none" stroke="url(#tGrad)" stroke-width="20" stroke-linecap="round" stroke-dasharray="352" stroke-dashoffset="352"/>
-        <!-- Ticks -->
-        <g id="trump-ticks" stroke="rgba(0,0,0,.18)" stroke-width="1.5"></g>
-        <!-- Zone labels -->
-        <text x="22"  y="150" font-size="9" fill="#27500A"  font-weight="600" text-anchor="middle">0</text>
-        <text x="62"  y="64"  font-size="9" fill="#639922"  font-weight="600" text-anchor="middle">25</text>
-        <text x="140" y="26"  font-size="9" fill="#BA7517"  font-weight="600" text-anchor="middle">50</text>
-        <text x="218" y="64"  font-size="9" fill="#C53030"  font-weight="600" text-anchor="middle">75</text>
-        <text x="258" y="150" font-size="9" fill="#7F1D1D"  font-weight="600" text-anchor="middle">100</text>
-        <!-- Zone text -->
-        <text x="44"  y="110" font-size="8" fill="#639922" text-anchor="middle">lav</text>
-        <text x="92"  y="52"  font-size="8" fill="#BA7517" text-anchor="middle">moderat</text>
-        <text x="188" y="52"  font-size="8" fill="#C53030" text-anchor="middle">høy</text>
-        <text x="234" y="110" font-size="8" fill="#7F1D1D" text-anchor="middle">kritisk</text>
-        <!-- Needle -->
-        <g id="trump-needle" transform="rotate(-90 140 144)">
-          <line x1="140" y1="144" x2="140" y2="44" stroke="rgba(0,0,0,.1)" stroke-width="5" stroke-linecap="round"/>
-          <line x1="140" y1="144" x2="140" y2="44" stroke="#1F3864" stroke-width="3" stroke-linecap="round"/>
-          <line x1="140" y1="144" x2="140" y2="158" stroke="#1F3864" stroke-width="3" stroke-linecap="round"/>
+        <!-- Geometri: sentrum (145,152), radius 112. pathLength=100 gjør at dashoffset = 100 − score. -->
+        <path d="M33,152 A112,112 0 0,1 257,152" fill="none" stroke="#D3D1C7" stroke-width="20" stroke-linecap="round" pathLength="100"/>
+        <path id="trump-arc" d="M33,152 A112,112 0 0,1 257,152" fill="none" stroke="url(#tGrad)" stroke-width="20" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" style="transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)"/>
+        <g id="trump-ticks"></g>
+        <g id="trump-labels"></g>
+        <!-- Nål -->
+        <g id="trump-needle" transform="rotate(-90 145 152)">
+          <line x1="145" y1="152" x2="145" y2="78" stroke="rgba(0,0,0,.1)" stroke-width="5" stroke-linecap="round"/>
+          <line x1="145" y1="152" x2="145" y2="78" stroke="#1F3864" stroke-width="3" stroke-linecap="round"/>
+          <line x1="145" y1="152" x2="145" y2="166" stroke="#1F3864" stroke-width="3" stroke-linecap="round"/>
         </g>
-        <circle cx="140" cy="144" r="9" fill="#1F3864"/>
-        <circle cx="140" cy="144" r="4" fill="white"/>
+        <circle cx="145" cy="152" r="9" fill="#1F3864"/>
+        <circle cx="145" cy="152" r="4" fill="white"/>
       </svg>
       <div style="margin-top:6px">
         <div style="font-size:40px;font-weight:700;line-height:1;color:var(--navy)" id="trump-score-num">—</div>
@@ -2703,6 +2721,39 @@ function updateSliderLabel(slider) {
   }
 }
 
+// ── FELLES MODELLPARAMETERE ────────────────────────────────────────────────
+// Brukes av kalkulatoren, scenariomodellen, Hormuz-modalen og oljeprisgrafene,
+// slik at alle visninger regner på nøyaktig samme tall.
+var BRENT_FALLBACK = 108;                 // statisk anslag ($/fat) når live-pris ikke er tilgjengelig
+var CONFLICT_MULT  = [0, 1.0, 1.5, 2.2];  // multiplikator per konfliktnivå (1 Begrenset · 2 Eskalert · 3 Full krig)
+function getBrentBase() { return window._brentLive || BRENT_FALLBACK; }
+// Formaterer Brent-pris for visning; markerer statisk anslag tydelig
+function fmtBrent(v) { return brentIsLive() ? v.toFixed(2) + ' $' : '~' + Math.round(v) + ' $ (anslag)'; }
+function brentIsLive()  { return !!window._brentLive; }
+
+// Oljeprisforløp: 9 punkter à 4 uker (indeks i = uke 4·i, dvs. 0–32 uker).
+//  • Fase 1 (stengning, i ≤ durIdx): platå ~0,92–1,0 × sjokk over basispris
+//  • Fase 2 (normalisering): eksponentielt fall mot et gulv som er forankret i
+//    dagens pris (72 % av basis) — jo høyere konfliktnivå, desto tregere fall.
+function hzPricePath(dur, oilShock, conflict, baseOil) {
+  var nPoints = 9;
+  var cm      = CONFLICT_MULT[conflict] || 1;
+  var peak    = Math.round(baseOil + oilShock * cm);
+  var durIdx  = Math.max(1, Math.min(nPoints - 2, Math.round(dur / 4)));
+  var decay   = conflict === 3 ? 0.16 : conflict === 2 ? 0.21 : 0.27;
+  var floor   = Math.max(72, baseOil * 0.72 + oilShock * cm * 0.12);
+  var prices  = [];
+  for (var i = 0; i < nPoints; i++) {
+    var p;
+    if (i === 0)            p = baseOil;
+    else if (i <= durIdx)   p = baseOil + oilShock * cm * (0.92 + 0.08 * Math.sin((i / durIdx) * Math.PI));
+    else                    p = floor + (peak - floor) * Math.exp(-decay * (i - durIdx));
+    prices.push(Math.round(p));
+  }
+  return { prices: prices, durIdx: durIdx, peak: peak, floor: floor, nPoints: nPoints,
+           labels: ['Nå','Uke 4','Uke 8','Uke 12','Uke 16','Uke 20','Uke 24','Uke 28','Uke 32'] };
+}
+
 // Debounce heavy chart rendering — 80ms idle before firing
 let _calcTimer = null;
 function debouncedCalc() {
@@ -2741,9 +2792,10 @@ function calcHormuz() {
   const gdpBase  = kilianGDP(oilShock);        // pp/kv, basis (uten konflikt)
   const gdpScaled = gdpBase * cm;              // pp/kv, inkl. konfliktnivå
 
-  const baseOil  = window._brentLive || null;
-  if (!baseOil) return; // Vent til live-pris er hentet
+  const baseOil  = getBrentBase();   // live Brent, ellers statisk anslag (merkes i etiketten)
   const peakOil  = Math.round(baseOil + oilShock * cm);
+  const baseLbl  = document.getElementById('brent-base-lbl');
+  if (baseLbl) baseLbl.textContent = '~' + Math.round(baseOil) + ' $' + (brentIsLive() ? '' : ' · anslag');
 
   // Varighet i kvartaler (13 uker = 1 kvartal)
   const durQtr = dur / 13;
@@ -2806,205 +2858,8 @@ function calcHormuz() {
   const brentBox = document.getElementById('rb-brent');
   if (brentBox) brentBox.style.borderLeft = peakOil > 150 ? '3px solid var(--red)' : peakOil > 125 ? '3px solid var(--amber)' : '';
 
-  // ── OIL PRICE CHART — Canvas 2D ─────────────────────────────────────────
-  const nPoints = 9;
-  const prices  = [];
-
-  // dur is in weeks (1–26); map to array index space (nPoints=9 covers ~32 weeks)
-  const durIdx = Math.round((dur / 26) * (nPoints - 1));
-
-  for (let i = 0; i < nPoints; i++) {
-    let p;
-    if (i === 0) {
-      p = baseOil;
-    } else if (i <= durIdx) {
-      const frac = i / Math.max(durIdx, 1);
-      p = baseOil + oilShock * cm * (0.92 + 0.08 * Math.sin(frac * Math.PI));
-    } else {
-      const t = i - durIdx;
-      const decayRate = conflict === 3 ? 0.16 : conflict === 2 ? 0.21 : 0.27;
-      const floorOil  = 72 + oilShock * cm * 0.12;
-      p = floorOil + (peakOil - floorOil) * Math.exp(-decayRate * t);
-    }
-    prices.push(Math.round(p));
-  }
-
-  const canvas = document.getElementById('hz-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const CW  = canvas.width;
-  const CH  = canvas.height;
-  const PAD = { l: 46, r: 16, t: 20, b: 36 };
-  const PW  = CW - PAD.l - PAD.r;
-  const PH  = CH - PAD.t - PAD.b;
-
-  const maxP  = Math.max(peakOil + 18, baseOil + 30, 145);
-  const minP  = Math.min(58, baseOil * 0.52);
-  const range = maxP - minP;
-
-  function cy(price) { return PAD.t + PH - ((price - minP) / range) * PH; }
-  function cx(i)     { return PAD.l + (i / (nPoints - 1)) * PW; }
-
-  ctx.clearRect(0, 0, CW, CH);
-
-  // Background
-  ctx.fillStyle = '#FAFAF8';
-  ctx.beginPath();
-  if (ctx.roundRect) ctx.roundRect(0, 0, CW, CH, 8); else ctx.rect(0, 0, CW, CH);
-  ctx.fill();
-
-  // GS risk band
-  const gsBandTop = cy(baseOil + 16);
-  const gsBandBot = cy(Math.max(minP, baseOil - 4));
-  ctx.fillStyle = 'rgba(186,117,23,0.09)';
-  ctx.fillRect(PAD.l, gsBandTop, PW, gsBandBot - gsBandTop);
-
-  // Gridlines + Y labels
-  const yTicks = 5;
-  ctx.font = '11px "DM Sans", sans-serif';
-  ctx.textAlign = 'right';
-  for (let k = 0; k <= yTicks; k++) {
-    const price = minP + (range / yTicks) * k;
-    const y = cy(price);
-    ctx.strokeStyle = k === 0 ? 'rgba(0,0,0,0.12)' : 'rgba(0,0,0,0.05)';
-    ctx.lineWidth = k === 0 ? 1 : 0.5;
-    ctx.setLineDash([]);
-    ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(PAD.l + PW, y); ctx.stroke();
-    ctx.fillStyle = 'rgba(0,0,0,0.28)';
-    ctx.fillText(Math.round(price), PAD.l - 5, y + 3.5);
-  }
-
-  // Anchor lines
-  var anchors = [
-    { price: 72,  color: '#14532D', dash: [5,4], label: '72 $ pre-krig',    alpha: 0.5 },
-    { price: 89,  color: '#92400E', dash: [5,4], label: '89 $ Hormuz-dag',  alpha: 0.5 },
-    { price: 127, color: '#888780', dash: [3,5], label: '127 $ (2022-topp)',  alpha: 0.38 },
-  ];
-  ctx.font = '10px "DM Sans", sans-serif';
-  ctx.textAlign = 'left';
-  anchors.forEach(function(a) {
-    if (a.price < minP || a.price > maxP) return;
-    const y = cy(a.price);
-    ctx.globalAlpha = a.alpha;
-    ctx.strokeStyle = a.color; ctx.lineWidth = 1; ctx.setLineDash(a.dash);
-    ctx.beginPath(); ctx.moveTo(PAD.l, y); ctx.lineTo(PAD.l + PW, y); ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle = a.color;
-    ctx.fillText(a.label, PAD.l + 4, y - 3);
-    ctx.globalAlpha = 1;
-  });
-
-  // Stengning shading
-  if (durIdx > 0) {
-    const x0 = cx(0), x1 = cx(Math.min(durIdx, nPoints - 1));
-    ctx.fillStyle = 'rgba(197,48,48,0.04)';
-    ctx.fillRect(x0, PAD.t, x1 - x0, PH);
-    if (x1 - x0 > 40) {
-      ctx.font = '10px "DM Sans", sans-serif';
-      ctx.fillStyle = 'rgba(197,48,48,0.45)';
-      ctx.textAlign = 'center';
-      ctx.fillText('Stengt', (x0 + x1) / 2, PAD.t + 13);
-    }
-    ctx.textAlign = 'left';
-  }
-
-  // Counterfactual line
-  ctx.strokeStyle = 'rgba(184,183,176,0.55)';
-  ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
-  ctx.beginPath();
-  for (var i = 0; i < nPoints; i++) { i === 0 ? ctx.moveTo(cx(i), cy(baseOil)) : ctx.lineTo(cx(i), cy(baseOil)); }
-  ctx.stroke(); ctx.setLineDash([]);
-
-  // Fill under Brent line
-  var grad = ctx.createLinearGradient(0, PAD.t, 0, PAD.t + PH);
-  grad.addColorStop(0, 'rgba(197,48,48,0.14)');
-  grad.addColorStop(1, 'rgba(197,48,48,0)');
-  ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.moveTo(cx(0), cy(prices[0]));
-  for (var i = 1; i < nPoints; i++) ctx.lineTo(cx(i), cy(prices[i]));
-  ctx.lineTo(cx(nPoints - 1), PAD.t + PH);
-  ctx.lineTo(cx(0), PAD.t + PH);
-  ctx.closePath(); ctx.fill();
-
-  // Brent line
-  ctx.strokeStyle = '#C53030'; ctx.lineWidth = 2.5;
-  ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.setLineDash([]);
-  ctx.beginPath();
-  for (var i = 0; i < nPoints; i++) { i === 0 ? ctx.moveTo(cx(i), cy(prices[i])) : ctx.lineTo(cx(i), cy(prices[i])); }
-  ctx.stroke();
-
-  // Data points
-  for (var i = 0; i < nPoints; i++) {
-    var isActive = i > 0 && i <= dur;
-    ctx.beginPath();
-    ctx.arc(cx(i), cy(prices[i]), isActive ? 4 : 3, 0, Math.PI * 2);
-    ctx.fillStyle   = isActive ? '#C53030' : '#E09090';
-    ctx.strokeStyle = 'white'; ctx.lineWidth = 1.5;
-    ctx.fill(); ctx.stroke();
-  }
-
-  // X-axis labels
-  var xlab = ['Nå','Uke 4','Uke 8','Uke 12','Uke 16','Uke 20','Uke 24','Uke 28','Uke 32'];
-  ctx.font = '10px "DM Sans", sans-serif';
-  ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.textAlign = 'center';
-  for (var i = 0; i < nPoints; i++) {
-    if (i < xlab.length) ctx.fillText(xlab[i], cx(i), PAD.t + PH + 22);
-  }
-
-  // Peak callout
-  var peakIdx = prices.indexOf(Math.max.apply(null, prices));
-  if (peakIdx >= 0 && prices[peakIdx] > baseOil + 2) {
-    ctx.font = 'bold 11px "DM Sans", sans-serif';
-    ctx.fillStyle = '#C53030';
-    ctx.textAlign = peakIdx > nPoints / 2 ? 'right' : 'left';
-    ctx.fillText('~' + prices[peakIdx] + ' $', cx(peakIdx) + (peakIdx > nPoints/2 ? -9 : 9), cy(prices[peakIdx]) - 9);
-  }
-
-  // Hover tooltip (bind once, update via stored data)
-  canvas._prices = prices.slice();
-  canvas._dur    = dur;
-  canvas._durIdx = durIdx;
-  if (!canvas._hzBound) {
-    canvas._hzBound = true;
-    var tooltip  = document.getElementById('hz-tooltip');
-    var ttPeriod = document.getElementById('hz-tt-period');
-    var ttPrice  = document.getElementById('hz-tt-price');
-    var ttPhase  = document.getElementById('hz-tt-phase');
-    var xlab2    = ['Nå','Uke 4','Uke 8','Uke 12','Uke 16','Uke 20','Uke 24','Uke 28','Uke 32'];
-    canvas.addEventListener('mousemove', function(e) {
-      var rect = canvas.getBoundingClientRect();
-      var scX = canvas.width / rect.width;
-      var mx  = (e.clientX - rect.left) * scX;
-      var best = 0, bestD = Infinity;
-      var n = canvas._prices ? canvas._prices.length : nPoints;
-      var stepW = PW / (n - 1);
-      for (var i = 0; i < n; i++) {
-        var d = Math.abs(PAD.l + i * stepW - mx);
-        if (d < bestD) { bestD = d; best = i; }
-      }
-      if (bestD > stepW * 0.7) { tooltip.style.display = 'none'; return; }
-      var p = canvas._prices ? canvas._prices[best] : 0;
-      var d2 = canvas._durIdx || 1;
-      var phase = best === 0 ? 'Brent i dag' : best <= d2 ? 'Stengning aktiv' : 'Normalisering';
-      if (ttPeriod) ttPeriod.textContent = xlab2[best] || '';
-      if (ttPrice)  ttPrice.textContent  = '~' + p + ' $/fat';
-      if (ttPhase)  ttPhase.textContent  = phase;
-      var relX = e.clientX - rect.left;
-      var relY = e.clientY - rect.top;
-      tooltip.style.left    = (relX > rect.width * 0.6 ? relX - 115 : relX + 14) + 'px';
-      tooltip.style.top     = Math.max(4, relY - 44) + 'px';
-      tooltip.style.display = 'block';
-    });
-    canvas.addEventListener('mouseleave', function() {
-      if (tooltip) tooltip.style.display = 'none';
-    });
-  }
-
-  
-
-
-
+  // Oljeprisgrafen tegnes av ccoDraw() (dashboard-overlay) og drawHzmGraf() (Hormuz-modal),
+  // begge basert på hzPricePath().
 }
 function setScenario(key, el) {
   document.querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
@@ -3291,13 +3146,14 @@ function fetchBrent() {
     var statEl = document.getElementById('live-brent-stat');
     var srcEl  = document.getElementById('live-brent-src');
     if (!price) {
-      window._brentLive = null;
-      if (lbl)    lbl.textContent  = '';
+      if (window._brentLive) return;          // behold pris fra markedsstripen hvis den finnes
+      if (lbl)    lbl.textContent  = '~' + BRENT_FALLBACK + ' $ · anslag';
       if (statEl) statEl.textContent = '';
       if (srcEl)  srcEl.textContent  = '';
       return;
     }
     window._brentLive = price;
+    if (typeof debouncedCalc === 'function') debouncedCalc();
     if (lbl)    lbl.textContent  = '~' + Math.round(price) + ' $';
     if (statEl) statEl.textContent = price.toFixed(2) + ' $/fat';
     if (srcEl) {
@@ -3388,7 +3244,7 @@ function renderTruth(posts) {
     var kort = text.length > 140 ? text.substring(0, 140) + '…' : text;
     var relevant = keywords.some(function(k) { return text.toLowerCase().indexOf(k) !== -1; });
 
-    return '<a href="' + p.url + '" target="_blank" rel="noopener" class="truth-card' + (relevant ? ' truth-relevant' : '') + '" style="' +
+    return '<a href="' + safeUrl(p.url) + '" target="_blank" rel="noopener" class="truth-card' + (relevant ? ' truth-relevant' : '') + '" style="' +
       'flex:1 1 ' + w + ';min-width:0;' +
       'background:var(--surface);' +
       'border:1px solid ' + (relevant ? 'rgba(197,48,48,.35)' : 'var(--border)') + ';' +
@@ -3403,7 +3259,7 @@ function renderTruth(posts) {
           : '<span style="font-size:7px;color:var(--faint)">Truth Social</span>') +
         '<span style="font-size:8px;color:var(--faint);flex-shrink:0">' + dato + ' &#x2197;</span>' +
       '</div>' +
-      '<div style="font-size:11px;line-height:1.55;color:var(--text);font-weight:300;flex:1;overflow:hidden">' + kort + '</div>' +
+      '<div style="font-size:11px;line-height:1.55;color:var(--text);font-weight:300;flex:1;overflow:hidden">' + escHtml(kort) + '</div>' +
       '<div style="font-size:8px;color:var(--faint)">' +
         (p.reblogs_count ? '&#x21BA; ' + p.reblogs_count.toLocaleString() + ' ' : '') +
         (p.favourites_count ? '&#x2665; ' + p.favourites_count.toLocaleString() : '') +
@@ -3421,6 +3277,12 @@ var _marketSymbols = [
 
 function fetchMarkets() {
   var PROXY = '/api/proxy?url=';
+  // Plassholdere før første svar, slik at stripen ikke står tom
+  document.querySelectorAll('.mkt-box').forEach(function(box) {
+    if (!box.innerHTML.trim()) {
+      box.innerHTML = '<div class="mkt-label">' + escHtml(box.dataset.label) + '</div><div class="mkt-val" style="color:var(--faint)">—</div><div class="mkt-chg" style="color:var(--faint)">venter</div>';
+    }
+  });
   // Individuelle v8-kall — batch v7 er blokkert
   _marketSymbols.forEach(function(sym) {
     var url = PROXY + encodeURIComponent(
@@ -3462,6 +3324,7 @@ function fetchMarkets() {
         if (sym === 'BZ=F') {
           window._brentLive = p;
           updateSpreadBanner();
+          if (typeof debouncedCalc === 'function') debouncedCalc();
           var lbl = document.getElementById('brent-base-lbl');
           if (lbl) lbl.textContent = '~' + Math.round(p) + ' $';
           var statEl = document.getElementById('live-brent-stat');
@@ -3474,7 +3337,12 @@ function fetchMarkets() {
 
         }
       })
-      .catch(function() {}); // Stille feil per symbol
+      .catch(function() {
+        var box = document.querySelector('.mkt-box[data-sym="' + sym + '"]');
+        if (box && !box.classList.contains('up') && !box.classList.contains('down')) {
+          var chg = box.querySelector('.mkt-chg'); if (chg) chg.textContent = 'ingen data';
+        }
+      });
   });
 }
 
@@ -3636,6 +3504,29 @@ function fetchAllNews() {
         if (loaded === _newsSources.length) renderNews();
       });
   });
+
+  // Etter at alle kilder har svart (eller feilet): vis tydelig status hvis tomt
+  var _chk = setInterval(function() {
+    if (loaded < _newsSources.length) return;
+    clearInterval(_chk);
+    if (_newsItems.length > 0) return;
+    var msg = '<div style="text-align:center;padding:28px 12px;color:var(--muted);font-size:12px;line-height:1.6">'
+      + '<div style="font-size:20px;margin-bottom:6px">⚠</div>'
+      + '<strong>Ingen nyheter kunne hentes.</strong><br>'
+      + 'RSS-kildene nås via <code>/api/proxy</code> (Vercel). Sjekk at siden kjører på Vercel-domenet og at proxyen svarer.'
+      + '</div>';
+    ['news-feed','trump-feed'].forEach(function(id) { var el = document.getElementById(id); if (el) el.innerHTML = msg; });
+    var df = document.getElementById('dash-trump-feed');
+    if (df) df.innerHTML = '<div style="font-size:11px;color:var(--muted);padding:8px 0;grid-column:span 2">⚠ Ingen nyheter tilgjengelig — proxy svarer ikke</div>';
+    var s2 = function(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; };
+    s2('news-status', 'Ingen kilder svarte');
+    s2('dash-trump-label', 'Ingen data');
+    s2('dash-trump-score', '—');
+    s2('dash-trump-count', '0');
+    s2('trump-score-label', 'Ingen data tilgjengelig');
+    s2('trump-updated', 'Ingen kilder svarte');
+    s2('trump-direction', 'Retning kan ikke beregnes uten nyhetsdata');
+  }, 500);
 }
 
 function renderNews() {
@@ -3683,13 +3574,13 @@ function renderNews() {
         '<div style="flex:1;min-width:0">' +
           '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap">' +
             badges +
-            '<span style="font-size:9px;color:var(--faint);margin-left:auto;white-space:nowrap">'+item.source+'</span>' +
+            '<span style="font-size:9px;color:var(--faint);margin-left:auto;white-space:nowrap">'+escHtml(item.source)+'</span>' +
           '</div>' +
-          '<a href="'+item.link+'" target="_blank" rel="noopener" style="font-size:12.5px;font-weight:600;color:var(--text);text-decoration:none;line-height:1.4;display:block;margin-bottom:3px" '+
+          '<a href="'+safeUrl(item.link)+'" target="_blank" rel="noopener" style="font-size:12.5px;font-weight:600;color:var(--text);text-decoration:none;line-height:1.4;display:block;margin-bottom:3px" '+
             '>'+
-            item.title +
+            escHtml(item.title) +
           '</a>' +
-          (descText ? '<div style="font-size:11px;color:var(--muted);line-height:1.5">'+descText+'</div>' : '') +
+          (descText ? '<div style="font-size:11px;color:var(--muted);line-height:1.5">'+escHtml(descText)+'</div>' : '') +
         '</div>' +
         '<div style="flex-shrink:0;text-align:right;min-width:60px">' +
           '<div style="font-size:10px;font-weight:600;color:var(--navy)">'+item.timeStr+'</div>' +
@@ -3715,8 +3606,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Også hent ved navigasjon til nyhetspanelet
 var _origNav = window.nav;
-window.nav = function(el) {
-  if (_origNav) _origNav(el);
+window.nav = function(el, skipHistory) {
+  if (_origNav) _origNav(el, skipHistory);
   if (el && el.dataset && el.dataset.panel === 'nyheter') {
     if (_newsItems.length === 0) fetchAllNews();
   }
@@ -4325,7 +4216,54 @@ window.nav = function(el) {
       positionTooltip(trigger, ttEl);
     }
   });
+
+  // Berøringsskjermer har ingen hover: tapp på «?» viser/skjuler tooltip,
+  // tapp utenfor lukker den.
+  var touchOnly = window.matchMedia && window.matchMedia('(hover: none)').matches;
+  if (touchOnly) {
+    document.addEventListener('click', function(e) {
+      var trigger = e.target.closest ? e.target.closest('.tt-trigger') : null;
+      if (trigger) {
+        e.preventDefault(); e.stopPropagation();
+        var box = document.getElementById(trigger.dataset.tt);
+        if (!box) return;
+        var open = box.classList.contains('visible');
+        document.querySelectorAll('.tt-box.visible').forEach(function(b) { b.classList.remove('visible'); });
+        if (!open) { box.classList.add('visible'); positionTooltip(trigger, box); ttEl = box; activeTooltip = trigger.dataset.tt; }
+        else { activeTooltip = null; }
+        return;
+      }
+      if (activeTooltip) {
+        document.querySelectorAll('.tt-box.visible').forEach(function(b) { b.classList.remove('visible'); });
+        activeTooltip = null;
+      }
+    }, true);
+  }
 })();
+
+// ── HTML-ESCAPING ────────────────────────────────────────────────────────────
+// RSS-titler/lenker settes inn via innerHTML. Escaping hindrer at feed-innhold
+// kan injisere markup eller skript i siden.
+function escHtml(v) {
+  return String(v == null ? '' : v)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function safeUrl(u) {
+  u = String(u || '').trim();
+  return /^https?:\/\//i.test(u) ? escHtml(u) : '#';
+}
+
+// ── TABELLER: horisontal scroll på smale skjermer ───────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('table.compare-table, table.doc-table, table.popup-perera-table').forEach(function(t) {
+    if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'table-scroll';
+    t.parentNode.insertBefore(wrap, t);
+    wrap.appendChild(t);
+  });
+});
 
 // ── DASHBOARD NYHETER — scorer og viser mest relevante RSS-nyheter ───────────
 
@@ -4405,9 +4343,9 @@ function updateDashboardNews() {
       '<span style="font-size:9px;font-weight:600;color:' + catStyle.color + ';white-space:nowrap;padding-top:2px;min-width:52px;text-align:right">' +
         timeLabel +
       '</span>' +
-      '<a href="' + item.link + '" target="_blank" rel="noopener" ' +
+      '<a href="' + safeUrl(item.link) + '" target="_blank" rel="noopener" ' +
          'style="font-size:11px;color:var(--text);line-height:1.4;text-decoration:none;flex:1">' +
-        title +
+        escHtml(title) +
       '</a>';
 
     feed.appendChild(row);
@@ -4442,10 +4380,7 @@ function syncDashTrump() {
   var meter = count > 0 ? Math.min(100, Math.round(avg*0.7 + avg*volF*0.3)) : 0;
 
   // Mini-speedometer nål
-  var needle = document.getElementById('dash-trump-needle');
-  if (needle) needle.setAttribute('transform', 'rotate(' + (-90 + meter*1.8) + ' 100 92)');
-  var arc = document.getElementById('dash-trump-arc');
-  if (arc) arc.setAttribute('stroke-dashoffset', (232 - meter/100*232).toFixed(1));
+  setGaugeValue('dash-trump-needle', 'dash-trump-arc', 100, 100, meter);
 
   // Score og label
   var scoreEl = document.getElementById('dash-trump-score');
@@ -4491,7 +4426,7 @@ function syncDashTrump() {
     row.innerHTML =
       '<div style="display:flex;align-items:center;justify-content:center;border-radius:4px;width:26px;height:16px;flex-shrink:0;margin-top:2px;background:'+(s.score>=60?'#FEF2F2':'#F5F4F0')+';color:'+scorCol+';font-size:9px;font-weight:700">'+s.score+'</div>'+
       '<div style="flex:1;min-width:0">'+
-        '<a href="'+it.link+'" target="_blank" rel="noopener" style="font-size:10.5px;font-weight:500;color:var(--text);text-decoration:none;line-height:1.3;display:block">'+it.title.substring(0,58)+(it.title.length>58?'…':'')+'</a>'+
+        '<a href="'+safeUrl(it.link)+'" target="_blank" rel="noopener" style="font-size:10.5px;font-weight:500;color:var(--text);text-decoration:none;line-height:1.3;display:block">'+escHtml(it.title.substring(0,58))+(it.title.length>58?'…':'')+'</a>'+
         '<div style="display:flex;gap:3px;align-items:center;margin-top:2px;flex-wrap:wrap">'+
           (primaryCat ? '<span style="font-size:7.5px;font-weight:700;padding:1px 5px;border-radius:8px;letter-spacing:.04em;background:'+tc.bg+';color:'+tc.c+'">'+(catLabels[primaryCat]||primaryCat)+'</span>' : '')+
           '<span style="font-size:8.5px;color:var(--faint)">'+age+'</span>'+
@@ -4680,7 +4615,7 @@ function updateScenarios() {
   var dur      = parseInt((document.getElementById('sl-duration') || {}).value) || 5;
   var oilShock = parseInt((document.getElementById('sl-oil')      || {}).value) || 13;
   var conflict = parseInt((document.getElementById('sl-conflict') || {}).value) || 1;
-  var baseOil  = window._brentLive || 108;
+  var baseOil  = getBrentBase();
   var cm = [0, 1.0, 1.5, 2.2][conflict];
   var conflictLabels = ['', 'Begrenset', 'Eskalert', 'Full krig'];
   var peakOil = Math.round(baseOil + oilShock * cm);
@@ -4862,32 +4797,58 @@ var _trumpTemaFilter  = 'alle';
 var _trumpFwFilter    = 'alle';
 var _trumpScoreFilter = 0;
 
-// Tegn tick-marks på speedometeret (kjøres én gang)
-(function() {
-  var g = document.getElementById('trump-ticks');
-  if (!g) return;
-  for (var i = 0; i <= 10; i++) {
-    var angle = (-180 + i * 18) * Math.PI / 180;
-    var cx = 140, cy = 144, r = 112;
-    var x1 = cx + r * Math.cos(angle);
-    var y1 = cy + r * Math.sin(angle);
-    var ri = i % 5 === 0 ? 95 : 103;
-    var x2 = cx + ri * Math.cos(angle);
-    var y2 = cy + ri * Math.sin(angle);
-    var line = document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1', x1.toFixed(1)); line.setAttribute('y1', y1.toFixed(1));
-    line.setAttribute('x2', x2.toFixed(1)); line.setAttribute('y2', y2.toFixed(1));
-    line.setAttribute('stroke', 'rgba(0,0,0,.2)');
-    line.setAttribute('stroke-width', i % 5 === 0 ? '2' : '1');
-    g.appendChild(line);
+// ── FELLES SPEEDOMETER-BYGGER ──────────────────────────────────────────────
+// Tegner tick-marks (hver 10. poeng), tall utenfor buen (0–100) og sonenavn
+// innenfor buen. Sonene speiler score-terskelene i trumpScoreWord():
+//   <20 Svak · 20–39 Lav · 40–59 Moderat · 60–79 Høy · 80–100 Kritisk
+// Vinkel: score 0 = 180° (venstre), score 100 = 360° (høyre). 1 poeng = 1,8°.
+function buildGauge(cfg) {
+  var NS = 'http://www.w3.org/2000/svg';
+  var ticks  = document.getElementById(cfg.ticksId);
+  var labels = document.getElementById(cfg.labelsId);
+  if (!ticks || !labels) return;
+  ticks.innerHTML = ''; labels.innerHTML = '';
+  function pt(score, r) {
+    var a = (180 + score * 1.8) * Math.PI / 180;
+    return [cfg.cx + r * Math.cos(a), cfg.cy + r * Math.sin(a)];
   }
-})();
+  function mk(tag, attrs, txt) {
+    var el = document.createElementNS(NS, tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    if (txt != null) el.textContent = txt;
+    return el;
+  }
+  var zoneCol = function(sc) { return sc >= 80 ? '#7F1D1D' : sc >= 60 ? '#C53030' : sc >= 40 ? '#BA7517' : sc >= 20 ? '#639922' : '#27500A'; };
+  for (var sc = 0; sc <= 100; sc += 10) {
+    var major = sc % 20 === 0;
+    var a = pt(sc, cfg.rOuter), b = pt(sc, cfg.rOuter + (major ? cfg.tickMajor : cfg.tickMinor));
+    ticks.appendChild(mk('line', { x1:a[0].toFixed(1), y1:a[1].toFixed(1), x2:b[0].toFixed(1), y2:b[1].toFixed(1),
+      stroke: major ? 'rgba(0,0,0,.35)' : 'rgba(0,0,0,.18)', 'stroke-width': major ? 1.5 : 1 }));
+    if (major) {
+      var t = pt(sc, cfg.rNum);
+      labels.appendChild(mk('text', { x:t[0].toFixed(1), y:(t[1] + cfg.numFont * 0.36).toFixed(1), 'font-size':cfg.numFont,
+        'font-weight':700, fill: zoneCol(sc), 'text-anchor':'middle', 'font-family':'DM Sans, sans-serif' }, sc));
+    }
+  }
+  [[30,'Lav'],[50,'Moderat'],[70,'Høy'],[90,'Kritisk']].forEach(function(z) {
+    var t = pt(z[0], cfg.rZone);
+    labels.appendChild(mk('text', { x:t[0].toFixed(1), y:(t[1] + cfg.zoneFont * 0.36).toFixed(1), 'font-size':cfg.zoneFont,
+      'font-weight':600, fill: zoneCol(z[0]), 'text-anchor':'middle', 'font-family':'DM Sans, sans-serif', 'letter-spacing':'.04em' }, z[1].toUpperCase()));
+  });
+}
+// Setter nål og fargebue for et speedometer. dashoffset = 100 − score (pathLength=100).
+function setGaugeValue(needleId, arcId, cx, cy, score) {
+  var sc = Math.max(0, Math.min(100, Number(score) || 0));
+  var needle = document.getElementById(needleId);
+  if (needle) needle.setAttribute('transform', 'rotate(' + (-90 + sc * 1.8).toFixed(1) + ' ' + cx + ' ' + cy + ')');
+  var arc = document.getElementById(arcId);
+  if (arc) arc.setAttribute('stroke-dashoffset', (100 - sc).toFixed(1));
+}
+buildGauge({ ticksId:'trump-ticks', labelsId:'trump-labels', cx:145, cy:152, rOuter:122, tickMajor:6, tickMinor:3, rNum:134, numFont:9, rZone:84, zoneFont:8 });
+buildGauge({ ticksId:'dash-trump-ticks', labelsId:'dash-trump-labels', cx:100, cy:100, rOuter:81, tickMajor:4, tickMinor:2, rNum:90, numFont:6.5, rZone:56, zoneFont:5.5 });
 
 function setTrumpNeedle(score) {
-  var needle = document.getElementById('trump-needle');
-  if (needle) needle.setAttribute('transform', 'rotate(' + (-90 + score * 1.8) + ' 140 144)');
-  var arc = document.getElementById('trump-arc');
-  if (arc) arc.setAttribute('stroke-dashoffset', (352 - score / 100 * 352).toFixed(1));
+  setGaugeValue('trump-needle', 'trump-arc', 145, 152, score);
   var numEl = document.getElementById('trump-score-num');
   if (numEl) { numEl.textContent = score; numEl.style.color = trumpScoreColor(score); }
   var labels = { 80:'Kritisk signalnivå — handl nå', 60:'Høy aktivitet — følg nøye',
@@ -5147,10 +5108,10 @@ function renderTrumpFeed() {
         '<div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;margin-bottom:3px">' +
           temaBadges + fwBadges +
           (matched.length ? '<span style="font-size:9px;color:var(--faint);font-style:italic">· '+matched.join(', ')+'</span>' : '') +
-          '<span style="font-size:9px;color:var(--faint);margin-left:auto">'+item.source+'</span>' +
+          '<span style="font-size:9px;color:var(--faint);margin-left:auto">'+escHtml(item.source)+'</span>' +
         '</div>' +
-        '<a href="'+item.link+'" target="_blank" rel="noopener" style="font-size:12px;font-weight:600;color:var(--text);text-decoration:none;line-height:1.4;display:block;margin-bottom:2px">' + item.title + '</a>' +
-        (desc ? '<div style="font-size:10.5px;color:var(--muted);line-height:1.4">'+desc+'</div>' : '') +
+        '<a href="'+safeUrl(item.link)+'" target="_blank" rel="noopener" style="font-size:12px;font-weight:600;color:var(--text);text-decoration:none;line-height:1.4;display:block;margin-bottom:2px">' + escHtml(item.title) + '</a>' +
+        (desc ? '<div style="font-size:10.5px;color:var(--muted);line-height:1.4">'+escHtml(desc)+'</div>' : '') +
       '</div>' +
       '<div style="flex-shrink:0;text-align:right;min-width:40px">' +
         '<div style="font-size:10px;font-weight:600;color:'+col+'">'+ageStr+'</div>' +
@@ -5169,8 +5130,8 @@ window.renderNews = function() {
 };
 
 var _origNavTrump = window.nav;
-window.nav = function(el) {
-  if (_origNavTrump) _origNavTrump(el);
+window.nav = function(el, skipHistory) {
+  if (_origNavTrump) _origNavTrump(el, skipHistory);
   if (el && el.dataset && el.dataset.panel === 'trumpometer') {
     if (_newsItems && _newsItems.length > 0) updateTrumpometer();
     else if (typeof fetchAllNews === 'function') fetchAllNews();
@@ -5255,7 +5216,9 @@ window.nav = function(el) {
 .popup-body { overflow-y:auto;flex:1;padding:20px 24px; }
 .calc-chart-overlay {
   display:none;
-  position:fixed;
+  position:absolute;
+  top:0; right:0; bottom:0;
+  width:calc(50% - 6px);
   z-index:500;
   background:var(--surface);
   border:1px solid var(--border);
@@ -5753,7 +5716,7 @@ function syncScenarioModalParams() {
   var dur       = parseInt((document.getElementById('sl-duration') || {}).value) || 4;
   var oilShock  = parseInt((document.getElementById('sl-oil')      || {}).value) || 13;
   var conflict  = parseInt((document.getElementById('sl-conflict') || {}).value) || 1;
-  var brentLive = window._brentLive || 108;
+  var brentLive = getBrentBase();
   var wtiLive   = window._wtiLive   || brentLive * 0.97;
   var cm        = conflict === 1 ? 1 : conflict === 2 ? 1.5 : 2.2;
   var confNames = ['','Begrenset','Eskalert','Full krig'];
@@ -5771,7 +5734,7 @@ function syncScenarioModalParams() {
   var pCstr = Math.round(pC) + ' %';
 
   // ── HEADER ────────────────────────────────────────────────────
-  s('scm-brent-live', brentLive.toFixed(2) + ' $');
+  s('scm-brent-live', fmtBrent(brentLive));
   s('scm-dur',  durTxt);
   s('scm-oil',  '+' + oilShock + ' $/fat · ' + (confNames[conflict] || conflict));
   s('scm-peak', '~' + brentPeak + ' $');
@@ -6309,7 +6272,7 @@ function syncHormuzModalData() {
   var dur      = parseInt((document.getElementById('sl-duration') || {}).value) || 4;
   var oilShock = parseInt((document.getElementById('sl-oil')      || {}).value) || 13;
   var conflict = parseInt((document.getElementById('sl-conflict') || {}).value) || 1;
-  var brent    = window._brentLive || 108;
+  var brent    = getBrentBase();
   var wti      = window._wtiLive   || brent * 0.97;
   var confNames = ['','Begrenset','Eskalert','Full krig'];
   var durTxt   = dur === 1 ? '1 uke' : dur + ' uker';
@@ -6377,7 +6340,7 @@ function syncHormuzModalData() {
 
   // ── FYLL INN ALLE ELEMENTER ──
   // Header
-  s('hzm-brent-live', brent.toFixed(2) + ' $');
+  s('hzm-brent-live', fmtBrent(brent));
   s('hzm-params', durTxt + ' · +' + oilShock + ' $ · ' + confNames[conflict]);
 
   // KPI-strip
@@ -6392,14 +6355,14 @@ function syncHormuzModalData() {
   s('hzm-ctx-dur',    durTxt);
   s('hzm-ctx-oil',    '+' + oilShock + ' $/fat');
   s('hzm-ctx-conf',   confNames[conflict] || conflict);
-  s('hzm-ctx-brent',  brent.toFixed(2) + ' $');
+  s('hzm-ctx-brent',  fmtBrent(brent));
   s('hzm-ctx-wti',    wti.toFixed(2) + ' $');
   var spreadEl = document.getElementById('hzm-ctx-spread');
   if (spreadEl) { spreadEl.textContent = spreadTxt; spreadEl.style.color = inv ? 'var(--red)' : 'var(--green)'; }
   s('hzm-big-brent', '~' + brentPeak + ' $');
   s('hzm-big-bnp',   '−' + bnpKum + ' pp');
   s('hzm-big-gs', gsTotal + '%');
-  s('hzm-brent-naa', brent.toFixed(2) + ' $');
+  s('hzm-brent-naa', fmtBrent(brent));
   // Dynamisk dag-teller fra stengningsdato 28. februar 2026
   var dagNr = Math.round((new Date() - new Date('2026-02-28')) / 86400000);
   s('hzm-dag-nr', dagNr);
@@ -6414,7 +6377,7 @@ function syncHormuzModalData() {
   s('hzm-eu-lbl',  'Brent ~' + brentPeak + ' $');
   s('hzm-cmp-usa', '−' + usaBnp + ' pp'); s('hzm-cmp-eu', '−' + euBnp + ' pp'); s('hzm-cmp-cn', '−' + cnBnp + ' pp');
   // Spread-banner i regioner
-  s('hzm-sp-brent', brent.toFixed(2) + ' $');
+  s('hzm-sp-brent', fmtBrent(brent));
   s('hzm-sp-wti',   wti.toFixed(2) + ' $');
   var spValEl = document.getElementById('hzm-sp-val');
   var spSigEl = document.getElementById('hzm-sp-signal');
@@ -6467,7 +6430,7 @@ function syncHormuzModalData() {
   s('hzm-grf-oil', '+' + oilShock + ' $/fat');
   s('hzm-grf-conf', confNames[conflict] || conflict);
   s('hzm-grf-peak', '~' + brentPeak + ' $');
-  s('hzm-grf-brent-live', brent.toFixed(2) + ' $');
+  s('hzm-grf-brent-live', fmtBrent(brent));
   s('hzm-grf-peak2', '~' + brentPeak + ' $');
   s('hzm-grf-bnp', '−' + bnpKum + ' pp');
 }
@@ -6479,9 +6442,9 @@ function drawHzmGraf() {
   var dur      = parseInt((document.getElementById('sl-duration') || {}).value) || 4;
   var oilShock = parseInt((document.getElementById('sl-oil')      || {}).value) || 13;
   var conflict = parseInt((document.getElementById('sl-conflict') || {}).value) || 1;
-  var brent    = window._brentLive || 108;
-  var cm       = conflict === 1 ? 1 : conflict === 2 ? 1.5 : 2.2;
-  var brentPeak = Math.round(brent + oilShock * cm);
+  var brent    = getBrentBase();
+  var path     = hzPricePath(dur, oilShock, conflict, brent);
+  var brentPeak = path.peak;
 
   // Sett canvas størrelse
   var rect = canvas.getBoundingClientRect();
@@ -6495,29 +6458,13 @@ function drawHzmGraf() {
   var PAD = { l:52, r:20, t:20, b:36 };
   var PW = Wp - PAD.l - PAD.r, PH = Hp - PAD.t - PAD.b;
 
-  // Datapunkter — starter på live Brent (ikke historisk hormuzDag)
-  var nPoints = 9;
+  // Datapunkter — felles modell (hzPricePath), starter på dagens Brent
+  var nPoints = path.nPoints;
   var preKrig = 72, hormuzDag = 89;
-  var durIdx = Math.min(Math.round((dur / 26) * (nPoints - 1)), nPoints - 2);
-  var floorOil = Math.max(72, brent * 0.72 + oilShock * cm * 0.12);
+  var durIdx  = path.durIdx;
+  var prices  = path.prices;
   var maxY = Math.max(brentPeak * 1.1, brent + 30);
-  var minY = Math.max(55, preKrig * 0.85);
-
-  var prices = [];
-  for (var i = 0; i < nPoints; i++) {
-    var p;
-    if (i === 0) {
-      p = brent; // starter alltid på live Brent
-    } else if (i <= durIdx) {
-      var frac = i / Math.max(durIdx, 1);
-      p = brent + oilShock * cm * (0.92 + 0.08 * Math.sin(frac * Math.PI));
-    } else {
-      var t2 = i - durIdx;
-      var decayRate = conflict === 3 ? 0.16 : conflict === 2 ? 0.21 : 0.27;
-      p = floorOil + (brentPeak - floorOil) * Math.exp(-decayRate * t2);
-    }
-    prices.push(Math.round(p));
-  }
+  var minY = Math.max(55, Math.min(preKrig * 0.85, path.floor * 0.95));
   canvas._prices = prices;
   canvas._durIdx = durIdx;
 
@@ -6562,8 +6509,8 @@ function drawHzmGraf() {
   // Startpunkt — Brent nå (dot + label)
   ctx.fillStyle = '#C53030';
   ctx.beginPath(); ctx.arc(toX(0), toY(prices[0]), 4, 0, Math.PI*2); ctx.fill();
-  ctx.fillStyle = '#1A1A18'; ctx.font = '700 10px DM Sans, sans-serif'; ctx.textAlign = 'center';
-  ctx.fillText(prices[0] + ' $', toX(0), toY(prices[0]) - 10);
+  ctx.fillStyle = '#1A1A18'; ctx.font = '700 10px DM Sans, sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText(prices[0] + ' $', toX(0) + 7, toY(prices[0]) + 14);
 
   // Peak-annotasjon — ved durIdx
   var peakIdx = Math.min(durIdx, nPoints - 1);
@@ -6581,7 +6528,7 @@ function drawHzmGraf() {
   });
 
   // X-akse
-  var xlabs = ['Nå','Uke 4','Uke 8','Uke 12','Uke 16','Uke 20','Uke 24','Uke 28','Uke 32'];
+  var xlabs = path.labels;
   ctx.fillStyle = '#A8A89E'; ctx.textAlign = 'center';
   for (var i7 = 0; i7 < nPoints; i7+=2) {
     ctx.fillText(xlabs[i7] || '', toX(i7), Hp - PAD.b + 16);
@@ -6589,7 +6536,8 @@ function drawHzmGraf() {
 
   // Hover
   var tooltip = document.getElementById('hz-modal-tooltip');
-  canvas.onmousemove = function(e) {
+  canvas.style.touchAction = 'pan-y';
+  canvas.onpointermove = function(e) {
     var r = canvas.getBoundingClientRect();
     var mx = (e.clientX - r.left);
     var best = 0, bestD = Infinity;
@@ -6608,7 +6556,7 @@ function drawHzmGraf() {
       tooltip.style.display = 'block';
     }
   };
-  canvas.onmouseleave = function() { if (tooltip) tooltip.style.display='none'; };
+  canvas.onpointerleave = function() { if (tooltip) tooltip.style.display='none'; };
 }
 </script>
 <!-- ═══════════════════════════════════════════════════════════════
@@ -7706,33 +7654,11 @@ function gTab(tab) {
 var _ccoTimer = null;
 var _ccoHideTimer = null;
 
-function ccoPosition() {
-  // Overlay dekker: fra toppen av Trumpometer-kortet til bunnen av griden (RAD 1)
-  // slik at den er like høy som kalkulatoren til venstre
-  var trumpCard = document.getElementById('dash-trump-gauge');
-  if (!trumpCard) return null;
-  var card = trumpCard.closest('[style*="flex-direction:column"]');
-  if (!card) return null;
-  var grid = card.parentElement; // RAD 1: display:grid 1fr 1fr
-  var cardR = card.getBoundingClientRect();
-  var gridR = grid ? grid.getBoundingClientRect() : cardR;
-  return {
-    left:   cardR.left,
-    top:    cardR.top,
-    width:  cardR.width,
-    height: gridR.bottom - cardR.top   // fra kortets topp til gridens bunn
-  };
-}
-
 function ccoShow() {
+  // Overlayet ligger i samme grid som kalkulatoren og dekker Trumpometer-kortet
+  // (position:absolute på desktop, vanlig blokk under kalkulatoren på mobil).
   var overlay = document.getElementById('calc-chart-overlay');
   if (!overlay) return;
-  var r = ccoPosition();
-  if (!r) return;
-  overlay.style.left   = Math.round(r.left)   + 'px';
-  overlay.style.top    = Math.round(r.top)     + 'px';
-  overlay.style.width  = Math.round(r.width)   + 'px';
-  overlay.style.height = Math.round(r.height)  + 'px';
   overlay.classList.add('visible');
   if (_ccoHideTimer) { clearTimeout(_ccoHideTimer); _ccoHideTimer = null; }
 }
@@ -7750,7 +7676,7 @@ function ccoDraw() {
   var dur      = parseInt((document.getElementById('sl-duration') || {}).value) || 4;
   var oilShock = parseInt((document.getElementById('sl-oil')      || {}).value) || 13;
   var conflict = parseInt((document.getElementById('sl-conflict') || {}).value) || 1;
-  var baseOil  = window._brentLive || 109;
+  var baseOil  = getBrentBase();
   var cm       = [0, 1.0, 1.5, 2.2][conflict];
   var conflictLabels = ['','Begrenset','Eskalert','Full krig'];
 
@@ -7787,36 +7713,24 @@ function ccoDraw() {
   s('cco-params', dur + ' uker · +' + oilShock + '$ · ' + conflictLabels[conflict]);
   s('cco-peak',   'Topp ~' + peakOil + ' $');
 
-  // Bygg prisdata
-  var nPoints = 9;
-  var prices  = [];
-  var durIdx  = Math.round((dur / 26) * (nPoints - 1));
-  for (var i = 0; i < nPoints; i++) {
-    var p;
-    if (i === 0) {
-      p = baseOil;
-    } else if (i <= durIdx) {
-      var frac = i / Math.max(durIdx, 1);
-      p = baseOil + oilShock * cm * (0.92 + 0.08 * Math.sin(frac * Math.PI));
-    } else {
-      var t = i - durIdx;
-      var decayRate = conflict === 3 ? 0.16 : conflict === 2 ? 0.21 : 0.27;
-      var floorOil  = 72 + oilShock * cm * 0.12;
-      p = floorOil + (peakOil - floorOil) * Math.exp(-decayRate * t);
-    }
-    prices.push(Math.round(p));
-  }
+  // Bygg prisdata — felles modell
+  var path    = hzPricePath(dur, oilShock, conflict, baseOil);
+  var nPoints = path.nPoints;
+  var prices  = path.prices;
+  var durIdx  = path.durIdx;
 
-  // Tegn canvas
+  // Tegn canvas (skalert for høyoppløselige skjermer)
   var canvas = document.getElementById('cco-canvas');
   if (!canvas) return;
   var container = canvas.parentElement;
   var CW = container.offsetWidth  || container.clientWidth;
   var CH = container.offsetHeight || container.clientHeight;
   if (CW < 10 || CH < 10) return;
-  canvas.width  = CW;
-  canvas.height = CH;
+  var dpr = window.devicePixelRatio || 1;
+  canvas.width  = Math.round(CW * dpr);
+  canvas.height = Math.round(CH * dpr);
   var ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   var PAD = { l: 44, r: 14, t: 18, b: 32 };
   var PW  = CW - PAD.l - PAD.r;
   var PH  = CH - PAD.t - PAD.b;
@@ -7921,7 +7835,7 @@ function ccoDraw() {
   }
 
   // X-labels
-  var xlab = ['Nå','V4','V8','V12','V16','V20','V24','V28','V32'];
+  var xlab = ['Nå','U4','U8','U12','U16','U20','U24','U28','U32'];
   ctx.font = '9px "DM Sans", sans-serif';
   ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.textAlign = 'center';
   for (var i = 0; i < nPoints; i++) {
@@ -7942,7 +7856,8 @@ function ccoDraw() {
     canvas._ccoBound = true;
     var tt = document.getElementById('cco-tooltip');
     canvas.style.pointerEvents = 'auto';
-    canvas.addEventListener('mousemove', function(e) {
+    canvas.style.touchAction = 'pan-y';
+    canvas.addEventListener('pointermove', function(e) {
       if (!tt) return;
       var rect = canvas.getBoundingClientRect();
       var mx = e.clientX - rect.left;
@@ -7963,21 +7878,10 @@ function ccoDraw() {
         tt.style.display = 'none';
       }
     });
-    canvas.addEventListener('mouseleave', function() { if (tt) tt.style.display = 'none'; });
+    canvas.addEventListener('pointerleave', function() { if (tt) tt.style.display = 'none'; });
   }
   canvas._prices = prices.slice();
   canvas._xlab   = xlab.slice();
-  // Reposisjoner overlay (kan ha endret størrelse)
-  var r = ccoPosition();
-  if (r) {
-    var overlay = document.getElementById('calc-chart-overlay');
-    if (overlay) {
-      overlay.style.left   = Math.round(r.left)   + 'px';
-      overlay.style.top    = Math.round(r.top)     + 'px';
-      overlay.style.width  = Math.round(r.width)   + 'px';
-      overlay.style.height = Math.round(r.height)  + 'px';
-    }
-  }
 }
 
 // Hook inn i debouncedCalc — vis overlay og tegn graf
@@ -7986,10 +7890,11 @@ var _ccoUserActive = false;
 var _origDebouncedCalc = debouncedCalc;
 debouncedCalc = function() {
   _origDebouncedCalc();
-  if (!_ccoUserActive) return; // Ikke vis overlay ved init-kall
-  ccoShow();
   if (_ccoTimer) clearTimeout(_ccoTimer);
+  // Flagget sjekkes i timeren: input-lytteren som setter det kjører etter inline-handleren
   _ccoTimer = setTimeout(function() {
+    if (!_ccoUserActive) return; // Ikke vis overlay ved init-kall
+    ccoShow();
     ccoDraw();
   }, 90);
 };
@@ -8002,17 +7907,13 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// Repositisjoner ved resize
+// Tegn grafen på nytt ved resize (canvas må matche ny bredde)
+var _ccoResizeTimer = null;
 window.addEventListener('resize', function() {
   var overlay = document.getElementById('calc-chart-overlay');
   if (!overlay || !overlay.classList.contains('visible')) return;
-  var r = ccoPosition();
-  if (r) {
-    overlay.style.left   = Math.round(r.left)   + 'px';
-    overlay.style.top    = Math.round(r.top)     + 'px';
-    overlay.style.width  = Math.round(r.width)   + 'px';
-    overlay.style.height = Math.round(r.height)  + 'px';
-  }
+  if (_ccoResizeTimer) clearTimeout(_ccoResizeTimer);
+  _ccoResizeTimer = setTimeout(ccoDraw, 120);
 });
 
 </script>
@@ -8023,44 +7924,148 @@ window.addEventListener('resize', function() {
 <span id="sc-pB" style="display:none">55 %</span>
 <span id="sc-pC" style="display:none">25 %</span>
 
-<!-- ── KALKULATOR OLJEPRISGRAF OVERLAY ──────────────────────────────────── -->
-<div id="calc-chart-overlay" class="calc-chart-overlay">
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0">
-    <div style="display:flex;align-items:center;gap:7px">
-      <span style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)">Oljeprisforløp</span>
-      <span style="font-size:9px;color:var(--faint)">· live beregning</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:10px">
-      <span style="font-size:9px;color:var(--muted)" id="cco-params">—</span>
-      <button onclick="ccoClose()" style="display:flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--border);border:none;cursor:pointer;color:var(--muted);font-size:13px;line-height:1;font-family:inherit;flex-shrink:0" onmouseover="this.style.background='var(--border-md)'" onmouseout="this.style.background='var(--border)'">×</button>
-    </div>
-  </div>
-  <div style="flex:1;position:relative;min-height:0;overflow:hidden">
-    <canvas id="cco-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%"></canvas>
-    <div id="cco-tooltip" style="display:none;position:absolute;background:var(--navy);color:white;border-radius:5px;padding:4px 8px;font-size:10px;pointer-events:none;white-space:nowrap;z-index:10"></div>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr 1px 1fr;border-top:1px solid var(--border);flex-shrink:0">
-    <div style="padding:5px 8px;text-align:center">
-      <div style="font-size:7.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:1px">Brent topp</div>
-      <div style="font-size:13px;font-weight:700;color:var(--red)" id="cco-brent">—</div>
-    </div>
-    <div style="background:var(--border)"></div>
-    <div style="padding:5px 8px;text-align:center">
-      <div style="font-size:7.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:1px">BNP kum.</div>
-      <div style="font-size:13px;font-weight:700;color:var(--red)" id="cco-gdp">—</div>
-    </div>
-    <div style="background:var(--border)"></div>
-    <div style="padding:5px 8px;text-align:center">
-      <div style="font-size:7.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:1px">KPI</div>
-      <div style="font-size:13px;font-weight:700;color:var(--amber)" id="cco-kpi">—</div>
-    </div>
-    <div style="background:var(--border)"></div>
-    <div style="padding:5px 8px;text-align:center">
-      <div style="font-size:7.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:1px">Resesjon</div>
-      <div style="font-size:12px;font-weight:700" id="cco-risk">—</div>
-    </div>
-  </div>
-</div>
+
+<!-- Responsiv CSS ligger sist slik at den vinner over modal-/guide-stilene som defineres lenger opp -->
+<style id="responsive-css">
+/* ── RESPONSIVE ─────────────────────────────────────────────────────────
+   Siden bruker mange inline-grids. På smale skjermer (≤ 860 px) brytes de
+   til én kolonne via attributt-selektorer, og faste kolonnebredder
+   (300px, 160px, 28px …) erstattes. Tabeller pakkes i .table-scroll av JS.
+──────────────────────────────────────────────────────────────────────── */
+.table-scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; margin-bottom:8px; }
+.table-scroll > table { margin-bottom:0; min-width:560px; }
+.topbar-brand { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+.topbar-meta  { white-space:nowrap; }
+.tt-box { max-width:min(340px, calc(100vw - 16px)); }
+
+@media (max-width: 1100px) {
+  .topbar-author { display:none; }
+}
+
+@media (max-width: 860px) {
+  html { -webkit-text-size-adjust:100%; }
+  .layout { flex-direction:column; height:auto; overflow:visible; }
+  .main { padding:14px 16px 40px; overflow:visible; }
+  .topbar { padding:0 14px; height:48px; gap:10px; }
+  .topbar-brand { font-size:14px; flex:1; }
+  .topbar-meta { font-size:11px; }
+  .topbar-badge { font-size:9px; padding:2px 8px; }
+  .panel-title { font-size:20px; }
+
+  /* Dashboard */
+  .dash-row1 { grid-template-columns:1fr !important; }
+  .dash-row1 .calc-chart-overlay { position:static; width:auto; height:300px; order:2; }
+  .dash-row1 > div:last-of-type:not(.calc-chart-overlay) { order:3; }
+  #market-strip { justify-content:flex-start; max-width:none; }
+  .dash-kpi5 { grid-template-columns:repeat(3,1fr) !important; }
+  .dash-kpi5 > div:nth-child(4), .dash-kpi5 > div:nth-child(5) { grid-column:span 1; }
+  #dash-trump-feed { grid-template-columns:1fr !important; }
+  #dash-spread-banner { flex-wrap:wrap; }
+  .trump-top-grid { grid-template-columns:1fr !important; gap:14px !important; }
+  .trump-top-grid > div:first-child { max-width:320px; margin:0 auto; }
+  .main .trump-top-grid [style*="grid-template-columns:1fr 1fr"] { grid-template-columns:1fr 1fr !important; }
+  #market-strip { flex:1 1 100% !important; max-width:none !important; justify-content:flex-start !important; }
+  #om-oversikt > div:last-child [style*="grid-template-columns:1fr 1fr"] { grid-template-columns:96px 1fr !important; }
+  .mkt-box { flex:1 1 calc(25% - 4px); text-align:center; }
+
+  /* Generelle inline-grids → én kolonne */
+  .main [style*="grid-template-columns:1fr 1fr"],
+  .main [style*="grid-template-columns: 1fr 1fr"],
+  .main [style*="grid-template-columns:repeat(3,1fr)"],
+  .main [style*="grid-template-columns: repeat(3, 1fr)"],
+  .main [style*="grid-template-columns:repeat(2,1fr)"],
+  .main [style*="grid-template-columns: repeat(2, 1fr)"],
+  .popup-body [style*="grid-template-columns:1fr 1fr"],
+  .popup-body [style*="grid-template-columns:repeat(3,1fr)"],
+  .popup-body [style*="grid-template-columns: repeat(3, 1fr)"],
+  .popup-body [style*="grid-template-columns:repeat(2,1fr)"],
+  .popup-body [style*="grid-template-columns:140px 1fr"],
+  .popup-body [style*="grid-template-columns:95px 1fr"] {
+    grid-template-columns:1fr !important;
+  }
+  .main [style*="grid-template-columns:repeat(4,1fr)"],
+  .main [style*="grid-template-columns: repeat(4, 1fr)"],
+  .popup-body [style*="grid-template-columns:repeat(4,1fr)"],
+  .popup-kpi-grid { grid-template-columns:repeat(2,1fr) !important; }
+  .main [style*="grid-template-columns:repeat(5,1fr)"]:not(.dash-kpi5),
+  .main [style*="grid-template-columns: repeat(5, 1fr)"] { grid-template-columns:repeat(2,1fr) !important; }
+  .main [style*="grid-template-columns:80px 1fr"] { grid-template-columns:72px 1fr !important; }
+  .popup-body [style*="grid-template-columns:140px 1fr"] > div:first-child,
+  .popup-body [style*="grid-template-columns:95px 1fr"] > div:first-child { border-right:none !important; border-bottom:1px solid var(--border); }
+
+  /* Om modellen */
+  .status-grid { grid-template-columns:1fr !important; }
+  .src-row { grid-template-columns:28px 1fr !important; row-gap:4px !important; }
+  .src-row > div:nth-child(3), .src-row > div:nth-child(4) { grid-column:2; }
+  .ana-card-head { padding:12px 14px; }
+  .ana-card-head > div:last-child span:first-child { display:none; }
+  .analyse-progress { margin:-14px -16px 20px; padding-left:16px; padding-right:16px; }
+  .om-panel .analyse-progress { margin:-4px 0 20px; }
+  .analyse-body h1 { font-size:20px; margin-top:32px; }
+  .stat-grid-3 { grid-template-columns:1fr 1fr; }
+  .author-grid, .taleb-grid, .matrix { grid-template-columns:1fr; }
+  .barbell { flex-direction:column; }
+  .barbell-left { border-right:none; border-bottom:1px solid var(--border); }
+  .readout-grid { grid-template-columns:1fr 1fr; }
+  .scenario-tabs { flex-wrap:wrap; }
+  .timeline-row { flex-direction:column; gap:3px; }
+  .tl-date { min-width:0; }
+
+  /* Popups (scenario, Hormuz, Kina, kapital) */
+  .popup-overlay { padding:6px; align-items:flex-end; }
+  .popup-modal, .popup-modal.popup-wide { width:100%; max-height:96vh; border-radius:var(--radius-lg) var(--radius-lg) 0 0; }
+  .popup-head { padding:12px 14px; }
+  .popup-head-title { font-size:16px; }
+  .popup-kpi-strip { flex-wrap:wrap; padding:8px 10px; row-gap:8px; }
+  .popup-kpi-cell { flex:1 1 30%; border-right:none; padding:0 4px; }
+  .popup-kpi-val { font-size:15px; }
+  .popup-tabs { padding:0 6px; }
+  .popup-tab { padding:9px 10px; font-size:11px; }
+  .popup-body { padding:14px 12px; }
+  .popup-footer { padding:10px 12px; flex-wrap:wrap; gap:8px; }
+  .popup-sektor-grid, .popup-prob-row, .popup-kapital, .popup-kaskade-grid, .popup-region-grid, .popup-hist-grid { grid-template-columns:1fr !important; }
+  .popup-kaskade-col:not(:last-child) { border-right:none; border-bottom:1px solid var(--border); }
+  .popup-cmp-head, .popup-cmp-row { grid-template-columns:minmax(80px,1.3fr) 1fr 1fr 1fr !important; gap:6px; padding:8px 10px; font-size:10px; }
+  .popup-cmp-label { font-size:10px; }
+  .popup-tl-row { grid-template-columns:1fr; gap:4px; }
+  .popup-tl-date { justify-self:start; }
+  .popup-trigger-row { flex-wrap:wrap; }
+  .popup-trigger-bar-wrap { width:100%; }
+  .popup-perera-table td:first-child { white-space:normal; }
+  #hz-modal-canvas { height:200px !important; }
+
+  /* Guide-modal */
+  #guide-overlay { align-items:flex-end; }
+  #guide-modal { width:100vw; max-height:96vh; border-radius:16px 16px 0 0; }
+  #guide-banner { padding:18px 16px 14px; }
+  .guide-title { font-size:20px; padding-right:40px; }
+  .guide-sub { font-size:10px; }
+  #guide-close { top:14px; right:12px; }
+  #guide-tabs { padding:0 6px; overflow-x:auto; }
+  .gtab { padding:11px 10px; font-size:10px; }
+  #guide-body { padding:16px 14px; }
+  .g-intro-grid, .g-analyst-grid, .g-use-grid { grid-template-columns:1fr; }
+  .g-flow-row { flex-direction:column; gap:8px !important; }
+  .g-flow-arrow { width:auto; height:22px; transform:rotate(90deg); }
+  #guide-network { height:auto; }
+
+  /* Søk og tooltip */
+  #search-modal { left:8px; right:8px; width:auto !important; top:56px; }
+}
+
+@media (max-width: 480px) {
+  .topbar-badge { display:none; }
+  .dash-kpi5 { grid-template-columns:repeat(2,1fr) !important; }
+  .dash-kpi5 > div:nth-child(5) { grid-column:span 2; }
+  .main [style*="grid-template-columns:repeat(4,1fr)"],
+  .main [style*="grid-template-columns: repeat(4, 1fr)"] { grid-template-columns:1fr 1fr !important; }
+  .mkt-box { flex:1 1 calc(33.333% - 4px); }
+  .popup-kpi-cell { flex:1 1 45%; }
+  .dash-row1 .calc-chart-overlay { height:260px; }
+  .popup-cmp-head, .popup-cmp-row { grid-template-columns:1fr 1fr !important; }
+  .popup-cmp-head > div:first-child, .popup-cmp-row > div:first-child { grid-column:1 / -1; }
+}
+</style>
 
 </body>
 </html>
