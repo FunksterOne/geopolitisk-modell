@@ -2202,6 +2202,9 @@ input[type=range]::-webkit-slider-thumb {
 </div>
 
 <script>
+// Norsk tallformat for visning: desimalkomma. Brukes på alle tall som settes i DOM.
+function nf(v, d) { return Number(v).toFixed(d).replace('.', ','); }
+
 function nav(elOrId, skipHistory) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   // Støtter nav('panel-makro') direkte ID-streng og nav(el-med-data-panel)
@@ -2255,7 +2258,7 @@ function updateSpreadBanner() {
   if (!b || !w) return;
   var raw = b - w;
   var inv = raw < 0;
-  var spreadTxt = (raw >= 0 ? 'Brent +' : 'WTI +') + Math.abs(raw).toFixed(2) + ' $';
+  var spreadTxt = (raw >= 0 ? 'Brent +' : 'WTI +') + nf(Math.abs(raw), 2) + ' $';
   var spreadCol = inv ? 'var(--red)' : 'var(--green)';
 
   // Felles oppdateringsfunksjon for begge bannere
@@ -2264,8 +2267,8 @@ function updateSpreadBanner() {
     var wEl  = document.getElementById(prefix + 'wti');
     var vEl  = document.getElementById(prefix + 'val');
     var sEl  = document.getElementById(prefix + 'signal');
-    if (bEl) bEl.textContent = b.toFixed(2) + ' $';
-    if (wEl) wEl.textContent = w.toFixed(2) + ' $';
+    if (bEl) bEl.textContent = nf(b, 2) + ' $';
+    if (wEl) wEl.textContent = nf(w, 2) + ' $';
     if (vEl) { vEl.textContent = spreadTxt; vEl.style.color = spreadCol; }
     if (sEl) {
       if (inv) {
@@ -2366,7 +2369,7 @@ function applyTSHM() {
   var konlNavn = ['','Begrenset','Eskalert','Full krig'];
   var begrunnelse = 'Trumpometer ' + (document.getElementById('dash-trump-score') ? document.getElementById('dash-trump-score').textContent : '?') + '/100 · '
     + count + ' nyheter siste 24t · s5-militærtermer: ' + s5total
-    + ' treff · Hormuz-tema: ' + Math.round(hormuzPts/Math.max(1,count)) + ' pts/nyhet · volFaktor: ' + volFactor.toFixed(2)
+    + ' treff · Hormuz-tema: ' + Math.round(hormuzPts/Math.max(1,count)) + ' pts/nyhet · volFaktor: ' + nf(volFactor, 2)
     + ' · Glidesnitt (70/30) fra forrige kjøring.';
 
   var statusEl = document.getElementById('tshm-status');
@@ -2451,7 +2454,7 @@ var BRENT_FALLBACK = 108;                 // statisk anslag ($/fat) når live-pr
 var CONFLICT_MULT  = [0, 1.0, 1.5, 2.2];  // multiplikator per konfliktnivå (1 Begrenset · 2 Eskalert · 3 Full krig)
 function getBrentBase() { return window._brentLive || BRENT_FALLBACK; }
 // Formaterer Brent-pris for visning; markerer statisk anslag tydelig
-function fmtBrent(v) { return brentIsLive() ? v.toFixed(2) + ' $' : '~' + Math.round(v) + ' $ (anslag)'; }
+function fmtBrent(v) { return brentIsLive() ? nf(v, 2) + ' $' : '~' + Math.round(v) + ' $ (anslag)'; }
 function brentIsLive()  { return !!window._brentLive; }
 
 // Oljeprisforløp: 9 punkter à 4 uker (indeks i = uke 4·i, dvs. 0–32 uker).
@@ -2529,7 +2532,7 @@ function calcHormuz() {
 
   // BNP per kvartal — inkluderer konflikt-multiplikator, vises med merkelapp
   const gdpEl = document.getElementById('out-gdp');
-  if (gdpEl) gdpEl.textContent = '−' + gdpScaled.toFixed(1) + ' pp';
+  if (gdpEl) gdpEl.textContent = '−' + nf(gdpScaled, 1) + ' pp';
   const gdpBar = document.getElementById('gdp-bar');
   if (gdpBar) {
     const pct = Math.min(100, (gdpScaled / 15) * 100);
@@ -2565,13 +2568,13 @@ function calcHormuz() {
   const gdpWithConflict = gdpBase * cm;
   const elGdp = document.getElementById('cr-gdp');
   if (elGdp) {
-    elGdp.textContent = '−' + gdpCumulative + ' pp';
+    elGdp.textContent = '−' + nf(gdpCumulative, 1) + ' pp';
     const gdpNum = parseFloat(gdpCumulative);
     elGdp.style.color = gdpNum > 5 ? 'var(--red)' : gdpNum > 2 ? 'var(--amber)' : 'var(--text)';
   }
 
   const elCpi = document.getElementById('cr-cpi');
-  if (elCpi) elCpi.textContent = '+' + cpiEffect + ' pp';
+  if (elCpi) elCpi.textContent = '+' + nf(cpiEffect, 1) + ' pp';
 
   const elDur = document.getElementById('cr-duration-out');
   if (elDur) {
@@ -2878,7 +2881,7 @@ function fetchBrent() {
     window._brentLive = price;
     if (typeof debouncedCalc === 'function') debouncedCalc();
     if (lbl)    lbl.textContent  = '~' + Math.round(price) + ' $';
-    if (statEl) statEl.textContent = price.toFixed(2) + ' $/fat';
+    if (statEl) statEl.textContent = nf(price, 2) + ' $/fat';
     if (srcEl) {
       var ts = new Date().toLocaleTimeString('no-NO', {hour:'2-digit', minute:'2-digit'});
       srcEl.textContent = 'Live · ' + (label || 'API') + ' · ' + ts;
@@ -3030,11 +3033,11 @@ function fetchMarkets() {
         box.classList.add(up ? 'up' : 'down');
         box.innerHTML =
           '<div class="mkt-label">' + box.dataset.label + '</div>' +
-          '<div class="mkt-val">' + p.toFixed(dec) +
+          '<div class="mkt-val">' + nf(p, dec) +
             (unit ? '<span class="mkt-unit"> ' + unit + '</span>' : '') +
           '</div>' +
           '<div class="mkt-chg" style="color:' + (up ? '#14532D' : '#C53030') + '">' +
-            (up ? '▲' : '▼') + ' ' + Math.abs(chg).toFixed(2) + '%' +
+            (up ? '▲' : '▼') + ' ' + nf(Math.abs(chg), 2) + ' %' +
           '</div>';
 
         // Lagre WTI live-pris for USA-BNP-beregning
@@ -3051,7 +3054,7 @@ function fetchMarkets() {
           var lbl = document.getElementById('brent-base-lbl');
           if (lbl) lbl.textContent = '~' + Math.round(p) + ' $';
           var statEl = document.getElementById('live-brent-stat');
-          if (statEl) statEl.textContent = p.toFixed(2) + ' $/fat';
+          if (statEl) statEl.textContent = nf(p, 2) + ' $/fat';
           var srcEl = document.getElementById('live-brent-src');
           if (srcEl) {
             var ts = new Date().toLocaleTimeString('no-NO', {hour:'2-digit', minute:'2-digit'});
@@ -4217,8 +4220,8 @@ function syncDashboard() {
   var knBrent = document.getElementById('kn-brent');
   var knWti   = document.getElementById('kn-wti');
   var knVix   = document.getElementById('kn-vix');
-  if (knBrent && window._brentLive) knBrent.textContent = window._brentLive.toFixed(2) + ' $';
-  if (knWti   && window._wtiLive)   knWti.textContent   = window._wtiLive.toFixed(2) + ' $';
+  if (knBrent && window._brentLive) knBrent.textContent = nf(window._brentLive, 2) + ' $';
+  if (knWti   && window._wtiLive)   knWti.textContent   = nf(window._wtiLive, 2) + ' $';
 
   // VIX fra markedsboks
   var vixBox = document.querySelector('[data-sym="^VIX"] .mkt-val');
@@ -4401,7 +4404,7 @@ function updateScenarios() {
   }
   var gdpQtr = kilianGDP(oilShock) * cm;
   var gdpCum = gdpQtr * Math.min(durQtr, 4) * (durQtr <= 2 ? 1.0 : durQtr <= 4 ? (1.0 - 0.14*(Math.min(durQtr,4)-2)) : 0.72);
-  var cpiEff = (oilShock * cm * 0.028 * (0.3 + 0.7 * Math.min(1, Math.sqrt(durQtr/2)))).toFixed(1);
+  var cpiEff = nf(oilShock * cm * 0.028 * (0.3 + 0.7 * Math.min(1, Math.sqrt(durQtr/2))), 1);
 
   // ── BRENT 12-MND PROGNOSE ────────────────────────────────────────────────
   var brentA_lo = Math.round(baseOil * 0.88 + oilShock * 0.08);
@@ -4421,11 +4424,11 @@ function updateScenarios() {
   s('sc-c-brent', bC); s('sc-c-brent-kpi', bC);
 
   // ── BNP-TAP ──────────────────────────────────────────────────────────────
-  var bnpA     = (gdpCum * 0.52).toFixed(1);
-  var bnpB_lo  = (gdpCum * 0.85).toFixed(1);
-  var bnpB_hi  = (gdpCum * 1.25).toFixed(1);
-  var bnpC_lo  = (gdpCum * 1.65).toFixed(1);
-  var bnpC_hi  = (gdpCum * 2.35).toFixed(1);
+  var bnpA     = nf(gdpCum * 0.52, 1);
+  var bnpB_lo  = nf(gdpCum * 0.85, 1);
+  var bnpB_hi  = nf(gdpCum * 1.25, 1);
+  var bnpC_lo  = nf(gdpCum * 1.65, 1);
+  var bnpC_hi  = nf(gdpCum * 2.35, 1);
 
   s('sc-a-bnp', '−' + bnpA + ' pp'); s('sc-a-bnp-kpi', '−' + bnpA + ' pp');
   var bB2 = '−' + bnpB_lo + '–' + bnpB_hi + ' pp';
@@ -5494,16 +5497,16 @@ function syncScenarioModalParams() {
   s('scm-a-prob',       pAstr);
   s('scm-a-norm',       dur <= 4 ? '2–4 uker' : dur <= 10 ? '6–8 uker' : '8–12 uker');
   s('scm-a-brent',      brentA_lo + '–' + brentA_hi + ' $');
-  s('scm-a-bnp',        '−' + bnpA + ' pp');
+  s('scm-a-bnp',        '−' + nf(bnpA, 1) + ' pp');
   s('scm-a-dur-detail', dur <= 4 ? '4–6 uker' : '6–10 uker');
 
   // ── SCENARIO B ────────────────────────────────────────────────
   var cpiSc   = Math.min(1, Math.sqrt(durQtrSc / 2));
-  var cpiB    = (oilShock * cm * 0.028 * (0.3 + 0.7 * cpiSc)).toFixed(1);
+  var cpiB    = nf(oilShock * cm * 0.028 * (0.3 + 0.7 * cpiSc), 1);
   var brentB_lo = Math.round(brentLive * (0.9 + conflict * 0.08));
   var brentB_hi = Math.round(brentLive * (1.1 + conflict * 0.12));
-  var bnpB_lo = (kilianGDPsc(oilShock) * cm * Math.min(durQtrSc,4) * (durQtrSc <= 2 ? 1.0 : durQtrSc <= 4 ? (1.0 - 0.14*(Math.min(durQtrSc,4)-2)) : 0.72) * 0.6).toFixed(1);
-  var bnpB_hi = (kilianGDPsc(oilShock) * cm * Math.min(durQtrSc,4) * (durQtrSc <= 2 ? 1.0 : durQtrSc <= 4 ? (1.0 - 0.14*(Math.min(durQtrSc,4)-2)) : 0.72) * 0.85).toFixed(1);
+  var bnpB_lo = nf(kilianGDPsc(oilShock) * cm * Math.min(durQtrSc,4) * (durQtrSc <= 2 ? 1.0 : durQtrSc <= 4 ? (1.0 - 0.14*(Math.min(durQtrSc,4)-2)) : 0.72) * 0.6, 1);
+  var bnpB_hi = nf(kilianGDPsc(oilShock) * cm * Math.min(durQtrSc,4) * (durQtrSc <= 2 ? 1.0 : durQtrSc <= 4 ? (1.0 - 0.14*(Math.min(durQtrSc,4)-2)) : 0.72) * 0.85, 1);
   s('scm-b-prob',  pBstr);
   s('scm-b-reg',   conflict >= 3 ? 'Stengt · yuan-kontroll' : conflict >= 2 ? 'Delvis åpen · eskalert' : 'Delvis åpen · yuan-toll');
   s('scm-b-brent', brentB_lo + '–' + brentB_hi + ' $');
@@ -5532,12 +5535,12 @@ function syncScenarioModalParams() {
   if (cEl) cEl.style.color = 'var(--red)';
 
   // ── WTI OG SPREAD ────────────────────────────────────────────
-  s('scm-wti-live', wtiLive.toFixed(2) + ' $');
+  s('scm-wti-live', nf(wtiLive, 2) + ' $');
   var rawSpread = brentLive - wtiLive;
   var inv = rawSpread < 0;
   var spreadBadge = document.getElementById('scm-spread-badge');
   if (spreadBadge) {
-    spreadBadge.textContent = (inv ? 'WTI +' : 'Brent +') + Math.abs(rawSpread).toFixed(2) + ' $';
+    spreadBadge.textContent = (inv ? 'WTI +' : 'Brent +') + nf(Math.abs(rawSpread), 2) + ' $';
     spreadBadge.style.color = inv ? '#FCA5A5' : 'rgba(255,255,255,.8)';
   }
   // Spread-varsel i B-panel
@@ -5546,7 +5549,7 @@ function syncScenarioModalParams() {
   if (alertEl) {
     if (inv && Math.abs(rawSpread) > 0.5) {
       alertEl.style.display = 'block';
-      if (alertTxt) alertTxt.textContent = 'WTI ' + Math.abs(rawSpread).toFixed(2)
+      if (alertTxt) alertTxt.textContent = 'WTI ' + nf(Math.abs(rawSpread), 2)
         + ' $ over Brent. USA-markedet strammere enn globalt. BNP-treff USA justert opp relativt Europa.';
     } else {
       alertEl.style.display = 'none';
@@ -5555,7 +5558,7 @@ function syncScenarioModalParams() {
 
   // ── KONKLUSJONER ──────────────────────────────────────────────
   s('scm-a-brent-conk', brentA_lo + '–' + brentA_hi + ' $');
-  s('scm-a-bnp-conk',   bnpA);
+  s('scm-a-bnp-conk',   nf(bnpA, 1));
   s('scm-b-brent-conk', brentB_lo + '–' + brentB_hi + ' $');
   s('scm-b-bnp-conk',   bnpB_lo + '–' + bnpB_hi);
   s('scm-b-cpi-conk',   cpiB);
@@ -6005,14 +6008,14 @@ function syncHormuzModalData() {
 
   // BNP per kvartal (Kilian ikke-lineær + konfliktskalert)
   var gdpBase   = kilianGDPsync(oilShock);
-  var bnpKv     = (gdpBase * cm).toFixed(1);
+  var bnpKv     = nf(gdpBase * cm, 1);
 
   // Kumulativ BNP (Hamilton 2009: 0.72-avtak, maks 4 kvartaler)
-  var bnpKum    = (gdpBase * cm * Math.min(durQtr, 4) * (durQtr <= 2 ? 1.0 : durQtr <= 4 ? (1.0 - 0.14*(Math.min(durQtr,4)-2)) : 0.72)).toFixed(1);
+  var bnpKum    = nf(gdpBase * cm * Math.min(durQtr, 4) * (durQtr <= 2 ? 1.0 : durQtr <= 4 ? (1.0 - 0.14*(Math.min(durQtr,4)-2)) : 0.72), 1);
 
   // KPI (0.028 × varighet-skalert — identisk calcHormuz)
   var cpiScale  = Math.min(1, Math.sqrt(durQtr / 2));
-  var kpiEff    = (oilShock * cm * 0.028 * (0.3 + 0.7 * cpiScale)).toFixed(2);
+  var kpiEff    = nf(oilShock * cm * 0.028 * (0.3 + 0.7 * cpiScale), 2);
 
   var brentPeak = Math.round(brent + oilShock * cm);
 
@@ -6025,9 +6028,9 @@ function syncHormuzModalData() {
   var BNP_PER_SPREAD = 0.03;
   var usaSpreadAdj = inv ? Math.abs(spreadDev) * BNP_PER_SPREAD : -Math.abs(spreadDev) * BNP_PER_SPREAD;
   var euSpreadAdj  = inv ? -Math.abs(spreadDev) * BNP_PER_SPREAD * 0.5 : Math.abs(spreadDev) * BNP_PER_SPREAD * 0.3;
-  var usaBnp = Math.max(0, kilianGDPsync(oilShock * (wti > brent ? brent/Math.max(wti,1) : 1)) * cm * 0.48 + usaSpreadAdj).toFixed(1);
-  var euBnp  = Math.max(0, kilianGDPsync(oilShock) * cm * 0.72 * 0.6 + oilShock * cm * 0.023 * 0.4 + euSpreadAdj).toFixed(1);
-  var cnBnp  = (kilianGDPsync(oilShock) * cm * 0.28).toFixed(1);
+  var usaBnp = nf(Math.max(0, kilianGDPsync(oilShock * (wti > brent ? brent/Math.max(wti,1) : 1)) * cm * 0.48 + usaSpreadAdj), 1);
+  var euBnp  = nf(Math.max(0, kilianGDPsync(oilShock) * cm * 0.72 * 0.6 + oilShock * cm * 0.023 * 0.4 + euSpreadAdj), 1);
+  var cnBnp  = nf(kilianGDPsync(oilShock) * cm * 0.28, 1);
 
   // Goodspeed — identiske vekter som calcHormuz (0.45/0.35/0.20)
   var energyW  = Math.min(98, 55 + oilShock * cm * 0.33 + dur * 2.5);
@@ -6038,7 +6041,7 @@ function syncHormuzModalData() {
   // Spread
   var rawSpread = brent - wti;
   var inv = rawSpread < 0;
-  var spreadTxt = (rawSpread >= 0 ? 'Brent +' : 'WTI +') + Math.abs(rawSpread).toFixed(2) + ' $';
+  var spreadTxt = (rawSpread >= 0 ? 'Brent +' : 'WTI +') + nf(Math.abs(rawSpread), 2) + ' $';
 
   // Analytisk konklusjon
   var konkl = dur + (dur===1?' uke':' uker') + ' stengning med +' + oilShock + ' $/fat sjokk ('
@@ -6047,7 +6050,7 @@ function syncHormuzModalData() {
     + 'Dallas Fed estimerer WTI-effekt til ~' + Math.round(wti + oilShock * cm * 0.9) + ' $. '
     + 'Global BNP ned ~' + bnpKum + ' prosentpoeng annualisert. '
     + 'Fed er handlingslam: kjerne PCE hindrer rentekutt, men resesjonsrisiko hindrer heving. '
-    + (inv ? 'Invertert WTI/Brent-spread (+' + Math.abs(rawSpread).toFixed(1) + ' $ til WTI) gir USA ekstra inflasjonspress. ' : '')
+    + (inv ? 'Invertert WTI/Brent-spread (+' + nf(Math.abs(rawSpread), 1) + ' $ til WTI) gir USA ekstra inflasjonspress. ' : '')
     + 'Mirans smale sti er stengt. Fishmans asymmetri betyr at skaden er strukturell.';
 
   // ── FYLL INN ALLE ELEMENTER ──
@@ -6068,7 +6071,7 @@ function syncHormuzModalData() {
   s('hzm-ctx-oil',    '+' + oilShock + ' $/fat');
   s('hzm-ctx-conf',   confNames[conflict] || conflict);
   s('hzm-ctx-brent',  fmtBrent(brent));
-  s('hzm-ctx-wti',    wti.toFixed(2) + ' $');
+  s('hzm-ctx-wti',    nf(wti, 2) + ' $');
   var spreadEl = document.getElementById('hzm-ctx-spread');
   if (spreadEl) { spreadEl.textContent = spreadTxt; spreadEl.style.color = inv ? 'var(--red)' : 'var(--green)'; }
   s('hzm-big-brent', '~' + brentPeak + ' $');
@@ -6090,7 +6093,7 @@ function syncHormuzModalData() {
   s('hzm-cmp-usa', '−' + usaBnp + ' pp'); s('hzm-cmp-eu', '−' + euBnp + ' pp'); s('hzm-cmp-cn', '−' + cnBnp + ' pp');
   // Spread-banner i regioner
   s('hzm-sp-brent', fmtBrent(brent));
-  s('hzm-sp-wti',   wti.toFixed(2) + ' $');
+  s('hzm-sp-wti',   nf(wti, 2) + ' $');
   var spValEl = document.getElementById('hzm-sp-val');
   var spSigEl = document.getElementById('hzm-sp-signal');
   if (spValEl) { spValEl.textContent = spreadTxt; spValEl.style.color = inv ? 'var(--red)' : 'var(--green)'; }
@@ -6110,8 +6113,8 @@ function syncHormuzModalData() {
     var euRow  = document.getElementById('hzm-eu-spread-row');
     if (usaRow) usaRow.style.display = 'block';
     if (euRow)  euRow.style.display  = 'block';
-    s('hzm-usa-spread-txt', 'WTI ' + absSpread.toFixed(1) + ' $ over Brent. BNP-treff justert opp +' + Math.abs(usaSpreadAdj).toFixed(2) + ' pp.');
-    s('hzm-eu-spread-txt',  'Relativ fordel: Brent billigere. BNP-treff justert ned −' + Math.abs(euSpreadAdj).toFixed(2) + ' pp.');
+    s('hzm-usa-spread-txt', 'WTI ' + nf(absSpread, 1) + ' $ over Brent. BNP-treff justert opp +' + nf(Math.abs(usaSpreadAdj), 2) + ' pp.');
+    s('hzm-eu-spread-txt',  'Relativ fordel: Brent billigere. BNP-treff justert ned −' + nf(Math.abs(euSpreadAdj), 2) + ' pp.');
   } else {
     var usaRowH = document.getElementById('hzm-usa-spread-row');
     var euRowH  = document.getElementById('hzm-eu-spread-row');
@@ -7415,9 +7418,9 @@ function ccoDraw() {
   var peakOil  = Math.round(baseOil + oilShock * cm);
   var durQtr   = dur / 13;
   var gdpBase  = kilianGDP(oilShock) * cm;
-  var gdpKum   = (gdpBase * Math.min(durQtr, 4) * hamiltonAvtak(Math.min(durQtr, 4))).toFixed(1);
+  var gdpKum   = nf(gdpBase * Math.min(durQtr, 4) * hamiltonAvtak(Math.min(durQtr, 4)), 1);
   var cpiScale = Math.min(1, Math.sqrt(durQtr / 2));
-  var kpi      = (oilShock * cm * 0.028 * (0.3 + 0.7 * cpiScale)).toFixed(1);
+  var kpi      = nf(oilShock * cm * 0.028 * (0.3 + 0.7 * cpiScale), 1);
   var score    = Math.min(100, Math.round(oilShock * cm * 0.4 + dur * 6 + conflict * 10));
   var riskLbl  = score < 25 ? 'Lav' : score < 45 ? 'Moderat' : score < 80 ? 'Høy' : 'Ekstrem';
   var riskCol  = score < 25 ? '#14532D' : score < 45 ? '#92400E' : score < 80 ? '#C53030' : '#7F1D1D';
@@ -8399,7 +8402,8 @@ document.addEventListener('DOMContentLoaded', function() {
   .dash-kpi5 > div:nth-child(5) { grid-column:span 2; }
   .main [style*="grid-template-columns:repeat(4,1fr)"],
   .main [style*="grid-template-columns: repeat(4, 1fr)"] { grid-template-columns:1fr 1fr !important; }
-  .mkt-box { flex:1 1 calc(33.333% - 4px); }
+  .mkt-box { flex:1 1 calc(25% - 4px); padding:4px 5px; }
+  .mkt-box .mkt-val { font-size:11px; }
   .popup-kpi-cell { flex:1 1 45%; }
   .dash-row1 .calc-chart-overlay { height:260px; }
   .popup-cmp-head, .popup-cmp-row { grid-template-columns:1fr 1fr !important; }
