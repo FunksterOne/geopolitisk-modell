@@ -1,8 +1,36 @@
 # Geopolitisk Systemanalyse Investor 2026
 
 Interaktiv analytisk investormodell for Hormuz-krisen 2026: kalkulator, scenarier,
-Trumpometer, makrodata og nyheter, bygget på en syntese av seks rammeverk
-(Goodspeed, Fishman, Miran, NDS, NSS og Taleb).
+raffineringsmarginer, Trumpometer, makrodata og nyheter, bygget på en syntese av seks
+rammeverk (Goodspeed, Fishman, Miran, NDS, NSS og Taleb).
+
+## Bokstruktur
+
+Siten leses som en bok. Forsiden «I dag» kommer først, deretter kapitlene i
+leserekkefølge:
+
+| Nr | Kapittel | Innhold |
+|----|----------|---------|
+| 0 | I dag | Dagens oppdatering (`DAGENS`), kalender (`KALENDER`), seks live-priser, Trumpometer, «Da og nå»-stripe, innhold |
+| 1 | Krisen og rammeverket | Hva som skjedde, årsakskaskaden, de seks rammeverkene (tidligere guiden) |
+| 2 | Da og nå | Grunnlinjen 31. mars mot i dag, hendelse for hendelse |
+| 3 | Raffineringsmarginer | Kapasitet, crack-marginer, prognoser, Norge, inflasjon og renter, appendiks |
+| 4 | Hormuz-kalkulatoren | Kalkulator, oljeprisgraf, Hormuz-analysen og scenariene A/B/C (tidligere popup-vinduer) |
+| 5 | Makrodata | Alle elleve live-markeder og makrokortene |
+| 6 | Kinas posisjon | Tidligere Kina-popup |
+| 7 | Investeringstips | Tidligere Investeringstips-popup |
+| 8 | Nyheter og Trumpometer | Live RSS og Trumpometer i to faner |
+| 9 | Om modellen | Rammeverk, Taleb, syntese, analysedokument og «Slik bruker du siten» |
+
+Kapittellisten `KAPITLER` i skript-blokken `book-js` nederst i `index.html` er den
+eneste kilden: innholdsfortegnelsen (venstre spalte over 1100 px), kapittellinjen med
+«Innhold»-ark og forrige/neste (mobil og nettbrett), kapittelføttene og hash-rutingen
+(`#idag`, `#krisen`, `#da-og-naa`, `#raffinering`, `#kalkulator`, `#makro`, `#kina`,
+`#kapital`, `#nyheter`, `#om`) genereres derfra. Tilbakeknappen i nettleseren går til
+forrige kapittel, og en lenke med hash åpner kapittelet direkte.
+
+Dagens oppdatering på forsiden ligger i objektet `DAGENS` (tittel, ingress, «nytt siste
+uke», «hva det betyr», lenker videre) og kalenderen i `KALENDER`, begge i `book-js`.
 
 ## Struktur
 
@@ -25,8 +53,8 @@ geopolitisk-modell/
   modellen «anslag» og «ingen data» i stedet for å henge.
 - **Hormuz-kalkulatoren** bruker live Brent som basispris. Mangler live-pris,
   brukes et statisk anslag (108 $) som merkes tydelig i grensesnittet.
-- **Oljeprisgrafen** (dashboard-overlay og Hormuz-modal) regnes av én felles
-  funksjon, `hzPricePath()`, slik at alle visninger gir samme forløp.
+- **Oljeprisgrafen** (ved siden av kalkulatoren og i Hormuz-analysens graf-fane)
+  regnes av én felles funksjon, `hzPricePath()`, slik at alle visninger gir samme forløp.
 - **Trumpometer** scorer Trump-relaterte nyheter 0–100. Speedometrene bruker
   `pathLength="100"`, slik at bue-fyllingen alltid er lik scoren.
 
@@ -46,9 +74,11 @@ Situasjonen i dag ligger i ett JavaScript-objekt, `SITUASJON`, i `index.html`
 - `hendelser`: daterte hendelser fra februar til i dag
 - `modelltest`: hva modellen sa 31. mars, og hva som faktisk skjedde
 
-Alt som vises i panelet «Da og nå», stripen på dashbordet, Makrodata-kortene,
-situasjonsstatusen i Om modellen og kronologien i Hormuz-modalen regnes ut fra dette
-objektet. For å oppdatere siden med ny status: endre `naa.dato`, oppdater `naa`-verdiene
+Alt som vises i kapittelet «Da og nå», stripen på forsiden, Makrodata-kortene,
+situasjonsstatusen i Om modellen og kronologien i Hormuz-analysen regnes ut fra dette
+objektet. Gruppen `raff` i `indikatorer` (dieselmarginer, lagre, gjennomkjøring,
+pumpepriser) og hendelsene om raffinering er hentet fra presentasjonen
+«Raffineringsmarginer, Hormuz, september 2026», som også er grunnlaget for kapittel 3. For å oppdatere siden med ny status: endre `naa.dato`, oppdater `naa`-verdiene
 i `indikatorer`, og legg nye hendelser nederst i `hendelser`. Ingen annen kode må røres.
 
 Kalkulatorens standardvarighet regnes ut fra faktiske uker siden 28. februar ganget med
@@ -57,9 +87,10 @@ modellen forutsetter full stengning mens den faktiske stengningen er delvis.
 
 ## Mobil
 
-Alle paneler og modaler brytes til én kolonne under 860 px bredde. Tabeller får
-horisontal rulling, tooltips åpnes ved å trykke på «?», og oljeprisgrafen vises
-som en egen blokk under kalkulatoren.
+Under 1100 px erstattes innholdsfortegnelsen av en kapittellinje øverst med
+«Innhold»-ark og forrige/neste. Under 860 px brytes alle kapitler til én kolonne,
+tabeller får horisontal rulling, tooltips åpnes ved å trykke på «?», og oljeprisgrafen
+vises som en egen blokk under kalkulatoren.
 
 ## Manuell oppdatering
 
