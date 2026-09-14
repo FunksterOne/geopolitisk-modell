@@ -1,72 +1,72 @@
 # Geopolitisk Systemanalyse Investor 2026
 
-Interaktiv analytisk investormodell som oppdateres daglig med geopolitiske nyheter.
-
-**Live:** https://halvard.github.io/geopolitisk-modell
+Interaktiv analytisk investormodell for Hormuz-krisen 2026: kalkulator, scenarier,
+Trumpometer, makrodata og nyheter, bygget på en syntese av seks rammeverk
+(Goodspeed, Fishman, Miran, NDS, NSS og Taleb).
 
 ## Struktur
 
 ```
 geopolitisk-modell/
-├── index.html              ← Selve modellen (publiseres som GitHub Pages)
-├── briefs/                 ← Daglige .md-filer, én per dag
-│   └── Geopolitisk oppdatering YYYY-MM-DD.md
-├── scripts/
-│   ├── build.py            ← Bygger ny index.html fra dagens brief
-│   └── sync_brief.py       ← Kopierer brief fra lokal mappe og pusher til GitHub
+├── index.html          ← Hele modellen (én fil: HTML, CSS og JavaScript)
+├── api/proxy.js        ← Vercel serverless CORS-proxy for RSS-feeder og markedsdata
+├── vercel.json         ← Vercel-konfigurasjon (rewrites og CORS-headere for /api)
+├── push.bat            ← Manuell publisering fra Windows (git add/commit/push)
 └── .github/workflows/
-    └── daglig.yml          ← GitHub Action: kjøres kl. 06:05 automatisk
+    └── daglig.yml      ← GitHub Action som verifiserer index.html daglig
 ```
 
-## Daglig flyt
+## Slik henger delene sammen
 
-```
-Kl. 06:00  Brief genereres til C:\Users\HalvardNordang\Downloads\Geopolitiske oppdateringer daglig\
-Kl. 06:02  sync_brief.py kjøres via Task Scheduler → kopierer og pusher til GitHub
-Kl. 06:05  GitHub Action kjøres → build.py integrerer brief i index.html → pusher ny HTML
-Kl. 06:06  Oppdatert modell er live på https://halvard.github.io/geopolitisk-modell
-```
+- **Live data** (Brent, WTI, gull, VIX, valuta, RSS-nyheter og Truth Social) hentes i
+  nettleseren via `/api/proxy?url=…`. Proxyen slipper bare gjennom vertsnavn på en
+  fast liste og følger inntil tre omdirigeringer. Siden må derfor kjøre på Vercel
+  for at live-data skal fungere; åpnes filen lokalt eller fra GitHub Pages, viser
+  modellen «anslag» og «ingen data» i stedet for å henge.
+- **Hormuz-kalkulatoren** bruker live Brent som basispris. Mangler live-pris,
+  brukes et statisk anslag (108 $) som merkes tydelig i grensesnittet.
+- **Oljeprisgrafen** (dashboard-overlay og Hormuz-modal) regnes av én felles
+  funksjon, `hzPricePath()`, slik at alle visninger gir samme forløp.
+- **Trumpometer** scorer Trump-relaterte nyheter 0–100. Speedometrene bruker
+  `pathLength="100"`, slik at bue-fyllingen alltid er lik scoren.
 
-## Oppsett (én gang)
+## Grunnlinje og «Da og nå»
 
-### 1. Opprett repository på GitHub
-- Gå til github.com → New repository
-- Navn: `geopolitisk-modell`
-- Public
-- Ikke initialiser med README (vi pusher selv)
+Analysen ble skrevet 31. mars 2026 (dag 31 av Hormuz-krisen) og bevares uendret som
+modellens grunnlinje. Alt som er datert «31. mars» i Om modellen, Makrodata og
+analysedokumentet, refererer til det tidspunktet.
 
-### 2. Initialiser lokalt og push
-```powershell
-cd C:\Users\HalvardNordang\Documents\geopolitisk-modell
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/DITT-BRUKERNAVN/geopolitisk-modell.git
-git push -u origin main
-```
+Situasjonen i dag ligger i ett JavaScript-objekt, `SITUASJON`, i `index.html`
+(skript-blokken `situasjon-js`). Objektet inneholder
 
-### 3. Aktiver GitHub Pages
-- Gå til repository → Settings → Pages
-- Source: `Deploy from a branch`
-- Branch: `main` / `/ (root)`
-- Klikk Save
+- `grunnlinje` og `naa`: de to datoene som sammenlignes
+- `faser`: krisens faser (krig, våpenhvile, kronisk forstyrrelse)
+- `indikatorer`: nøkkeltall med verdi ved grunnlinjen (`da`), i dag (`naa`), kilder og
+  en kort tolkning
+- `hendelser`: daterte hendelser fra februar til i dag
+- `modelltest`: hva modellen sa 31. mars, og hva som faktisk skjedde
 
-### 4. Opprett .github/workflows/-mappen på GitHub
-- Kopier innholdet fra `github-workflows-daglig.yml`
-- Opprett filen `.github/workflows/daglig.yml` i repositoryet via GitHub-nettstedet
+Alt som vises i panelet «Da og nå», stripen på dashbordet, Makrodata-kortene,
+situasjonsstatusen i Om modellen og kronologien i Hormuz-modalen regnes ut fra dette
+objektet. For å oppdatere siden med ny status: endre `naa.dato`, oppdater `naa`-verdiene
+i `indikatorer`, og legg nye hendelser nederst i `hendelser`. Ingen annen kode må røres.
 
-### 5. Sett opp Windows Task Scheduler for sync_brief.py
-- Åpne Task Scheduler → Create Basic Task
-- Navn: `Geopolitisk brief sync`
-- Trigger: Daily kl. 06:02
-- Action: Start a program
-  - Program: `python`
-  - Arguments: `C:\Users\HalvardNordang\Documents\geopolitisk-modell\scripts\sync_brief.py`
+Kalkulatorens standardvarighet regnes ut fra faktiske uker siden 28. februar ganget med
+en effektiv stengningsgrad (`SN_EFFEKTIV_GRAD`, 0,5 per IEA september 2026), fordi
+modellen forutsetter full stengning mens den faktiske stengningen er delvis.
+
+## Mobil
+
+Alle paneler og modaler brytes til én kolonne under 860 px bredde. Tabeller får
+horisontal rulling, tooltips åpnes ved å trykke på «?», og oljeprisgrafen vises
+som en egen blokk under kalkulatoren.
 
 ## Manuell oppdatering
+
 ```powershell
 cd C:\Users\HalvardNordang\Documents\geopolitisk-modell
-python scripts/build.py
-git add index.html && git commit -m "Manuell oppdatering" && git push
+push.bat
 ```
+
+`push.bat` legger til `index.html`, committer med tidsstempel og pusher til `main`.
+Vercel bygger og publiserer automatisk ved push.
