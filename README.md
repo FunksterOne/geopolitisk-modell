@@ -30,6 +30,31 @@ geopolitisk-modell/
 - **Trumpometer** scorer Trump-relaterte nyheter 0–100. Speedometrene bruker
   `pathLength="100"`, slik at bue-fyllingen alltid er lik scoren.
 
+## Grunnlinje og «Da og nå»
+
+Analysen ble skrevet 31. mars 2026 (dag 31 av Hormuz-krisen) og bevares uendret som
+modellens grunnlinje. Alt som er datert «31. mars» i Om modellen, Makrodata og
+analysedokumentet, refererer til det tidspunktet.
+
+Situasjonen i dag ligger i ett JavaScript-objekt, `SITUASJON`, i `index.html`
+(skript-blokken `situasjon-js`). Objektet inneholder
+
+- `grunnlinje` og `naa`: de to datoene som sammenlignes
+- `faser`: krisens faser (krig, våpenhvile, kronisk forstyrrelse)
+- `indikatorer`: nøkkeltall med verdi ved grunnlinjen (`da`), i dag (`naa`), kilder og
+  en kort tolkning
+- `hendelser`: daterte hendelser fra februar til i dag
+- `modelltest`: hva modellen sa 31. mars, og hva som faktisk skjedde
+
+Alt som vises i panelet «Da og nå», stripen på dashbordet, Makrodata-kortene,
+situasjonsstatusen i Om modellen og kronologien i Hormuz-modalen regnes ut fra dette
+objektet. For å oppdatere siden med ny status: endre `naa.dato`, oppdater `naa`-verdiene
+i `indikatorer`, og legg nye hendelser nederst i `hendelser`. Ingen annen kode må røres.
+
+Kalkulatorens standardvarighet regnes ut fra faktiske uker siden 28. februar ganget med
+en effektiv stengningsgrad (`SN_EFFEKTIV_GRAD`, 0,5 per IEA september 2026), fordi
+modellen forutsetter full stengning mens den faktiske stengningen er delvis.
+
 ## Mobil
 
 Alle paneler og modaler brytes til én kolonne under 860 px bredde. Tabeller får

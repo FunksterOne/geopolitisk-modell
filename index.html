@@ -779,6 +779,9 @@ input[type=range]::-webkit-slider-thumb {
       <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--green)">★ Investeringstips</span>
     </button>
     <div style="width:1px;height:18px;background:var(--border);flex-shrink:0"></div>
+    <button onclick="nav('panel-tidslinje')" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy);border:none;border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s;box-shadow:var(--shadow)">
+      <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:white">◆ Da og nå</span>
+    </button>
     <button onclick="nav('panel-makro')" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy-lt);border:1px solid rgba(31,56,100,.2);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s">
       <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-mid)">📊 Makrodata</span>
     </button>
@@ -834,8 +837,9 @@ input[type=range]::-webkit-slider-thumb {
             </span>
             <span style="font-size:15px;font-weight:700;color:var(--navy)" id="out-duration">4 uker</span>
           </div>
-          <input type="range" min="1" max="26" value="4" step="1" id="sl-duration" oninput="updateSliderLabel(this);debouncedCalc()" style="width:100%;accent-color:var(--navy);cursor:pointer;height:3px">
-          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--faint);margin-top:3px"><span>1 uke</span><span>8 uker</span><span>16 uker</span><span>26 uker</span></div>
+          <input type="range" min="1" max="52" value="4" step="1" id="sl-duration" oninput="updateSliderLabel(this);debouncedCalc()" style="width:100%;accent-color:var(--navy);cursor:pointer;height:3px">
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--faint);margin-top:3px"><span>1 uke</span><span>13 uker</span><span>26 uker</span><span>39 uker</span><span>52 uker</span></div>
+          <div id="sl-duration-note" style="font-size:9.5px;color:var(--muted);margin-top:3px;line-height:1.45"></div>
         </div>
         <div>
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px">
@@ -1048,6 +1052,31 @@ input[type=range]::-webkit-slider-thumb {
     </div>
   </div>
 
+  <div id="dash-danaa" class="dn-dash"></div>
+</div>
+
+<!-- ─── DA OG NÅ ─── -->
+<div class="panel" id="panel-tidslinje">
+  <div class="panel-header">
+    <div class="panel-title">Da og nå</div>
+    <div class="panel-sub">Modellens grunnlinje 31. mars 2026 mot situasjonen 14. september 2026 · fasene, hendelsene og en ærlig test av rammeverkene</div>
+  </div>
+  <div id="dn-intro"></div>
+  <div class="section-label">Krisens faser — 28. februar til i dag</div>
+  <div style="font-size:11.5px;color:var(--muted);margin-bottom:6px;line-height:1.6">Fargene er fasene. Punktene er daterte hendelser: hold musen over eller trykk på et punkt. Romben er grunnlinjen (dagen modellen ble skrevet), det røde punktet er i dag.</div>
+  <div id="dn-fasebar"></div>
+  <div id="dn-faser"></div>
+  <div class="section-label">Nøkkeltall: 31. mars mot i dag</div>
+  <div style="font-size:11.5px;color:var(--muted);margin-bottom:10px;line-height:1.6">Grønn pil betyr bedring, rød forverring, blå nøytral endring. Endringer i prosentstørrelser oppgis i prosentpoeng (pp), i priser og nivåer som prosent.</div>
+  <div id="dn-filter-grupper"></div>
+  <div id="dn-tabell"></div>
+  <div class="section-label">Hva modellen sa, og hva som skjedde</div>
+  <div style="font-size:11.5px;color:var(--muted);margin-bottom:10px;line-height:1.6">Hvert kort setter modellens formulering fra 31. mars opp mot det som faktisk skjedde. Vurderingen er skjønnsmessig og skal leses som observasjon, ikke som karakter.</div>
+  <div id="dn-modelltest"></div>
+  <div class="section-label">Alle hendelser, dag for dag</div>
+  <div id="dn-hendelser-filter"></div>
+  <div id="dn-hendelser"></div>
+  <div class="footnote" style="margin-top:16px">Grunnlag: BLS, BEA, Federal Reserve, Eurostat, ECB, NBS, Kinas tollvesen, SSB, Norges Bank, IEA Oil Market Report (sept. 2026), Dallas Fed, Yale Budget Lab, CBOE, ICE, Trading Economics, Lloyd's List, Windward/Straits-sporing, Al Jazeera, CNN, CNBC, Bloomberg, Britannica. Innhentet 14. september 2026. Tall merket «flash» eller «estimat» kan bli revidert.</div>
 </div>
 
 <!-- ─── OM MODELLEN (Merged: Analytikere + Taleb + Analysedokument) ─── -->
@@ -1077,26 +1106,11 @@ input[type=range]::-webkit-slider-thumb {
     <div style="font-size:13.5px;line-height:1.82;color:var(--text);font-weight:300;margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--navy);border-radius:0 var(--radius) var(--radius) 0;padding:16px 20px;box-shadow:var(--shadow)">
       Dette er en analytisk modell basert på en syntese av seks sentrale verk som til sammen beskriver den geopolitiske og makroøkonomiske virkeligheten per 31. mars 2026. Modellen integrerer makroøkonomisk resesjonsteori (Goodspeed), kartlegging av det amerikanske sanksjonsapparatet (Fishman), handelspolitisk arkitektur (Miran), offisielle amerikanske forsvars- og sikkerhetsstrategier, og erkjennelsesteori for investorer under dyp usikkerhet (Taleb).
     </div>
+    <div class="dn-banner"><strong>Grunnlinje og oppdatering.</strong> Analysen ble skrevet 31. mars 2026, 31 dager etter at Hormuz ble stengt, og bevares uendret som modellens grunnlinje. Alt som er merket «31. mars» i denne fanen og i analysedokumentet, refererer til det tidspunktet. Situasjonen i dag, hendelsene siden og en test av rammeverkene finnes i <a href="#" onclick="nav('panel-tidslinje');return false" style="color:var(--amber);font-weight:600">Da og nå</a>.</div>
 
     <!-- Situasjonsstatus -->
-    <div class="section-label" style="margin-top:0;border-top:none;padding-top:0">Situasjonsstatus — per 2. april 2026</div>
-    <div class="status-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px">
-      <div style="background:var(--red-lt);border:1px solid rgba(197,48,48,.2);border-radius:var(--radius);padding:14px 16px">
-        <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-bottom:6px">Hormuz-status</div>
-        <div style="font-size:18px;font-weight:700;color:var(--red);line-height:1;margin-bottom:4px">Stengt 29 dager</div>
-        <div style="font-size:11px;color:var(--muted)">Siden 28. februar 2026 — IEA: historisk krise</div>
-      </div>
-      <div style="background:var(--amber-lt);border:1px solid rgba(146,64,14,.2);border-radius:var(--radius);padding:14px 16px">
-        <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-bottom:6px">Goodspeed-status</div>
-        <div style="font-size:18px;font-weight:700;color:var(--amber);line-height:1;margin-bottom:4px">3 av 3 triggere</div>
-        <div style="font-size:11px;color:var(--muted)">Energi · Krig · Kreditt — simultant aktive</div>
-      </div>
-      <div style="background:var(--navy-lt);border:1px solid rgba(31,56,100,.15);border-radius:var(--radius);padding:14px 16px">
-        <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);margin-bottom:6px">Mirans smale sti <span class="tt-trigger" data-tt="tt-miran-foruts" style="display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div style="font-size:18px;font-weight:700;color:var(--navy);line-height:1;margin-bottom:4px">Stengt</div>
-        <div style="font-size:11px;color:var(--muted)">Alle 5 forutsetninger brutt per 31. mars</div>
-      </div>
-    </div>
+    <div class="section-label" style="margin-top:0;border-top:none;padding-top:0">Situasjonsstatus — 31. mars 2026 mot i dag</div>
+    <div class="status-grid" id="status-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px"></div>
 
     <!-- Modellkart / flytdiagram -->
     <div class="section-label">Hvordan rammeverk henger sammen</div>
@@ -1543,6 +1557,7 @@ input[type=range]::-webkit-slider-thumb {
       Sammenstilt produserer de seks kildene en diagnose av et system i strukturell overbelastning, der alle de primære risikofaktorene er under simultant press, og der belastningene forsterker hverandre snarere enn å utlikne hverandre.
     </div>
 
+    <div class="dn-banner"><strong>Grunnlinje.</strong> Syntesediagnosen under er per 31. mars 2026. Per 14. september er fem av ni påstander helt eller delvis bekreftet, én avkreftet (systemkollaps) og én uavklart. Se <a href="#" onclick="nav('panel-tidslinje');return false" style="color:var(--amber);font-weight:600">Da og nå</a>.</div>
     <!-- Syntesediagnose -->
     <div class="section-label" style="margin-top:0;border-top:none;padding-top:0">Syntesediagnose per 31. mars 2026</div>
     <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
@@ -1631,7 +1646,7 @@ input[type=range]::-webkit-slider-thumb {
     </div>
 
     <div class="analyse-body" id="analyse-scroll-body">
-
+    <div class="dn-banner" style="margin-bottom:20px"><strong>Historisk dokument.</strong> Teksten under er datert 31. mars 2026 og er bevart ord for ord. Den er modellens grunnlinje og skal leses som en dokumentert hypotese. Hva som faktisk skjedde i de påfølgende månedene, er samlet i <a href="#" onclick="nav('panel-tidslinje');return false" style="color:var(--amber);font-weight:600">Da og nå</a>, med en vurdering av hvert rammeverk.</div>
     <!-- SAMMENDRAG -->
     <h1 id="adoc-sammendrag">Sammendrag</h1>
     <p>Dette dokumentet er en analytisk syntese av seks sentrale verk som til sammen gir det mest presise tilgjengelige bildet av den geopolitiske og makroøkonomiske virkeligheten per 31. mars 2026. Dokumentet kombinerer makroøkonomisk teori, geopolitisk analyse, amerikansk forsvars- og sikkerhetsstrategi og epistemologisk rammeverk for å nå konklusjoner som er relevante for langsiktige kapitalallokerings- og strategibeslutninger.</p>
@@ -1820,7 +1835,7 @@ input[type=range]::-webkit-slider-thumb {
 <!-- ─── TALEB ─── --><div class="panel" id="panel-makro">
   <div class="panel-header">
     <div class="panel-title">Makrodata</div>
-    <div class="panel-sub" style="font-size:10.5px">Autoriserte kilder · Oppdatert per <span id="dyn-makro-date"></span> · Koblet til de analytiske posisjonene</div>
+    <div class="panel-sub" style="font-size:10.5px">Grunnlinje 31. mars 2026 · oppdatert 14. september 2026 · hvert kort viser dagens tall med grunnlinjen som referanse</div>
   </div>
 
   <div class="macro-tabs">
@@ -1834,268 +1849,47 @@ input[type=range]::-webkit-slider-thumb {
 
   <!-- ── SAMMENLIGNING ── -->
   <div class="macro-panel active" id="macro-sammenligning">
-    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Nøkkeltall per <span id="dyn-makro-sect1"></span> — tre regioner</div>
-
-    <table class="compare-table">
-      <thead>
-        <tr>
-          <th>Indikator</th>
-          <th>🇺🇸 USA</th>
-          <th>🇪🇺 Eurosonen</th>
-          <th>🇨🇳 Kina</th>
-          <th>Analytisk relevans</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Styringsrente</strong><br><span style="font-size:10px;color:var(--faint)">Sentralbank</span></td>
-          <td><span class="num">3,50–3,75 %</span><br><span style="font-size:10px;color:var(--muted)">Holdt 18. mars (Fed)</span></td>
-          <td><span class="num">2,00 %</span><br><span style="font-size:10px;color:var(--muted)">Holdt 19. mars (ECB)</span></td>
-          <td><span class="num">3,10 %</span><br><span style="font-size:10px;color:var(--muted)">PBoC LPR 1 år</span></td>
-          <td style="font-size:11px">Fed fanget mellom inflasjon og resesjonsrisiko — Mirans smale sti stengt</td>
-        </tr>
-        <tr>
-          <td><strong>KPI-inflasjon</strong><br><span style="font-size:10px;color:var(--faint)">Siste 12 mnd.</span></td>
-          <td><span class="warn-cell">2,4 %</span><br><span style="font-size:10px;color:var(--muted)">Feb 2026 (BLS)</span></td>
-          <td><span class="ok-cell">1,9 %</span><br><span style="font-size:10px;color:var(--muted)">Feb 2026 (Eurostat)</span></td>
-          <td><span class="ok-cell">~0,1 %</span><br><span style="font-size:10px;color:var(--muted)">Jan 2026 (NBS)</span></td>
-          <td style="font-size:11px">Hormuz-sjokket presser alle tall oppover — ECB varsler 2,6 % for 2026</td>
-        </tr>
-        <tr>
-          <td><strong>BNP-vekst</strong><br><span style="font-size:10px;color:var(--faint)">Siste år / prognose 2026</span></td>
-          <td><span class="ok-cell">2,4 %</span><br><span style="font-size:10px;color:var(--muted)">FOMC prognose 2026</span></td>
-          <td><span class="warn-cell">0,9 %</span><br><span style="font-size:10px;color:var(--muted)">ECB prognose 2026</span></td>
-          <td><span class="ok-cell">5,0 %</span><br><span style="font-size:10px;color:var(--muted)">NBS 2025 (offisiell)</span></td>
-          <td style="font-size:11px">Europa hardest rammet av Hormuz — ECB kuttet vekstprognosen fra 1,2 % til 0,9 %</td>
-        </tr>
-        <tr>
-          <td><strong>Arbeidsledighet</strong><br><span style="font-size:10px;color:var(--faint)">Siste tall</span></td>
-          <td><span class="warn-cell">4,4 %</span><br><span style="font-size:10px;color:var(--muted)">Feb 2026 (BLS)</span></td>
-          <td><span class="ok-cell">5,7 %</span><br><span style="font-size:10px;color:var(--muted)">Jan 2026 (Eurostat)</span></td>
-          <td><span class="ok-cell">5,2 %</span><br><span style="font-size:10px;color:var(--muted)">NBS offisiell rate</span></td>
-          <td style="font-size:11px">Goodspeed: arbeidsledigheten er ledende indikator — stigende USA-rate er varselsignal</td>
-        </tr>
-        <tr>
-          <td><strong>10-årig statsobl.</strong><br><span style="font-size:10px;color:var(--faint)">Yield</span></td>
-          <td><span class="num">4,27 %</span><br><span style="font-size:10px;color:var(--muted)">18. mars (Tradeweb)</span></td>
-          <td><span class="num">2,88 %</span><br><span style="font-size:10px;color:var(--muted)">Tysk Bund (Euronews)</span></td>
-          <td><span class="ok-cell">1,81 %</span><br><span style="font-size:10px;color:var(--muted)">Kinesisk 10-år</span></td>
-          <td style="font-size:11px">Miran: Triffin-dilemma — USA eksporterer obligasjoner. Mar-a-Lago Accord krever at partnere bytter korte til lange</td>
-        </tr>
-        <tr>
-          <td><strong>Core PCE / kjerneinflasjoner</strong><br><span style="font-size:10px;color:var(--faint)">Sentralbankens mål</span></td>
-          <td><span class="warn-cell">2,7 %</span><br><span style="font-size:10px;color:var(--muted)">FOMC prognose 2026</span></td>
-          <td><span class="warn-cell">2,3 %</span><br><span style="font-size:10px;color:var(--muted)">ECB kjerne prognose 2026</span></td>
-          <td><span class="ok-cell">ca. 0 %</span><br><span style="font-size:10px;color:var(--muted)">Deflasjonstrend NBS</span></td>
-          <td style="font-size:11px">Fed mandat: 2,0 % PCE-mål. Nå 2,7 % — holder renten høy selv ved resesjonsrisiko</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Nøkkeltall i dag mot 31. mars — tre regioner</div>
+    <div id="mk-cmp"></div>
 
     <div class="relevance-box">
       <div class="relevance-label">Analytisk sammenstilling — Goodspeed · Miran · Fishman</div>
-      USA befinner seg i stagflasjonskorridoren: inflasjon over mål (2,4 % CPI, 2,7 % kjerne PCE prognose) og stigende arbeidsledighet (4,4 %) simultant. Fed kan verken heve (resesjonsrisiko) eller kutte (inflasjonsrisiko) — dette er Mirans "smale sti stengt" i numerisk form. Europa er hardere eksponert mot Hormuz-sjokket enn USA: ECB kuttet BNP-prognosen for 2026 fra 1,2 % til 0,9 % på tre uker. Kina med sin nær-null-inflasjon og energiimportprofil er den suverene vinneren på kort sikt — men Fishmans halvledersanksjoner representerer den strukturelle trusselen.
+      Grunnlinjen 31. mars beskrev en stagflasjonskorridor som «Mirans smale sti stengt i numerisk form». Et halvt år senere er halve diagnosen bekreftet og halve avkreftet. Bekreftet: Fed har ikke rørt renten på seks måneder, og inflasjonen har kommet (KPI 3,4 %, kjerne-PCE 3,3 %). Avkreftet: ledigheten falt til 4,1 %, BNP vokser, og markedet priser resesjon i 2026 til 8 %. Europa har fått Goodspeed-mønsteret modellen ventet i USA: ledighet opp 0,7 pp, energiinflasjon 14 %, og ECB har hevet to ganger. Kina er den kortsiktige vinneren, som antatt: eksport +25 % og rekordoverskudd, samtidig som REE-eksporten strupes. Fishmans asymmetri er blitt til tall.
     </div>
   </div>
 
   <!-- ── USA ── -->
   <div class="macro-panel" id="macro-usa">
-    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">USA — nøkkeltall per <span id="dyn-makro-sect2"></span></div>
-    <div style="font-size:11px;color:var(--faint);margin-bottom:14px">Kilder: BLS, BEA, Federal Reserve (FOMC SEP mars 2026), Tradeweb</div>
+    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">USA — i dag mot 31. mars 2026</div>
+    <div style="font-size:11px;color:var(--faint);margin-bottom:14px">Kilder: BLS (KPI 11. sep., sysselsetting 4. sep.), BEA (BNP og PCE 26. aug.), Federal Reserve (FOMC 29. juli), Yale Budget Lab, Polymarket, Trading Economics</div>
 
-    <div class="data-grid">
-      <div class="data-card warn">
-        <div class="dc-label">Fed Funds Rate <span class="tt-trigger" data-tt="tt-fed" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div class="dc-value">3,50–3,75 %</div>
-        <div class="dc-sub">Holdt uendret 18. mars 2026</div>
-        <div class="dc-trend" style="color:var(--amber)">→ 1 kutt forventet i 2026</div>
-        <div class="dc-src">Kilde: Federal Reserve</div>
-      </div>
-      <div class="data-card warn">
-        <div class="dc-label">KPI-inflasjon (CPI-U) <span class="tt-trigger" data-tt="tt-cpi-u" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div class="dc-value">2,4 %</div>
-        <div class="dc-sub">Februar 2026 · 12 mnd. · uendret fra januar</div>
-        <div class="dc-trend" style="color:var(--amber)">Kjerne CPI: 2,5 %</div>
-        <div class="dc-src">Kilde: BLS, 11. mars 2026</div>
-      </div>
-      <div class="data-card warn">
-        <div class="dc-label">Kjerne PCE (prognose) <span class="tt-trigger" data-tt="tt-pce" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div class="dc-value">2,7 %</div>
-        <div class="dc-sub">FOMC median for Q4 2026</div>
-        <div class="dc-trend" style="color:var(--amber)">Revidert opp fra 2,5 %</div>
-        <div class="dc-src">Kilde: FOMC SEP mars 2026</div>
-      </div>
-      <div class="data-card warn">
-        <div class="dc-label">Arbeidsledighet <span class="tt-trigger" data-tt="tt-arb" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div class="dc-value">4,4 %</div>
-        <div class="dc-sub">Februar 2026 · langsomt stigende</div>
-        <div class="dc-trend" style="color:var(--amber)">FOMC prognose Q4 2026: 4,4 %</div>
-        <div class="dc-src">Kilde: BLS</div>
-      </div>
-    </div>
-
-    <div class="data-grid">
-      <div class="data-card ok">
-        <div class="dc-label">BNP-vekst prognose 2026 <span class="tt-trigger" data-tt="tt-bnp-prognose" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div class="dc-value">2,4 %</div>
-        <div class="dc-sub">FOMC median Q4/Q4 · revidert opp</div>
-        <div class="dc-trend" style="color:var(--green)">Fra 2,3 % i desember 2025</div>
-        <div class="dc-src">Kilde: FOMC SEP mars 2026</div>
-      </div>
-      <div class="data-card ok">
-        <div class="dc-label">10-årig Treasury <span class="tt-trigger" data-tt="tt-treasury" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div class="dc-value">4,27 %</div>
-        <div class="dc-sub">18. mars 2026 · stengetid</div>
-        <div class="dc-trend" style="color:var(--green)">30-årig: 4,88 %</div>
-        <div class="dc-src">Kilde: Tradeweb via Fed</div>
-      </div>
-      <div class="data-card alert">
-        <div class="dc-label">Effektiv tarifffrate <span class="tt-trigger" data-tt="tt-tarifffrate" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div class="dc-value">10,5 %</div>
-        <div class="dc-sub">Høyeste siden 1943</div>
-        <div class="dc-trend" style="color:var(--red)">Var 14,3 % (Yale Budget Lab)</div>
-        <div class="dc-src">Kilde: Yale Budget Lab, mars 2026</div>
-      </div>
-      <div class="data-card alert">
-        <div class="dc-label">Fed-balanse <span class="tt-trigger" data-tt="tt-fed-balanse" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div class="dc-value">6,65 bn $</div>
-        <div class="dc-sub">Per 11. mars 2026</div>
-        <div class="dc-trend" style="color:var(--red)">−2,4 bn $ fra topp apr. 2022</div>
-        <div class="dc-src">Kilde: Federal Reserve</div>
-      </div>
-    </div>
+    <div class="data-grid" id="mk-cards-usa"></div>
 
     <div class="relevance-box">
       <div class="relevance-label">Kobling til analysen — Goodspeed · Miran · Taleb</div>
-      Fed er fanget i Goodspeeds verste scenariokategori: energisjokk og kredittkontraksjonssignaler simultant. Kjerne PCE på 2,7 % i 2026-prognosen er 70 basispunkter over målet — Fed kan ikke kutte. Men stigende arbeidsledighet (4,4 %) og Goodspeeds diskontinuerlige resesjonsmekanisme betyr at de heller ikke kan heve uten å utløse det de frykter. Miran erkjenner selv i sitt dokument at Fed-koordinering er en nødvendig forutsetning for den smale stien — og den forutsetningen er brutt.
+      Fed er fortsatt fanget, men i et annet hjørne enn modellen så for seg. 31. mars var spørsmålet om Fed kunne kutte for å møte resesjonen. 14. september er spørsmålet om Fed må heve for å møte inflasjonen: markedet priser 83–89 % sannsynlighet for +25 bp 16. september, og tiårsrenten står i 4,96 %. Goodspeeds diskontinuerlige resesjonsmekanisme har ikke utløst; arbeidsmarkedet styrket seg (+162 000 i august). Tolkningen etter Taleb: fraværet av resesjon er ikke bevis på at risikoen er borte, bare at den ikke har materialisert seg ennå. Ny Fed-sjef (Warsh) og Mirans avgang fra styret er institusjonelle endringer modellen ikke hadde i sikte.
     </div>
   </div>
 
   <!-- ── EUROPA ── -->
   <div class="macro-panel" id="macro-europa">
-    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Eurosonen — nøkkeltall per 31. mars 2026</div>
-    <div style="font-size:11px;color:var(--faint);margin-bottom:14px">Kilder: ECB (pressemøte 19. mars 2026), Eurostat, ECB stab-projeksjoner mars 2026</div>
+    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Eurosonen — i dag mot 31. mars 2026</div>
+    <div style="font-size:11px;color:var(--faint);margin-bottom:14px">Kilder: ECB (rentebeslutning 10. sep., stabsprognoser sept. 2026), Eurostat (HICP flash 1. sep., ledighet 1. sep., BNP Q2), Trading Economics</div>
 
-    <div class="data-grid">
-      <div class="data-card ok">
-        <div class="dc-label">ECB-styringsrente (innskudd) <span class="tt-trigger" data-tt="tt-ecb-rente" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div class="dc-value">2,00 %</div>
-        <div class="dc-sub">Holdt 19. mars · refinansiering: 2,15 %</div>
-        <div class="dc-trend" style="color:var(--green)">Marginal utlånsrente: 2,40 %</div>
-        <div class="dc-src">Kilde: ECB, 19. mars 2026</div>
-      </div>
-      <div class="data-card warn">
-        <div class="dc-label">HICP-inflasjon (faktisk) <span class="tt-trigger" data-tt="tt-hicp" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div class="dc-value">1,9 %</div>
-        <div class="dc-sub">Februar 2026 · 12 mnd. (Eurostat)</div>
-        <div class="dc-trend" style="color:var(--amber)">Prognose 2026: 2,6 % (ECB mars)</div>
-        <div class="dc-src">Kilde: Eurostat flash-estimat</div>
-      </div>
-      <div class="data-card alert">
-        <div class="dc-label">BNP-vekst prognose 2026</div>
-        <div class="dc-value">0,9 %</div>
-        <div class="dc-sub">ECB mars-revisjon · ned fra 1,2 %</div>
-        <div class="dc-trend" style="color:var(--red)">Hormuz trekker 0,3 pp fra 2026</div>
-        <div class="dc-src">Kilde: ECB stab-projeksjoner mars 2026</div>
-      </div>
-      <div class="data-card ok">
-        <div class="dc-label">Arbeidsledighet</div>
-        <div class="dc-value">5,7 %</div>
-        <div class="dc-sub">Januar 2026 (Eurostat)</div>
-        <div class="dc-trend" style="color:var(--green)">Stabilt lavt — historisk</div>
-        <div class="dc-src">Kilde: Eurostat</div>
-      </div>
-    </div>
-
-    <div class="data-grid data-grid-3">
-      <div class="data-card ok">
-        <div class="dc-label">Kjerneinflasjon (ex. mat/energi)</div>
-        <div class="dc-value">2,3 %</div>
-        <div class="dc-sub">ECB prognose 2026 · revidert opp</div>
-        <div class="dc-trend" style="color:var(--green)">2027: 2,2 % · 2028: 2,1 %</div>
-        <div class="dc-src">Kilde: ECB stab-projeksjoner mars 2026</div>
-      </div>
-      <div class="data-card warn">
-        <div class="dc-label">BNP Q4 2025 (faktisk)</div>
-        <div class="dc-value">+0,2 %</div>
-        <div class="dc-sub">Kvartal over kvartal · ned fra 0,3 %</div>
-        <div class="dc-trend" style="color:var(--amber)">Årsrate Q4/Q4: +1,2 %</div>
-        <div class="dc-src">Kilde: Eurostat</div>
-      </div>
-      <div class="data-card ok">
-        <div class="dc-label">Tysk 10-årig Bund <span class="tt-trigger" data-tt="tt-bund" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div class="dc-value">2,88 %</div>
-        <div class="dc-sub">Eurosoneens referanserente</div>
-        <div class="dc-trend" style="color:var(--green)">EUR/USD ~1,18</div>
-        <div class="dc-src">Kilde: Euronews / markedsdata</div>
-      </div>
-    </div>
+    <div class="data-grid" id="mk-cards-europa"></div>
 
     <div class="relevance-box">
       <div class="relevance-label">Kobling til analysen — ECB · Goodspeed · Fishmans asymmetri</div>
-      Europa er den regionen som er mest eksponert mot Hormuz-sjokket blant de tre store. ECB kuttet BNP-prognosen for 2026 fra 1,2 % til 0,9 % på tre uker — det er 0,3 prosentpoeng tapt på grunn av konflikten som ECB-president Lagarde kalte «vesentlig mer usikker». Energipris-chokket driver inflasjonsprognosen for 2026 fra 1,9 % til 2,6 %. ECB er i samme tvangssituasjon som Fed: inflasjonen stiger (energi), men veksten faller — klassisk stagflasjonssituasjon. I kapitalimplikasjonsseksjonen er europeisk LNG-infrastruktur et av de fire strukturelle investeringstemaene. Disse tallene dokumenterer hvorfor.
+      Europa er den regionen der grunnlinjen har truffet best, og der utviklingen har gått lengst. ECB «utsatte kutt» i mars; siden har banken hevet to ganger, til 2,50 %, med inflasjon på 3,3 % og energipriser opp 14 % på ett år. Ledigheten har steget fra 5,7 % til 6,4 %, det brå hoppet Goodspeed beskriver. Vekstanslaget for 2026 er bare marginalt ned (0,9 → 0,8 %), fordi svakheten skyves til 2027 (0,4 %) samtidig som ECBs stab ser inflasjonen toppe på 5,4 % neste år. Det er en stagflasjonsprofil. Fishmans asymmetri gjelder også her: Qatar-LNG er halvert, TTF er på det høyeste siden 2023, og ingen kan «beordre» ny forsyning på plass.
     </div>
   </div>
 
   <!-- ── KINA ── -->
   <div class="macro-panel" id="macro-kina">
-    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Kina — nøkkeltall per 31. mars 2026</div>
+    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Kina — i dag mot 31. mars 2026</div>
     <div style="font-size:11px;color:var(--faint);margin-bottom:14px">Offisielle tall: NBS (National Bureau of Statistics of China). Viktig: IMF og Rhodium Group estimerer faktisk vekst 2025 til 2,5–3,0 % vs. NBS' offisielle 5,0 %</div>
 
-    <div class="data-grid">
-      <div class="data-card ok">
-        <div class="dc-label">BNP-vekst 2025 (offisiell)</div>
-        <div class="dc-value">5,0 %</div>
-        <div class="dc-sub">140,19 trillioner yuan · NBS jan. 2026</div>
-        <div class="dc-trend" style="color:var(--green)">Mål nådd · Q4: 4,5 % år/år</div>
-        <div class="dc-src">Kilde: NBS, 19. januar 2026</div>
-      </div>
-      <div class="data-card warn">
-        <div class="dc-label">BNP-vekst (uavhengig est.)</div>
-        <div class="dc-value">2,5–3,0 %</div>
-        <div class="dc-sub">Rhodium Group / Rosen m.fl.</div>
-        <div class="dc-trend" style="color:var(--amber)">Investering kollapset H2 2025</div>
-        <div class="dc-src">Kilde: Rhodium Group, januar 2026</div>
-      </div>
-      <div class="data-card alert">
-        <div class="dc-label">KPI-inflasjon</div>
-        <div class="dc-value">~0 %</div>
-        <div class="dc-sub">Nær-deflasjonstrend 2025</div>
-        <div class="dc-trend" style="color:var(--red)">Vekstmål 2026: 2,0 % inflasjon</div>
-        <div class="dc-src">Kilde: NBS, februar 2026</div>
-      </div>
-      <div class="data-card ok">
-        <div class="dc-label">BNP-mål 2026</div>
-        <div class="dc-value">4,5–5,0 %</div>
-        <div class="dc-sub">Premier Li Qiang — NPC mars 2026</div>
-        <div class="dc-trend" style="color:var(--green)">«Strive for better outcomes»</div>
-        <div class="dc-src">Kilde: NPC (Folkekongress)</div>
-      </div>
-    </div>
-
-    <div class="data-grid data-grid-3">
-      <div class="data-card ok">
-        <div class="dc-label">10-årig statsobl. yield</div>
-        <div class="dc-value">1,81 %</div>
-        <div class="dc-sub">Lavt — reflekterer pengepol. stimulus</div>
-        <div class="dc-trend" style="color:var(--green)">Investorer søker trygg havn</div>
-        <div class="dc-src">Kilde: Trading Economics / PBoC</div>
-      </div>
-      <div class="data-card ok">
-        <div class="dc-label">Industrifortjeneste jan–feb 2026</div>
-        <div class="dc-value">+15,2 %</div>
-        <div class="dc-sub">År/år · 1,02 trillioner yuan</div>
-        <div class="dc-trend" style="color:var(--green)">Fra 0,6 % vekst i 2025</div>
-        <div class="dc-src">Kilde: NBS, mars 2026</div>
-      </div>
-      <div class="data-card ok">
-        <div class="dc-label">PBoC utlånsrente (1 år, LPR)</div>
-        <div class="dc-value">3,10 %</div>
-        <div class="dc-sub">Pengepolitikk «moderat akkomoderende»</div>
-        <div class="dc-trend" style="color:var(--green)">Støtter innenlandsk vekst</div>
-        <div class="dc-src">Kilde: PBoC</div>
-      </div>
-    </div>
+    <div class="data-grid" id="mk-cards-kina"></div>
 
     <div class="card" style="border-left:3px solid var(--amber);margin-bottom:14px">
       <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Statistikk-advarsel — Fishmans analyse i praksis <span class="tt-trigger" data-tt="tt-statistikk" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
@@ -2106,108 +1900,37 @@ input[type=range]::-webkit-slider-thumb {
 
     <div class="relevance-box">
       <div class="relevance-label">Kobling til analysen — Fishman (halvledere) · NDS/NSS · Taleb</div>
-      Kina er paradokset i denne analysen: landet nyter kortsikte gevinst av Hormuz-sjokket (lavere energiimportpriser enn konkurrenter, renere rekkevidde i Persiabukta) og er den klare vinneren på to til tre års sikt ved statusquo. Men Fishmans halvlederstrategi — eksportkontroller uten avslutningsbetingelse — er den strukturelle trusselen. NSS (2026) navngir Kina eksplisitt som strategisk konkurrent. Kinas 10-årige rente på 1,81 % mot USAs 4,27 % er Triffin-dilemmaet i tallform: to valutaer, to renteregimer, og de strukturelle kreftene Miran ønsker å adressere gjennom Mar-a-Lago Accord.
+      Kina er fortsatt paradokset, og tallene er blitt tydeligere. Kortsiktig vinner: eksport +25 % i august, handelsoverskudd 119 mrd. $ (rekord), eksport til USA +34 % til tross for toll. Strukturell trussel: eksporten av sjeldne jordarter er −11 % hittil i år, ingen dysprosiumoksid til Japan, og europeiske priser ligger opptil seks ganger over kinesisk innenlandsnivå. Det er Fishmans «lettere å rive ned enn å bygge opp» i praksis. Veksten bremser (Q2 4,3 % å/å), og pengepolitikken ligger i observasjonsfase. Neste beslutningspunkt er 10. november, når pausen i de utvidede kontrollene utløper.
     </div>
   </div>
 
   <!-- ── ENERGI ── -->
   <div class="macro-panel" id="macro-energi">
-    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Energi og finansmarkeder — per 31. mars 2026</div>
-    <div style="font-size:11px;color:var(--faint);margin-bottom:14px">Kilder: IEA, Dallas Fed (mars 2026), EIA, Tradeweb, Trading Economics</div>
+    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Energi — i dag mot 31. mars 2026</div>
+    <div style="font-size:11px;color:var(--faint);margin-bottom:14px">Kilder: IEA Oil Market Report (sept. 2026), Straits/Windward-sporing, Kpler, Trading Economics, ICE. Brent i markedsstripen er live og overstyrer tallet under når den er tilgjengelig.</div>
 
-    <div class="data-grid">
-      <div class="data-card alert">
-        <div class="dc-label">Brent råolje <span class="tt-trigger" data-tt="tt-brent-live" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div class="dc-value" style="color:var(--red)">~113 $</div>
-        <div class="dc-sub">31. mars 2026 (CNBC/ICE) · +55 % i mars · Dallas Fed: 98 $ v/1 kv. stengning</div>
-        <div class="dc-trend" style="color:var(--red)">200 $-scenario ved langvarig stengning</div>
-        <div class="dc-src">Kilde: EIA / Dallas Fed mars 2026</div>
-      </div>
-      <div class="data-card alert">
-        <div class="dc-label">Hormuz — forstyrret volum <span class="tt-trigger" data-tt="tt-hormuz-vol" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div class="dc-value">20 %</div>
-        <div class="dc-sub">Av global oljeforsyning · 21+ skip angrepet</div>
-        <div class="dc-trend" style="color:var(--red)">IEA: «Historiens største energikrise»</div>
-        <div class="dc-src">Kilde: IEA / Geopolitisk syntese</div>
-      </div>
-      <div class="data-card alert">
-        <div class="dc-label">BNP-effekt ved 1 kvartal stengning</div>
-        <div class="dc-value">−2,9 pp</div>
-        <div class="dc-sub">Global vekst · annualisert rate</div>
-        <div class="dc-trend" style="color:var(--red)">WTI til 98 $ · Dallas Fed estimat</div>
-        <div class="dc-src">Kilde: Federal Reserve Bank of Dallas</div>
-      </div>
-      <div class="data-card warn">
-        <div class="dc-label">Goodspeed energisjokk-frekvens <span class="tt-trigger" data-tt="tt-gs-energifrekvens" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div class="dc-value">10 av 12</div>
-        <div class="dc-sub">Resesjoner i USA siden 1945 med energikomponent</div>
-        <div class="dc-trend" style="color:var(--amber)">Hormuz er Goodspeeds type-1 sjokk</div>
-        <div class="dc-src">Kilde: Goodspeed (2025)</div>
-      </div>
-    </div>
+    <div class="data-grid" id="mk-cards-energi"></div>
 
-    <div class="data-grid data-grid-3">
-      <div class="data-card warn">
-        <div class="dc-label">Europeisk naturgass (TTF) <span class="tt-trigger" data-tt="tt-ttf" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div class="dc-value">~2× nivå</div>
-        <div class="dc-sub">Nær-dobling etter Hormuz-stengning</div>
-        <div class="dc-trend" style="color:var(--amber)">Europa mer utsatt enn USA</div>
-        <div class="dc-src">Kilde: ECB pressekonferanse mars 2026</div>
-      </div>
-      <div class="data-card ok">
-        <div class="dc-label">US 10-årig Treasury</div>
-        <div class="dc-value">4,27 %</div>
-        <div class="dc-sub">Statsobligasjoner søkt som trygg havn</div>
-        <div class="dc-trend" style="color:var(--green)">Miran: USA eksporterer obligasjoner</div>
-        <div class="dc-src">Kilde: Tradeweb, 18. mars 2026</div>
-      </div>
-      <div class="data-card warn">
-        <div class="dc-label">Brent-sjokk på KPI (Moody's) <span class="tt-trigger" data-tt="tt-brent-sjokk-kpi" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-        <div class="dc-value">+0,3–1,1 pp</div>
-        <div class="dc-sub">Avhengig av konfliktes varighet</div>
-        <div class="dc-trend" style="color:var(--amber)">USA KPI kan nå 3,5 % innen Q4</div>
-        <div class="dc-src">Kilde: Moody's / CNBC mars 2026</div>
-      </div>
-    </div>
+    <div class="section-label">Finansmarkeder — i dag mot 31. mars 2026</div>
+    <div class="data-grid data-grid-3" id="mk-cards-marked"></div>
 
     <div class="card">
-      <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Kritisk tidslinje — Hormuz-stengningen</div>
-      <div class="timeline-row">
-        <div class="tl-date">Juni 2025</div>
-        <div><div class="tl-text">Operation Midnight Hammer — USA ødelegger Irans kjernevåpenprogram</div><div class="tl-src">Kilde: Geopolitisk faktagrunnlag</div></div>
-      </div>
-      <div class="timeline-row">
-        <div class="tl-date">28. feb. 2026</div>
-        <div><div class="tl-text">Operation Epic Fury — drapet på ayatollah Khamenei</div><div class="tl-src">Kilde: Geopolitisk faktagrunnlag</div></div>
-      </div>
-      <div class="timeline-row">
-        <div class="tl-date">28. februar 2026</div>
-        <div><div class="tl-text">Iran erklærer Hormuz stengt. Brent stiger umiddelbart. 20 % av global oljeforsyning forstyrret.</div><div class="tl-src">Kilde: IEA / markedsdata</div></div>
-      </div>
-      <div class="timeline-row">
-        <div class="tl-date">11. mars 2026</div>
-        <div><div class="tl-text">BLS publiserer CPI februar: 2,4 % — uendret fra januar. Hormuz-presset ennå ikke synlig i tallene.</div><div class="tl-src">Kilde: BLS, 11. mars 2026</div></div>
-      </div>
-      <div class="timeline-row">
-        <div class="tl-date">18–19. mars 2026</div>
-        <div><div class="tl-text">Fed holder renten (3,50–3,75 %). ECB holder renten (2,00 %). Begge sentralbanker reviderer inflasjonsprognoser oppover.</div><div class="tl-src">Kilde: Federal Reserve / ECB</div></div>
-      </div>
-      <div class="timeline-row">
-        <div class="tl-date">31. mars 2026</div>
-        <div><div class="tl-text">Hormuz stengt i 29 dager. 21+ skip angrepet. Brent i 80–90 $-beltet. Neste CPI-rapport planlagt 10. april.</div><div class="tl-src">Kilde: Denne analysen</div></div>
-      </div>
+      <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Kritisk tidslinje — 28. februar til i dag</div>
+      <div id="mk-timeline"></div>
     </div>
 
     <div class="relevance-box">
       <div class="relevance-label">Analytisk nøkkelpunkt — Goodspeed · Taleb · investeringstips</div>
-      Goodspeed dokumenterer at energisjokk er involvert i 10 av 12 resesjoner i USA siden 1945. Hormuz-stengningen er nøyaktig den typen brå og diskontinuerlig energisjokk han beskriver — ikke en gradvis prisstigning, men en strukturell forstyrrelse av forsyningskjeden. Dallas Feds estimat på −2,9 prosentpoeng annualisert BNP-effekt ved ett kvartal stengning er en Goodspeed-type-1-hendelse. Talebs poeng: ingen av de eksisterende modellene er kalibrert for dette. March 2026 CPI-dataene (2,4 %) reflekterer ennå ikke Hormuz-effekten — det vil komme i april og mai-rapportene.
+      Grunnlinjens ankerestimat, Dallas Feds −2,9 pp ved ett kvartal full stengning, ble aldri testet som forutsatt: stredet var delvis åpent fra 8. april, og rørledninger utenom Hormuz tok over deler av volumet. Resultatet er en mildere, men mer langvarig krise enn modellen tegnet: Gulfens oljeeksport er halvert, diesel i USA har passert 200 $ per fat, og raffineringssystemet er ifølge IEA «strukket til det ytterste». Goodspeeds energisjokk er altså reelt, men kanaliseres gjennom raffinerte produkter og gass mer enn gjennom råoljeprisen. For investoren betyr det at temaet «energiinfrastruktur» har vist seg riktig, mens «kortsiktig long olje» har vært en berg-og-dal-bane (117 $ i april, 84 $ i august, 108 $ i dag).
     </div>
   </div>
 
   <!-- ── NORGE ── -->
   <div class="macro-panel" id="macro-norge">
-    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Norges økonomi · SSB tabell 12880 · Oppdatert 17. mars 2026</div>
+    <div class="section-label" style="margin-top:0;padding-top:0;border-top:none">Norge — i dag mot 31. mars 2026</div>
+    <div class="data-grid" id="mk-cards-norge"></div>
 
+    <div class="section-label">SSBs prognose fra mars 2026 (grunnlinje, laget før Hormuz-sjokket slo inn)</div>
     <!-- Nøkkeltall 2025/2026 -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px">
       <div class="stat-card" style="border-left:3px solid var(--navy)">
@@ -2284,7 +2007,7 @@ input[type=range]::-webkit-slider-thumb {
     <div class="section-label">Analytisk kobling til modellen</div>
     <div class="diag-box">
       <div class="diag-label">Norge i Hormuz-konteksten <span class="tt-trigger" data-tt="tt-norge-hormuz" style="display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:8px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-      SSB-prognosen for råoljepris i 2026 er 78 $/fat — utarbeidet i mars 2026 og reflekterer ikke Hormuz-stengningen. Gjeldende Brent ~101 $/fat er 30 % over SSBs prognose. Driftsbalansen på 946 mrd kr (prognose) er en undervurdering: høyere oljepris øker norske eksportinntekter direkte. <strong>Norge er en strukturell vinner i Scenario B og C</strong> — energieksportør med sunn statsbalanse, lav gjeldsgrad og stor petroleumsfond-buffer. Motvekt: kronestyrkelse (NOK/EUR 11,20 prognose) komprimerer eksportkonkurranseevne for fastlandsøkonomien. KPI 3,2 % (2026P) gir Norges Bank begrenset rom for rentekutt — renten holdes høy lengre enn andre sentralbanker.
+      SSB-prognosen for råoljepris i 2026 er 78 $/fat — utarbeidet i mars 2026 og reflekterer ikke Hormuz-stengningen. Brent i dag (~108 $) ligger nær 40 % over SSBs prognose, og kronen har styrket seg til om lag 10,7 per euro mot prognosen 11,20. Norges Bank hevet til 4,25 % i mai og har varslet mer. Ny pengepolitisk rapport kommer 24. september. Driftsbalansen på 946 mrd kr (prognose) er en undervurdering: høyere oljepris øker norske eksportinntekter direkte. <strong>Norge er en strukturell vinner i Scenario B og C</strong> — energieksportør med sunn statsbalanse, lav gjeldsgrad og stor petroleumsfond-buffer. Motvekt: kronestyrkelse (NOK/EUR 11,20 prognose) komprimerer eksportkonkurranseevne for fastlandsøkonomien. KPI 3,2 % (2026P) gir Norges Bank begrenset rom for rentekutt — renten holdes høy lengre enn andre sentralbanker.
     </div>
     <div class="footnote">Kilde: SSB tabell 12880 — Makroøkonomiske hovedstørrelser. Regnskap og prognoser 1991–2029 · Oppdatert 17. mars 2026</div>
   </div>
@@ -2736,7 +2459,7 @@ function brentIsLive()  { return !!window._brentLive; }
 //  • Fase 2 (normalisering): eksponentielt fall mot et gulv som er forankret i
 //    dagens pris (72 % av basis) — jo høyere konfliktnivå, desto tregere fall.
 function hzPricePath(dur, oilShock, conflict, baseOil) {
-  var nPoints = 9;
+  var nPoints = 14;                       // 0–52 uker à 4 uker
   var cm      = CONFLICT_MULT[conflict] || 1;
   var peak    = Math.round(baseOil + oilShock * cm);
   var durIdx  = Math.max(1, Math.min(nPoints - 2, Math.round(dur / 4)));
@@ -2751,7 +2474,7 @@ function hzPricePath(dur, oilShock, conflict, baseOil) {
     prices.push(Math.round(p));
   }
   return { prices: prices, durIdx: durIdx, peak: peak, floor: floor, nPoints: nPoints,
-           labels: ['Nå','Uke 4','Uke 8','Uke 12','Uke 16','Uke 20','Uke 24','Uke 28','Uke 32'] };
+           labels: ['Nå','Uke 4','Uke 8','Uke 12','Uke 16','Uke 20','Uke 24','Uke 28','Uke 32','Uke 36','Uke 40','Uke 44','Uke 48','Uke 52'] };
 }
 
 // Debounce heavy chart rendering — 80ms idle before firing
@@ -3859,7 +3582,7 @@ window.nav = function(el, skipHistory) {
   Tre parametere styrer alle beregninger:
   <div class="tt-sep"></div>
   <table>
-    <tr><td style="color:rgba(255,255,255,.5);white-space:nowrap">⏱ Varighet</td><td>Antall uker Hormuz er stengt. Over 13 uker utløser Goodspeeds resesjonstrigger. Over 26 uker: irreversibel Perera-terskel.</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5);white-space:nowrap">⏱ Varighet</td><td>Antall uker Hormuz er stengt, regnet som fullstengnings-ekvivalente uker (faktisk delvis stengning × effektiv grad). Over 13 uker utløser Goodspeeds resesjonstrigger. Over 26 uker: irreversibel Perera-terskel.</td></tr>
     <tr><td style="color:rgba(255,255,255,.5);white-space:nowrap">📈 Oljeprissjokk</td><td>Ekstra stigning i Brent utover live-pris. +13 $/fat = Dallas Fed base-scenario (mars 2026). Kilian (2008): store sjokk gir overproporsjonal BNP-effekt.</td></tr>
     <tr><td style="color:rgba(255,255,255,.5);white-space:nowrap">⚔️ Konfliktnivå</td><td>Skalerer alle effekter: Begrenset ×1,0 · Eskalert ×1,5 · Full krig ×2,2</td></tr>
   </table>
@@ -3963,6 +3686,7 @@ window.nav = function(el, skipHistory) {
     <tr><td style="color:rgba(255,255,255,.5)">1–4 uker</td><td>Midlertidig sjokk, begrenset kumulativ effekt</td></tr>
     <tr><td style="color:rgba(255,255,255,.5)">4–13 uker</td><td>Kvartalssjokk — Goodspeed type-1 trigger</td></tr>
     <tr><td style="color:rgba(255,255,255,.5)">13–26 uker</td><td>Strukturell skade — Perera ikke-reversibel terskel</td></tr>
+    <tr><td style="color:rgba(255,255,255,.5)">26–52 uker</td><td>Kronisk regime. Merk: kalkulatoren regner i fullstengnings-ekvivalente uker; faktisk delvis stengning (ca. 50 %) siden 28. februar tilsvarer om lag halvparten av kalenderukene.</td></tr>
   </table>
   <div class="tt-sep"></div>
   Kilde: Perera (2026) · Goodspeed (2025) · Dallas Fed (mars 2026)
@@ -4572,9 +4296,11 @@ window.calcHormuz = function() {
 
 // Oppdater Hormuz-dag dynamisk
 function updateHormuzDag() {
-  var stengningsDato = new Date('2026-02-28');
-  var naa = new Date();
-  var dagDiff = Math.round((naa - stengningsDato) / 86400000);
+  // Dagteller: hele døgn siden 28. februar 2026 (UTC-basert, samme regnemåte som Da og nå)
+  var stengningsDato = Date.UTC(2026, 1, 28);
+  var n = new Date();
+  var naa = Date.UTC(n.getFullYear(), n.getMonth(), n.getDate());
+  var dagDiff = Math.floor((naa - stengningsDato) / 86400000);
   var dagTxt = dagDiff + ' dager';
   var els = document.querySelectorAll('#kn-hormuz-dag, #ms-hormuz-dag, #hzm-stengt, #hzm-dag-nr');
   els.forEach(function(el) { el.textContent = el.id === 'hzm-dag-nr' ? dagDiff : dagTxt; });
@@ -5428,6 +5154,7 @@ window.nav = function(el, skipHistory) {
         <div class="popup-info-box accent-green" style="margin-bottom:14px">
           <div class="popup-info-box-label" style="color:var(--green)">Triggervilkår <span class="tt-trigger" data-tt="tt-sc-trig-a" style="display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
           <div class="popup-info-box-text">Trump aksepterer ansiktsbevarende avtale. Iran åpner Hormuz mot suspensjon av sanksjoner. Kinas Pakistan-mekling lykkes. Gjenåpning gradvis innen <strong id="scm-a-dur-detail">6–8 uker</strong>. Atomspørsmålet uløst — konflikten avblåst, ikke løst.</div>
+          <div style="margin-top:8px;padding:7px 10px;background:rgba(255,255,255,.6);border-radius:6px;font-size:11px;line-height:1.55;color:var(--text)"><span class="dn-pill" style="background:#FAEEDA;color:#633806">Status 14. sep.: delvis</span> Våpenhvile 8. april og MoU 14.–17. juni inntraff som beskrevet, men avtalen brøt sammen 6.–7. juli da Iran angrep fartøy utenfor sin rute. 60-dagersfristen utløp uten avtale i august.</div>
         </div>
         <!-- KPI -->
         <div class="popup-kpi-grid">
@@ -5489,6 +5216,7 @@ window.nav = function(el, skipHistory) {
         <div class="popup-info-box accent-amber">
           <div class="popup-info-box-label" style="color:var(--amber)">Triggervilkår <span class="tt-trigger" data-tt="tt-sc-trig-b" style="display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
           <div class="popup-info-box-text">Irans yuan-baserte «toll-booth»-system. Kinesiske/russiske skip passerer mot yuan-betaling — vestlige betaler ×40–80 risikopremie. Hormuz formelt åpen, reelt et <strong>tospors-system der Kina kontrollerer adgangen</strong>. Konflikten institusjonalisert, ikke løst.</div>
+          <div style="margin-top:8px;padding:7px 10px;background:rgba(255,255,255,.6);border-radius:6px;font-size:11px;line-height:1.55;color:var(--text)"><span class="dn-pill" style="background:#E1F5EE;color:#085041">Status 14. sep.: inntraff</span> Persian Gulf Strait Authority krever forhåndsgodkjent rute og toll på 1–2 mill. $ i yuan. Trafikken er ~90 % under normalen, USA eskorterer langs en sørlig korridor. Brent 84–117 $ siden april. Dette er scenarioet som beskriver virkeligheten.</div>
         </div>
         <div id="scm-popup-spread-alert" style="display:none;padding:9px 14px;background:var(--red-lt);border:1px solid rgba(197,48,48,.2);border-radius:8px;margin-bottom:14px;font-size:11.5px;color:var(--red);line-height:1.6">
           <strong>⚠ Invertert WTI/Brent-spread aktiv:</strong> <span id="scm-popup-spread-txt">—</span>
@@ -5550,6 +5278,7 @@ window.nav = function(el, skipHistory) {
         <div class="popup-info-box accent-red">
           <div class="popup-info-box-label" style="color:var(--red)">NDS «The Simultaneity Problem» <span class="tt-trigger" data-tt="tt-sc-trig-c" style="display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
           <div class="popup-info-box-text">Iran eskalerer — Kharg Island angripes, 90 % av oljeeksport stanser. Kina agerer mot Taiwan innen 90 dager. Russland aktiverer øst-flanken. Tre fronter simultant. USA militært utmattet.</div>
+          <div style="margin-top:8px;padding:7px 10px;background:rgba(255,255,255,.6);border-radius:6px;font-size:11px;line-height:1.55;color:var(--text)"><span class="dn-pill" style="background:#FCEBEB;color:#791F1F">Status 14. sep.: ikke inntruffet</span> Ingen Taiwan-front, ingen russisk eskalering, S&amp;P 500 +13 % i år, VIX 15,7. Men Houthiene kontrollerer Yemens Rødehavskyst og Saudi-Arabias øst–vest-rørledning er stengt (10. sep.): den andre flaskehalsen er aktiv.</div>
         </div>
         <div class="popup-kpi-grid">
           <div class="popup-kpi-card">
@@ -5908,12 +5637,12 @@ function syncScenarioModalParams() {
           <div class="popup-info-box accent-red">
             <div class="popup-info-box-label" style="color:var(--red)">Nøkkelfakta</div>
             <div style="display:flex;flex-direction:column;gap:5px">
-              <div style="display:flex;justify-content:space-between;font-size:11.5px"><span style="color:var(--muted)">Stengt siden</span><strong>28. februar 2026</strong></div>
-              <div style="display:flex;justify-content:space-between;font-size:11.5px"><span style="color:var(--muted)">Global oljeandel</span><strong style="color:var(--red)">~20 %</strong></div>
-              <div style="display:flex;justify-content:space-between;font-size:11.5px"><span style="color:var(--muted)">LNG-andel</span><strong style="color:var(--red)">~30 %</strong></div>
-              <div style="display:flex;justify-content:space-between;font-size:11.5px"><span style="color:var(--muted)">IEA</span><strong style="color:var(--red)">Historisk krise</strong></div>
-              <div style="display:flex;justify-content:space-between;font-size:11.5px"><span style="color:var(--muted)">Dallas Fed WTI</span><strong>98 $ ved 1 kvartal</strong></div>
-              <div style="display:flex;justify-content:space-between;font-size:11.5px"><span style="color:var(--muted)">Goodspeed-klasse</span><strong style="color:var(--red)">Verste kategori</strong></div>
+              <div style="display:flex;justify-content:space-between;font-size:11.5px"><span style="color:var(--muted)">Forstyrret siden</span><strong>28. februar 2026 · dag <span id="hzm-dag-nr">—</span></strong></div>
+              <div style="display:flex;justify-content:space-between;font-size:11.5px"><span style="color:var(--muted)">Transitter per dag</span><strong style="color:var(--red)">5–11 (normalt ~125)</strong></div>
+              <div style="display:flex;justify-content:space-between;font-size:11.5px"><span style="color:var(--muted)">Oljeeksport fra Gulfen</span><strong style="color:var(--red)">~13 mill. fat/dag (halvert)</strong></div>
+              <div style="display:flex;justify-content:space-between;font-size:11.5px"><span style="color:var(--muted)">Diesel USA</span><strong style="color:var(--red)">&gt; 200 $/fat (+94 %)</strong></div>
+              <div style="display:flex;justify-content:space-between;font-size:11.5px"><span style="color:var(--muted)">Regime</span><strong>Iransk rute og toll i yuan · US-eskorter</strong></div>
+              <div style="display:flex;justify-content:space-between;font-size:11.5px"><span style="color:var(--muted)">Omkomne sjøfolk</span><strong style="color:var(--red)">20 (+1 havnearbeider)</strong></div>
             </div>
           </div>
           <div class="popup-info-box accent-navy">
@@ -5931,24 +5660,7 @@ function syncScenarioModalParams() {
 
         <!-- Kronologi -->
         <div class="popup-section-label no-border">Kronologi</div>
-        <div style="margin-bottom:14px">
-          <div class="popup-tl-row">
-            <div class="popup-tl-date" style="background:#EEEDFE;color:#3C3489">Jun. 2025</div>
-            <div><div class="popup-tl-title">Operation Midnight Hammer</div><div class="popup-tl-body">USA/Israel ødelegger iransk kjernevåpenprogram.</div></div>
-          </div>
-          <div class="popup-tl-row">
-            <div class="popup-tl-date" style="background:#FCEBEB;color:#791F1F">28. feb. 2026</div>
-            <div><div class="popup-tl-title">Operation Epic Fury · Hormuz stengt</div><div class="popup-tl-body">Drapet på Khamenei. Revolusjonsgarden erklærer Hormuz stengt samme dag.</div></div>
-          </div>
-          <div class="popup-tl-row">
-            <div class="popup-tl-date" style="background:#FAEEDA;color:#633806">19. mar. 2026</div>
-            <div><div class="popup-tl-title">ECB utsetter rentekutt</div><div class="popup-tl-body">BNP-prognose kuttet 0,3 pp. Energiinfrastruktur under akutt press.</div></div>
-          </div>
-          <div class="popup-tl-row">
-            <div class="popup-tl-date" style="background:#FEF2F2;color:#C53030">Dag <span id="hzm-dag-nr">33</span></div>
-            <div><div class="popup-tl-title">Nåværende situasjon</div><div class="popup-tl-body">Hormuz stengt. Brent <span id="hzm-brent-naa">—</span>. IEA: største globale energikrise i historien.</div></div>
-          </div>
-        </div>
+        <div style="margin-bottom:14px" id="hzm-kronologi"></div>
 
         <!-- Konklusjon -->
         <div class="popup-conclusion">
@@ -6733,6 +6445,8 @@ function drawHzmGraf() {
               <div class="popup-tl-row"><div class="popup-tl-date" style="background:var(--amber-lt);color:var(--amber)">2025</div><div><div class="popup-tl-title">Eksportrestriksjoner innføres</div><div class="popup-tl-body">Sjeldne jordarter og kritiske metaller underlegges eksportkontroll.</div></div></div>
               <div class="popup-tl-row"><div class="popup-tl-date" style="background:var(--amber-lt);color:var(--amber)">2025–nov. 26</div><div><div class="popup-tl-title">Delvis suspensjon</div><div class="popup-tl-body">«Moratorium» — men lisensregime opprettholdes og håndheves selektivt.</div></div></div>
               <div class="popup-tl-row"><div class="popup-tl-date" style="background:var(--red-lt);color:var(--red)">2026 pågående</div><div><div class="popup-tl-title">Selektiv restriksjon mot USA</div><div class="popup-tl-body">Redusert/stanset eksport av tunge REE spesifikt til USA. Andre land: selektiv tilgang.</div></div></div>
+              <div class="popup-tl-row"><div class="popup-tl-date" style="background:var(--navy-lt);color:var(--navy)">Per 14. sep.</div><div><div class="popup-tl-title">Eksporten strupes selektivt</div><div class="popup-tl-body">Sjeldne jordarter jan.–aug. 2026: 39 441 t (−11 %). August 4 735 t (−18 % å/å). Ingen dysprosiumoksid til Japan i 2026. Europeisk Dy-pris opptil 6 × kinesisk.</div></div></div>
+              <div class="popup-tl-row"><div class="popup-tl-date" style="background:var(--red-lt);color:var(--red)">10. nov. 2026</div><div><div class="popup-tl-title">Pausen utløper</div><div class="popup-tl-body">Suspensjonen av de utvidede kontrollene fra 2025 utløper. Lisensplikten for dysprosium og seks andre tunge REE gjelder uansett. Neste beslutningspunkt for Fishman-asymmetrien.</div></div></div>
             </div>
           </div>
           <div class="popup-info-box accent-navy">
@@ -6945,7 +6659,7 @@ function kinaTab(tab) {
         <!-- Strategisk diagnose -->
         <div class="popup-conclusion" style="margin-top:0;margin-bottom:14px">
           <div class="popup-conclusion-label">Strategisk diagnose — <span id="kap-diag-dato">2. april 2026</span> <span class="tt-trigger" data-tt="tt-strategi-diag" style="display:inline-flex;align-items:center;justify-content:center;width:11px;height:11px;border-radius:50%;background:var(--navy-lt);color:var(--navy-mid);font-size:7px;font-weight:700;cursor:help;border:1px solid var(--border-md);margin-left:4px;vertical-align:middle">?</span></div>
-          <div class="popup-conclusion-text">Vi befinner oss i Goodspeeds verste kategori: alle tre resesjonstriggers aktive simultant. Gull korreksjon fra $5 594 (jan-topp) til mars-bunn ~$4 200, nå tilbake ~$4 654 — teknisk, ikke fundamental. J.P. Morgan fastholder $5 055 som snitt for Q4 2026. Kobber $12 200/t og aluminium +52 % siden Hormuz signaliserer strukturelt nytt råvareregime. US 10Y ned fra 4,44 % til 4,32 %: vekstfrykt overstiger nå inflasjonsfrykten. Markedet er ikke priset for Scenario C. Unngå middels risiko.</div>
+          <div class="popup-conclusion-text">Grunnlinjen 2. april satte oss i Goodspeeds verste kategori. Per 14. september er bildet mer sammensatt: energisjokket er reelt (Brent ~108 $, diesel over 200 $/fat, TTF på 2023-nivå), men kredittkontraksjonen har uteblitt og aksjemarkedet er på rekord (S&amp;P 500 +13 % i år). Gull har ikke fulgt manuset: 4 681 $ 31. mars, ~4 440 $ i dag, etter et fall på 13 % i mars; J.P. Morgans mars-anslag på 5 055 $ står uinnfridd. Rentene har steget i stedet: amerikansk tiåring 4,96 %, tysk Bund 3,50 %, ECB hevet to ganger, Fed ventes å heve 16. september. Konsekvens for barbellen: den robuste delen (korte statsobligasjoner, energiinfrastruktur, forsvar) har levert; den asymmetriske delen (gull, volatilitet) har kostet. Middels risiko (bred europeisk industri, EM-gjeld) er fortsatt det svakeste hjørnet.</div>
         </div>
 
         <!-- Fordelingsmatrise per scenario -->
@@ -6982,7 +6696,7 @@ function kinaTab(tab) {
             <div class="popup-info-box-label" style="color:var(--green);margin-bottom:0">Energiinfrastruktur</div>
             <span style="font-size:9px;font-weight:700;padding:2px 9px;border-radius:10px;background:var(--green-lt);color:var(--green);border:1px solid rgba(20,83,45,.2)">STRUKTURELL VINNER</span>
           </div>
-          <div style="font-size:10px;color:var(--faint);margin-bottom:8px">Brent ~104 $ · LNG-bortfall &gt;26 % globalt · Perera: Train 4 og 6 ødelagt</div>
+          <div style="font-size:10px;color:var(--faint);margin-bottom:8px">Brent ~108 $ (14. sep.) · Gulfens oljeeksport halvert (IEA) · Qatar-LNG 2026 ~50 % av kapasitet · TTF 66 €/MWh</div>
           <div class="popup-sektor-grid" style="margin-bottom:8px">
             <div style="background:white;border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--green);margin-bottom:4px">Nordamerikansk LNG</div><div style="font-size:11px;color:var(--muted);line-height:1.6">Sabine Pass, Corpus Christi, Freeport. Qatar-bortfall (+26 % av global prod.) er direkte markedsåpning. Strukturell etterspørsel fra Europa 2026–2030.</div></div>
             <div style="background:white;border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--green);margin-bottom:4px">Norsk energiinfrastruktur</div><div style="font-size:11px;color:var(--muted);line-height:1.6">Equinor, Aker BP. Norge er nå Europas viktigste gassleverandør. Stabil politisk risiko. NOK-eksponering som valutabeskyttelse.</div></div>
@@ -7012,7 +6726,7 @@ function kinaTab(tab) {
             <div class="popup-info-box-label" style="color:var(--amber);margin-bottom:0">Gull og reelle verdier</div>
             <span style="font-size:9px;font-weight:700;padding:2px 9px;border-radius:10px;background:var(--amber-lt);color:var(--amber);border:1px solid rgba(146,64,14,.2)">KJØP VED KORREKSJON</span>
           </div>
-          <div style="font-size:10px;color:var(--faint);margin-bottom:8px">~$4 400/oz · J.P. Morgan: $5 055 Q4 2026 · Sentralbanketterspørsel 585 t/kvartal</div>
+          <div style="font-size:10px;color:var(--faint);margin-bottom:8px">~4 440 $/oz (8. sep.) · 4 681 $ ved grunnlinjen · J.P. Morgans mars-anslag 5 055 $ ikke innfridd · 52-ukers intervall 3 660–5 627 $</div>
           <div class="popup-sektor-grid" style="margin-bottom:8px">
             <div style="background:white;border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--amber);margin-bottom:4px">Fysisk gull — primær</div><div style="font-size:11px;color:var(--muted);line-height:1.6">Korreksjon fra $5 594 til $4 654 — teknisk, ikke fundamental. J.P. Morgan: $5 055 Q4 2026. Taleb: fysisk gull overlever Scenario C strukturelt.</div></div>
             <div style="background:white;border-radius:var(--radius);padding:9px 12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--amber);margin-bottom:4px">Gull og sølv miners</div><div style="font-size:11px;color:var(--muted);line-height:1.6">Newmont, Agnico Eagle, Wheaton. Miners gir 2–3× beta på gullpris. Sølv: ~$74/oz, industrielt + safe haven.</div></div>
@@ -7330,7 +7044,7 @@ function kapitalTab(tab) {
           <div class="g-intro-card">
             <div class="g-intro-card-icon">📅</div>
             <div class="g-intro-card-title">Kontekst</div>
-            <div class="g-intro-card-body">28. februar 2026 stengte Irans Revolusjonsgarde Hormuz-stredet etter Operation Epic Fury. 20 % av verdens oljeforsyning er forstyrret. Modellen oppdateres med live data.</div>
+            <div class="g-intro-card-body">28. februar 2026 stengte Irans Revolusjonsgarde Hormuz-stredet etter Operation Epic Fury. Modellen ble bygget 31. mars (dag 31). Siden har krisen gått gjennom våpenhvile (8. april), avtale (juni) og sammenbrudd (7. juli). I dag er stredet formelt «åpent» med ~10 % av normal trafikk, og en andre front er åpnet i Rødehavet.</div>
           </div>
           <div class="g-intro-card">
             <div class="g-intro-card-icon">⚠️</div>
@@ -7388,7 +7102,7 @@ function kapitalTab(tab) {
             <div class="g-flow-node accent-green">
               <div class="g-node-label" style="color:rgba(80,200,120,.7)">Modellens svar</div>
               <div class="g-node-title">Tre scenarier · Live kalkulator · Investeringsposisjonering</div>
-              <div class="g-node-body">Scenario A (20 %): rask løsning · B (55 %): kronisk forstyrrelse · C (25 %): systemkollaps. Kalkulatoren beregner konsekvenser dynamisk fra dine parametere.</div>
+              <div class="g-node-body">Scenario A (20 %): rask løsning · B (55 %): kronisk forstyrrelse · C (25 %): systemkollaps. Status september 2026: B inntraff, A kom og gikk (april–juli), C uteble. Fanen «Da og nå» viser hele testen.</div>
             </div>
           </div>
         </div>
@@ -7511,7 +7225,7 @@ function kapitalTab(tab) {
             <div class="g-flow-node accent-navy">
               <div class="g-node-label" style="color:#7BA8E8">Parameter 1</div>
               <div class="g-node-title">⏱ Stengningens varighet</div>
-              <div class="g-node-body">1–26 uker. Avgjør kumulativ effekt. Under 4 uker: begrenset. Over 13 uker (1 kvartal): Goodspeeds resesjonstrigger. Over 26 uker: irreversibel Perera-terskel.</div>
+              <div class="g-node-body">1–52 uker, regnet som fullstengnings-ekvivalente uker. Under 4 uker: begrenset. Over 13 uker (1 kvartal): Goodspeeds resesjonstrigger. Over 26 uker: irreversibel Perera-terskel. Standardverdien kalibreres mot faktisk, delvis stengning (ca. 50 %).</div>
             </div>
             <div class="g-flow-node accent-red">
               <div class="g-node-label" style="color:rgba(255,120,120,.8)">Parameter 2</div>
@@ -7601,6 +7315,13 @@ function kapitalTab(tab) {
             <div>
               <div class="g-use-title">Tooltips overalt</div>
               <div class="g-use-body">Hvert ❓-ikon gir metodologisk forklaring: hvilken forsker, hvilken formel, hvilken kilde. 100 tooltip-elementer i modellen — bruk dem for å forstå beregningene bak tallene.</div>
+            </div>
+          </div>
+          <div class="g-use-card">
+            <div class="g-use-step">7</div>
+            <div>
+              <div class="g-use-title">Test modellen i «Da og nå»</div>
+              <div class="g-use-body">Modellen ble skrevet 31. mars 2026 og bevares som grunnlinje. Fanen «Da og nå» legger dagens tall ved siden av, dag for dag, og vurderer hvert rammeverk: inntraff, delvis, inntraff ikke eller uavklart. Kalkulatorens standardvarighet er kalibrert mot den faktiske, delvise stengningen.</div>
             </div>
           </div>
         </div>
@@ -7835,10 +7556,10 @@ function ccoDraw() {
   }
 
   // X-labels
-  var xlab = ['Nå','U4','U8','U12','U16','U20','U24','U28','U32'];
+  var xlab = path.labels.map(function(l) { return l.replace('Uke ', 'U'); });
   ctx.font = '9px "DM Sans", sans-serif';
   ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.textAlign = 'center';
-  for (var i = 0; i < nPoints; i++) {
+  for (var i = 0; i < nPoints; i += 2) {
     if (i < xlab.length) ctx.fillText(xlab[i], cx(i), PAD.t + PH + 20);
   }
 
@@ -7925,6 +7646,620 @@ window.addEventListener('resize', function() {
 <span id="sc-pC" style="display:none">25 %</span>
 
 
+<style id="danaa-css">
+/* ── DA OG NÅ ──────────────────────────────────────────────────────────── */
+.dn-eyebrow { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); margin-bottom:5px; }
+.dn-btn { font-size:10px; font-weight:700; letter-spacing:.04em; color:var(--navy-mid); background:var(--navy-lt); border:1px solid rgba(31,56,100,.2); border-radius:20px; padding:5px 12px; cursor:pointer; font-family:inherit; }
+.dn-btn:hover { background:var(--navy); color:#fff; }
+.dn-pill { display:inline-block; font-size:9px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:2px 8px; border-radius:10px; white-space:nowrap; }
+.dn-kilde { font-size:9.5px; color:var(--faint); }
+
+/* Dashboard-stripe */
+.dn-dash { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow); padding:10px 16px 12px; margin-top:12px; }
+.dn-dash-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
+.dn-dash-title { font-size:12px; font-weight:600; color:var(--text); }
+.dn-dash-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-top:26px; }
+.dn-mini { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:7px 9px; min-width:0; }
+.dn-mini-navn { font-size:8.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--faint); margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dn-mini-row { display:flex; align-items:baseline; gap:5px; flex-wrap:wrap; }
+.dn-mini-da { font-size:10.5px; color:var(--muted); text-decoration:line-through; text-decoration-color:rgba(0,0,0,.25); }
+.dn-mini-arrow { font-size:9px; color:var(--faint); }
+.dn-mini-naa { font-size:13px; font-weight:700; color:var(--text); font-variant-numeric:tabular-nums; }
+.dn-mini-delta { font-size:9.5px; font-weight:600; margin-top:2px; }
+
+/* Fasebar */
+.dn-bar { position:relative; height:26px; border-radius:6px; overflow:visible; margin:26px 0 6px; background:var(--bg); border:1px solid var(--border); }
+.dn-bar-kompakt { height:12px; margin:18px 0 4px; }
+.dn-fase { position:absolute; top:0; bottom:0; display:flex; align-items:center; justify-content:center; color:#fff; font-size:9.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; overflow:hidden; white-space:nowrap; cursor:help; }
+.dn-fase:first-child { border-radius:5px 0 0 5px; } .dn-fase span { padding:0 6px; text-overflow:ellipsis; overflow:hidden; }
+.dn-dot { position:absolute; width:11px; height:11px; margin-left:-5.5px; border-radius:50%; background:#fff; border:2.5px solid var(--dot); cursor:pointer; padding:0; transform:translateY(-16px); z-index:2; transition:transform .12s; }
+.dn-bar-kompakt .dn-dot { width:9px; height:9px; margin-left:-4.5px; transform:translateY(-12px); border-width:2px; }
+.dn-dot:hover, .dn-dot:focus { transform:translateY(-16px) scale(1.35); outline:none; z-index:3; }
+.dn-bar-kompakt .dn-dot:hover { transform:translateY(-12px) scale(1.35); }
+.dn-dot-gl { background:var(--navy); border-color:var(--navy); border-radius:2px; transform:translateY(-16px) rotate(45deg); }
+.dn-dot-gl:hover { transform:translateY(-16px) rotate(45deg) scale(1.35); }
+.dn-dot-naa { background:var(--red); border-color:var(--red); }
+.dn-mark { position:absolute; top:100%; width:0; border-left:1.5px dashed var(--navy); height:14px; }
+.dn-mark span { position:absolute; top:14px; left:-2px; font-size:9px; font-weight:700; color:var(--navy); white-space:nowrap; letter-spacing:.03em; }
+.dn-mark-naa { border-color:var(--red); } .dn-mark-naa span { color:var(--red); left:auto; right:-2px; text-align:right; }
+.dn-bar-kompakt .dn-mark { height:8px; } .dn-bar-kompakt .dn-mark span { top:8px; font-size:8px; }
+.dn-axis { position:relative; height:14px; margin-top:32px; }
+.dn-bar-kompakt + .dn-axis { margin-top:22px; height:10px; }
+.dn-axis span { position:absolute; font-size:9px; color:var(--faint); transform:translateX(-50%); }
+.dn-bar-kompakt + .dn-axis span { font-size:8px; }
+.dn-tt { position:fixed; z-index:9999; max-width:min(320px, calc(100vw - 16px)); background:var(--navy); color:#fff; border-radius:8px; padding:9px 12px; font-size:11px; line-height:1.55; box-shadow:0 4px 20px rgba(0,0,0,.25); opacity:0; pointer-events:none; transition:opacity .12s; }
+.dn-tt.visible { opacity:1; }
+.dn-tt-date { display:block; font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:3px; }
+
+/* Panel */
+.dn-hero { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:14px; }
+.dn-hero-col { border-radius:var(--radius-lg); padding:16px 18px; border:1px solid var(--border); background:var(--surface); box-shadow:var(--shadow); }
+.dn-hero-da { border-top:3px solid var(--navy); } .dn-hero-mellom { border-top:3px solid var(--amber); } .dn-hero-naa { border-top:3px solid var(--red); }
+.dn-hero-big { font-family:'DM Serif Display',serif; font-size:20px; color:var(--text); margin-bottom:6px; }
+.dn-hero-txt { font-size:12px; color:var(--muted); line-height:1.65; }
+.dn-lesehjelp { background:var(--navy-lt); border:1px solid rgba(31,56,100,.15); border-radius:var(--radius-lg); padding:14px 18px; margin-bottom:8px; }
+.dn-lesehjelp p { font-size:12.5px; line-height:1.7; color:var(--text); margin-bottom:8px; } .dn-lesehjelp p:last-child { margin-bottom:0; }
+.dn-lesehjelp .dn-metode { font-size:10.5px; color:var(--muted); font-style:italic; }
+.dn-faser { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:22px; }
+.dn-fasekort { background:var(--surface); border:1px solid var(--border); border-top:3px solid; border-radius:var(--radius); padding:12px 14px; box-shadow:var(--shadow); }
+.dn-fasekort-navn { font-size:12px; font-weight:700; margin-bottom:2px; } .dn-fasekort-dato { font-size:10px; color:var(--faint); margin-bottom:6px; } .dn-fasekort-txt { font-size:11.5px; color:var(--muted); line-height:1.6; }
+.dn-chips { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+.dn-chip { font-size:10px; font-weight:600; padding:4px 11px; border-radius:20px; border:1px solid var(--border-md); background:var(--surface); color:var(--muted); cursor:pointer; font-family:inherit; }
+.dn-chip.active { background:var(--navy); color:#fff; border-color:var(--navy); }
+.dn-chip[style*="--chip"]:not(.active) { color:var(--chip); }
+.dn-gruppe { margin-bottom:18px; } .dn-gruppe-navn { font-size:12px; font-weight:700; color:var(--navy); margin-bottom:6px; }
+.dn-table { width:100%; border-collapse:collapse; font-size:11.5px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); }
+.dn-table th { background:var(--navy); color:#fff; font-size:9px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:7px 10px; text-align:left; }
+.dn-table td { padding:9px 10px; border-bottom:1px solid var(--border); vertical-align:top; line-height:1.5; }
+.dn-table tr:last-child td { border-bottom:none; } .dn-table tr:nth-child(even) td { background:rgba(0,0,0,.015); }
+.dn-table td.dn-da { color:var(--muted); font-variant-numeric:tabular-nums; } .dn-table td.dn-naa { font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap; } .dn-table td.dn-delta { font-weight:700; white-space:nowrap; } .dn-table td.dn-komm { color:var(--muted); font-size:11px; min-width:220px; }
+.dn-enhet { font-size:9.5px; color:var(--faint); }
+.dn-mt-sum { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+.dn-mt-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.dn-mt { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:12px 14px; box-shadow:var(--shadow); }
+.dn-mt-head { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:8px; } .dn-mt-navn { font-size:12.5px; font-weight:700; color:var(--text); }
+.dn-mt-row { font-size:11.5px; line-height:1.6; color:var(--text); margin-bottom:8px; } .dn-mt-row:last-child { margin-bottom:0; } .dn-mt-row .dn-eyebrow { margin-bottom:2px; }
+.dn-konklusjon { background:var(--navy); color:#fff; border-radius:var(--radius-lg); padding:16px 20px; margin-top:12px; } .dn-konklusjon .dn-eyebrow { color:rgba(255,255,255,.55); } .dn-konklusjon p { font-size:13px; line-height:1.7; opacity:.92; }
+.dn-liste { display:flex; flex-direction:column; gap:6px; }
+.dn-ev { display:grid; grid-template-columns:110px 1fr; gap:12px; background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--fase); border-radius:var(--radius); padding:10px 14px; box-shadow:var(--shadow); }
+.dn-ev-gl { background:var(--navy-lt); } .dn-ev-naa { border-color:var(--red); }
+.dn-ev-dato { font-size:11px; font-weight:700; color:var(--navy); } .dn-ev-dag { font-size:9.5px; color:var(--faint); font-weight:500; margin-top:1px; }
+.dn-ev-tittel { font-size:12.5px; font-weight:600; color:var(--text); margin-bottom:3px; } .dn-ev-txt { font-size:11.5px; color:var(--muted); line-height:1.6; margin-bottom:5px; }
+.dn-ev-meta { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.dn-banner { background:var(--amber-lt); border:1px solid rgba(146,64,14,.25); border-left:3px solid var(--amber); border-radius:var(--radius); padding:10px 14px; font-size:11.5px; line-height:1.6; color:var(--text); margin-bottom:14px; }
+.dn-banner strong { color:var(--amber); }
+@media (max-width: 860px) {
+  .dn-dash-grid { grid-template-columns:1fr 1fr !important; }
+  .dn-hero, .dn-faser, .dn-mt-grid { grid-template-columns:1fr !important; }
+  .dn-ev { grid-template-columns:1fr; gap:4px; }
+  .dn-mark span { display:none; }
+  .dn-bar { margin-top:22px; }
+  .dn-fase span { display:none; }
+}
+</style>
+<script id="situasjon-js">
+// ═══════════════════════════════════════════════════════════════════════════
+//  SITUASJON — modellens grunnlinje (31. mars 2026) mot status i dag
+//
+//  Pedagogisk prinsipp: Analysen ble skrevet 31 dager etter at Hormuz ble
+//  stengt. Den bevares uendret som GRUNNLINJE. Alt som har skjedd siden,
+//  legges i dette objektet: nøkkeltall da og nå, daterte hendelser, og en
+//  ærlig test av hva modellen sa mot hva som faktisk skjedde.
+//
+//  Oppdatering: endre «naa.dato» og tallene under «naa» i hver indikator,
+//  legg nye hendelser nederst i «hendelser». Alt annet regnes ut av koden.
+// ═══════════════════════════════════════════════════════════════════════════
+var SITUASJON = {
+  konfliktStart: '2026-02-28',
+  grunnlinje: { dato: '2026-03-31', kort: '31. mars', lang: '31. mars 2026', label: 'Ved analysens start' },
+  naa:        { dato: '2026-09-14', kort: '14. sep.', lang: '14. september 2026', label: 'Status i dag' },
+
+  // Fasene i krisen — brukes i fasebaren
+  faser: [
+    { fra: '2026-02-28', til: '2026-04-07', navn: 'Åpen krig',            kort: 'Krig',        farge: '#C53030', tekst: 'Operation Epic Fury. Khamenei drept. Hormuz erklært stengt. Brent-futures topper 118–120 $ i mars.' },
+    { fra: '2026-04-08', til: '2026-07-06', navn: 'Våpenhvile og avtale', kort: 'Våpenhvile',  farge: '#BA7517', tekst: 'To ukers våpenhvile 8. april, forlenget. MoU 14.–17. juni. Iran krever egen rute og toll i yuan fra 19. juni.' },
+    { fra: '2026-07-07', til: null,         navn: 'Kronisk forstyrrelse', kort: 'Forstyrrelse', farge: '#7F1D1D', tekst: 'Våpenhvilen bryter sammen 6.–7. juli. USA eskorterer tankskip, Iran angriper fartøy utenfor sin rute. Houthiene åpner en andre front i Rødehavet.' }
+  ],
+
+  // Nøkkeltall da og nå. «bedre»: 'lav' = lavere er bedre, 'hoy' = høyere er bedre, null = nøytralt.
+  // «da» og «naa» er tall der det gir mening (brukes til pil og prosentendring); tekstfeltene vises.
+  indikatorer: [
+    // ── Energi og Hormuz ──────────────────────────────────────────────────
+    { g: 'energi', id: 'brent', navn: 'Brent råolje', enhet: '$/fat', da: 113, naa: 108.3, daTxt: '~113 $', naaTxt: '108,3 $', daKilde: 'ICE/CNBC 31. mars', naaKilde: 'ICE 14. sep. (live i markedsstripen)', bedre: 'lav',
+      kommentar: 'Toppen kom i mars (futures 118–120 $, fysisk last opp mot 130 $). April-snittet var 117 $. Gjennom våpenhvilen falt prisen til ca. 84 $ i begynnelsen av august, før Houthi-angrepene og stengingen av Saudi-Arabias øst–vest-rørledning løftet den over 100 $ igjen i september.' },
+    { g: 'energi', id: 'transitt', navn: 'Skipstransitter gjennom Hormuz', enhet: 'per dag', da: 0, naa: 7.7, daTxt: '~0 (stengt)', naaTxt: '5–11 (snitt 7,7)', daKilde: 'IRGC-erklæring; Lloyd\'s List', naaKilde: 'Straits/Windward-sporing 13. sep.', bedre: 'hoy',
+      kommentar: 'Normalt før krigen: ca. 125 transitter per dag. Trafikken er altså rundt 90 % under normalen. Over 80 % av fartøyene seiler med sporingen avslått.' },
+    { g: 'energi', id: 'gulfeksport', navn: 'Oljeeksport fra Gulfen', enhet: 'mill. fat/dag', da: null, naa: 13, daTxt: 'Nær null via Hormuz', naaTxt: '~13 mill. fat/dag', daKilde: 'IEA mars 2026', naaKilde: 'IEA Oil Market Report sept. 2026 (august-tall)', bedre: 'hoy',
+      kommentar: 'Omtrent halvparten av nivået før krigen. Råoljetapet er krympet til i underkant av 45 % takket være rørledninger utenom stredet og amerikanske eskorter. Diesel og gassolje fra Gulfen er fortsatt bare en firedel av normalen.' },
+    { g: 'energi', id: 'diesel', navn: 'Diesel USA', enhet: '$/fat', da: null, naa: 200, daTxt: '—', naaTxt: '> 200 $/fat', daKilde: '', naaKilde: 'IEA sept. 2026', bedre: 'lav',
+      kommentar: '94 % over nivået før krigen. Raffinerte produkter har steget mer enn råolje fordi Gulfens raffinerier og eksportterminaler er avskåret.' },
+    { g: 'energi', id: 'ttf', navn: 'Europeisk gass (TTF)', enhet: '€/MWh', da: null, naa: 66.5, daTxt: '~2 × førkrigsnivå', naaTxt: '66,5 €/MWh', daKilde: 'ECB mars 2026', naaKilde: 'Kpler/Trading Economics 28. aug.', bedre: 'lav',
+      kommentar: 'Høyeste sluttkurs siden januar 2023. Qatars LNG-eksport i 2026 anslås til 38,7 Mt, omtrent halvparten av kapasiteten.' },
+    { g: 'energi', id: 'iea', navn: 'Global oljeforsyning 2026', enhet: 'mill. fat/dag', da: null, naa: -5.7, daTxt: '−20 % forstyrret', naaTxt: '−5,7 mill. fat/dag (−6 %)', daKilde: 'IEA mars', naaKilde: 'IEA sept. 2026', bedre: 'hoy',
+      kommentar: 'IEA venter at verdens oljetilbud faller 6 % i 2026 mot 2025. Raffineringssystemet beskrives som «strukket til det ytterste».' },
+
+    // ── USA ───────────────────────────────────────────────────────────────
+    { g: 'usa', id: 'fed', navn: 'Fed funds-rente', enhet: '%', da: 3.625, naa: 3.625, daTxt: '3,50–3,75 %', naaTxt: '3,50–3,75 %', daKilde: 'FOMC 18. mars', naaKilde: 'FOMC 29. juli (delt komité)', bedre: null,
+      kommentar: 'Uendret i seks måneder, nøyaktig den handlingslammelsen modellen beskrev. Retningen har snudd: markedet priser 83–89 % sannsynlighet for en heving på møtet 16. september. Kevin Warsh overtok som sentralbanksjef 22. mai; Stephen Miran forlot styret samtidig.' },
+    { g: 'usa', id: 'cpi', navn: 'KPI-inflasjon (CPI-U)', enhet: '%', da: 2.4, naa: 3.4, daTxt: '2,4 % (feb.)', naaTxt: '3,4 % (aug.)', daKilde: 'BLS 11. mars', naaKilde: 'BLS 11. sep.', bedre: 'lav',
+      kommentar: 'Bensin +27,4 % på tolv måneder og står for over en tredel av månedsøkningen. Kjerne-KPI er 2,4 %, lavere enn i februar (2,5 %). Sjokket sitter i energi, ikke bredt i økonomien.' },
+    { g: 'usa', id: 'pce', navn: 'Kjerne-PCE', enhet: '%', da: 2.7, naa: 3.3, daTxt: '2,7 % (FOMC-prognose Q4)', naaTxt: '3,3 % (juli, faktisk)', daKilde: 'FOMC SEP mars', naaKilde: 'BEA 26. aug.', bedre: 'lav',
+      kommentar: 'Feds foretrukne mål ligger 1,3 prosentpoeng over 2 %-målet. Total PCE er 3,7 %.' },
+    { g: 'usa', id: 'arb', navn: 'Arbeidsledighet', enhet: '%', da: 4.4, naa: 4.1, daTxt: '4,4 % (feb.)', naaTxt: '4,1 % (aug.)', daKilde: 'BLS', naaKilde: 'BLS 4. sep.', bedre: 'lav',
+      kommentar: 'Goodspeeds ledende indikator har gått motsatt vei av det modellen fryktet: 162 000 nye jobber i august, det sterkeste siden mars. Sahm-regelen ligger på −0,07, langt under resesjonsterskelen 0,50.' },
+    { g: 'usa', id: 'bnp', navn: 'BNP-vekst', enhet: '%', da: 2.4, naa: 1.5, daTxt: '2,4 % (FOMC-prognose 2026)', naaTxt: '+1,5 % (Q2, annualisert)', daKilde: 'FOMC SEP mars', naaKilde: 'BEA 2. estimat 26. aug.', bedre: 'hoy',
+      kommentar: 'Q1: +2,1 %. Q2: +1,5 %. Nedbremsing, ikke sammentrekning. Dallas Feds anslag på −2,9 pp global effekt forutsatte full stengning i hele Q2; stredet var delvis åpent fra 8. april.' },
+    { g: 'usa', id: 'us10', navn: '10-årig statsrente', enhet: '%', da: 4.27, naa: 4.96, daTxt: '4,27 %', naaTxt: '4,96 %', daKilde: 'Tradeweb 18. mars', naaKilde: 'Trading Economics 14. sep.', bedre: 'lav',
+      kommentar: 'Høyeste siden november 2023, på terskelen til 5 %. Global obligasjonsnedsalg: inflasjon, ventet Fed-heving og finanspolitisk uro. Mirans «USA eksporterer obligasjoner» er blitt dyrere.' },
+    { g: 'usa', id: 'toll', navn: 'Effektiv tollsats', enhet: '%', da: 10.5, naa: 11.0, daTxt: '10,5 %', naaTxt: '~11,0 % (lovfestet snitt)', daKilde: 'Yale Budget Lab mars', naaKilde: 'Yale Budget Lab 24. aug.', bedre: null,
+      kommentar: 'Høyesterett underkjente IEEPA-tollen 20. februar. Section 122 (10 %) gjaldt 24. feb.–24. juli. Erstattet av Section 301-toll på ca. 60 land (10–12,5 %) fra 24. juli, og 50 % Section 338-toll på utvalgte kanadiske varer fra 19. august.' },
+    { g: 'usa', id: 'resesjon', navn: 'Resesjonssannsynlighet 2026', enhet: '%', da: 33, naa: 8, daTxt: '~30–33 % (prediksjonsmarked, vår)', naaTxt: '8 % (Polymarket) · 25–30 % (økonomer)', daKilde: 'Polymarket/Forbes 14. april', naaKilde: 'Polymarket ult. aug.; Goldman/RSM', bedre: 'lav',
+      kommentar: 'Markedet har nesten avskrevet resesjon i 2026. Profesjonelle prognosemakere holder fortsatt en risiko på 25–30 %.' },
+
+    // ── Eurosonen ─────────────────────────────────────────────────────────
+    { g: 'europa', id: 'ecb', navn: 'ECB innskuddsrente', enhet: '%', da: 2.00, naa: 2.50, daTxt: '2,00 %', naaTxt: '2,50 %', daKilde: 'ECB 19. mars', naaKilde: 'ECB 10. sep. (gjelder fra 16. sep.)', bedre: null,
+      kommentar: 'To hevinger: 11. juni (første på tre år) og 10. september. Refinansiering 2,65 %, marginal utlån 2,90 %. Modellen ventet at ECB ville «utsette kutt»; ECB gikk lenger og hevet.' },
+    { g: 'europa', id: 'hicp', navn: 'HICP-inflasjon', enhet: '%', da: 1.9, naa: 3.3, daTxt: '1,9 % (feb.)', naaTxt: '3,3 % (aug., flash)', daKilde: 'Eurostat', naaKilde: 'Eurostat 1. sep.', bedre: 'lav',
+      kommentar: 'Energi +14,3 % på tolv måneder. Høyeste inflasjon siden september 2023. ECBs stab venter 3,3 % for 2026 og en topp på 5,4 % i 2027.' },
+    { g: 'europa', id: 'eubnp', navn: 'BNP-vekst 2026 (prognose)', enhet: '%', da: 0.9, naa: 0.8, daTxt: '0,9 %', naaTxt: '0,8 % (2027: 0,4 %)', daKilde: 'ECB mars', naaKilde: 'ECB stabsprognose sept.', bedre: 'hoy',
+      kommentar: 'Faktisk Q2 2026: +0,6 % fra kvartalet før, +1,2 % på årsbasis. Tyskland +0,3 %, Frankrike 0,0 %. Svakheten ventes å komme i 2027, ikke i 2026.' },
+    { g: 'europa', id: 'euarb', navn: 'Arbeidsledighet', enhet: '%', da: 5.7, naa: 6.4, daTxt: '5,7 % (jan.)', naaTxt: '6,4 % (juli)', daKilde: 'Eurostat', naaKilde: 'Eurostat 1. sep.', bedre: 'lav',
+      kommentar: 'Opp 0,7 prosentpoeng. Her, i motsetning til USA, viser arbeidsmarkedet Goodspeed-mønsteret modellen ventet. Tyskland fortsatt lavt (4,0 %).' },
+    { g: 'europa', id: 'bund', navn: 'Tysk 10-årig Bund', enhet: '%', da: 2.88, naa: 3.50, daTxt: '2,88 %', naaTxt: '3,50 %', daKilde: 'Euronews mars', naaKilde: 'Trading Economics 11. sep.', bedre: 'lav',
+      kommentar: 'Opp 62 basispunkter på ventede ECB-hevinger og energidrevet inflasjon.' },
+    { g: 'europa', id: 'eurusd', navn: 'EUR/USD', enhet: '', da: 1.18, naa: 1.157, daTxt: '~1,18', naaTxt: '1,157', daKilde: 'Markedsdata mars', naaKilde: 'Trading Economics 14. sep.', bedre: null,
+      kommentar: 'Dollaren styrket av ventet Fed-heving. DXY 99,3.' },
+
+    // ── Kina ──────────────────────────────────────────────────────────────
+    { g: 'kina', id: 'cnbnp', navn: 'BNP-vekst', enhet: '%', da: 5.0, naa: 4.3, daTxt: '5,0 % (2025, offisielt)', naaTxt: '4,3 % å/å (Q2 2026)', daKilde: 'NBS jan.', naaKilde: 'NBS/Trading Economics', bedre: 'hoy',
+      kommentar: 'Q1 5,0 %, Q2 4,3 %, første halvår 4,7 %. Investering og forbruk svekket fra andre kvartal. Uavhengige anslag (Rhodium) lå på 2,5–3,0 % allerede i mars.' },
+    { g: 'kina', id: 'cncpi', navn: 'KPI-inflasjon', enhet: '%', da: 0.1, naa: 0.8, daTxt: '~0,1 % (jan.)', naaTxt: '0,8 % (aug.)', daKilde: 'NBS', naaKilde: 'NBS 9. sep.', bedre: null,
+      kommentar: 'Ut av deflasjonssonen. Kjerne-KPI 1,0 %. Produsentprisene overrasket opp på råvarekostnader.' },
+    { g: 'kina', id: 'lpr', navn: 'PBoC utlånsrente (LPR 1 år)', enhet: '%', da: 3.00, naa: 3.00, daTxt: '3,00 %', naaTxt: '3,00 % (uendret 15 mnd.)', daKilde: 'PBoC (modellen oppga 3,10 %; korrekt nivå var 3,00 %)', naaKilde: 'PBoC 20. aug.', bedre: null,
+      kommentar: 'Pengepolitikken «i observasjonsfase». PBoC har fortsatt rom, som modellen antok.' },
+    { g: 'kina', id: 'cneksport', navn: 'Eksport (å/å)', enhet: '%', da: null, naa: 25, daTxt: '—', naaTxt: '+25 % (aug.)', daKilde: '', naaKilde: 'Kinas tollvesen 8. sep.', bedre: null,
+      kommentar: 'Handelsoverskudd 119,1 mrd. $ i august, rekord. Biler +43 %, halvledere +130 %, eksport til USA +34 %. Kina er krisens kortsiktige vinner, slik modellen ventet.' },
+    { g: 'kina', id: 'ree', navn: 'Eksport av sjeldne jordarter', enhet: 'tonn', da: null, naa: 4735, daTxt: 'Lisensregime; Dy₂O₃ ~191 $/kg', naaTxt: '4 735 t i aug. (−18 % å/å)', daKilde: 'SMM mars', naaKilde: 'Kinas tollvesen 8. sep.', bedre: null,
+      kommentar: 'Januar–august: 39 441 tonn, −11 % fra i fjor. Ingen dysprosiumoksid til Japan i 2026. Europeiske dysprosiumpriser opptil seks ganger kinesisk innenlandspris. Pausen i de utvidede kontrollene utløper 10. november 2026.' },
+
+    // ── Norge ─────────────────────────────────────────────────────────────
+    { g: 'norge', id: 'nbrente', navn: 'Styringsrente', enhet: '%', da: 4.00, naa: 4.25, daTxt: '4,00 %', naaTxt: '4,25 %', daKilde: 'Norges Bank 26. mars', naaKilde: 'Norges Bank 13. aug. (hevet 7. mai)', bedre: null,
+      kommentar: 'Hevet 7. mai. Rentebanen fra juni peker mot litt over 4,5 % ved utgangen av 2026. Neste møte 24. september med ny pengepolitisk rapport.' },
+    { g: 'norge', id: 'nokpi', navn: 'KPI', enhet: '%', da: 3.0, naa: 3.3, daTxt: '3,0 % (2025-snitt)', naaTxt: '3,3 % (aug.)', daKilde: 'SSB', naaKilde: 'SSB 10. sep.', bedre: 'lav',
+      kommentar: 'KPI-JAE 3,0 %. Tolvmånedersveksten steg 0,3 prosentpoeng fra juli, drevet av barnehage og SFO. Lavere strømprisvekst dempet.' },
+    { g: 'norge', id: 'nobnp', navn: 'BNP Fastlands-Norge', enhet: '%', da: 2.0, naa: 0.3, daTxt: '2,0 % (SSB-prognose 2026)', naaTxt: '+0,3 % k/k (Q2)', daKilde: 'SSB mars', naaKilde: 'SSB nasjonalregnskap Q2', bedre: 'hoy',
+      kommentar: 'Konflikten i Midtøsten ga kraftig økning i samlet BNP i løpende priser første halvår, altså petroleumsinntekter. Fastlandsveksten er moderat.' },
+    { g: 'norge', id: 'usdnok', navn: 'USD/NOK', enhet: '', da: null, naa: 9.25, daTxt: '—', naaTxt: '~9,2–9,3', daKilde: '', naaKilde: 'Wise/OFX uke 37', bedre: null,
+      kommentar: 'Avledet EUR/NOK ≈ 10,7, klart sterkere krone enn SSBs mars-prognose på 11,20 for 2026. Oljeprisen har gjort kronen til en «energivaluta» igjen.' },
+
+    // ── Finansmarkeder ────────────────────────────────────────────────────
+    { g: 'marked', id: 'gull', navn: 'Gull', enhet: '$/oz', da: 4681, naa: 4440, daTxt: '4 681 $', naaTxt: '~4 440 $', daKilde: 'Spot 31. mars', naaKilde: 'Spot 8. sep.', bedre: null,
+      kommentar: 'Gull falt 13 % i mars, det bratteste månedsfallet siden oktober 2008, og har ikke hentet seg inn. 52-ukers intervall 3 660–5 627 $. Modellens «tilbake mot 5 055 $» (J.P. Morgan-anslag) har ikke slått til.' },
+    { g: 'marked', id: 'sp500', navn: 'S&P 500', enhet: '', da: 6715, naa: 7657, daTxt: '~6 715 (3. mars, bunn)', naaTxt: '~7 657 (+13 % i 2026)', daKilde: 'CNBC 3. mars', naaKilde: 'Yahoo Finance sept.', bedre: 'hoy',
+      kommentar: 'Aksjemarkedet priser scenario A/B, ikke C. Modellens «S&P −30–40 %» hørte til scenario C og har ikke inntruffet.' },
+    { g: 'marked', id: 'vix', navn: 'VIX', enhet: '', da: 25.6, naa: 15.7, daTxt: '25,6 (snitt mars)', naaTxt: '15,7', daKilde: 'CBOE', naaKilde: 'CBOE medio sept.', bedre: 'lav',
+      kommentar: 'Volatiliteten ble «slipt ned» gjennom sommeren til årets laveste (14,1 ult. august). Markedet behandler krisen som kronisk, ikke akutt. Det er Talebs poeng snudd på hodet: en rolig overflate i Extremistan.' }
+  ],
+
+  // Daterte hendelser. tema: krig · diplomati · energi · makro · marked · kina · norge
+  hendelser: [
+    { d: '2025-06-22', tema: 'krig',      tittel: 'Operation Midnight Hammer',                       tekst: 'USA angriper Irans kjernevåpenanlegg. Modellens forhistorie.', kilde: 'Analysedokumentet' },
+    { d: '2026-01-23', tema: 'krig',      tittel: 'National Defense Strategy signert',                tekst: 'Hegseth signerer NDS for Department of War. «The Simultaneity Problem» beskrives.', kilde: 'Analysedokumentet' },
+    { d: '2026-02-20', tema: 'makro',     tittel: 'Høyesterett underkjenner IEEPA-tollen',            tekst: 'Learning Resources v. Trump: IEEPA gir ikke tollmyndighet. Trump svarer med 10 % Section 122-toll fra 24. februar. Mirans tollarkitektur mister sitt juridiske fundament.', kilde: 'Supreme Court 24-1287' },
+    { d: '2026-02-28', tema: 'krig',      tittel: 'Operation Epic Fury · Khamenei drept · Hormuz stengt', tekst: 'USA og Israel åpner luftkrig mot Iran. Ayatollah Ali Khamenei drepes i åpningsangrepet. Revolusjonsgarden erklærer Hormuz-stredet stengt samme dag.', kilde: 'Britannica; Department of War' },
+    { d: '2026-03-02', tema: 'energi',    tittel: 'Stengningen formaliseres',                         tekst: 'IRGC erklærer stredet stengt for USA- og Israel-allierte fartøy. Tankertrafikken stanser i praksis fra 1. mars; ca. 8 % av verdens VLCC-flåte låses inne i Gulfen.', kilde: 'Lloyd\'s List; IEA' },
+    { d: '2026-03-03', tema: 'marked',    tittel: 'Markedene faller',                                 tekst: 'S&P 500 ned mer enn 2 % til ca. 6 715, alle årets gevinster borte. VIX 25. Brent passerer 80 $.', kilde: 'CNBC' },
+    { d: '2026-03-08', tema: 'krig',      tittel: 'Mojtaba Khamenei ny øverste leder',                 tekst: 'Ekspertrådet utpeker sønnen, 56 år, mer hardlinjet og med tette bånd til IRGC. Trump uttrykker «skuffelse».', kilde: 'Al Jazeera; CNBC' },
+    { d: '2026-03-13', tema: 'energi',    tittel: 'Første transitter under IRGCs «bomstasjon»',        tekst: 'Fartøy slipper gjennom på forhåndsgodkjent rute etter vetting. Enkelte betaler opp mot 2 mill. $ per passering, gjort opp i yuan. Modellens scenario B tar form allerede i uke 2.', kilde: 'Lloyd\'s List; Bloomberg 1. april' },
+    { d: '2026-03-16', tema: 'energi',    tittel: 'Brent topper 118–120 $',                           tekst: 'Futures når toppen midt i mars; fysiske laster handles opp mot 130–150 $. IEA: den største forsyningsforstyrrelsen i oljemarkedets historie.', kilde: 'EIA; Trading Economics' },
+    { d: '2026-03-18', tema: 'makro',     tittel: 'Fed holder 3,50–3,75 %',                           tekst: 'FOMC holder renten. Inflasjonsprognosen revideres opp.', kilde: 'Federal Reserve' },
+    { d: '2026-03-19', tema: 'makro',     tittel: 'ECB holder 2,00 %, kutter vekstanslaget',          tekst: 'BNP-prognosen for 2026 ned fra 1,2 % til 0,9 %. Lagarde: «vesentlig mer usikker».', kilde: 'ECB' },
+    { d: '2026-03-20', tema: 'makro',     tittel: 'Dallas Fed: −2,9 pp ved stengning ett kvartal',    tekst: 'Modellens ankerestimat: WTI 98 $ og global vekst −2,9 pp annualisert i Q2 ved full stengning.', kilde: 'Dallas Fed' },
+    { d: '2026-03-26', tema: 'norge',     tittel: 'Norges Bank holder 4,00 %, varsler heving',        tekst: 'Rentebanen peker mot 4,25–4,50 % ved utgangen av 2026.', kilde: 'Norges Bank' },
+    { d: '2026-03-31', tema: 'makro',     tittel: 'Grunnlinje: analysen skrives',                     tekst: 'Dag 31. Analysedokumentet og modellen ferdigstilles. Gull har falt 13 % i mars. Alt i modellen som er datert «31. mars», refererer til dette tidspunktet.', kilde: 'Denne modellen', grunnlinje: true },
+    { d: '2026-04-08', tema: 'diplomati', tittel: 'To ukers våpenhvile · Hormuz skal gjenåpnes',      tekst: 'Pakistan-meklet våpenhvile mellom USA, Israel og Iran. Iran går med på sikker passasje. Brent faller mot 95 $.', kilde: 'Al Jazeera 7.–8. april' },
+    { d: '2026-04-18', tema: 'energi',    tittel: 'Iran strammer inn igjen',                          tekst: 'De fleste passeringer begrenses på nytt. Brent +7 % på én dag. April-snittet ender på 117 $.', kilde: 'Trading Economics; Statista' },
+    { d: '2026-05-04', tema: 'krig',      tittel: 'Operation Project Freedom',                        tekst: 'USA begynner å eskortere handelsfartøy og opprettholder sjøblokade av iranske havner fra Omanbukta.', kilde: 'Wikipedia; National Interest' },
+    { d: '2026-05-05', tema: 'krig',      tittel: 'Operation Epic Fury formelt avsluttet',            tekst: 'Luftkampanjen avsluttes etter 67 dager. 7. mai: nye amerikanske angrep i Sør-Iran og Teheran etter iransk beskytning av krigsskip.', kilde: 'Department of War' },
+    { d: '2026-05-07', tema: 'norge',     tittel: 'Norges Bank hever til 4,25 %',                     tekst: 'Første heving. Begrunnelse: høyere prisvekst og svakere krone tidlig i krisen.', kilde: 'Norges Bank' },
+    { d: '2026-05-16', tema: 'energi',    tittel: 'Iran varsler formell bompengeordning',              tekst: 'Persian Gulf Strait Authority (PGSA) skal administrere transittavgift. Søknad, kontroll av eierskap, forsikring og last før tillatelse.', kilde: 'Windward; Straits' },
+    { d: '2026-05-22', tema: 'makro',     tittel: 'Warsh ny Fed-sjef · Miran ut av styret',           tekst: 'Senatet bekrefter Kevin Warsh 54–45, den mest splittede avstemningen noensinne. Stephen Miran, en av modellens seks kilder, går av som Fed-guvernør.', kilde: 'CNBC; Federal Reserve' },
+    { d: '2026-06-11', tema: 'makro',     tittel: 'ECB hever for første gang på tre år',              tekst: 'Innskuddsrenten til 2,25 %. Krigen i Midtøsten «gir næring til inflasjonen».', kilde: 'Euronews; ECB' },
+    { d: '2026-06-14', tema: 'diplomati', tittel: 'MoU USA–Iran: slutt på konflikten innen 60 dager', tekst: 'Meklere kunngjør avtaleutkast 14. juni; signert 17. juni. Modellens scenario A ser ut til å vinne fram.', kilde: 'Britannica; Kpler' },
+    { d: '2026-06-19', tema: 'energi',    tittel: 'Iran krever egen rute gjennom eget farvann',       tekst: 'Alle fartøy må følge en rute gjennom iransk territorialfarvann. Stredet brukes som forhandlingskort. Tospors-systemet fra scenario B er institusjonalisert.', kilde: 'Britannica' },
+    { d: '2026-07-07', tema: 'krig',      tittel: 'Våpenhvilen bryter sammen',                        tekst: 'Iran angriper tre handelsfartøy som gikk utenom ruten (6.–7. juli). USA trapper opp angrep mot iranske mål; Trump: «våpenhvilen er over».', kilde: 'Axios; Britannica' },
+    { d: '2026-07-24', tema: 'makro',     tittel: 'Section 122 utløper · Section 301 på 60 land',     tekst: 'Ny toll på 10 % eller 12,5 % mot ca. 60 handelspartnere (tvangsarbeid-etterforskning). 19. august: 50 % toll på utvalgte kanadiske varer (Section 338).', kilde: 'USTR; Honigman' },
+    { d: '2026-07-29', tema: 'makro',     tittel: 'Fed holder igjen, med dissens for heving',          tekst: 'Renten 3,50–3,75 % for femte møte på rad. Dissensene øker presset for heving i september.', kilde: 'Federal Reserve' },
+    { d: '2026-08-05', tema: 'diplomati', tittel: 'Trump: «Hormuz gjenåpnes snart»',                 tekst: 'Samtaler Witkoff–Araghchi via Oman. Samme dag melder Houthiene angrep på saudisk tankskip.', kilde: 'CNN; Axios' },
+    { d: '2026-08-17', tema: 'diplomati', tittel: '60-dagersfristen utløper uten avtale',             tekst: 'Trump avviser nye samtaler og truer Oman. Washington vil heretter forhandle om atomprogrammet, ikke stredet. IRGC: stengt til USA godtar Teherans vilkår.', kilde: 'CBS; Al Jazeera 18. aug.' },
+    { d: '2026-08-18', tema: 'energi',    tittel: 'Sjømann drept i angrep · «stredet er åpent»',      tekst: 'Trump kaller stredet «open and operating» samme dag som et fartøy angripes. Totalt er 20 sjøfolk og én havnearbeider drept siden februar.', kilde: 'CNBC; Wikipedia' },
+    { d: '2026-08-20', tema: 'krig',      tittel: 'US Navy eskorterer i det stille',                  tekst: 'Marinen leder tankskip langs en sørlig korridor nær Oman. Eksperter: konvoier krever 10+ krigsskip og dekker under 10 % av normal trafikk.', kilde: 'Newsmax; ABC News' },
+    { d: '2026-08-26', tema: 'makro',     tittel: 'USA: BNP +1,5 % i Q2, kjerne-PCE 3,3 %',          tekst: 'Nedbremsing, ikke resesjon. Sparerate 3,0 %.', kilde: 'BEA' },
+    { d: '2026-08-28', tema: 'energi',    tittel: 'TTF-gass høyeste siden januar 2023',                tekst: '66,5 €/MWh, omtrent dobbelt så høyt som for ett år siden. Qatar-LNG fortsatt halvert.', kilde: 'Kpler; Trading Economics' },
+    { d: '2026-09-01', tema: 'krig',      tittel: 'USAs «rekorddag» i Hormuz',                        tekst: '60 IRGC-mål angrepet etter iransk mineleggingsforsøk. 40 fartøy med 18 mill. fat eskortert på ett døgn. Iran svarer med missiler og droner mot Aqaba, Bandar Abbas og Qeshm.', kilde: 'CNN 2. sep.; Military Times' },
+    { d: '2026-09-04', tema: 'makro',     tittel: 'USA: +162 000 jobber, ledighet 4,1 %',             tekst: 'Mer enn dobbelt av ventet. Lønnsvekst 3,1 %.', kilde: 'BLS' },
+    { d: '2026-09-05', tema: 'diplomati', tittel: 'Ukraina: USA-utsendinger i Moskva og Kyiv',        tekst: 'Witkoff og Kushner møter Putin; tre dagers begrenset våpenhvile. Fronten står stille; Donbas og sikkerhetsgarantier låser samtalene. NDS-simultaniteten er reell: to kriger, én amerikansk kapasitet.', kilde: 'Al Jazeera; Kyiv Post' },
+    { d: '2026-09-08', tema: 'krig',      tittel: 'Houthi-angrep på saudisk oljeinfrastruktur',       tekst: 'Droner og ballistiske missiler mot Abha, Khamis Mushait, Jizan og Najran. Brann ved Aramco-anlegg, 73 skadet. Houthiene tar kontroll over Yemens Rødehavskyst mot Bab el-Mandeb.', kilde: 'NPR; Al Jazeera; NBC' },
+    { d: '2026-09-10', tema: 'energi',    tittel: 'Øst–vest-rørledningen angrepet og stengt',         tekst: 'Saudi-Arabias 1 200 km lange rørledning til Yanbu, som fraktet 4–5 mill. fat/dag utenom Hormuz, stenges «i forebyggende øyemed». Brent over 100 $ igjen; uken ender +8 %.', kilde: 'Al Jazeera 12. og 14. sep.; Bloomberg' },
+    { d: '2026-09-10', tema: 'makro',     tittel: 'ECB hever til 2,50 %',                             tekst: 'Andre heving. Inflasjonsanslag 3,3 % for 2026; 2027 og 2028 revidert opp til 2,5 % og 2,1 % (stabsprognosen viser en topp på 5,4 % i 2027). Tysk Bund 3,50 %.', kilde: 'ECB; FXStreet' },
+    { d: '2026-09-11', tema: 'makro',     tittel: 'USA: KPI 3,4 % · 10-årsrenten nær 5 %',            tekst: 'Bensin +3,9 % på én måned. Kjerne 2,4 %. Global obligasjonsnedsalg sender tiåringen til 4,96 %. IEA: diesel over 200 $/fat, raffineringssystemet «strukket til det ytterste».', kilde: 'BLS; Bloomberg; IEA' },
+    { d: '2026-09-13', tema: 'diplomati', tittel: 'Gulf–Iran-møtet om gjenåpning utsatt på ubestemt tid', tekst: 'Omans plan for regulær tankertrafikk skulle drøftes i Salalah 9. september. Samme dag melder Iran at et handelsfartøy er truffet ved Qeshm.', kilde: 'CNN 13. sep.' },
+    { d: '2026-09-14', tema: 'energi',    tittel: 'I dag: dag 198',                                   tekst: 'Brent 108,3 $ (+3,6 % på dagen, +19 % siste måned). 5–11 transitter per dag mot ~125 normalt. Fed-møte 16. september (heving ventet), Norges Bank 24. september, Kinas REE-pause utløper 10. november.', kilde: 'Trading Economics; Straits', naa: true }
+  ],
+
+  // Hva modellen sa 31. mars, og hva som faktisk skjedde. status: treff · delvis · bom · aapen
+  modelltest: [
+    { navn: 'Scenario B — kronisk forstyrrelse (55 %)', status: 'treff',
+      sa: 'Irans yuan-baserte «toll-booth»-system. Hormuz formelt åpen, reelt et tospors-system der Kina kontrollerer adgangen. Brent 95–130 $ over tolv måneder.',
+      ble: 'PGSA-toll i yuan (1–2 mill. $ per passering), forhåndsgodkjent rute gjennom iransk farvann fra 19. juni, trafikk 90 % under normalen, Brent 84–117 $ siden april. Dette er det scenarioet som beskriver virkeligheten i september.' },
+    { navn: 'Scenario A — rask oppløsning (20 %)', status: 'delvis',
+      sa: 'Ansiktsbevarende avtale, Pakistan-mekling, gradvis gjenåpning innen 6–8 uker, Brent 75–85 $.',
+      ble: 'Inntraff, og brøt sammen: våpenhvile 8. april (Pakistan-meklet), MoU 14.–17. juni med 60-dagers frist, kollaps 6.–7. juli. Brent nådde riktignok ca. 84 $ tidlig i august. Modellens A og B viste seg å være faser, ikke alternativer.' },
+    { navn: 'Scenario C — systemkollaps (25 %)', status: 'bom',
+      sa: 'Kharg angripes, Kina agerer mot Taiwan innen 90 dager, Russland aktiverer østflanken. VIX over 50, S&P −30–40 %, Brent 150–200 $.',
+      ble: 'Ingen Taiwan-front, ingen russisk eskalering, S&P 500 +13 % i år, VIX 15,7. Men den andre flaskehalsen har åpnet seg: Houthiene kontrollerer Yemens Rødehavskyst, og øst–vest-rørledningen er stengt. Simultaniteten kom fra Rødehavet, ikke fra Taiwan.' },
+    { navn: 'Goodspeed — tre triggere, brå resesjon', status: 'delvis',
+      sa: 'Energisjokk, krig og kredittkontraksjon simultant aktive. Resesjoner begynner med et brått hopp i ledigheten.',
+      ble: 'Energisjokket og krigen er reelle. Kredittkontraksjonen har uteblitt, amerikansk ledighet falt fra 4,4 % til 4,1 %, og BNP vokser. I eurosonen steg ledigheten fra 5,7 % til 6,4 %, så mønsteret er der, men på feil kontinent og i lavere tempo. Modellen undervurderte hvor mye råolje som finner vei utenom stredet.' },
+    { navn: 'Miran — «den smale stien er stengt»', status: 'treff',
+      sa: 'Fed kan verken heve eller kutte. Alle fem forutsetninger for tollplanen er brutt.',
+      ble: 'Fed har stått stille i seks måneder og er nå på vei mot heving, det motsatte av Mirans plan. Høyesterett underkjente IEEPA-tollen 20. februar, og Miran selv forlot Fed-styret 22. mai. Tollsatsen er likevel høyere (ca. 11 %) etter Section 301 og 338.' },
+    { navn: 'Fishman — asymmetri og REE som våpen', status: 'treff',
+      sa: 'Kinas eksportkontroller er speilbildet av amerikanske halvledersanksjoner. Lettere å rive ned enn å bygge opp.',
+      ble: 'Kinas REE-eksport −11 % hittil i år, null dysprosiumoksid til Japan, europeisk pris opptil seks ganger kinesisk. Samtidig +25 % total eksport og rekordoverskudd. Neste test: pausen som utløper 10. november.' },
+    { navn: 'NDS — «The Simultaneity Problem»', status: 'delvis',
+      sa: 'USA er dimensjonert for én stor konflikt, ikke tre samtidige.',
+      ble: 'Iran (eskorter og angrep), Rødehavet (Houthiene) og Ukraina (stillstand, forhandlinger) binder amerikansk kapasitet samtidig. Marinen holder seg utenfor selve Gulfen og dekker under 10 % av normal trafikk. Ingen Kina-front, men tre teatre er allerede aktive.' },
+    { navn: 'Dallas Fed — WTI 98 $ og −2,9 pp i Q2', status: 'delvis',
+      sa: 'Full stengning i hele andre kvartal gir WTI på 98 $ og et globalt vekstfall på 2,9 prosentpoeng annualisert.',
+      ble: 'Brent-snittet i april var 117 $, altså høyere enn anslaget, men stredet var delvis åpent fra 8. april og BNP-effekten ble mye mindre: USA +1,5 %, eurosonen +0,6 % k/k i Q2. Forutsetningen «full stengning» holdt ikke; kalkulatoren må leses med en effektiv stengningsgrad rundt 50 %.' },
+    { navn: 'Taleb — Extremistan, bygg robusthet', status: 'aapen',
+      sa: 'Én hendelse kan dominere hele fordelingen. Unngå middels risiko; barbell.',
+      ble: 'Markedene har prist krisen som kronisk og håndterbar (VIX på årets laveste i august). Det er enten rasjonelt, fordi flyten tilpasser seg, eller kalkunens dag 999. Rødehavet og rørledningen 10. september er en påminnelse om at halen fortsatt er tykk. Uavklart, per definisjon.' }
+  ]
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  DA OG NÅ — rendering av SITUASJON
+//  Alle funksjoner har prefiks sn (situasjon nå). Kjøres ved DOMContentLoaded.
+// ═══════════════════════════════════════════════════════════════════════════
+var SN_MND = ['jan.','feb.','mars','apr.','mai','juni','juli','aug.','sep.','okt.','nov.','des.'];
+var SN_TEMA = {
+  krig:      { navn: 'Krig',        bg: '#FCEBEB', c: '#791F1F' },
+  diplomati: { navn: 'Diplomati',   bg: '#E6F1FB', c: '#0C447C' },
+  energi:    { navn: 'Energi',      bg: '#FAEEDA', c: '#633806' },
+  makro:     { navn: 'Makro',       bg: '#EEEDFE', c: '#3C3489' },
+  marked:    { navn: 'Marked',      bg: '#E1F5EE', c: '#085041' },
+  kina:      { navn: 'Kina',        bg: '#FAECE7', c: '#7C2D12' },
+  norge:     { navn: 'Norge',       bg: '#F1EFE8', c: '#444441' }
+};
+var SN_GRUPPE = { energi: 'Energi og Hormuz', usa: 'USA', europa: 'Eurosonen', kina: 'Kina', norge: 'Norge', marked: 'Finansmarkeder' };
+var SN_STATUS = {
+  treff:  { navn: 'Inntraff',      bg: '#E1F5EE', c: '#085041' },
+  delvis: { navn: 'Delvis',        bg: '#FAEEDA', c: '#633806' },
+  bom:    { navn: 'Inntraff ikke', bg: '#FCEBEB', c: '#791F1F' },
+  aapen:  { navn: 'Uavklart',      bg: '#E6F1FB', c: '#0C447C' }
+};
+
+function snDate(s) { var p = s.split('-'); return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])); }
+function snDays(a, b) { return Math.round((snDate(b) - snDate(a)) / 86400000); }
+function snFmt(s, lang) { var d = snDate(s); var m = SN_MND[d.getUTCMonth()]; return d.getUTCDate() + '. ' + (lang ? m.replace('.', '') : m) + (lang ? ' ' + d.getUTCFullYear() : ''); }
+// Norsk tallformat: komma som desimaltegn, tynt mellomrom som tusenskille
+function snNum(v, dec) {
+  if (v == null || isNaN(v)) return '—';
+  var s = Math.abs(v).toFixed(dec == null ? (Math.abs(v) >= 100 ? 0 : 1) : dec);
+  var parts = s.split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  return (v < 0 ? '−' : '') + parts.join(',');
+}
+// Endring mellom da og nå. Prosentenheter når enheten er %, ellers prosentvis endring.
+function snDelta(ind) {
+  if (ind.da == null || ind.naa == null) return null;
+  var diff = ind.naa - ind.da, txt, sign = diff > 0 ? '+' : diff < 0 ? '−' : '±';
+  if (ind.enhet === '%') txt = sign + snNum(Math.abs(diff), 2).replace(/,?0+$/, '') + ' pp';
+  else if (ind.da === 0) txt = 'fra 0';
+  else txt = sign + snNum(Math.abs(diff / ind.da * 100), 0) + ' %';
+  var god = ind.bedre === 'lav' ? diff < 0 : ind.bedre === 'hoy' ? diff > 0 : null;
+  var farge = diff === 0 ? 'var(--muted)' : god === null ? 'var(--navy)' : god ? 'var(--green)' : 'var(--red)';
+  var pil = diff > 0 ? '↑' : diff < 0 ? '↓' : '→';
+  return { txt: txt, farge: farge, pil: pil, diff: diff };
+}
+function snInd(id) { for (var i = 0; i < SITUASJON.indikatorer.length; i++) if (SITUASJON.indikatorer[i].id === id) return SITUASJON.indikatorer[i]; return null; }
+function snDagNr() { return snDays(SITUASJON.konfliktStart, SITUASJON.naa.dato); }
+function snDagGrunnlinje() { return snDays(SITUASJON.konfliktStart, SITUASJON.grunnlinje.dato); }
+
+// ── Fasebar ──────────────────────────────────────────────────────────────────
+// Horisontal tidslinje fra konfliktstart til i dag. Fasene fargelegges,
+// hendelsene legges som punkter. Hover eller trykk viser detaljer.
+function snFasebar(container, opts) {
+  opts = opts || {};
+  var start = SITUASJON.konfliktStart, slutt = SITUASJON.naa.dato;
+  var total = snDays(start, slutt);
+  var pct = function(d) { return Math.max(0, Math.min(100, snDays(start, d) / total * 100)); };
+  var h = '<div class="dn-bar' + (opts.kompakt ? ' dn-bar-kompakt' : '') + '">';
+  SITUASJON.faser.forEach(function(f) {
+    var a = pct(f.fra), b = pct(f.til || slutt);
+    h += '<div class="dn-fase" style="left:' + a.toFixed(2) + '%;width:' + (b - a).toFixed(2) + '%;background:' + f.farge + '" data-tt-html="' + escHtml('<strong>' + f.navn + '</strong><br>' + snFmt(f.fra) + ' – ' + (f.til ? snFmt(f.til) : 'i dag') + ' (' + snDays(f.fra, f.til || slutt) + ' dager)<br>' + f.tekst) + '">'
+       + (opts.kompakt ? '' : '<span>' + f.kort + '</span>') + '</div>';
+  });
+  // Hendelser
+  var seen = {};
+  SITUASJON.hendelser.forEach(function(e) {
+    if (e.d < start) return;
+    var x = pct(e.d);
+    var key = Math.round(x * 2); var stack = seen[key] || 0; seen[key] = stack + 1;
+    if (opts.kompakt && stack > 0) return;
+    var t = SN_TEMA[e.tema] || SN_TEMA.makro;
+    var cls = 'dn-dot' + (e.grunnlinje ? ' dn-dot-gl' : '') + (e.naa ? ' dn-dot-naa' : '');
+    h += '<button type="button" class="' + cls + '" style="left:' + x.toFixed(2) + '%;--dot:' + t.c + ';top:' + (opts.kompakt ? 0 : -(stack * 9)) + 'px" data-tt-html="' + escHtml('<span class="dn-tt-date">' + snFmt(e.d, true) + ' · dag ' + snDays(start, e.d) + '</span><strong>' + e.tittel + '</strong><br>' + e.tekst) + '" aria-label="' + escHtml(snFmt(e.d, true) + ': ' + e.tittel) + '"></button>';
+  });
+  // Markører for grunnlinje og i dag
+  h += '<div class="dn-mark dn-mark-gl" style="left:' + pct(SITUASJON.grunnlinje.dato).toFixed(2) + '%"><span>◆ Grunnlinje ' + SITUASJON.grunnlinje.kort + ' · dag ' + snDagGrunnlinje() + '</span></div>';
+  h += '<div class="dn-mark dn-mark-naa" style="left:100%"><span>I dag · dag ' + snDagNr() + '</span></div>';
+  h += '</div>';
+  // Måneds-akse
+  h += '<div class="dn-axis">';
+  var d = snDate(start); d.setUTCDate(1); d.setUTCMonth(d.getUTCMonth() + 1);
+  while (d <= snDate(slutt)) {
+    var iso = d.toISOString().slice(0, 10);
+    h += '<span style="left:' + pct(iso).toFixed(2) + '%">' + SN_MND[d.getUTCMonth()].replace('.', '') + '</span>';
+    d.setUTCMonth(d.getUTCMonth() + 1);
+  }
+  h += '</div>';
+  container.innerHTML = h;
+}
+
+// Felles tooltip for fasebar (mus og berøring)
+(function() {
+  var box = null;
+  function get() {
+    if (box) return box;
+    box = document.createElement('div'); box.className = 'dn-tt'; document.body.appendChild(box); return box;
+  }
+  function show(el) {
+    var b = get(); b.innerHTML = el.getAttribute('data-tt-html'); b.classList.add('visible');
+    var r = el.getBoundingClientRect(); var bw = b.offsetWidth, bh = b.offsetHeight;
+    var left = r.left + r.width / 2 - bw / 2; left = Math.max(8, Math.min(window.innerWidth - bw - 8, left));
+    var top = r.top - bh - 10; if (top < 8) top = r.bottom + 10;
+    b.style.left = left + 'px'; b.style.top = top + 'px';
+  }
+  function hide() { if (box) box.classList.remove('visible'); }
+  document.addEventListener('mouseover', function(e) { var el = e.target.closest && e.target.closest('[data-tt-html]'); if (el) show(el); });
+  document.addEventListener('mouseout',  function(e) { var el = e.target.closest && e.target.closest('[data-tt-html]'); if (el) hide(); });
+  document.addEventListener('click', function(e) {
+    var el = e.target.closest && e.target.closest('[data-tt-html]');
+    if (el) { e.preventDefault(); if (box && box.classList.contains('visible') && box.innerHTML === el.getAttribute('data-tt-html')) hide(); else show(el); }
+    else hide();
+  });
+  window.addEventListener('scroll', hide, true);
+})();
+
+// ── Dashboard-stripe ─────────────────────────────────────────────────────────
+function snRenderDash() {
+  var el = document.getElementById('dash-danaa'); if (!el) return;
+  var nokler = ['brent', 'transitt', 'cpi', 'fed', 'ecb', 'sp500'];
+  var h = '<div class="dn-dash-head">'
+    + '<div><div class="dn-eyebrow">Da og nå</div><div class="dn-dash-title">Dag ' + snDagNr() + ' av krisen — modellen ble bygget dag ' + snDagGrunnlinje() + '</div></div>'
+    + '<button class="dn-btn" onclick="nav(\'panel-tidslinje\')">Hele bildet →</button></div>'
+    + '<div id="dash-danaa-bar"></div><div class="dn-dash-grid">';
+  nokler.forEach(function(id) {
+    var ind = snInd(id); if (!ind) return; var d = snDelta(ind);
+    h += '<div class="dn-mini"><div class="dn-mini-navn">' + escHtml(ind.navn) + '</div>'
+      + '<div class="dn-mini-row"><span class="dn-mini-da">' + escHtml(ind.daTxt) + '</span><span class="dn-mini-arrow">→</span><span class="dn-mini-naa">' + escHtml(ind.naaTxt) + '</span></div>'
+      + (d ? '<div class="dn-mini-delta" style="color:' + d.farge + '">' + d.pil + ' ' + d.txt + '</div>' : '<div class="dn-mini-delta" style="color:var(--faint)">nytt tall</div>')
+      + '</div>';
+  });
+  h += '</div>';
+  el.innerHTML = h;
+  snFasebar(document.getElementById('dash-danaa-bar'), { kompakt: true });
+}
+
+// ── Panelet «Da og nå» ───────────────────────────────────────────────────────
+var _snGruppeFilter = 'alle', _snTemaFilter = 'alle';
+function snRenderPanel() {
+  var intro = document.getElementById('dn-intro'); if (!intro) return;
+  var gl = SITUASJON.grunnlinje, naa = SITUASJON.naa;
+  intro.innerHTML =
+    '<div class="dn-hero">'
+    + '<div class="dn-hero-col dn-hero-da"><div class="dn-eyebrow">Da · dag ' + snDagGrunnlinje() + '</div><div class="dn-hero-big">' + gl.lang + '</div><div class="dn-hero-txt">Analysen skrives. Hormuz har vært stengt i en måned, Brent er ~113 $, gull har falt 13 % på en måned, og Fed og ECB har nettopp holdt rentene. Alt som er merket «31. mars» i modellen, er fryst her.</div></div>'
+    + '<div class="dn-hero-col dn-hero-mellom"><div class="dn-eyebrow">Mellom</div><div class="dn-hero-big">' + (snDagNr() - snDagGrunnlinje()) + ' dager</div><div class="dn-hero-txt">Våpenhvile, avtale, sammenbrudd. Bompenger i yuan. To ECB-hevinger, én Fed-sjef byttet ut, en ny front i Rødehavet. ' + SITUASJON.hendelser.filter(function(e){ return e.d > gl.dato; }).length + ' daterte hendelser er lagt inn under.</div></div>'
+    + '<div class="dn-hero-col dn-hero-naa"><div class="dn-eyebrow">Nå · dag ' + snDagNr() + '</div><div class="dn-hero-big">' + naa.lang + '</div><div class="dn-hero-txt">Stredet er formelt «åpent» med 5–11 transitter per dag mot 125 normalt. Brent er tilbake over 100 $, USAs tiårsrente nær 5 %, og markedet venter Fed-heving 16. september.</div></div>'
+    + '</div>'
+    + '<div class="dn-lesehjelp"><div class="dn-eyebrow">Slik leser De panelet</div>'
+    + '<p>Modellen ble bygget ' + snDagGrunnlinje() + ' dager etter at stredet ble stengt. Den beholdes uendret som <strong>grunnlinje</strong>: en dokumentert hypotese om hvordan krisen ville utvikle seg. Dette panelet legger dagens tall ved siden av, hendelse for hendelse, slik at avviket blir synlig.</p>'
+    + '<p>Avvik er ikke feil i seg selv. De er den empiriske testen av de seks rammeverkene, og de forteller hvor modellen bør kalibreres. Tre spørsmål styrer lesningen: <strong>Hva visste vi da?</strong> (kolonnen «31. mars»). <strong>Hva vet vi nå?</strong> (kolonnen «i dag»). <strong>Hva sa modellen om veien mellom?</strong> (avsnittet «Hva modellen sa»).</p>'
+    + '<p class="dn-metode">Grunnlag: offisiell statistikk (BLS, BEA, Eurostat, ECB, NBS, SSB, Norges Bank), IEA Oil Market Report september 2026, markedsdata per ' + naa.lang + '. Live-priser i markedsstripen overstyrer tallene her når de er tilgjengelige.</p></div>';
+
+  // Fasebar + fasekort
+  snFasebar(document.getElementById('dn-fasebar'), {});
+  var fk = '<div class="dn-faser">';
+  SITUASJON.faser.forEach(function(f) {
+    fk += '<div class="dn-fasekort" style="border-top-color:' + f.farge + '"><div class="dn-fasekort-navn" style="color:' + f.farge + '">' + f.navn + '</div><div class="dn-fasekort-dato">' + snFmt(f.fra, true) + ' – ' + (f.til ? snFmt(f.til, true) : 'i dag') + ' · ' + snDays(f.fra, f.til || SITUASJON.naa.dato) + ' dager</div><div class="dn-fasekort-txt">' + f.tekst + '</div></div>';
+  });
+  fk += '</div>';
+  document.getElementById('dn-faser').innerHTML = fk;
+
+  // Gruppefilter + tabell
+  var gf = '<div class="dn-chips"><button class="dn-chip' + (_snGruppeFilter === 'alle' ? ' active' : '') + '" onclick="snSetGruppe(\'alle\')">Alle</button>';
+  Object.keys(SN_GRUPPE).forEach(function(g) { gf += '<button class="dn-chip' + (_snGruppeFilter === g ? ' active' : '') + '" onclick="snSetGruppe(\'' + g + '\')">' + SN_GRUPPE[g] + '</button>'; });
+  gf += '</div>';
+  document.getElementById('dn-filter-grupper').innerHTML = gf;
+  snRenderTabell();
+
+  // Modelltest
+  var mt = '<div class="dn-mt-grid">';
+  SITUASJON.modelltest.forEach(function(m) {
+    var st = SN_STATUS[m.status];
+    mt += '<div class="dn-mt"><div class="dn-mt-head"><div class="dn-mt-navn">' + escHtml(m.navn) + '</div><span class="dn-pill" style="background:' + st.bg + ';color:' + st.c + '">' + st.navn + '</span></div>'
+      + '<div class="dn-mt-row"><div class="dn-eyebrow">Modellen sa</div><div>' + escHtml(m.sa) + '</div></div>'
+      + '<div class="dn-mt-row"><div class="dn-eyebrow">Det som skjedde</div><div>' + escHtml(m.ble) + '</div></div></div>';
+  });
+  mt += '</div>';
+  var teller = { treff: 0, delvis: 0, bom: 0, aapen: 0 };
+  SITUASJON.modelltest.forEach(function(m) { teller[m.status]++; });
+  document.getElementById('dn-modelltest').innerHTML =
+    '<div class="dn-mt-sum">' + Object.keys(teller).map(function(k) { return '<span class="dn-pill" style="background:' + SN_STATUS[k].bg + ';color:' + SN_STATUS[k].c + '">' + teller[k] + ' ' + SN_STATUS[k].navn.toLowerCase() + '</span>'; }).join('') + '</div>' + mt
+    + '<div class="dn-konklusjon"><div class="dn-eyebrow">Hovedpoeng</div><p>Modellen traff på <strong>formen</strong> (kronisk forstyrrelse med yuan-toll, handlingslammet Fed, Kinas REE-asymmetri) og bommet på <strong>tempoet og størrelsen</strong> (ingen resesjon, aksjer på rekord, gull ned). Fellesnevneren er én forutsetning: modellen regnet med full stengning, mens virkeligheten ble en stengning på rundt 50 % effektiv grad, med rørledninger utenom stredet og amerikanske eskorter. Kalkulatoren er derfor justert til å lese varighet som «fullstengnings-ekvivalente uker».</p></div>';
+
+  // Hendelsesfilter + liste
+  var tf = '<div class="dn-chips"><button class="dn-chip' + (_snTemaFilter === 'alle' ? ' active' : '') + '" onclick="snSetTema(\'alle\')">Alle</button>';
+  Object.keys(SN_TEMA).forEach(function(t) { tf += '<button class="dn-chip' + (_snTemaFilter === t ? ' active' : '') + '" style="--chip:' + SN_TEMA[t].c + '" onclick="snSetTema(\'' + t + '\')">' + SN_TEMA[t].navn + '</button>'; });
+  tf += '</div>';
+  document.getElementById('dn-hendelser-filter').innerHTML = tf;
+  snRenderHendelser();
+}
+function snSetGruppe(g) { _snGruppeFilter = g; document.querySelectorAll('#dn-filter-grupper .dn-chip').forEach(function(b) { b.classList.toggle('active', b.textContent === (g === 'alle' ? 'Alle' : SN_GRUPPE[g])); }); snRenderTabell(); }
+function snSetTema(t) { _snTemaFilter = t; document.querySelectorAll('#dn-hendelser-filter .dn-chip').forEach(function(b) { b.classList.toggle('active', b.textContent === (t === 'alle' ? 'Alle' : SN_TEMA[t].navn)); }); snRenderHendelser(); }
+
+function snRenderTabell() {
+  var el = document.getElementById('dn-tabell'); if (!el) return;
+  var grupper = _snGruppeFilter === 'alle' ? Object.keys(SN_GRUPPE) : [_snGruppeFilter];
+  var h = '';
+  grupper.forEach(function(g) {
+    var rows = SITUASJON.indikatorer.filter(function(i) { return i.g === g; });
+    if (!rows.length) return;
+    h += '<div class="dn-gruppe"><div class="dn-gruppe-navn">' + SN_GRUPPE[g] + '</div><div class="table-scroll"><table class="dn-table"><thead><tr><th>Indikator</th><th>' + SITUASJON.grunnlinje.kort + '</th><th>I dag</th><th>Endring</th><th>Hva det betyr</th></tr></thead><tbody>';
+    rows.forEach(function(ind) {
+      var d = snDelta(ind);
+      h += '<tr><td><strong>' + escHtml(ind.navn) + '</strong>' + (ind.enhet ? '<br><span class="dn-enhet">' + escHtml(ind.enhet) + '</span>' : '') + '</td>'
+        + '<td class="dn-da">' + escHtml(ind.daTxt) + (ind.daKilde ? '<br><span class="dn-kilde">' + escHtml(ind.daKilde) + '</span>' : '') + '</td>'
+        + '<td class="dn-naa">' + escHtml(ind.naaTxt) + (ind.naaKilde ? '<br><span class="dn-kilde">' + escHtml(ind.naaKilde) + '</span>' : '') + '</td>'
+        + '<td class="dn-delta">' + (d ? '<span style="color:' + d.farge + '">' + d.pil + ' ' + d.txt + '</span>' : '<span style="color:var(--faint)">—</span>') + '</td>'
+        + '<td class="dn-komm">' + escHtml(ind.kommentar) + '</td></tr>';
+    });
+    h += '</tbody></table></div></div>';
+  });
+  el.innerHTML = h;
+}
+
+function snRenderHendelser() {
+  var el = document.getElementById('dn-hendelser'); if (!el) return;
+  var liste = SITUASJON.hendelser.filter(function(e) { return _snTemaFilter === 'alle' || e.tema === _snTemaFilter; });
+  var h = '<div class="dn-liste">';
+  var fase = function(d) { for (var i = SITUASJON.faser.length - 1; i >= 0; i--) if (d >= SITUASJON.faser[i].fra) return SITUASJON.faser[i]; return null; };
+  liste.forEach(function(e) {
+    var t = SN_TEMA[e.tema] || SN_TEMA.makro; var f = fase(e.d);
+    var dag = snDays(SITUASJON.konfliktStart, e.d);
+    h += '<div class="dn-ev' + (e.grunnlinje ? ' dn-ev-gl' : '') + (e.naa ? ' dn-ev-naa' : '') + '" style="--fase:' + (f ? f.farge : 'var(--faint)') + '">'
+      + '<div class="dn-ev-dato"><div>' + snFmt(e.d, true) + '</div><div class="dn-ev-dag">' + (dag < 0 ? 'forhistorie' : 'dag ' + dag) + '</div></div>'
+      + '<div class="dn-ev-body"><div class="dn-ev-tittel">' + escHtml(e.tittel) + (e.grunnlinje ? ' <span class="dn-pill" style="background:var(--navy-lt);color:var(--navy)">◆ Grunnlinje</span>' : '') + (e.naa ? ' <span class="dn-pill" style="background:var(--navy);color:#fff">I dag</span>' : '') + '</div>'
+      + '<div class="dn-ev-txt">' + escHtml(e.tekst) + '</div>'
+      + '<div class="dn-ev-meta"><span class="dn-pill" style="background:' + t.bg + ';color:' + t.c + '">' + t.navn + '</span>' + (e.kilde ? '<span class="dn-kilde">Kilde: ' + escHtml(e.kilde) + '</span>' : '') + '</div></div></div>';
+  });
+  h += '</div>';
+  el.innerHTML = h;
+}
+
+// ── Makrodata: kort og tabell fra SITUASJON ──────────────────────────────────
+function snCard(ind) {
+  var d = snDelta(ind);
+  var cls = 'ok';
+  if (d && ind.bedre) cls = (ind.bedre === 'lav' ? d.diff > 0 : d.diff < 0) ? (Math.abs(d.diff) > (ind.enhet === '%' ? 0.5 : ind.da * 0.1) ? 'alert' : 'warn') : 'ok';
+  else if (d && !ind.bedre) cls = 'warn';
+  return '<div class="data-card ' + cls + '"><div class="dc-label">' + escHtml(ind.navn) + '</div>'
+    + '<div class="dc-value">' + escHtml(ind.naaTxt) + '</div>'
+    + '<div class="dc-sub">' + SITUASJON.grunnlinje.kort + ': ' + escHtml(ind.daTxt) + '</div>'
+    + '<div class="dc-trend" style="color:' + (d ? d.farge : 'var(--faint)') + '">' + (d ? d.pil + ' ' + d.txt + ' siden grunnlinjen' : 'Nytt tall siden grunnlinjen') + '</div>'
+    + '<div class="dc-src">Kilde: ' + escHtml(ind.naaKilde || '') + '</div></div>';
+}
+function snRenderMakro() {
+  var grupper = { usa: 'mk-cards-usa', europa: 'mk-cards-europa', kina: 'mk-cards-kina', energi: 'mk-cards-energi', norge: 'mk-cards-norge', marked: 'mk-cards-marked' };
+  Object.keys(grupper).forEach(function(g) {
+    var el = document.getElementById(grupper[g]); if (!el) return;
+    var rows = SITUASJON.indikatorer.filter(function(i) { return i.g === g; });
+    el.className = 'data-grid' + (rows.length % 3 === 0 && rows.length % 4 !== 0 ? ' data-grid-3' : '');
+    el.innerHTML = rows.map(snCard).join('');
+  });
+  // Sammenligningstabell
+  var cmp = document.getElementById('mk-cmp'); if (cmp) {
+    var cell = function(id, fallback) {
+      var ind = snInd(id); if (!ind) return '<td><span class="num">' + (fallback || '—') + '</span></td>';
+      var d = snDelta(ind);
+      return '<td><span class="num">' + escHtml(ind.naaTxt) + '</span>' + (d ? ' <span style="font-size:10px;font-weight:700;color:' + d.farge + '">' + d.pil + '</span>' : '') + '<br><span style="font-size:10px;color:var(--muted)">' + SITUASJON.grunnlinje.kort + ': ' + escHtml(ind.daTxt) + '</span></td>';
+    };
+    var rows = [
+      ['Styringsrente', 'fed', 'ecb', 'lpr', 'Fed uendret i seks måneder og nå på vei opp; ECB har hevet to ganger. Mirans «smale sti» viste seg å gå oppover, ikke nedover.'],
+      ['KPI-inflasjon', 'cpi', 'hicp', 'cncpi', 'Energisjokket slår nå inn i tallene på begge sider av Atlanteren. Kina har forlatt deflasjonssonen.'],
+      ['BNP-vekst', 'bnp', 'eubnp', 'cnbnp', 'Nedbremsing, ikke sammentrekning. ECB legger svakheten til 2027.'],
+      ['Arbeidsledighet', 'arb', 'euarb', null, 'Goodspeed-mønsteret (brått hopp) er synlig i Europa, ikke i USA.'],
+      ['10-årig statsrente', 'us10', 'bund', null, 'Global obligasjonsnedsalg: inflasjon og renteforventninger. Kinesisk tiåring er ikke oppdatert.'],
+      ['Kjerneinflasjon', 'pce', null, null, 'Feds mål er 2 %. Kjerne-PCE 3,3 % gjør kutt umulig; heving ventes 16. september.']
+    ];
+    var h = '<table class="compare-table"><thead><tr><th>Indikator</th><th>USA</th><th>Eurosonen</th><th>Kina</th><th>Analytisk relevans</th></tr></thead><tbody>';
+    rows.forEach(function(r) {
+      h += '<tr><td><strong>' + r[0] + '</strong><br><span style="font-size:10px;color:var(--faint)">i dag · ' + SITUASJON.grunnlinje.kort + '</span></td>' + cell(r[1]) + cell(r[2], r[2] === null ? 'ikke oppdatert' : null) + cell(r[3], r[3] === null ? 'ikke oppdatert' : null) + '<td style="font-size:11px">' + r[4] + '</td></tr>';
+    });
+    h += '</tbody></table>';
+    cmp.innerHTML = h;
+  }
+  // Kompakt tidslinje i energipanelet
+  var tl = document.getElementById('mk-timeline'); if (tl) {
+    var viktige = SITUASJON.hendelser.filter(function(e) { return ['energi', 'krig', 'diplomati'].indexOf(e.tema) !== -1 || e.grunnlinje; });
+    tl.innerHTML = viktige.map(function(e) {
+      return '<div class="timeline-row"><div class="tl-date">' + snFmt(e.d, true) + '</div><div><div class="tl-text">' + escHtml(e.tittel) + '. ' + escHtml(e.tekst) + '</div><div class="tl-src">Kilde: ' + escHtml(e.kilde || '') + '</div></div></div>';
+    }).join('') + '<div style="margin-top:10px"><button class="dn-btn" onclick="nav(\'panel-tidslinje\')">Alle ' + SITUASJON.hendelser.length + ' hendelser i «Da og nå» →</button></div>';
+  }
+}
+
+// ── Om modellen: situasjonsstatus da og nå ───────────────────────────────────
+function snRenderStatus() {
+  var el = document.getElementById('status-grid'); if (!el) return;
+  var tr = snInd('transitt'), arb = snInd('arb');
+  el.innerHTML =
+    '<div style="background:var(--red-lt);border:1px solid rgba(197,48,48,.2);border-radius:var(--radius);padding:14px 16px">'
+    + '<div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-bottom:6px">Hormuz-status</div>'
+    + '<div style="font-size:18px;font-weight:700;color:var(--red);line-height:1;margin-bottom:4px">Dag ' + snDagNr() + ' · forstyrret</div>'
+    + '<div style="font-size:11px;color:var(--muted)">' + SITUASJON.grunnlinje.kort + ': stengt dag ' + snDagGrunnlinje() + '. I dag: ' + escHtml(tr.naaTxt) + ' transitter/dag mot ~125 normalt, oljeeksport fra Gulfen halvert (IEA).</div></div>'
+    + '<div style="background:var(--amber-lt);border:1px solid rgba(146,64,14,.2);border-radius:var(--radius);padding:14px 16px">'
+    + '<div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-bottom:6px">Goodspeed-status</div>'
+    + '<div style="font-size:18px;font-weight:700;color:var(--amber);line-height:1;margin-bottom:4px">2 av 3 triggere</div>'
+    + '<div style="font-size:11px;color:var(--muted)">' + SITUASJON.grunnlinje.kort + ': alle tre antatt aktive. I dag: energi og krig aktive; kredittkontraksjon uteblitt. USA-ledighet ' + escHtml(arb.naaTxt) + ', resesjonsodds 8 %.</div></div>'
+    + '<div style="background:var(--navy-lt);border:1px solid rgba(31,56,100,.15);border-radius:var(--radius);padding:14px 16px">'
+    + '<div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);margin-bottom:6px">Mirans smale sti</div>'
+    + '<div style="font-size:18px;font-weight:700;color:var(--navy);line-height:1;margin-bottom:4px">Stengt, bekreftet</div>'
+    + '<div style="font-size:11px;color:var(--muted)">Fed uendret siden mars, heving ventet 16. sep. IEEPA-tollen underkjent 20. feb. Miran forlot Fed-styret 22. mai.</div></div>';
+}
+
+// ── Hormuz-modal: nøkkelfakta og kronologi ───────────────────────────────────
+function snRenderHormuzModal() {
+  var k = document.getElementById('hzm-kronologi'); if (k) {
+    var viktige = SITUASJON.hendelser.filter(function(e) { return ['2026-02-28','2026-03-16','2026-03-31','2026-04-08','2026-06-14','2026-06-19','2026-07-07','2026-09-01','2026-09-10','2026-09-14'].indexOf(e.d) !== -1 && e.tema !== 'makro' || e.grunnlinje || e.naa; });
+    k.innerHTML = viktige.map(function(e) {
+      var t = SN_TEMA[e.tema] || SN_TEMA.makro;
+      return '<div class="popup-tl-row"><div class="popup-tl-date" style="background:' + t.bg + ';color:' + t.c + '">' + snFmt(e.d) + '</div><div><div class="popup-tl-title">' + escHtml(e.tittel) + '</div><div class="popup-tl-body">' + escHtml(e.tekst) + '</div></div></div>';
+    }).join('');
+  }
+}
+
+// ── Kalkulator: standardverdi = fullstengnings-ekvivalente uker ─────────────
+// Faktisk varighet siden 28. februar er ~28 uker, men stengningen er delvis
+// (IEA: råoljetap i underkant av 45 %). Standardverdi settes til faktiske uker × 0,5.
+var SN_EFFEKTIV_GRAD = 0.5;
+function snKalibrerKalkulator() {
+  var sl = document.getElementById('sl-duration'); if (!sl) return;
+  var uker = Math.floor(snDagNr() / 7);
+  var eff = Math.max(1, Math.min(parseInt(sl.max) || 52, Math.round(uker * SN_EFFEKTIV_GRAD)));
+  if (!sl.dataset.userSet) { sl.value = eff; if (typeof updateSliderLabel === 'function') updateSliderLabel(sl); }
+  var note = document.getElementById('sl-duration-note');
+  if (note) note.innerHTML = 'Faktisk: uke <strong>' + uker + '</strong> siden 28. februar. Standardverdi <strong>' + eff + ' uker</strong> = ' + uker + ' × ' + (SN_EFFEKTIV_GRAD * 100) + ' % effektiv stengningsgrad (IEA sept.: råoljetap i underkant av 45 %). Dra for egne forutsetninger.';
+  sl.addEventListener('input', function() { sl.dataset.userSet = '1'; });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  try { snKalibrerKalkulator(); } catch (e) { console.warn('kalibrering', e); }
+  try { snRenderDash(); } catch (e) { console.warn('dash', e); }
+  try { snRenderPanel(); } catch (e) { console.warn('panel', e); }
+  try { snRenderMakro(); } catch (e) { console.warn('makro', e); }
+  try { snRenderStatus(); } catch (e) { console.warn('status', e); }
+  try { snRenderHormuzModal(); } catch (e) { console.warn('hormuz', e); }
+  // Tabeller som er generert etter DOMContentLoaded-wrapperen: pakk inn
+  document.querySelectorAll('#mk-cmp table.compare-table').forEach(function(t) {
+    if (t.parentElement.classList.contains('table-scroll')) return;
+    var w = document.createElement('div'); w.className = 'table-scroll'; t.parentNode.insertBefore(w, t); w.appendChild(t);
+  });
+});
+</script>
+
 <!-- Responsiv CSS ligger sist slik at den vinner over modal-/guide-stilene som defineres lenger opp -->
 <style id="responsive-css">
 /* ── RESPONSIVE ─────────────────────────────────────────────────────────
@@ -7993,6 +8328,10 @@ window.addEventListener('resize', function() {
   .popup-body [style*="grid-template-columns:140px 1fr"] > div:first-child,
   .popup-body [style*="grid-template-columns:95px 1fr"] > div:first-child { border-right:none !important; border-bottom:1px solid var(--border); }
 
+  /* Makrodata-kort (klassebaserte grids) */
+  .data-grid, .data-grid-3, .data-grid-5 { grid-template-columns:1fr 1fr !important; }
+  .dc-value { font-size:15px; }
+
   /* Om modellen */
   .status-grid { grid-template-columns:1fr !important; }
   .src-row { grid-template-columns:28px 1fr !important; row-gap:4px !important; }
@@ -8055,6 +8394,7 @@ window.addEventListener('resize', function() {
 
 @media (max-width: 480px) {
   .topbar-badge { display:none; }
+  .data-grid, .data-grid-3, .data-grid-5 { grid-template-columns:1fr !important; }
   .dash-kpi5 { grid-template-columns:repeat(2,1fr) !important; }
   .dash-kpi5 > div:nth-child(5) { grid-column:span 2; }
   .main [style*="grid-template-columns:repeat(4,1fr)"],
